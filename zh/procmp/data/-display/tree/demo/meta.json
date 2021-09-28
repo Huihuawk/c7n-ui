@@ -1,0 +1,83 @@
+{
+  "title": {
+    "zh": "中文分类",
+    "en": "Category"
+  },
+  "demos": [
+    {
+      "filename": "dataset.js",
+      "title": {
+        "zh": "绑定数据源",
+        "en": "DataSet"
+      },
+      "description": {
+        "zh": "绑定数据源。\n",
+        "en": "DataSet.\n"
+      },
+      "order": 0,
+      "screenshot": "",
+      "height": 580,
+      "category": "pro"
+    },
+    {
+      "filename": "checkexpand.js",
+      "title": {
+        "zh": "check和expand使用",
+        "en": "check and expand use in tree and relevance with dataSet"
+      },
+      "description": {
+        "zh": "expand 和 check 可以配合dataSet的使用方法\n",
+        "en": "expand ,check diffrent using with dataSet\n\nDataSet.\n"
+      },
+      "order": 1,
+      "screenshot": "",
+      "height": 400,
+      "category": "pro"
+    },
+    {
+      "filename": "selection.js",
+      "title": {
+        "zh": "只使用 check 功能",
+        "en": "only need check"
+      },
+      "description": {
+        "zh": "Tree selectable 属性设置为 false，checkable 为 true 时可实现点击整个节点触发 onCheck 事件及 DataSet select 相关事件。\n",
+        "en": "The Tree `selectable` property is set to `false`, and when `checkable` is `true`, the `onCheck` event and DataSet `select` related events can be triggered by clicking the entire node."
+      },
+      "order": 2,
+      "screenshot": "",
+      "height": 400,
+      "category": "pro"
+    },
+    {
+      "filename": "async.js",
+      "title": {
+        "zh": "异步加载",
+        "en": "async"
+      },
+      "description": {
+        "zh": "异步加载\n",
+        "en": "async\n"
+      },
+      "order": 3,
+      "screenshot": "",
+      "height": 580,
+      "category": "pro"
+    },
+    {
+      "filename": "line.js",
+      "title": {
+        "zh": "连接线",
+        "en": "line"
+      },
+      "description": {
+        "zh": "节点之间带连接线的树，常用于文件目录结构展示。使用 showLine 开启，可以用 switcherIcon 修改默认图标。\n",
+        "en": "A tree with connecting lines between nodes is often used for file directory structure display. Use showLine to open, you can use switcherIcon to modify the default icon.\n"
+      },
+      "order": 4,
+      "screenshot": "",
+      "height": 440,
+      "category": "pro"
+    }
+  ]
+}

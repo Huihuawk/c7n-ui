@@ -1,0 +1,110 @@
+{
+  "title": {
+    "zh": "中文分类",
+    "en": "Category"
+  },
+  "demos": [
+    {
+      "filename": "dataset.js",
+      "title": {
+        "zh": "数据源",
+        "en": "DataSet"
+      },
+      "description": {
+        "zh": "绑定数据源。\n",
+        "en": "DataSet binding.\n"
+      },
+      "order": 0,
+      "screenshot": "",
+      "category": "pro"
+    },
+    {
+      "filename": "multiple.js",
+      "title": {
+        "zh": "多值",
+        "en": "Multiple"
+      },
+      "description": {
+        "zh": "通过属性`multiple`设置为多值。\n",
+        "en": "Multiple values via property `multiple`.\n"
+      },
+      "order": 1,
+      "screenshot": "",
+      "category": "pro"
+    },
+    {
+      "filename": "cascade.js",
+      "title": {
+        "zh": "LOV级联",
+        "en": "LOV Cascade"
+      },
+      "description": {
+        "zh": "LOV 级联。\n",
+        "en": "LOV Cascade\n"
+      },
+      "order": 2,
+      "screenshot": "",
+      "category": "pro"
+    },
+    {
+      "filename": "button.js",
+      "title": {
+        "zh": "按钮",
+        "en": "Button"
+      },
+      "description": {
+        "zh": "按钮。\n",
+        "en": "Button.\n"
+      },
+      "order": 3,
+      "screenshot": "",
+      "height": 200,
+      "category": "pro"
+    },
+    {
+      "filename": "search-action.js",
+      "title": {
+        "zh": "搜索触发变更的动作",
+        "en": "search action"
+      },
+      "description": {
+        "zh": "搜索触发变更的动作\n",
+        "en": "search action.\n"
+      },
+      "order": 4,
+      "screenshot": "",
+      "height": 200,
+      "category": "pro"
+    },
+    {
+      "filename": "tree-data.js",
+      "title": {
+        "zh": "树形数据",
+        "en": "Tree Data"
+      },
+      "description": {
+        "zh": "树形数据, LovConfig 配置中需要有 treeFlag、parentIdField、idField， 如果配置无法辨别是否是树形， 可以给 tableProps 加上 mode: 'tree'，以及 dataSetProps 加上 parentField 和 idField。\n",
+        "en": "For tree data, the LovConfig configuration requires treeFlag, parentIdField, and idField. If the configuration cannot distinguish whether it is a tree, you can add mode:'tree' to tableProps, and add parentField and idField to dataSetProps.\n"
+      },
+      "order": 5,
+      "screenshot": "",
+      "height": 200,
+      "category": "pro"
+    },
+    {
+      "filename": "popup-mode.js",
+      "title": {
+        "zh": "下拉框模式",
+        "en": "Popup mode"
+      },
+      "description": {
+        "zh": "下拉框模式。\n",
+        "en": "Popup mode.\n"
+      },
+      "order": 6,
+      "screenshot": "",
+      "height": 300,
+      "category": "pro"
+    }
+  ]
+}
