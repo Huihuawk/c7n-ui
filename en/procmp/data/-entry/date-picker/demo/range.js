@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import {
   DataSet,
   DatePicker,
+  MonthPicker,
+  YearPicker,
   DateTimePicker,
   TimePicker,
   Row,
   Col,
 } from 'choerodon-ui/pro';
-import moment from 'moment';
 
 function handleDataSetChange({ value, oldValue }) {
   console.log('[range dataset newValue]', value, '[oldValue]', oldValue);
@@ -39,7 +40,7 @@ class App extends React.Component {
         name: 'date2',
         type: 'date',
         range: true,
-        required: true,
+        defaultValue: ['1985-11-22', new Date()],
         validator: rangeValidator,
       },
       {
@@ -64,15 +65,10 @@ class App extends React.Component {
     return (
       <Row gutter={10}>
         <Col style={{ marginBottom: 10 }} span={24}>
-          <DateTimePicker
+          <DatePicker
             dataSet={this.ds}
             name="date"
-            editorInPopup
-            isFlat
-            defaultTime={[
-              moment('00:00:00', 'HH:mm:ss'),
-              moment('23:59:59', 'HH:mm:ss'),
-            ]}
+            placeholder={['Start Date', 'End Date']}
           />
         </Col>
         <Col style={{ marginBottom: 10 }} span={24}>

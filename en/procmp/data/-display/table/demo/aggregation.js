@@ -411,8 +411,8 @@ class App extends React.Component {
         customizedCode="aggregation"
         key="user"
         dataSet={this.userDs}
-        columnDraggable
-        columnTitleEditable
+        columnDraggable={false}
+        columnTitleEditable={false}
         style={{ height: 'calc(100vh - 100px)', maxHeight: 300 }}
         aggregation={aggregation}
         onAggregationChange={this.handleAggregationChange}

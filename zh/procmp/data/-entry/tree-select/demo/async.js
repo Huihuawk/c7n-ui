@@ -71,14 +71,13 @@ class App extends React.Component {
     },
   });
 
-  handleLoadData = (record) => {
-    const { key, children } = record;
+  handleLoadData = ({ key, children }) => {
     return new Promise((resolve) => {
       if (!children) {
         axios
           .get(`/tree-async-${key}.mock`)
           .then((res) => {
-            this.pageOptionDs.appendData(res.data.rows, record);
+            this.optionDs.appendData(res.data.rows);
             resolve();
           })
           .catch((err) => {

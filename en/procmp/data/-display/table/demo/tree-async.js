@@ -59,14 +59,13 @@ class App extends React.Component {
     this.ds.create({ parentId: this.ds.current.get('id') });
   };
 
-  handleLoadData = ({ record, dataSet }) => {
-    const { key, children } = record;
+  handleLoadData = ({ record: { key, children }, dataSet }) => {
     return new Promise((resolve) => {
       if (!children) {
         axios
           .get(`/tree-async-${key}.mock`)
           .then((res) => {
-            dataSet.appendData(res.data.rows, record);
+            dataSet.appendData(res.data.rows);
             resolve();
           })
           .catch((err) => {

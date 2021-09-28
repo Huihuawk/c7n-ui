@@ -41,14 +41,13 @@ const TreeDs = () => ({
 const App = () => {
   const dataSet = useMemo(() => new DataSet(TreeDs()), []);
 
-  const onLoadData = useCallback((record) => {
-    const { key, children } = record;
+  const onLoadData = useCallback(({ key, children }) => {
     return new Promise((resolve) => {
       if (!children) {
         axios
           .get(`/tree-async-${key}.mock`)
           .then((res) => {
-            dataSet.appendData(res.data.rows, record);
+            dataSet.appendData(res.data.rows);
             resolve();
           })
           .catch((err) => {
