@@ -46,7 +46,7 @@ abstract: true
 | primaryKey | 主键字段名，一般用作级联行表的查询字段 | string |  | |
 | idField | 树形数据当前节点 id 字段名，与 parentField 组合使用。 适用于平铺数据；渲染性能相对 childrenField 比较差；变更节点层级可直接修改 idField 和 parentField 对应的值 | string |  | |
 | parentField | 树形数据当前父节点 id 字段名，与 idField 组合使用。适用于平铺数据；渲染性能相对 childrenField 比较差；变更节点层级可直接修改 idField 和 parentField 对应的值| string |  | |
-| childrenField | 树形数据子数据集字段名， 如果要异步加载子节点需设置 idField 和 parentField 或者使用 appendData 方法。适用于树形数据；渲染性能优于 idField 和 parentField 组合；变更节点层级需要操作 record.parent 和 record.children | string |  | 1.4.5-beta.0 |
+| childrenField | 树形数据子数据集字段名， 如果要异步加载子节点需设置 idField 和 parentField 或者使用 appendData 方法。适用于树形数据；渲染性能优于 idField 和 parentField 组合；变更节点层级需要操作 record.parent 和 record.children | string |  | 1.4.5 |
 | expandField | 树形数据标记节点是否展开的字段名 | string |  |  |
 | checkField | 树形数据标记节点是否为选中的字段名，在展开按钮后面会显示 checkbox | string |  |  |
 | fields | 字段属性数组，详见[Field Props](#field-props) | object\[\] |  |  |
@@ -57,7 +57,7 @@ abstract: true
 | cascadeParams | 级联查询参数 | (record, primaryKey) => object | (record, primaryKey) => primaryKey ? record.get(primaryKey) : record.toData() |   |
 | exportMode | 导出模式选择：前端导出，后端导出 | client \| server | server |   |
 | combineSort | 是否开启组件列排序传参 | boolean | false | 1.4.2 |
-| forceValidate | 始终校验全部数据 | boolean | false | 1.4.5-beta.0 |
+| forceValidate | 始终校验全部数据 | boolean | false | 1.4.5 |
 
 ### DataSet Values
 
@@ -289,7 +289,7 @@ abstract: true
 | bind | 内部字段别名绑定 | string |  | |
 | dynamicProps | [动态属性对象](/zh/tutorials/dataSet-more#dynamicProps)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
 | computedProps | 计算属性对象。功能和用法同 dynamicProps，具有 mobx computed 的缓存功能，一般用于计算量大的场景，避免重复计算，提高性能。请确保计算依赖的值是可观察的。  | { fieldProp: ({ dataSet, record, name }) => value } |  | 1.4.0 |
-| cascadeMap | 快码和 LOV 查询时的级联参数映射。 例如：cascadeMap: { parentCodeValue: 'city' }，其中'city'是当前所在数据源的其他字段名，parentCodeValue 是快码和 LOV 的查询参数 | object |  |   |
+| cascadeMap | 快码和 LOV 查询时的级联参数映射，详见[级联](/zh/tutorials/select#级联)。 | object |  |   |
 | currency | 货币代码，详见[Current currency & funds code list.](https://www.currency-iso.org/en/home/tables/table-a1.html) | string |  |   |
 | ignore | 忽略提交, 可选值: always - 总是忽略 clean - 值未变化时忽略 never - 从不忽略 | string | |   |
 | transformRequest | 在发送请求之前对数据进行处理 | (value: any, record: Record) => any |  |    |
