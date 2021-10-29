@@ -26,6 +26,7 @@ title: API
 | keyboard| keyboard events| boolean | true | |
 | customizable | 是否显示个性化设置入口按钮  | boolean | | 1.4.5 |
 | customizedCode | 个性化编码，设置后默认将会存储列拖拽等个性化设置更改到 localStorage，如果要存储到后端, 请重写[全局配置](/components/configure)中的表格个性化钩子： `customizedSave` `customizedLoad` | string | | 1.4.5 |
+| showMore | 页签超过容器宽度是否显示更多 | boolean | false | 1.5.0-beta.0 |
 
 ### Tabs.TabPane
 
@@ -37,6 +38,7 @@ title: API
 | title         | 选项卡头显示文字          | string | 无     | 1.4.5 |
 | disabled         | 是否禁用          | boolean | 无     | |
 | count         | 选项卡头内显示数字          | number\| () => number | 无     | |
+| countRenderer | 数字渲染器 | ({ text, count, overflowCount }) => ReactNode | ({ text }) => { if (text) return text; } | 1.5.0-beta.0 |
 | overflowCount         | 展示封顶的数字值         | number | 99     | |
 
 ### Tabs.TabGroup

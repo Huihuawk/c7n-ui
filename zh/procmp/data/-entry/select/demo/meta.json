@@ -230,21 +230,6 @@
       "category": "pro"
     },
     {
-      "filename": "dataset-gruop.js",
-      "title": {
-        "zh": "DataSet group 分组",
-        "en": "DataSet group"
-      },
-      "description": {
-        "zh": "DataSet group 分组。\n",
-        "en": "DataSet group.\n"
-      },
-      "order": 14,
-      "screenshot": "",
-      "height": 200,
-      "category": "pro"
-    },
-    {
       "filename": "popup-content.js",
       "title": {
         "zh": "扩展菜单",

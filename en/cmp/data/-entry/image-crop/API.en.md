@@ -43,10 +43,9 @@ This component can be used to upload avatar, and add the preview
 | uploadProps | config of upload|  UploadProps  |   |
 | modalProps | config of modal|  ModalProps  |   |
 | limit | limit of the type and size of the avatar| boolean |  {type: 'jpeg,png,jpg',size: 1024,}  |
-| previewList | defined the preview list | number[] | \[80, 30, 18\] |
-| editorWidth | crop width | number | 540 |
-| editorHeight | crop height  | number | 300 |
-| minRectSize | the minimum size of the crop area| number | 80 |
-| defaultRectSize | the default size of the crop area| number | 200 |
+| previewList | defined the preview list | number[] | \[80, 48, 34\] |
+| editorWidth | crop width | number | 380 |
+| editorHeight | crop height  | number | 380 |
+| rectSize | size of the crop area| number | 280 |
 | axiosConfig | the upload axios config | AxiosRequestConfig |   |
 
