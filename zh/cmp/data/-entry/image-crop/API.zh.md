@@ -38,7 +38,6 @@ title: API
 | handleUpload | 点击上传|   (area: AvatarArea) => void;    |   |
 | cropComplete | 裁剪完成|  (imageState: any) => void;   |   |
 | title | 上传头像标题|  string \| React.ReactElement;   |   |
-| subTitle | 上传头像小标题|  string \| React.ReactElement;  |   |
 | previewTitle | 头像预览标题|  string \| React.ReactElement;  |   |
 | reloadTitle | 重新上传标题|  string \| React.ReactElement;  |   |
 | uploadProps | 上传配置|  UploadProps  |   |

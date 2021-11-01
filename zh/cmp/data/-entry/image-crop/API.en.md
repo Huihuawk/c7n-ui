@@ -37,7 +37,6 @@ This component can be used to upload avatar, and add the preview
 | handleUpload | call back when click the save button|   (area: AvatarArea) => void;    |   |
 | cropComplete | call back when crop the finished |  (imageState: any) => void;   |   |
 | title | the title of avatar upload|  string \| React.ReactElement;   |   |
-| subTitle | the sub title of avatar upload|  string \| React.ReactElement;  |   |
 | previewTitle | the title of avatar preview|  string \| React.ReactElement;  |   |
 | reloadTitle | the title of avatar reupload|  string \| React.ReactElement;  |   |
 | uploadProps | config of upload|  UploadProps  |   |

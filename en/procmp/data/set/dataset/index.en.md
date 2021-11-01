@@ -7,7 +7,6 @@ abstract: true
 
 **注意事项**
 
-> DataSet 内部会将普通数据对象转成可观察对象，单次 `loadData | create` 加载超过 1000+ 或遍历创建 record 时会有明显耗时，在对性能有严格要求的项目建议采取其他方案处理大数据量。
 > 初次使用该组件库建议阅读[引导教程](https://huihuawk.gitee.io/c7n-ui/zh/tutorials/introduction)。
 
 ## API
@@ -26,7 +25,7 @@ abstract: true
 | autoLocateAfterRemove | 当前数据被删除后自动定位到其他记录 | boolean | true | |
 | validateBeforeQuery | 查询时是否校验查询字段或查询数据集 | boolean | true | 1.0.0  |
 | selection | 选择的模式, 可选值: false 'multiple' 'single' | boolean \| string | multiple |    |
-| selectionStrategy | 树形选择记录策略， SHOW_ALL \| SHOW_CHILD \| SHOW_PARENT | string | 'SHOW_ALL' | 1.4.2 |
+| selectionStrategy | 树形选择记录策略， SHOW\_ALL \| SHOW\_CHILD \| SHOW\_PARENT | string | 'SHOW_ALL' | 1.4.2 |
 | modifiedCheck | 查询前，当有记录更改过时，是否警告提示。 | boolean | true |   |
 | modifiedCheckMessage | 查询前，当有记录更改过时，警告提示。 | ReactNode \| ModalProps |  |    |
 | pageSize | 分页大小 | number | 10 |   |
@@ -158,7 +157,7 @@ abstract: true
 | bind(ds, name) | 绑定头 DataSet | ds - 头 DataSet 对象或 id name - 绑定名 |  |    |
 | setQueryParameter(para, value) | 设置查询参数 | para - 参数名 value - 参数值 |  | |
 | getQueryParameter(para) | 获取查询参数 | para - 参数名 |  | 1.4.0 |
-| loadData(data, total, cache) | 加载数据 | `data` - 数据数组 `total` - 总数，可选，用于分页 `cache`((1.5.0-beat.0)) - 是否保留缓存的变更记录 | | |
+| loadData(data, total, cache) | 加载数据 | `data` - 数据数组 `total` - 总数，可选，用于分页 `cache`(1.5.0-beat.0) - 是否保留缓存的变更记录 | | |
 | appendData(data, parentRecord, total) | 附加数据 | `data` - 数据数组 `total` - 总数，可选，用于分页 `parentRecord` - 父节点，可选， 用于 childrenField 模式的树形数据 | | 1.1.0 |
 | setState(key, value) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  | 1.3.1 |
 | getState(key) | 获取自定义状态值。 | key - 键名 |  |  1.3.1  |

@@ -85,7 +85,7 @@ title: API
 | searchCode | 动态筛选条后端接口唯一编码 | string | | 1.4.5 |
 | rowBoxPlacement | 行选择框位置  | 可选值: start, end \| number | start | 1.4.5 |
 
-更多属性请参考 [DataSetComponent](/zh/procmp/abstract/#DataSetComponent)。
+更多属性请参考 [DataSetComponent](/zh/procmp/abstract/ViewComponent#datasetcomponent)。
 
 ### Table.Column
 
