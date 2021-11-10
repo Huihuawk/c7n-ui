@@ -187,6 +187,20 @@
       "order": 13,
       "height": 165,
       "screenshot": ""
+    },
+    {
+      "filename": "more.js",
+      "title": {
+        "zh": "显示更多",
+        "en": "ShowMore"
+      },
+      "description": {
+        "zh": "对超出的内容可以显示在下拉框中，并且可以快速定位。\n",
+        "en": "The content before and after can be displayed in the drop-down position, and can be quickly located.\n"
+      },
+      "order": 14,
+      "height": 165,
+      "screenshot": ""
     }
   ]
 }
