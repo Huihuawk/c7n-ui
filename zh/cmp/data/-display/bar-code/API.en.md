@@ -23,7 +23,6 @@ Used to set barcode parameters.
 | format | Barcode format type | string | auto (CODE128) |
 | displayValue | Whether to display text | boolean | true |
 | text | Text | string | |
-| textPosition | Text position | number | bottom |
 | width | Width | number | 2 |
 | height | Height | number | 100 |
 | font | Font | string | monospace |
