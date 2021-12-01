@@ -48,7 +48,6 @@ class App extends React.Component {
       },
     ],
   });
-
   toggleHidden = () => {
     this.setState({ hiddenContent: !this.state.hiddenContent });
   };
