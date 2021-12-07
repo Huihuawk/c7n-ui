@@ -42,4 +42,10 @@ const options = { tabSize: 4, viewportMargin: Infinity };
 <CodeArea options={options} />;
 ```
 
+<style>
+.hidden-content .react-codemirror2 {
+  visibility: hidden;
+}
+</style>
+
 所有可用的配置项请参考 [CodeMirror Options](https://codemirror.net/doc/manual.html#config)。

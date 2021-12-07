@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import { CodeArea, DataSet, Button } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 // 处理 codemirror 的SSR问题， 如无需SSR，请用import代替require;
-if (typeof window !== 'undefined') {
-  // 提供对应语言的语法高亮
-  require('codemirror/mode/javascript/javascript');
-}
+import 'codemirror/mode/javascript/javascript';
+// if (typeof window !== 'undefined') {
+//   // 提供对应语言的语法高亮
+//   require('codemirror/mode/javascript/javascript');
+// }
+
 const jsonText = `{
   "compilerOptions": {
     "strictNullChecks": true,
@@ -37,6 +39,7 @@ class App extends React.Component {
   state = {
     hiddenContent: false,
   };
+
   ds = new DataSet({
     autoCreate: true,
     fields: [
@@ -49,15 +52,21 @@ class App extends React.Component {
     ],
   });
 
-  toggleHidden = () => {
-    this.setState({ hiddenContent: !this.state.hiddenContent });
-  };
-
   get getIconType() {
     return this.state.hiddenContent
       ? 'baseline-arrow_drop_up'
       : 'baseline-arrow_drop_down';
   }
+
+  get getClassName() {
+    const { hiddenContent } = this.state;
+    return hiddenContent ? 'hidden-content' : '';
+  }
+
+  toggleHidden = () => {
+    const { hiddenContent } = this.state;
+    this.setState({ hiddenContent: !hiddenContent });
+  };
 
   getHeader = () => (
     <div
@@ -81,9 +90,13 @@ class App extends React.Component {
           onClick={this.toggleHidden}
         />
       </div>
-      <Button size="small" color="gray">
-        Button
-      </Button>
+      <Icon
+        type="source"
+        onClick={() => {
+          console.log('Do something.');
+        }}
+        style={{ cursor: 'pointer' }}
+      />
     </div>
   );
 

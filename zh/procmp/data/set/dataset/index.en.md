@@ -7,7 +7,7 @@ abstract: true
 
 **注意事项**
 
-> 初次使用该组件库建议阅读[引导教程](https://huihuawk.gitee.io/c7n-ui/zh/tutorials/introduction)。
+> 初次使用该组件库建议阅读[引导教程](https://huihuawk.gitee.io/c7n-ui/en/tutorials/introduction)。
 
 ## API
 
@@ -39,7 +39,7 @@ abstract: true
 | tlsUrl | 多语言查询请求的 url。 当设定 name 时， 默认 /dataset/{name}/languages | string |  | |
 | validateUrl | 远程校验查询请求的 url。 当设定 name 时， 默认 /dataset/{name}/validate | string |  |   |
 | exportUrl | 导出请求的 url。 当设定 name 时， 默认 /dataset/{name}/export | string |  |   |
-| transport | 自定义 CRUD 请求配置, 详见[Transport](#transport) 及 [AxiosRequestConfig](/zh/procmp/configure/configure/#axiosrequestconfig) | Transport |  |    |
+| transport | 自定义 CRUD 请求配置, 详见[Transport](#transport) 及 [AxiosRequestConfig](/en/procmp/configure/configure/#axiosrequestconfig) | Transport |  |    |
 | feedback | 查询和提交数据的反馈配置, 详见[Feedback](#feedback) | Feedback |  |    |
 | children | 级联行数据集, 例： { name_1: dataSet1, name_2: dataSet2 } | { name: DataSet } |  | |
 | primaryKey | 主键字段名，一般用作级联行表的查询字段 | string |  | |
@@ -50,7 +50,7 @@ abstract: true
 | checkField | 树形数据标记节点是否为选中的字段名，在展开按钮后面会显示 checkbox | string |  |  |
 | fields | 字段属性数组，详见[Field Props](#field-props) | object\[\] |  |  |
 | record | 记录属性，详见[Record Props](#record-Props) | object |  |
-| queryFields | 查询字段属性数组，在内部生成 queryDataSet，优先级低于 queryDataSet 属性，详见[Field Props](#field-props) | object\[\] |  |  |
+| queryFields | 查询字段属性数组，在内部生成 queryDataSet，优先级高于 queryDataSet 属性，详见[Field Props](#field-props) | object\[\] |  |  |
 | cacheSelection | 缓存选中记录，使切换分页时仍保留选中状态。当设置了 primaryKey 或有字段设置了 unique 才起作用。 | boolean | false |   |
 | cacheModified | 缓存变更记录，使切换分页时仍保留变更的记录。当设置了 primaryKey 或有字段设置了 unique 才起作用。 | boolean | false | 1.5.0-beta.0 |
 | axios | 覆盖默认 axios | AxiosInstance |  |   |
@@ -199,7 +199,7 @@ abstract: true
 
 ### Record Props
 
-> 1.5.0  版本新增属性，更多案例参考 [Form](/zh/procmp/data-entry/form#禁用) & [Table](/zh/procmp/data-display/table#功能总和)。
+> 1.5.0  版本新增属性，更多案例参考 [Form](/en/procmp/data-entry/form#禁用) & [Table](/en/procmp/data-display/table#功能总和)。
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
@@ -212,7 +212,7 @@ abstract: true
 
 ### Record Values
 
-> 详细介绍：[Record](/zh/tutorials/dataSet-more#record-%E5%AF%B9%E8%B1%A1)
+> 详细介绍：[Record](/en/tutorials/dataSet-more#record-%E5%AF%B9%E8%B1%A1)
 
 | 名称           | 说明                                            | 类型                      |
 | -------------- | ----------------------------------------------- | ------------------------- |
@@ -237,7 +237,7 @@ abstract: true
 
 ### Record Methods
 
-> 详细介绍：[Record](/zh/tutorials/dataSet-more#record-%E5%AF%B9%E8%B1%A1)
+> 详细介绍：[Record](/en/tutorials/dataSet-more#record-%E5%AF%B9%E8%B1%A1)
 
 | 名称 | 说明 | 参数 | 返回值类型 | 版本 |
 | --- | --- | --- | --- | --- |
@@ -263,7 +263,7 @@ abstract: true
 
 ### Field Props
 
-> 详细介绍：[Field](/zh/tutorials/dataSet-more#fields)
+> 详细介绍：[Field](/en/tutorials/dataSet-more#fields)
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
@@ -303,12 +303,12 @@ abstract: true
 | lookupUrl | 值列表请求地址 | string \| (code) => string |  |  |
 | lovDefineUrl | lov 配置请求地址 | string \| (code) => string |  | |
 | lovQueryUrl | lov 查询请求地址 | string \| (code, config, { dataSet, params, data }) => string |  |   |
-| lookupAxiosConfig | 值列表请求配置或返回配置的钩子，详见[AxiosRequestConfig](/zh/procmp/configure/configure/#axiosRequestConfig)。配置中默认 url 为 lookupUrl， method 为 post。 | AxiosRequestConfig\| ({ dataSet, record, params, lookupCode }) => AxiosRequestConfig |  |  |
-| lovDefineAxiosConfig | lov 配置的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/zh/procmp/configure/configure/#axiosRequestConfig)。 配置中默认 url 为 lovDefineUrl， method 为 post。 | AxiosRequestConfig\| (code) => AxiosRequestConfig |  |  |
-| lovQueryAxiosConfig | lov 查询的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/zh/procmp/configure/configure/#axiosRequestConfig)。 配置中默认 url 为 lovQueryUrl， method 为 post。 | AxiosRequestConfig\| (code, config, { dataSet, params, data }) => AxiosRequestConfig |  | |
+| lookupAxiosConfig | 值列表请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosRequestConfig)。配置中默认 url 为 lookupUrl， method 为 post。 | AxiosRequestConfig\| ({ dataSet, record, params, lookupCode }) => AxiosRequestConfig |  |  |
+| lovDefineAxiosConfig | lov 配置的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosRequestConfig)。 配置中默认 url 为 lovDefineUrl， method 为 post。 | AxiosRequestConfig\| (code) => AxiosRequestConfig |  |  |
+| lovQueryAxiosConfig | lov 查询的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosRequestConfig)。 配置中默认 url 为 lovQueryUrl， method 为 post。 | AxiosRequestConfig\| (code, config, { dataSet, params, data }) => AxiosRequestConfig |  | |
 | lookupBatchAxiosConfig | 返回 lookup 批量查询配置的钩子，优先级高于全局配置的lookupBatchAxiosConfig，根据返回配置的url的不同分别做批量查询，详见[AxiosRequestConfig](/components/configure/#AxiosRequestConfig)。 | (codes: string[]) => AxiosRequestConfig | - | 1.0.0 |
 | bind | 内部字段别名绑定 | string |  | |
-| dynamicProps | [动态属性对象](/zh/tutorials/dataSet-more#dynamicProps)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
+| dynamicProps | [动态属性对象](/en/tutorials/dataSet-more#dynamicProps)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
 | computedProps | 计算属性对象。功能和用法同 dynamicProps，具有 mobx computed 的缓存功能，一般用于计算量大的场景，避免重复计算，提高性能。请确保计算依赖的值是可观察的。  | { fieldProp: ({ dataSet, record, name }) => value } |  | 1.4.0 |
 | cascadeMap | 快码和 LOV 查询时的级联参数映射，详见[级联](/en/tutorials/select#cascading)。 | object |  |   |
 | currency | 货币代码，详见[Current currency & funds code list.](https://www.currency-iso.org/en/home/tables/table-a1.html) | string |  |   |
@@ -316,7 +316,7 @@ abstract: true
 | transformRequest | 在发送请求之前对数据进行处理 | (value: any, record: Record) => any |  |    |
 | transformResponse | 在获得响应之后对数据进行处理 | (value: any, object: any) => any |  |  |
 | trim | 字符串值是否去掉首尾空格，可选值: both \| left \| right \| none | string | both |  |
-| defaultValidationMessages | 默认校验信息，详见[ValidationMessages](/zh/procmp/configure/configure/#ValidationMessages) | ValidationMessages |  |  |
+| defaultValidationMessages | 默认校验信息，详见[ValidationMessages](/en/procmp/configure/configure/#ValidationMessages) | ValidationMessages |  |  |
 | highlight | 高亮, 如是字符串或 ReactElement, 则会显示 Tooltip | boolean \| ReactNode |  | 1.4.0 |
 | showCheckedStrategy | 树形多选时定义选中项回填的方式。SHOW_CHILD: 只显示子节点. SHOW_PARENT: 只显示父节点(当父节点下所有子节点都选中时). 默认显示所有选中节点(包括父节点). | string | SHOW_ALL | 1.4.4 |
 | bucketName | 附件上传的桶名 | string |  | 1.4.4 |
@@ -327,7 +327,7 @@ abstract: true
 
 ### Field Values
 
-> 详细介绍：[Field](/zh/tutorials/dataSet-more#fields)
+> 详细介绍：[Field](/en/tutorials/dataSet-more#fields)
 
 | 名称     | 说明     | 类型                      | 版本 |
 | -------- | -------- | ------------------------- | --- |
@@ -336,7 +336,7 @@ abstract: true
 
 ### Field Methods
 
-> 详细介绍：[Field](/zh/tutorials/dataSet-more#fields)
+> 详细介绍：[Field](/en/tutorials/dataSet-more#fields)
 
 * 当 field 是通过 ds.getField 获取的字段时， 以上传了 record 参数的方法等同于调用了通过 record.getField 得到的 field 对应的方法。版本：1.5.0-beta.0+
 
@@ -360,7 +360,7 @@ abstract: true
 
 ### Transport
 
-> 详细介绍：[Transport](/zh/tutorials/dataSet-more#transport)
+> 详细介绍：[Transport](/en/tutorials/dataSet-more#transport)
 
 | 属性 | 说明 | 类型 |
 | --- | --- | --- |
@@ -385,7 +385,7 @@ abstract: true
 
 ### DataToJSON
 
-> 详细介绍：[DataToJSON](/zh/tutorials/dataSet-more#datatojson)
+> 详细介绍：[DataToJSON](/en/tutorials/dataSet-more#datatojson)
 
 | 枚举值 | 说明 | 版本  |
 | --- | --- | --- |

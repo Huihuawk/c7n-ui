@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom';
 import { CodeArea, Switch, DataSet } from 'choerodon-ui/pro';
 // 这两个主题不是组件内置的主题，需要手动引入
 import 'codemirror/theme/eclipse.css';
+import 'codemirror/theme/neat.css';
 // 引入 javascript lint
 import 'choerodon-ui/pro/lib/code-area/lint/javascript';
 // 处理 codemirror 的SSR问题， 如无需SSR，请用import代替require;
-if (typeof window !== 'undefined') {
-  // 提供对应语言的语法高亮
-  require('codemirror/mode/javascript/javascript');
-}
+import 'codemirror/mode/javascript/javascript';
+// if (typeof window !== 'undefined') {
+//   // 提供对应语言的语法高亮
+//   require('codemirror/mode/javascript/javascript');
+// }
 
 const jsonText = `{
   "compilerOptions": {
