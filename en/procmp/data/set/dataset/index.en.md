@@ -49,12 +49,12 @@ abstract: true
 | expandField | 树形数据标记节点是否展开的字段名 | string |  |  |
 | checkField | 树形数据标记节点是否为选中的字段名，在展开按钮后面会显示 checkbox | string |  |  |
 | fields | 字段属性数组，详见[Field Props](#field-props) | object\[\] |  |  |
-| record | 记录属性，详见[Record Props](#record-Props) | object |  |
+| record | 记录属性，详见[Record Props](#record-props) | object |  |
 | queryFields | 查询字段属性数组，在内部生成 queryDataSet，优先级高于 queryDataSet 属性，详见[Field Props](#field-props) | object\[\] |  |  |
 | cacheSelection | 缓存选中记录，使切换分页时仍保留选中状态。当设置了 primaryKey 或有字段设置了 unique 才起作用。 | boolean | false |   |
 | cacheModified | 缓存变更记录，使切换分页时仍保留变更的记录。当设置了 primaryKey 或有字段设置了 unique 才起作用。 | boolean | false | 1.5.0-beta.0 |
 | axios | 覆盖默认 axios | AxiosInstance |  |   |
-| dataToJSON | 数据转为 json 的方式，详见[DataToJSON](#dataToJSON) | DataToJSON | dirty |   |
+| dataToJSON | 数据转为 json 的方式，详见[DataToJSON](#datatojson) | DataToJSON | dirty |   |
 | cascadeParams | 级联查询参数 | (record, primaryKey) => object | (record, primaryKey) => primaryKey ? record.get(primaryKey) : record.toData() |   |
 | exportMode | 导出模式选择：前端导出，后端导出 | client \| server | server |   |
 | combineSort | 是否开启组件列排序传参 | boolean | false | 1.4.2 |
@@ -270,7 +270,7 @@ abstract: true
 | name | 字段名 | string |  |   |
 | type | 字段类型，可选值：boolean \| number \| string \| date \| dateTime \| time \| week \| month \| year \| email \| url \| intl \| object \| attachment \| json | string | string |  |
 | order | 排序类型，只支持单 field 排序， 如果多个 field 设置了 order，取第一个有 order 的 field，可选值: asc \| desc | string |  |    |
-| label | 字段标签 | string |  |    |
+| label | 字段标签 | string \| ReactNode |  |    |
 | labelWidth | 字段标签宽度 | number |  |   |
 | format | 字符串类型和日期类型字段值格式化。 字符串类型格式化可选值: 'uppercase' 'lowercase' 'capitalize' | string |  |    |
 | pattern | 正则校验 | string \| RegExp |  |    |
@@ -289,9 +289,9 @@ abstract: true
 | textField | 值列表的文本字段 | string | meaning | |
 | valueField | 值列表的值字段 | string | value |    |
 | trueValue | 类型为 boolean 时，true 对应的值 | boolean \|string \|number | true | |
-| falseValue | 类型为 boolean 时，false 对应的值 | boolean |string \|number | false |   |
+| falseValue | 类型为 boolean 时，false 对应的值 | boolean \|string \|number | false |   |
 | options | 下拉框组件的菜单数据集 | DataSet |  |   |
-| optionsProps | 值集组件的数据集配置 | DataSetProps \| | (DataSetProps) => DataSetProps |  | |
+| optionsProps | 值集组件的数据集配置 | DataSetProps \| (DataSetProps) => DataSetProps |  | |
 | group | 是否分组，如果是 number，则为分组的顺序 | boolean \|number |  | |
 | defaultValue | 默认值 | any |  |  |
 | multiple | 是否为值数组。 当为字符串时，作为数据分隔符，查询时会将字符串分割成数组，提交时会将数组拼接成字符串 | boolean \| string | false |  |
@@ -303,12 +303,12 @@ abstract: true
 | lookupUrl | 值列表请求地址 | string \| (code) => string |  |  |
 | lovDefineUrl | lov 配置请求地址 | string \| (code) => string |  | |
 | lovQueryUrl | lov 查询请求地址 | string \| (code, config, { dataSet, params, data }) => string |  |   |
-| lookupAxiosConfig | 值列表请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosRequestConfig)。配置中默认 url 为 lookupUrl， method 为 post。 | AxiosRequestConfig\| ({ dataSet, record, params, lookupCode }) => AxiosRequestConfig |  |  |
-| lovDefineAxiosConfig | lov 配置的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosRequestConfig)。 配置中默认 url 为 lovDefineUrl， method 为 post。 | AxiosRequestConfig\| (code) => AxiosRequestConfig |  |  |
-| lovQueryAxiosConfig | lov 查询的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosRequestConfig)。 配置中默认 url 为 lovQueryUrl， method 为 post。 | AxiosRequestConfig\| (code, config, { dataSet, params, data }) => AxiosRequestConfig |  | |
-| lookupBatchAxiosConfig | 返回 lookup 批量查询配置的钩子，优先级高于全局配置的lookupBatchAxiosConfig，根据返回配置的url的不同分别做批量查询，详见[AxiosRequestConfig](/components/configure/#AxiosRequestConfig)。 | (codes: string[]) => AxiosRequestConfig | - | 1.0.0 |
+| lookupAxiosConfig | 值列表请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosrequestconfig)。配置中默认 url 为 lookupUrl， method 为 post。 | AxiosRequestConfig\| ({ dataSet, record, params, lookupCode }) => AxiosRequestConfig |  |  |
+| lovDefineAxiosConfig | lov 配置的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosrequestconfig)。 配置中默认 url 为 lovDefineUrl， method 为 post。 | AxiosRequestConfig\| (code) => AxiosRequestConfig |  |  |
+| lovQueryAxiosConfig | lov 查询的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure/#axiosrequestconfig)。 配置中默认 url 为 lovQueryUrl， method 为 post。 | AxiosRequestConfig\| (code, config, { dataSet, params, data }) => AxiosRequestConfig |  | |
+| lookupBatchAxiosConfig | 返回 lookup 批量查询配置的钩子，优先级高于全局配置的lookupBatchAxiosConfig，根据返回配置的url的不同分别做批量查询，详见[AxiosRequestConfig](/components/configure/#axiosrequestconfig)。 | (codes: string[]) => AxiosRequestConfig | - | 1.0.0 |
 | bind | 内部字段别名绑定 | string |  | |
-| dynamicProps | [动态属性对象](/en/tutorials/dataSet-more#dynamicProps)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
+| dynamicProps | [动态属性对象](/en/tutorials/dataSet-more#dynamicprops)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
 | computedProps | 计算属性对象。功能和用法同 dynamicProps，具有 mobx computed 的缓存功能，一般用于计算量大的场景，避免重复计算，提高性能。请确保计算依赖的值是可观察的。  | { fieldProp: ({ dataSet, record, name }) => value } |  | 1.4.0 |
 | cascadeMap | 快码和 LOV 查询时的级联参数映射，详见[级联](/en/tutorials/select#cascading)。 | object |  |   |
 | currency | 货币代码，详见[Current currency & funds code list.](https://www.currency-iso.org/en/home/tables/table-a1.html) | string |  |   |
@@ -316,7 +316,7 @@ abstract: true
 | transformRequest | 在发送请求之前对数据进行处理 | (value: any, record: Record) => any |  |    |
 | transformResponse | 在获得响应之后对数据进行处理 | (value: any, object: any) => any |  |  |
 | trim | 字符串值是否去掉首尾空格，可选值: both \| left \| right \| none | string | both |  |
-| defaultValidationMessages | 默认校验信息，详见[ValidationMessages](/en/procmp/configure/configure/#ValidationMessages) | ValidationMessages |  |  |
+| defaultValidationMessages | 默认校验信息，详见[ValidationMessages](/en/procmp/configure/configure/#validationmessages) | ValidationMessages |  |  |
 | highlight | 高亮, 如是字符串或 ReactElement, 则会显示 Tooltip | boolean \| ReactNode |  | 1.4.0 |
 | showCheckedStrategy | 树形多选时定义选中项回填的方式。SHOW_CHILD: 只显示子节点. SHOW_PARENT: 只显示父节点(当父节点下所有子节点都选中时). 默认显示所有选中节点(包括父节点). | string | SHOW_ALL | 1.4.4 |
 | bucketName | 附件上传的桶名 | string |  | 1.4.4 |

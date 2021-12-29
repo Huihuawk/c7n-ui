@@ -56,8 +56,8 @@ title: API
 | autoFocus | 是否新增行自动获焦至第一个可编辑字段 | boolean | false |    |
 | editorNextKeyEnterDown            | 是否开启回车跳转下一行编辑                                                                                                                                                                                                             | boolean                                     | true    |    |
 | onDragEnd | 完成拖拽后的触发事件 | (dataSet, columns, resultDrag, provided) => void |  |    |
-| columnsDragRender | 控制列的拖拽渲染 | 请查看DragRender[配置项](#dragRender)  |  |    |
-| rowDragRender | 控制行的拖拽渲染| 请查看DragRender[配置项](#dragRender) |  |    |
+| columnsDragRender | 控制列的拖拽渲染 | 请查看DragRender[配置项](#dragrender)  |  |    |
+| rowDragRender | 控制行的拖拽渲染| 请查看DragRender[配置项](#dragrender) |  |    |
 | onDragEndBefore |完成拖拽后,切换位置之前的触发事件 | (dataSet, columns, resultDrag, provided) => false \| void \|resultDrag   |  |    |
 | keyboard | 开启关闭新增的快捷按钮事件 | boolean | false |   |
 | treeLoadData | 树形异步加载数据 | ({ record, dataSet }) => Promise | | 1.1.0   |
@@ -71,7 +71,7 @@ title: API
 | showSelectionCachedButton | 是否显示缓存选中记录按钮 | boolean | | 1.4.1   |
 | showAllPageSelectionButton | 是否显示切换跨页全选按钮 | boolean | | 1.4.0  |
 | customizable | 是否显示个性化设置入口按钮  | boolean | | 1.3.0   |
-| customizedCode | 个性化编码，设置后默认将会存储列拖拽等个性化设置更改到 localStorage，如果要存储到后端, 请重写[全局配置](/zh/procmp/configure)中的表格个性化钩子： customizedSave \| customizedLoad | string | | 1.2.0   |
+| customizedCode | 个性化编码，设置后默认将会存储列拖拽等个性化设置更改到 localStorage，如果要存储到后端, 请重写[全局配置](/zh/procmp/configure/configure)中的表格个性化钩子： customizedSave \| customizedLoad | string | | 1.2.0   |
 | treeQueryExpanded | 树形结构下queryBar触发查询,自动展开树形结构  | boolean | | 1.3.1   |
 | aggregation | 是否是聚合视图， 若有个性化则以个性化配置为主  | boolean | | 1.4.0   |
 | aggregationLimit | 聚合显示条目数量上限，超过限制的条目可通过展开按钮来显示  | number | 4 |   |
@@ -116,7 +116,7 @@ title: API
 | onCell          | 设置单元格属性                                                                                                                                                                                    | ({ dataSet, record, column }) => object                                                                                            |           |  |
 | command | 行操作按钮集，该值为数组 或 返回数组的钩子，内置按钮可添加 afterClick 钩子，用于执行除了默认行为外的动作，数组可选值：edit delete 或 \[edit\| delete , 按钮配置属性对象\] 或 自定义按钮 | (string \| \[string, object\] \| ReactNode)[] \| ({ dataSet, record, aggregation }) => (string \| \[string, object\] \| ReactNode \| object )[] | | |
 | hidden          | 隐藏                                                                                                                                                                                              | boolean                                                                                                                            |           |  |
-| tooltip         | 用 Tooltip 显示单元格内容。可选值 none \| always \| overflow                                                                                                                                      | string                                                                                                                             |  [globalConfig.tooltip](/zh/procmp/configure)    |  |
+| tooltip         | 用 Tooltip 显示单元格内容。可选值 none \| always \| overflow                                                                                                                                      | string                                                                                                                             |  [globalConfig.tooltip](/zh/procmp/configure/configure/configure)    |  |
 | aggregation | 是否是聚合列， 平铺视图下不显示  | boolean | |  |
 | aggregationLimit | 聚合显示条目数量上限，超过限制的条目可通过展开按钮来显示  | number | 4 | |
 | aggregationDefaultExpandedKeys | 默认展开指定的聚合列下的树节点  | (string \| number)[] |  |  |
@@ -308,4 +308,4 @@ const tableDs = new DataSet({
 - Alt + delete，焦点在 table 单元格内，删除当前行，弹出二次提示框 
 - Shift + 方向键，焦点在 table 某行，当前 table 可多选的情况，可选择多行
 
-局部的使用 demo 方法参见[Table](/zh/procmp/data-display/table#components-pro-table-demo-basic);
+局部的使用 demo 方法参见[Table](/zh/procmp/data-display/table#基础);
