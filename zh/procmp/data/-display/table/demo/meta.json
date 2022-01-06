@@ -446,6 +446,36 @@
       "category": "pro"
     },
     {
+      "filename": "group.js",
+      "title": {
+        "zh": "数据分组",
+        "en": "Data grouping"
+      },
+      "description": {
+        "zh": "数据分组。\n",
+        "en": "Data grouping.\n"
+      },
+      "order": 29,
+      "screenshot": "",
+      "height": 450,
+      "category": "pro"
+    },
+    {
+      "filename": "advanced-group.js",
+      "title": {
+        "zh": "进阶数据分组",
+        "en": "Advanced data grouping"
+      },
+      "description": {
+        "zh": "更为复杂的数据分组场景。\n",
+        "en": "More complex data grouping scenarios.\n"
+      },
+      "order": 30,
+      "screenshot": "",
+      "height": 680,
+      "category": "pro"
+    },
+    {
       "filename": "multifunction.js",
       "title": {
         "zh": "功能总和",

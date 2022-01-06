@@ -26,9 +26,10 @@ abstract: true
 | validateBeforeQuery | 查询时是否校验查询字段或查询数据集 | boolean | true | 1.0.0  |
 | selection | 选择的模式, 可选值: false 'multiple' 'single' | boolean \| string | multiple |    |
 | selectionStrategy | 树形选择记录策略， SHOW\_ALL \| SHOW\_CHILD \| SHOW\_PARENT | string | 'SHOW_ALL' | 1.4.2 |
-| modifiedCheck | 查询前，当有记录更改过时，是否警告提示。 | boolean | true |   |
-| modifiedCheckMessage | 查询前，当有记录更改过时，警告提示。 | ReactNode \| ModalProps |  |    |
+| modifiedCheck | 翻页查询前，当有记录更改过时，是否警告提示。 | boolean | true |   |
+| modifiedCheckMessage | 翻页查询前，当有记录更改过时，警告提示。 | ReactNode \| ModalProps |  |    |
 | pageSize | 分页大小 | number | 10 |   |
+| strictPageSize | 严格分页大小, 前端将截断超出 pageSize 的数据 | boolean | true |  1.5.1  |
 | paging | 是否分页，server 主要为 Table 的 Tree 模式服务，约定 total 为根节点数目，index 的定位都是基于根节点，为 server 时候保证同时存在 idField 和 parentField (根节点为空或者 undefined) 不然表现和原有版本一致 | boolean \| 'server'| true |   |
 | dataKey | 查询返回的 json 中对应的数据的 key, 当为 null 时对应整个 json 数据, json 不是数组时自动作为新数组的第一条数据 | string \| null | rows | |
 | totalKey | 查询返回的 json 中对应的总数的 key | string | total |  |
@@ -59,6 +60,7 @@ abstract: true
 | exportMode | 导出模式选择：前端导出，后端导出 | client \| server | server |   |
 | combineSort | 是否开启组件列排序传参 | boolean | false | 1.4.2 |
 | forceValidate | 始终校验全部数据 | boolean | false | 1.4.5 |
+| validationRules | dataSet校验规则，详见[ValidationRule](#validationrule) | ValidationRule\[\] |  |  1.5.1  |
 
 ### DataSet Values
 
@@ -117,9 +119,9 @@ abstract: true
 | nextPage() | 定位到下一页，如果paging 为 true和server，则做远程查询 |  | Promise&lt;any&gt; |   |
 | create(data, index) | 创建一条记录 | data - 记录数据对象；index&lt;optional,default:0&gt; - 记录所在的索引 | Record | |
 | delete(records, confirmMessage: ReactNode \| ModalProps) | 立即删除记录 | records - 删除的记录或记录组 confirmMessage - 自定义提示信息或弹窗的属性, 设为false时不弹确认直接删除 |  |  |
-| remove(records) | 临时删除记录 | records - 删除的记录或记录组 |  |  |
+| remove(records, forceRemove) | 临时删除记录 | records - 删除的记录或记录组; forceRemove(1.5.1) - 是否强制删除 |  |
 | deleteAll(confirmMessage: ReactNode \| ModalProps) | 立即删除所有记录 | confirmMessage - 自定义提示信息或弹窗的属性, 设为false时不弹确认直接删除 |  |   |
-| removeAll() | 临时删除所有记录 |  |  |    |
+| removeAll(forceRemove) | 临时删除所有记录 | forceRemove(1.5.1) - 是否强制删除 |  |    |
 | push(...records) | 将若干数据记录插入记录堆栈顶部 | records - 插入的记录列表 | number | |
 | unshift(...records) | 将若干数据记录插入记录堆栈底部 | records - 插入的记录列表 | number |  |
 | pop() | 从记录堆栈顶部获取记录 |  | Record |  |
@@ -195,6 +197,7 @@ abstract: true
 | beforeDelete | 数据删除前的事件， 返回值为 false 将阻止删除 | ({ dataSet, records }) =&gt; boolean | dataSet - 数据集 records - 记录集 | 是 | 1.0.0 |
 | reset | 数据重置事件 | ({ dataSet, records }) =&gt; void | dataSet - 数据集 records - 记录集 | 是 |   |
 | validate | 校验事件 | ({ dataSet, result }) =&gt; void | dataSet - 数据集 result - 校验结果集 | 是 |  |
+| validateSelf | 校验dataSet事件 | ({ dataSet, result }) =&gt; void | `dataSet` - 数据集 `result` - 校验结果 | 是 | 1.5.1 |
 
 
 ### Record Props
@@ -260,6 +263,7 @@ abstract: true
 | restore() | 从缓存恢复保存的数据 |  |  |  |
 | clear() | 清除所有数据 |  |  |    |
 | getValidationErrors() | 获取校验错误信息 | | | 1.4.0   |
+| getAllValidationErrors() | 获取所有校验错误信息 |  |  | 1.5.1 |
 
 ### Field Props
 
@@ -268,7 +272,7 @@ abstract: true
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | name | 字段名 | string |  |   |
-| type | 字段类型，可选值：boolean \| number \| string \| date \| dateTime \| time \| week \| month \| year \| email \| url \| intl \| object \| attachment \| json | string | string |  |
+| type | 字段类型，可选值：boolean \| number \| string \| date \| dateTime \| time \| week \| month \| year \| email \| url \| intl \| object \| attachment \| json \| bigNumber(1.5.1) | string | string |  |
 | order | 排序类型，只支持单 field 排序， 如果多个 field 设置了 order，取第一个有 order 的 field，可选值: asc \| desc | string |  |    |
 | label | 字段标签 | string \| ReactNode |  |    |
 | labelWidth | 字段标签宽度 | number |  |   |
@@ -276,9 +280,9 @@ abstract: true
 | pattern | 正则校验 | string \| RegExp |  |    |
 | maxLength | 最大长度 | number |  |    |
 | minLength | 最小长度 | number |  |    |
-| max | 最大值。 fieldName 指向当前记录的 fieldName 值作为最大值。 | number \| MomentInput \| fieldName | MAX_SAFE_INTEGER(number 类型) |   |
-| min | 最小值。 fieldName 指向当前记录的 fieldName 值作为最小值。 | number \| MomentInput \| fieldName | MIN_SAFE_INTEGER(number 类型) |   |
-| step | 步距 | number \| { hour: number, minute: number, second: number } |  | |
+| max | 最大值。 fieldName 指向当前记录的 fieldName 值作为最大值。type 为 bigNumber 时，传入 string 类型。 | number \| string \| MomentInput \| fieldName | MAX_SAFE_INTEGER(number 类型) |   |
+| min | 最小值。 fieldName 指向当前记录的 fieldName 值作为最小值。type 为 bigNumber 时，传入 string 类型。 | number \| string \| MomentInput \| fieldName | MIN_SAFE_INTEGER(number 类型) |   |
+| step | 步距。type 为 bigNumber 时，传入 string 类型。 | number \| string \| { hour: number, minute: number, second: number } |  | |
 | nonStrictStep | 非严格步距，在非严格步距下，允许输入值不为步距的倍数加上最小值，也允许在设置整数步距的情况下输入小数   | boolean | false |    |
 | precision | 转换小数点位数 | number |  | 1.3.0 |
 | numberGrouping | 千分位分组显示 | boolean | true | 1.3.0   |
@@ -402,7 +406,7 @@ abstract: true
 
 ### AttachmentFile
 
-> 1.4.4
+> 1.4.4 版本新增属性
 
 | 属性                | 说明                                       | 类型     |
 | ------------------- | ------------------------------------------ | -------- |
@@ -421,3 +425,13 @@ abstract: true
 | errorMessage   | 错误消息  | string |
 | invalid   | 检验失败，如果为true, 则无法重新上传  | boolean |
 | originFileObj   | 原始文件对象，只有通过上传按钮选择的附件才有该对象  | File |
+
+### ValidationRule
+
+> 1.5.1 版本新增属性
+
+| 属性                | 说明                                       | 类型     |
+| ------------------- | ------------------------------------------ | -------- |
+| name | 校验的名称，可选值：`minLength` `maxLength` | string |
+| value | 校验值 | number |
+| message | 校验提示内容  | string |

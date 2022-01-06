@@ -59,6 +59,7 @@ title: API
 | columnsDragRender | 控制列的拖拽渲染 | 请查看DragRender[配置项](#dragrender)  |  |    |
 | rowDragRender | 控制行的拖拽渲染| 请查看DragRender[配置项](#dragrender) |  |    |
 | onDragEndBefore |完成拖拽后,切换位置之前的触发事件 | (dataSet, columns, resultDrag, provided) => false \| void \|resultDrag   |  |    |
+| dragDropContextProps | react-beautiful-dnd DragDropContextProps | [DragDropContextProps](https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/drag-drop-context.md) | | 1.5.1 |
 | keyboard | 开启关闭新增的快捷按钮事件 | boolean | false |   |
 | treeLoadData | 树形异步加载数据 | ({ record, dataSet }) => Promise | | 1.1.0   |
 | treeAsync | 树形异步加载，需要后端接口配合，对应的数据源会自动调用查询接口，接口参数中会带有 parentField 对应的参数名和 idField 对应的参数值，接口返回的数据会附加到已有的数据之中 | ((props: {record?: Record \| null;dataSet?: DataSet \| null;}) => TreeNodeRendererProps )|() => {} | 1.1.0  |
@@ -84,6 +85,16 @@ title: API
 | onColumnResize | 列宽改变的回调事件  | ({ column, width }) => void | | 1.4.4 |
 | searchCode | 动态筛选条后端接口唯一编码 | string | | 1.4.5 |
 | rowBoxPlacement | 行选择框位置  | 可选值: start, end \| number | start | 1.4.5 |
+| groups | 分组 | 请查看TableGroup[配置项](#tablegroup) | | 1.5.1 |
+| headerRowHeight | 头行高 | number \| auto | rowHeight | 1.5.1 |
+| footerRowHeight | 脚行高 | number \| auto | rowHeight | 1.5.1 |
+| heightChangeable | 高度设置, customizable 为 true 才起作用 | boolean | [globalConfig.tableHeightChangeable](/components/configure#API) | 1.5.1 |
+| bodyExpandable | 表格体是否可展开 | boolean | | 1.5.1 |
+| defaultBodyExpanded | 默认表格体是否展开 | boolean | true | 1.5.1 |
+| bodyExpanded | 表格体是否展开 | boolean |  | 1.5.1 |
+| onScrollLeft | 横向滚动事件 | (scrollLeft) => void |  | 1.5.1 |
+| onScrollTop | 纵向滚动事件 | (scrollTop) => void |  | 1.5.1 |
+| onBodyExpand | 点击表格体展开图标时触发 | (expanded) => void | | 1.5.1 |
 
 更多属性请参考 [DataSetComponent](/zh/procmp/abstract/ViewComponent#datasetcomponent)。
 
@@ -116,13 +127,27 @@ title: API
 | onCell          | 设置单元格属性                                                                                                                                                                                    | ({ dataSet, record, column }) => object                                                                                            |           |  |
 | command | 行操作按钮集，该值为数组 或 返回数组的钩子，内置按钮可添加 afterClick 钩子，用于执行除了默认行为外的动作，数组可选值：edit delete 或 \[edit\| delete , 按钮配置属性对象\] 或 自定义按钮 | (string \| \[string, object\] \| ReactNode)[] \| ({ dataSet, record, aggregation }) => (string \| \[string, object\] \| ReactNode \| object )[] | | |
 | hidden          | 隐藏                                                                                                                                                                                              | boolean                                                                                                                            |           |  |
-| tooltip         | 用 Tooltip 显示单元格内容。可选值 none \| always \| overflow                                                                                                                                      | string                                                                                                                             |  [globalConfig.tooltip](/zh/procmp/configure/configure/configure)    |  |
+| tooltip         | 用 Tooltip 显示单元格内容。可选值 none \| always \| overflow                                                                                                                                      | string                                                                                                                             |  [globalConfig.tooltip](/zh/procmp/configure/configure)    |  |
 | aggregation | 是否是聚合列， 平铺视图下不显示  | boolean | |  |
 | aggregationLimit | 聚合显示条目数量上限，超过限制的条目可通过展开按钮来显示  | number | 4 | |
 | aggregationDefaultExpandedKeys | 默认展开指定的聚合列下的树节点  | (string \| number)[] |  |  |
 | aggregationDefaultExpandAll | 默认展开所有聚合列下的树节点  | boolean |  |  |
 | hiddenInAggregation | 在聚合列下是否隐藏  | boolean \| (record) => boolean |  | |
 | highlightRenderer | 单元格高亮渲染器 | ({ title, content, dataSet, record, name, className, style }, element) => ReactNode | |  |
+| defaultWidth | 默认列宽, 只在出横向滚动条时起作用 | number | [globalConfig.tableColumnDefaultWidth](/components/configure#API) \| [globalConfig.tableAggregationColumnDefaultWidth](/components/configure#API) | 1.5.1 |
+| aggregationLimitDefaultExpanded | 聚合超过限制的条目默认是否展开显示  | boolean \| (record) => boolean | 1.5.1 |
+
+### TableGroup
+
+> 1.5.1 版本新增方法。
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| type | 分组类型， 可选值 `column` `row` `header` `none` | string | 'none' |
+| name | 分组对照的字段名 | string |  |
+| parentField | 树形分组对照的父字段名 | string |  |
+| hidden | 隐藏组, 只适用于类型为 header 的分组 | boolean |  |
+| columnProps | 列属性 | ColumnProps |  |
 
 ### Table.FilterBar
 
@@ -158,8 +183,10 @@ title: API
 | autoQueryAfterReset | 重置后自动查询 | boolean | true | 1.4.4 |
 | dynamicFilterBar | 筛选条属性配置 | DynamicFilterBarConfig | | 1.4.5 |
 | fuzzyQuery | 是否开启模糊查询 | boolean | true | 1.4.5 |
+| fuzzyQueryOnly | 是否仅使用模糊查询 | boolean | false | 1.5.1 |
 | fuzzyQueryPlaceholder | 模糊查询 placeholder  | string |  | 1.4.5 |
 | autoQuery | 条件变更是否自动查询  | boolean | true |1.4.5 |
+| refreshBtn | 刷新按钮  | boolean | true | 1.5.1 |
 | onQuery | 查询回调 | () => void |  | 1.4.5 |
 | onReset | 重置回调 | () => void |  | 1.4.5 |
 
@@ -221,6 +248,15 @@ spin 的配置项。
 | spinning  | 是否旋转   | boolean      |
 
 更多案列和属性请参考 [Spin](/zh/procmp/feedback/spin/)。
+
+### instance methods
+
+> 1.5.1 版本新增方法。
+
+| 名称 | 说明 | 参数 | 返回值类型 |
+| --- | --- | --- | --- |
+| setScrollLeft(scrollLeft) | 设置横向滚动值。 | `scrollLeft` - 横向滚动值 |  |
+| setScrollTop(scrollTop) | 设置纵向滚动值。 | `scrollTop` - 纵向滚动值 |  |
 
 ### 分页配置
 

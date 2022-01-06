@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CodeArea, DataSet, Button } from 'choerodon-ui/pro';
+import { CodeArea, DataSet } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 // 处理 codemirror 的SSR问题， 如无需SSR，请用import代替require;
 import 'codemirror/mode/javascript/javascript';
@@ -53,7 +53,8 @@ class App extends React.Component {
   });
 
   get getIconType() {
-    return this.state.hiddenContent
+    const { hiddenContent } = this.state;
+    return hiddenContent
       ? 'baseline-arrow_drop_up'
       : 'baseline-arrow_drop_down';
   }
@@ -99,10 +100,6 @@ class App extends React.Component {
       />
     </div>
   );
-
-  get getClassName() {
-    return this.state.hiddenContent ? 'hidden-content' : '';
-  }
 
   render() {
     return (

@@ -540,6 +540,8 @@ class App extends React.Component {
         summary="BASIC DEMO"
         virtual
         virtualCell
+        headerRowHeight={50}
+        footerRowHeight={40}
         pagination={{
           pageSizeEditable: true,
           showQuickJumper: true,
@@ -553,7 +555,7 @@ class App extends React.Component {
           style={{ color: 'red' }}
           tooltip="overflow"
           editor
-          width={200}
+          defaultWidth={200}
           minWidth={150}
           lock
           sortable

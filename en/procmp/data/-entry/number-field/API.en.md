@@ -4,16 +4,17 @@ title: API
 
 ### NumberField
 
-| 参数 | 说明   | 类型   | 默认值 |
-| ---- | ------ | ------ | ------ |
-| min  | 最小值 | number |    MIN_SAFE_INTEGER   |
-| max  | 最大值 | number |   MAX_SAFE_INTEGER     |
-| step | 步距   | number |        |
-| nonStrictStep | 非严格步距，在非严格步距下，允许输入值不为步距的倍数加上最小值，也允许在设置整数步距的情况下输入小数   | boolean | false |
-| longPressPlus | 长按累加开关  | boolean | true |
-| precision(1.3.0) | 转换小数点位数 | number |  |
-| numberGrouping(1.3.0) | 千分位分组显示 | boolean | true |
-| keyboard(1.5.0) | 是否启用UP DOWN键盘事件 | boolean | true |
+| 参数 | 说明   | 类型   | 默认值 | 版本    |
+| ---- | ------ | ------ | ------ |------ |
+| min  | 最小值( stringMode 开启后传入 string 类型) | number \| string |    MIN_SAFE_INTEGER   ||
+| max  | 最大值( stringMode 开启后传入 string 类型) | number \| string |   MAX_SAFE_INTEGER     ||
+| step | 步距( stringMode 开启后传入 string 类型)   | number \| string |        ||
+| nonStrictStep | 非严格步距，在非严格步距下，允许输入值不为步距的倍数加上最小值，也允许在设置整数步距的情况下输入小数   | boolean | false ||
+| longPressPlus | 长按累加开关  | boolean | true ||
+| precision | 转换小数点位数 | number |  | 1.3.0 |
+| numberGrouping | 千分位分组显示 | boolean | true | 1.3.0 |
+| keyboard | 是否启用UP DOWN键盘事件 | boolean | true | 1.5.0 |
+| stringMode| 字符值模式，开启后支持高精度小数和大数据。同时 onChange 将返回 string 类型 | boolean | false | 1.5.1 |
 
 更多属性请参考 [TextField](/zh/procmp/data-entry/text-field/#TextField)。
 
