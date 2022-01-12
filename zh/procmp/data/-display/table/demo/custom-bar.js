@@ -42,7 +42,12 @@ const QueryBar = (props) => {
             {buttons}
           </div>
         </Form>
-        <FilterBar {...props} buttons={[]} />
+        <FilterBar
+          {...props}
+          // 官网 demo 需要,正常项目内使用无需传 prefixCls
+          prefixCls="c7n-pro-table"
+          buttons={[]}
+        />
       </>
     );
   }

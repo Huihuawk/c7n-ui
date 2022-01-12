@@ -463,7 +463,10 @@ const App = () => {
             <Row>
               <Col
                 span={12}
-                style={{ cursor: 'pointer', borderRight: '1px solid #eee' }}
+                style={{
+                  cursor: 'pointer',
+                  borderRight: '1px solid #eee',
+                }}
                 onClick={() =>
                   record.isSelected
                     ? dataSet.unSelect(record)
@@ -539,7 +542,7 @@ const App = () => {
               return (
                 <>
                   <div>
-                    {text}{' '}
+                    {text}
                     <CheckBox
                       value
                       checked={totalRecords.some((r) => r.getState('editing'))}
@@ -656,9 +659,6 @@ const App = () => {
         headerRowHeight="auto"
         onScrollLeft={handleGroup2ScrollLeft}
         ref={group2Ref}
-        onBodyExpand={(expanded) => {
-          console.log('expanded');
-        }}
         selectionMode="none"
         bodyExpandable
         defaultBodyExpanded={false}

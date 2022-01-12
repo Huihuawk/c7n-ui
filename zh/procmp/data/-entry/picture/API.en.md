@@ -12,6 +12,7 @@ title: API
 | lazy | 懒加载 | boolean |  |
 | preview | 可预览 | boolean | true |
 | previewUrl | 预览时的路径， 默认为src | string |  |
+| downloadUrl(1.5.1) | 预览时的下载路径 | string \| Function |  |
 | previewTarget | 预览方式，若设置则通过 a 标签来预览， 默认是弹窗预览 | string |  |
 | index | 序号, 配合[Picture.Provider](#pictureprovider)进行组预览 | number |  |
 | status | 状态 | 'empty' \| 'loaded' \| 'error' |  |

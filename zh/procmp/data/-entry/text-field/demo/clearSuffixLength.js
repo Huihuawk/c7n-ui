@@ -51,7 +51,7 @@ const App = () => {
             // custom-suffix-text 用户自定义类名，适配后缀样式
             className="custom-suffix-text"
             defaultValue="suffix-showLengthInfo-suffix-showLengthInfo"
-            suffix={<span style={{ width: '56px' }}>文字后缀</span>}
+            suffix={<span style={{ width: '60px' }}>文字后缀</span>}
             maxLength={50}
             showLengthInfo
           />
@@ -104,7 +104,12 @@ const App = () => {
             clearButton
             suffix={
               <Button
-                style={{ width: '32px', height: '28px', padding: '0px 2px' }}
+                style={{
+                  width: '32px',
+                  minWidth: '32px',
+                  height: '28px',
+                  padding: '0px 2px',
+                }}
                 onClick={handleCustom}
               >
                 Click

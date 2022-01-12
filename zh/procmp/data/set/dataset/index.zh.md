@@ -283,8 +283,9 @@ abstract: true
 | min | 最小值。 fieldName 指向当前记录的 fieldName 值作为最小值。type 为 bigNumber 时，传入 string 类型。 | number \| string \|  MomentInput \| fieldName | MIN_SAFE_INTEGER(number 类型) |   |
 | step | 步距。type 为 bigNumber 时，传入 string 类型。 | number \| { hour: number, minute: number, second: number } \| string |  | |
 | nonStrictStep | 非严格步距，在非严格步距下，允许输入值不为步距的倍数加上最小值，也允许在设置整数步距的情况下输入小数   | boolean | false |    |
-| precision | 转换小数点位数 | number |  | 1.3.0 |
+| precision | 小数点精度, 提交时会截断 | number |  | 1.3.0 |
 | numberGrouping | 千分位分组显示 | boolean | true | 1.3.0   |
+| formatterOptions | 数字和货币格式化配置 | FormatNumberFuncOptions: { lang?: string, options?: [Intl.NumberFormatOptions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat) } | | 1.5.1 |
 | validator | 校验器，当返回值为 false 或 涵盖错误信息的字符串，则为校验失败 | (value, name, record) =&gt; boolean \| string \| undefined |  |  |
 | required | 是否必选 | boolean | false |   |
 | readOnly | 是否只读 | boolean | false |   |
@@ -360,6 +361,32 @@ abstract: true
 | getValidationErrorValues(record) | 获取校验结果 |  `record` - 记录 | ValidationResult[] | 1.5.0-beta.0 |
 | getAttachments(record) | 获取附件列表 |  `record` - 记录 | AttachmentFile[] | 1.5.0-beta.0 |
 | getAttachmentCount(record) | 获取附件数量 |  `record` - 记录 | number | 1.5.0-beta.0 |
+
+
+### Group Values
+
+> 1.5.1 版本新增属性
+
+| 名称     | 说明     | 类型                      |
+| -------- | -------- | ------------------------- |
+| name     | 分组名， 对应字段名   | readonly string           |
+| value    | 分组值， 对应字段值     | readonly any  |
+| records    | 分组数据集，若有子分组则为空数组     | Record[]  |
+| totalRecords    | 总数据集，涵盖所有子分组的数据集     | Record[]  |
+| subGroups    | 非同组子分组     | Group[]  |
+| parentGroup    | 非同组父分组     | Group  |
+| children    | 同组树形子分组     | Group[]  |
+| parent    | 同组树形父分组     | Group  |
+| index    | 索引     | number  |
+
+### Group Methods
+
+> 1.5.1 版本新增属性
+
+| 名称 | 说明 | 参数 | 返回值类型 |
+| --- | --- | --- | --- |
+| setState(key, value) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  |
+| getState(key) | 获取自定义状态值。 | key - 键名 |  |
 
 ### Transport
 

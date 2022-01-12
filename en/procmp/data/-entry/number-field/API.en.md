@@ -23,3 +23,18 @@ title: API
 | 名称                         | 说明       | 参数    |
 | ---------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | format(value, lang, options) | 数字格式化 | value - 数值 lang - 语言代码 options - 详见[Intl.NumberFormatOptions](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) |
+| bigNumberFormat(value, lang, options, bigNumberTarget) | stringMode 字符串格式化(组件为 `NumberField` 时, `bigNumberTarget` 传入 `number-field`) | `value` - 字符串 `lang` - 语言代码 `options` - 详见[Intl.NumberFormatOptions](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) - `BigNumberTarget` 可选值：`currency` \| `number-field` |
+
+### stringMode 说明
+
+开启 `stringMode` 模式后，受控的值会变成string类型，并且支持长字符串数字和高精度字符串小数。
+
+DataSet的field type属性设置成 `bigNumber` 后,效果同 `stringMode` 。
+
+组件库使用外部库`bignumber.js`实现大数字，具体使用参见官网 [BigNumber](https://mikemcl.github.io/bignumber.js/)
+
+<style>
+.Pane.horizontal.Pane1 .c7n-pro-input-number-wrapper {
+  margin-bottom: .1rem;
+}
+</style>
