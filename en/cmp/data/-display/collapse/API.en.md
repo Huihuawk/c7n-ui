@@ -28,3 +28,4 @@ title: API
 | forceRender | Forced render of content on panel, instead of lazy rending after clicking on header | boolean | `false` |
 | showArrow	| If false, panel will not show arrow icon	| boolean	|  true |
 | extra	| The extra element in the corner | ReactNode | - |	
+| dataSet(1.5.3)	| 数据集对象，当数据集校验失败时会自动展开 | DataSet \| DataSet[] |  |	
