@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Tree } from 'choerodon-ui/pro';
+import { Tree } from 'choerodon-ui';
 
 const { DirectoryTree } = Tree;
 
