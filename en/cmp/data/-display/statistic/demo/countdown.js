@@ -12,7 +12,9 @@ function onFinish() {
 function countDownFormatter(value) {
   return (
     <>
-      <span style={{fontWeight: 400, fontSize: 14, marginRight: 10}}>COUNTDOWN:</span>
+      <span style={{ fontWeight: 400, fontSize: 14, marginRight: 10 }}>
+        COUNTDOWN:
+      </span>
       {value}
     </>
   );
@@ -31,7 +33,11 @@ ReactDOM.render(
       />
     </Col>
     <Col span={24} style={{ marginTop: 32 }}>
-      <Countdown title="Countdown Formatter" value={deadline} formatter={countDownFormatter} />
+      <Countdown
+        title="Countdown Formatter"
+        value={deadline}
+        formatter={countDownFormatter}
+      />
     </Col>
     <Col span={24} style={{ marginTop: 32 }}>
       <Countdown
