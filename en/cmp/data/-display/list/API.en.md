@@ -16,6 +16,7 @@ title: API
 | loadMore | Shows a load more content | string\|ReactNode | - |
 | pagination | Pagination [config](#pagination), hide it by setting it to false | boolean \| object | false |
 | split | Toggles rendering of the split under the list item | boolean | true |
+| rowSelection | 是否可选择，[config](#rowselection) | boolean\|object | false |
 
 ### List grid props
 
@@ -35,6 +36,7 @@ title: API
 
 | Property | Description | Type | Default |
 | -------- | ----------- | ---- | ------- |
+| value | Unique key value. Assignment is required when using `rowSelection` | string \| number | - |
 | actions | The actions content of list item. If `itemLayout` is `vertical`, shows the content on bottom, otherwise shows content on the far right. | Array<ReactNode> | - |
 | extra | The extra content of list item. If `itemLayout` is `vertical`, shows the content on right, otherwise shows content on the far right. | string\|ReactNode | - |
 
@@ -51,9 +53,7 @@ title: API
 
 | Property | Description | Type | Default |
 | -------- | ----------- | ---- | ------- |
-| current | current page number | number | - |
-| defaultCurrent | default initial page number | number | 1 |
-| defaultPageSize | default number of data items per page | number | 10 |
+| page | current page number | number | - |
 | hideOnSinglePage | Whether to hide pager on single page | boolean | false |
 | itemRender | to customize item innerHTML | (page, type: 'page' \| 'prev' \| 'next', originalElement) => React.ReactNode | - |
 | pageSize | number of data items per page | number | - |
@@ -62,8 +62,12 @@ title: API
 | showSizeChanger | determine whether `pageSize` can be changed | boolean | false |
 | showTotal | to display the total number and range | Function(total, range) | - |
 | simple | whether to use simple mode | boolean | - |
-| tiny | whether to use simple mode | boolean | true |
-| size | specify the size of `Pagination`, can be set to `small` | string | "" |
 | total | total number of data items | number | 0 |
 | onChange | a callback function, executed when the page number is changed, and it takes the resulting page number and pageSize as its arguments | Function(page, pageSize) | noop |
-| onShowSizeChange | a callback function, executed when `pageSize` is changed | Function(current, size) | noop |
+
+### RowSelection
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| selectedRowKeys | Selected value | Array[] | - |
+| onChange | Callback of select | Function(selectedRowKeys) | - |

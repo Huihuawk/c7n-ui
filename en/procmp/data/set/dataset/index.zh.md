@@ -15,8 +15,9 @@ abstract: true
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| name | 对应后台 ds 的 name，自动生成约定的 submitUrl, queryUrl, tlsUrl, validateUrl | Array&lt;string&gt; |  |    |
-| data | 初始化数据 | Array&lt;object&gt; |  |  |
+| [name](/zh/datasetapi/dataset-props/name) | 对应后台 ds 的 name，自动生成约定的 submitUrl, queryUrl, tlsUrl, validateUrl | Array&lt;string&gt; |  |    |
+| [data](/zh/datasetapi/dataset-props/data) | 初始化数据 | Array&lt;object&gt; |  |  |
+| autoCount | 查询时通知后端是否自动统计总数， 用于分页。当设为 false 时， 查询的参数默认会带上count=N的参数，参数名和值可以通过全局配置 generatePageQuery 设置。当查询结果中 countKey 对应的值是 Y 时，会发起计数查询的请求，请求地址同 read 的地址， 请求参数会带上 onlyCount=Y 的参数，参数名和值可以通过全局配置 generatePageQuery 设置 | boolean | [autoCount](/zh/procmp/configure/configure) | 1.5.5 |
 | autoQuery | 初始化后自动查询 | boolean | false |  |
 | autoQueryAfterSubmit | 提交成功后响应的数据不符合回写条件时自动查询。注：回写条件是指响应数据中含有提交时的数据时，数据将按数据状态分组进行顺序回写，如果要更准确的回写，响应数据要含有提交时的\_\_id 字段值。 | boolean | true | |
 | autoCreate | 初始化时，如果没有记录且 autoQuery 为 false，则自动创建记录 | boolean | false |  |
@@ -31,8 +32,9 @@ abstract: true
 | pageSize | 分页大小 | number | 10 |   |
 | strictPageSize | 严格分页大小, 前端将截断超出 pageSize 的数据 | boolean | true |  1.5.1  |
 | paging | 是否分页，server 主要为 Table 的 Tree 模式服务，约定 total 为根节点数目，index 的定位都是基于根节点，为 server 时候保证同时存在 idField 和 parentField (根节点为空或者 undefined) 不然表现和原有版本一致 | boolean \| 'server'| true |   |
-| dataKey | 查询返回的 json 中对应的数据的 key, 当为 null 时对应整个 json 数据, json 不是数组时自动作为新数组的第一条数据 | string \| null | rows | |
-| totalKey | 查询返回的 json 中对应的总数的 key | string | total |  |
+| dataKey | 查询返回的 json 中对应的数据的 key, 当为 null 时对应整个 json 数据, json 不是数组时自动作为新数组的第一条数据 | string \| null |  [dataKey](/zh/procmp/configure/configure) | |
+| totalKey | 查询返回的 json 中对应的总数的 key | string | [totalKey](/zh/procmp/configure/configure) | |
+| countKey | 查询返回的 json 中对应的是否需要异步计数的 key | string | [countKey](/zh/procmp/configure/configure) | 1.5.5 |
 | queryDataSet | 查询条件数据源 | DataSet |  |  |
 | queryUrl | 查询请求的 url。 当设定 name 时，默认 /dataset/{name}/queries | string |  |    |
 | queryParameter | 查询请求的初始参数 | object |  | |
@@ -56,7 +58,7 @@ abstract: true
 | cacheSelection | 缓存选中记录，使切换分页时仍保留选中状态。当设置了 primaryKey 或有字段设置了 unique 才起作用。 | boolean | false |   |
 | cacheModified | 缓存变更记录，使切换分页时仍保留变更的记录。当设置了 primaryKey 或有字段设置了 unique 才起作用。 | boolean | false | 1.5.0-beta.0 |
 | axios | 覆盖默认 axios | AxiosInstance |  |   |
-| dataToJSON | 数据转为 json 的方式，详见[DataToJSON](#datatojson) | DataToJSON | dirty |   |
+| [dataToJSON](/zh/datasetapi/dataset-props/data-to-json) | 数据转为 json 的方式，详见[DataToJSON](#datatojson) | DataToJSON | dirty |   |
 | cascadeParams | 级联查询参数 | (record, primaryKey) => object | (record, primaryKey) => primaryKey ? record.get(primaryKey) : record.toData() |   |
 | exportMode | 导出模式选择：前端导出，后端导出 | client \| server | server |   |
 | combineSort | 是否开启组件列排序传参 | boolean | false | 1.4.2 |
@@ -74,6 +76,7 @@ abstract: true
 | totalPage | 总页数 | readonly observable&lt;number&gt; |  |
 | pageSize | 分页大小 | observable&lt;number&gt; |  |
 | paging | 是否分页 | observable&lt;boolean&gt; |   |
+| counting | 是否在异步计数查询 | observable&lt;boolean&gt; | 1.5.5 |
 | status | 状态，loading submitting ready | observable&lt;string&gt; |  |
 | selection | 选择的模式, 可选值: false 'multiple' 'single' | observable&lt;string\|boolean&gt; |   |
 | selectionStrategy | 树形选择记录策略， SHOW_ALL \| SHOW_CHILD \| SHOW_PARENT | observable&lt;string[]&gt; |   |
@@ -106,9 +109,9 @@ abstract: true
 | ready() | 判断数据源是否准备就绪 |  | Promise |   |
 | query(page, params, cache) | 查询 | `page`&lt;optional,default:1&gt; - 指定页码 `params`&lt;optional&gt; - 临时查询参数  `cache`&lt;optional&gt;(1.5.0-beta.0) - 是否保留缓存的变更记录  | Promise&lt;any&gt; | |
 | queryMore(page, params) | 查询更多， 保留原数据 | page&lt;optional,default:1&gt; - 指定页码 params&lt;optional&gt; - 临时查询参数  | Promise&lt;any&gt; | 1.1.0 |
-| submit() | 将数据集中的增删改的记录先进行校验再进行远程提交。submit 会抛出请求的异常，请用 promise.catch 或 try-await-catch 来处理异常。 |  | Promise&lt;any&gt; false - 校验失败，undefined - 无数据提交或提交相关配置不全，如没有 submitUrl。 | |
+| [submit()](/zh/datasetapi/dataset-methods/submit) | 将数据集中的增删改的记录先进行校验再进行远程提交。submit 会抛出请求的异常，请用 promise.catch 或 try-await-catch 来处理异常。 |  | Promise&lt;any&gt; false - 校验失败，undefined - 无数据提交或提交相关配置不全，如没有 submitUrl。 | |
 | forceSubmit() | 强制提交，绕过校验。 | | Promise&lt;any&gt; undefined - 无数据提交或提交相关配置不全，如没有 submitUrl。 | 1.5.2 |
-| reset() | 重置更改, 并清除校验状态 |  |  |    |
+| [reset()](/zh/datasetapi/dataset-methods/reset) | 重置更改, 并清除校验状态 |  |  |    |
 | locate(index) | 定位到指定记录, 如果paging 为 true和server，则做远程查询 为server指代的是根节点节点的index坐标| index - 记录索引 | Promise&lt;Record&gt; |  |
 | page(page) | 定位到指定页码，如果paging 为 true和server，则做远程查询 | page - 页码 | Promise&lt;any&gt; |    |
 | first() | 定位到第一条记录，如果paging 为 true和server，则做远程查询 为server指代的第一个根节点 |  | Promise&lt;Record&gt; |  |
@@ -164,8 +167,8 @@ abstract: true
 | getQueryParameter(para) | 获取查询参数 | para - 参数名 |  | 1.4.0 |
 | loadData(data, total, cache) | 加载数据 | `data` - 数据数组 `total` - 总数，可选，用于分页 `cache`(1.5.0-beat.0) - 是否保留缓存的变更记录 | | |
 | appendData(data, parentRecord) | 附加数据 | `data` - 数据数组 `parentRecord` - 父节点，可选， 用于 childrenField 模式的树形数据 | |
-| setState(key, value) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  | 1.3.1 |
-| getState(key) | 获取自定义状态值。 | key - 键名 |  |  1.3.1  |
+| [setState(key, value)](/zh/datasetapi/other/state) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  | 1.3.1 |
+| [getState(key)](/zh/datasetapi/other/state) | 获取自定义状态值。 | key - 键名 |  |  1.3.1  |
 | modifiedCheck(message) | 变更检查 | message - 同 modifiedCheckMessage， 优先级高于 modifiedCheckMessage | | 1.3.1 |
 | setAllPageSelection(enabled) | 切换是否跨页全选。 | enabled - 是否开启 |  | 1.4.0 |
 | getValidationErrors() | 获取校验错误信息 |  |  | 1.4.0 |
@@ -210,11 +213,11 @@ abstract: true
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| disabled | 是否禁用 | boolean | false |
+| [disabled](/zh/datasetapi/record-props/disabled) | 是否禁用 | boolean | false |
 | selectable | 是否可选 | boolean | true |
 | defaultSelected | 是否默认选中 | boolean | false |
 | defaultExpanded | 是否默认展开 | boolean | false |
-| dynamicProps | 动态属性对象。对象为记录属性和返回该记录属性值的钩子的键值对。 | { recordProp: (record) => value } |  |
+| [dynamicProps](/zh/datasetapi/other/dynamic-props) | 动态属性对象。对象为记录属性和返回该记录属性值的钩子的键值对。 | { recordProp: (record) => value } |  |
 
 ### Record Values
 
@@ -250,10 +253,10 @@ abstract: true
 | --- | --- | --- | --- | --- |
 | get(fieldName) | 根据字段名获取字段值或根据字段名数组获取字段名与字段值的对象。注意：禁止通过 record.data\[fieldName\]的方式获取字段值。 | fieldName - 字段名 或 字段名数组 | any |  |
 | getPristineValue(fieldName) | 根据字段名获取字段的原始值。 | fieldName - 字段名 | any | |
-| set(fieldName, value) | 给指定字段赋值 | fieldName - 字段名或者键值对对象；value - 值 |  |    |
-| init(fieldName, value) | 给指定字段初始化值。字段变为净值。 | fieldName - 字段名或者键值对对象；value - 值 |  |   |
-| setState(key, value) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  | |
-| getState(key) | 获取自定义状态值。 | key - 键名 |  |    |
+| set(fieldName, value) | 给指定字段赋值，支持批量字段键值对赋值。 | fieldName - 字段名或者键值对对象；value - 值 |  |    |
+| init(fieldName, value) | 给指定字段初始化值。字段变为净值。支持批量字段键值对初始化 | fieldName - 字段名或者键值对对象；value - 值 |  |   |
+| [setState(key, value)](/zh/datasetapi/other/state) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  | |
+| [getState(key)](/zh/datasetapi/other/state) | 获取自定义状态值。 | key - 键名 |  |    |
 | toJSONData() | 转换成用于提交的 json 数据, 受 DataSet 的 dataToJSON 属性影响。 |  | object |  |
 | toData() | 转换成普通数据, 包括所有级联数据。 注意：禁止通过此方法获取的 data 来获取值，请用更高性能的 get 方法来获取值。 | | object |    |
 | validate(all, noCascade) | 校验记录 | all - 校验所有字段，默认为 false，只校验修改或新增字段 noCascade - 为 true 时，不校验级联数据 | Promise&lt;boolean&gt; |    |
@@ -276,7 +279,7 @@ abstract: true
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | name | 字段名 | string |  |   |
-| type | 字段类型，可选值：boolean \| number \| string \| date \| dateTime \| time \| week \| month \| year \| email \| url \| intl \| object \| attachment \| json \| bigNumber(1.5.1) | string | string |  |
+| [type](/zh/datasetapi/field-props/type) | 字段类型，可选值：boolean \| number \| string \| date \| dateTime \| time \| week \| month \| year \| email \| url \| intl \| object \| attachment \| json \| bigNumber(1.5.1) | string | string |  |
 | order | 排序类型，只支持单 field 排序， 如果多个 field 设置了 order，取第一个有 order 的 field，可选值: asc \| desc | string |  |    |
 | label | 字段标签 | string \| ReactNode |  |    |
 | labelWidth | 字段标签宽度 | number |  |   |
@@ -300,7 +303,7 @@ abstract: true
 | trueValue | 类型为 boolean 时，true 对应的值 | boolean \|string \|number | true | |
 | falseValue | 类型为 boolean 时，false 对应的值 | boolean \|string \|number | false |   |
 | options | 下拉框组件的菜单数据集 | DataSet |  |   |
-| optionsProps | 值集组件的数据集配置 | DataSetProps \| (DataSetProps) => DataSetProps |  | |
+| [optionsProps](/zh/datasetapi/field-props/options-props) | 值集组件的数据集配置 | DataSetProps \| (DataSetProps) => DataSetProps |  | |
 | group | 是否分组，如果是 number，则为分组的顺序 | boolean \|number |  | |
 | defaultValue | 默认值 | any |  |  |
 | multiple | 是否为值数组。 当为字符串时，作为数据分隔符，查询时会将字符串分割成数组，提交时会将数组拼接成字符串 | boolean \| string | false |  |
@@ -317,7 +320,7 @@ abstract: true
 | lovQueryAxiosConfig | lov 查询的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/zh/procmp/configure/configure#axiosrequestconfig)。 配置中默认 url 为 lovQueryUrl， method 为 post。 | AxiosRequestConfig\| (code, config, { dataSet, params, data }) => AxiosRequestConfig |  | |
 | lookupBatchAxiosConfig | 返回 lookup 批量查询配置的钩子，优先级高于全局配置的lookupBatchAxiosConfig，根据返回配置的url的不同分别做批量查询，详见[AxiosRequestConfig](/zh/procmp/configure/configure#axiosrequestconfig)。 | (codes: string[]) => AxiosRequestConfig | - | 1.0.0 |
 | bind | 内部字段别名绑定 | string |  | |
-| dynamicProps | [动态属性对象](/zh/tutorials/dataSet-more#dynamicprops)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
+| [dynamicProps](/zh/datasetapi/other/dynamic-props) | [动态属性对象](/zh/tutorials/dataSet-more#dynamicprops)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
 | computedProps | 计算属性对象。功能和用法同 dynamicProps，具有 mobx computed 的缓存功能，一般用于计算量大的场景，避免重复计算，提高性能。请确保计算依赖的值是可观察的。  | { fieldProp: ({ dataSet, record, name }) => value } |  | 1.4.0 |
 | cascadeMap | 快码和 LOV 查询时的级联参数映射，详见[级联](/zh/tutorials/select#级联)。 | object |  |   |
 | currency | 货币代码，详见[Current currency & funds code list.](https://www.currency-iso.org/en/home/tables/table-a1.html) | string |  |   |
@@ -331,6 +334,7 @@ abstract: true
 | bucketName | 附件上传的桶名 | string |  | 1.4.4 |
 | bucketDirectory | 附件上传的桶目录 | string |  | 1.4.4 |
 | storageCode | 附件存储编码 | string |  | 1.4.4 |
+| template | 附件模板 | { bucketName?: string, bucketDirectory?: string, storageCode?:string, attachmentUUID: string, isPublic?: boolean } |  | 1.5.5 |
 | attachmentCount | 附件数量， 一般使用 dynamicProps 来获取 record 中某个字段值作为附件数量， 优先级低于attachments.length | string |  | 1.4.4 |
 | fileKey | 附件上传属性名 | string | [AttachmentConfig.defaultFileKey](zh/procmp/configure/configure#attachmentconfig) | 1.5.2 |
 | fileSize | 附件大小限制 | number | [AttachmentConfig.defaultFileSize](zh/procmp/configure/configure#attachmentconfig) | 1.5.2 |
@@ -396,8 +400,8 @@ abstract: true
 
 | 名称 | 说明 | 参数 | 返回值类型 |
 | --- | --- | --- | --- |
-| setState(key, value) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  |
-| getState(key) | 获取自定义状态值。 | key - 键名 |  |
+| [setState(key, value)](/zh/datasetapi/other/state) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  |
+| [getState(key)](/zh/datasetapi/other/state) | 获取自定义状态值。 | key - 键名 |  |
 
 ### Transport
 

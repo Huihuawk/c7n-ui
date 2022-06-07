@@ -24,6 +24,8 @@ title: API
 | type | 卡片类型，可设置为 `inner` 或 不设置 | string | - |
 | onTabChange | 页签切换的回调 | (key) => void | - |
 | onHeadClick | 卡片头部的点击事件 | React.MouseEventHandler<any> | - |
+| selected | 是否选中 | boolean | false |
+| onSelectChange | 选中事件的回调，点击卡片内容区域触发 | (selected) => void | - |
 
 ### Card.Grid
 
@@ -31,6 +33,8 @@ title: API
 | -------- | ----------- | ---- | ------- |
 | className | 网格容器类名 | string | - |
 | style | 定义网格容器类名的样式 | object | - |
+| selected | 是否选中 | boolean | false |
+| onSelectChange | 选中事件的回调，点击卡片内容区域触发 | (selected) => void | - |
 
 ### Card.Meta
 

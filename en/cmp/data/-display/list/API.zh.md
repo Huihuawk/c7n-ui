@@ -17,6 +17,7 @@ title: API
 | pagination | 对应的 `pagination` [配置](#pagination), 设置 `false` 不显示 | boolean\|object | false |
 | size | list 的尺寸 | `default` \| `large` \| `small` | `default` |
 | split | 是否展示分割线 | boolean | true |
+| rowSelection | 是否可选择，[配置项](#rowselection) | boolean\|object | false |
 
 ### List grid props
 
@@ -35,6 +36,7 @@ title: API
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| value | 唯一键值，在使用 `rowSelection` 时需要赋值 | string \| number | - |
 | actions | 列表操作组，根据 `itemLayout` 的不同, 位置在卡片底部或者最右侧 | Array&lt;ReactNode> | - |
 | extra | 额外内容, 通常用在 `itemLayout` 为 `vertical` 的情况下, 展示右侧内容; `horizontal` 展示在列表元素最右侧 | string\|ReactNode | - |
 
@@ -50,9 +52,7 @@ title: API
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| current | 当前页数 | number | - |
-| defaultCurrent | 默认的当前页数 | number | 1 |
-| defaultPageSize | 默认的每页条数 | number | 10 |
+| page | 当前页数 | number | - |
 | hideOnSinglePage | 只有一页时是否隐藏分页器 | boolean | false |
 | itemRender | 用于自定义页码的结构，可用于优化 SEO | (page, type: 'page' \| 'prev' \| 'next', originalElement) => React.ReactNode | - |
 | pageSize | 每页条数 | number | - |
@@ -61,8 +61,12 @@ title: API
 | showSizeChanger | 是否可以改变 pageSize | boolean | false |
 | showTotal | 用于显示数据总量和当前数据顺序 | Function(total, range) | - |
 | simple | 当添加该属性时，显示为简单分页 | boolean | - |
-| tiny | 当添加该属性时，显示为简单分页 | boolean | true |
-| size | 当为「small」时，是小尺寸分页 | string | "" |
 | total | 数据总数 | number | 0 |
 | onChange | 页码改变的回调，参数是改变后的页码及每页条数 | Function(page, pageSize) | noop |
-| onShowSizeChange | pageSize 变化的回调 | Function(current, size) | noop |
+
+### rowSelection
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| selectedRowKeys | 指定选中项值 | Array[] | - |
+| onChange | 选中项发生变化时的回调 | Function(selectedRowKeys) | - |
