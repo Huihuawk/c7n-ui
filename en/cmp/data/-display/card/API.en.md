@@ -24,8 +24,6 @@ title: API
 | type | Card style type, can be set to `inner` or not set | string | - |
 | onTabChange | Callback when tab is switched | (key) => void | - |
 | onHeadClick | Callback while Click Card head | React.MouseEventHandler<any> | - |
-| selected | Toggles selected | boolean | false |
-| onSelectChange | Select the callback of the event and click the card content area to trigger | (selected) => void | - |
 
 ### Card.Grid
 
@@ -33,8 +31,6 @@ title: API
 | -------- | ----------- | ---- | ------- |
 | className | className of container | string | - |
 | style | style object of container | object | - |
-| selected | Toggles selected | boolean | false |
-| onSelectChange | Select the callback of the event and click the card content area to trigger | (selected) => void | - |
 
 ### Card.Meta
 

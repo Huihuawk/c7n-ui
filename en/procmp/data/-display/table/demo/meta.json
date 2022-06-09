@@ -113,7 +113,7 @@
       "filename": "tree-async.js",
       "title": {
         "zh": "树形数据异步懒加载",
-        "en": "Tree Data"
+        "en": "Lazy load of tree data asynchronously"
       },
       "description": {
         "zh": "点击展开图标时异步加载子数据。\n",
@@ -128,7 +128,7 @@
       "filename": "tree-async-paging.js",
       "title": {
         "zh": "树形数据异步分页",
-        "en": "Tree Data"
+        "en": "Tree data asynchronous paging"
       },
       "description": {
         "zh": "异步加载数据并对父亲节点进行分页处理，树形分页需要根节点 parentId 为 null。\n",
