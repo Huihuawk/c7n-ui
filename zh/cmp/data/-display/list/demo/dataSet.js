@@ -7,31 +7,36 @@ class App extends React.Component {
   ds = new DataSet({
     autoQuery: true,
     name: 'user',
+    primaryKey: 'name',
     pageSize: 5,
-    paging: false,
+    events: {
+      select: ({ dataSet, record, previous })=>{
+        console.log('select', { dataSet, record, previous });
+      },
+      unSelect: ({ dataSet, record, previous })=>{
+        console.log('unSelect', { dataSet, record, previous });
+      },
+    },
   });
 
-  render() {
+
+  render(){
     return (
-      <div style={{ height: 500, overflow: 'auto' }}>
-        <List
+      <List
           dataSet={this.ds}
-          renderItem={({ dataSet, record, index }) => (
+          rowKey="name"
+          renderItem={({record}) => (
             <List.Item>
-              <List.Item.Meta
-                avatar={<Avatar>Choerodon</Avatar>}
-                title={
-                  <a href="https://choerodon.github.io/choerodon-ui/">
-                    {record.get('name')}
-                  </a>
-                }
-                description="Choerodon"
-              />
+                <List.Item.Meta
+                  avatar={<Avatar>Choerodon</Avatar>}
+                  title={<a href="https://choerodon.github.io/choerodon-ui/">{record.get('name')}</a>}
+                  description="Choerodon"
+                />
             </List.Item>
-          )}
+            )
+          }
         />
-      </div>
-    );
+    )
   }
 }
 
