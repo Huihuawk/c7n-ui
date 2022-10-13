@@ -10,33 +10,35 @@ class App extends React.Component {
     primaryKey: 'name',
     pageSize: 5,
     events: {
-      select: ({ dataSet, record, previous })=>{
+      select: ({ dataSet, record, previous }) => {
         console.log('select', { dataSet, record, previous });
       },
-      unSelect: ({ dataSet, record, previous })=>{
+      unSelect: ({ dataSet, record, previous }) => {
         console.log('unSelect', { dataSet, record, previous });
       },
     },
   });
 
-
-  render(){
+  render() {
     return (
       <List
-          dataSet={this.ds}
-          rowKey="name"
-          renderItem={({record}) => (
-            <List.Item>
-                <List.Item.Meta
-                  avatar={<Avatar>Choerodon</Avatar>}
-                  title={<a href="https://choerodon.github.io/choerodon-ui/">{record.get('name')}</a>}
-                  description="Choerodon"
-                />
-            </List.Item>
-            )
-          }
-        />
-    )
+        dataSet={this.ds}
+        rowKey="name"
+        renderItem={({ record }) => (
+          <List.Item>
+            <List.Item.Meta
+              avatar={<Avatar>Choerodon</Avatar>}
+              title={
+                <a href="https://choerodon.github.io/choerodon-ui/">
+                  {record.get('name')}
+                </a>
+              }
+              description="Choerodon"
+            />
+          </List.Item>
+        )}
+      />
+    );
   }
 }
 

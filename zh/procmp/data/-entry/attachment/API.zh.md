@@ -39,6 +39,7 @@ title: API
 | onUploadProgress | 上传进度变化的回调 | (percent: number, attachment: AttachmentFile) => void | | |
 | onUploadSuccess | 上传成功的回调 | (response: any, attachment: AttachmentFile) => void |  | |
 | onUploadError | 上传出错的回调 | (error: Error, attachment: AttachmentFile) => void |  | | |
+| onRemove | 删除文件回调，用于发送删除请求, 返回 false 或抛出异常将中止删除 | ({ attachment: AttachmentFile, bucketName?: string, bucketDirectory?: string, storageCode?:string, attachmentUUID: string, isPublic?: boolean }, multiple: boolean) => boolean | | |
 
 更多属性请参考 [FormField](/zh/procmp/abstract/field#formfield) 和 [Button](/zh/procmp/general/button#API)。
 

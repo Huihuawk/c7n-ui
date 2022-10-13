@@ -195,7 +195,7 @@
         "en": "DataSet"
       },
       "description": {
-        "zh": "页签结合数据源。\n",
+        "zh": "页签结合数据源，控制是否可切换。\n",
         "en": "Bind DataSet.\n"
       },
       "order": 14,
@@ -214,6 +214,20 @@
       },
       "order": 15,
       "height": 445,
+      "screenshot": ""
+    },
+    {
+      "filename": "validate.js",
+      "title": {
+        "zh": "校验限制跳转",
+        "en": "validate"
+      },
+      "description": {
+        "zh": "结合数据源，校验限制页签跳转的不同交互示例。\n",
+        "en": "Combined with the data source, verify the different interaction examples that restrict tab jumping.\n"
+      },
+      "order": 16,
+      "height": 280,
       "screenshot": ""
     }
   ]

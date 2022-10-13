@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Avatar,Divider, Tooltip } from 'choerodon-ui';
+import { Avatar, Divider, Tooltip } from 'choerodon-ui';
 
 ReactDOM.render(
   <>
@@ -48,4 +48,6 @@ ReactDOM.render(
       </Tooltip>
       <Avatar style={{ backgroundColor: '#1890ff' }} icon="event_available-o" />
     </Avatar.Group>
-  </>, document.getElementById('container'))
+  </>,
+  document.getElementById('container'),
+);

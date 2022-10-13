@@ -16,7 +16,7 @@ class App extends React.Component {
   render() {
     const { selected } = this.state;
     return (
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
         <Card
           title="Title"
           style={{ width: 300 }}
@@ -27,12 +27,23 @@ class App extends React.Component {
           <p>Card content</p>
           <p>Card content</p>
         </Card>
-        <Card title="Title" style={{ width: 300, marginLeft:10 }} selected={selected} onSelectChange={this.handleSelect} cornerPlacement="topRight">
+        <Card
+          title="Title"
+          style={{ width: 300, marginLeft: 10 }}
+          selected={selected}
+          onSelectChange={this.handleSelect}
+          cornerPlacement="topRight"
+        >
           <p>Card content</p>
           <p>Card content</p>
           <p>Card content</p>
         </Card>
-        <Card style={{ height: 50, marginLeft:10 }} selected={selected} onSelectChange={this.handleSelect} cornerPlacement="bottomLeft">
+        <Card
+          style={{ height: 50, marginLeft: 10 }}
+          selected={selected}
+          onSelectChange={this.handleSelect}
+          cornerPlacement="bottomLeft"
+        >
           <p>small card</p>
         </Card>
       </div>
