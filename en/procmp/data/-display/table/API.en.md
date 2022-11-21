@@ -76,7 +76,7 @@ title: API
 | showCachedTips | 是否显示缓存记录提示， 优先级高于 showSelectionTips | boolean | [globalConfig.tableShowCachedTipsTips](/zh/procmp/configure/configure) | 1.5.6 |
 | showCachedSelection | 是否显示缓存选中记录  | boolean | | 1.4.4 |
 | onShowCachedSelectionChange | 缓存选中记录显示回调  | (boolean) => void | |1.4.4 |
-| showSelectionCachedButton | 是否显示缓存选中记录按钮 | boolean | | 1.4.1   |
+| showSelectionCachedButton | 是否显示缓存选中记录按钮 | boolean | true | 1.4.1   |
 | showAllPageSelectionButton | 是否显示切换跨页全选按钮 | boolean | | 1.4.0  |
 | customizable | 是否显示个性化设置入口按钮  | boolean | [globalConfig.customizable](/zh/procmp/configure/configure) | 1.3.0   |
 | customizedCode | 个性化编码，设置后默认将会存储列拖拽等个性化设置更改到 localStorage，如果要存储到后端, 请重写[全局配置](/zh/procmp/configure/configure)中的表格个性化钩子： customizedSave \| customizedLoad | string | | 1.2.0   |
