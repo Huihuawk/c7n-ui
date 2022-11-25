@@ -197,6 +197,7 @@ title: API
 | refreshBtn | 刷新按钮 | boolean | true | 1.5.1 |
 | onQuery | 查询回调 | () => void |  | 1.4.5 |
 | onReset | 重置回调 | () => void |  | 1.4.5 |
+| onRefresh | 刷新按钮回调，返回false | Promise.resolve(false)或Promise.reject()不会刷新查询， 其他自动查询 | () => Promise&lt;boolean&gt; | | 1.5.7 |
 
 #### DynamicFilterBarConfig
 
@@ -222,21 +223,6 @@ title: API
 
 更多属性请参考 `Table` `queryBar` 属性的钩子参数。
 
-<!-- ### ComboBar
-
-> 1.5.2 版本新增属性。
-
-组合搜索条的配置项。
-
-| 参数             | 说明                           | 类型   | 默认值 |
-| ---------------- | ----------------------------- | ------ | ------ |
-| title | 头部标题 | string | |
-| dropDownArea | 自定义下拉菜单区域 | () => ReactNode | |
-| buttonArea | 自定义按钮区域 | () => ReactNode | |
-| searchable | 筛选条头部是否配置查询  | boolean | false |
-| fold | 表格是否开启折叠收缩 | boolean | false |
-
-更多属性请参考 `Table` `queryBar` 属性的钩子参数。 -->
 
 ### pagination
 
@@ -250,6 +236,7 @@ title: API
 
 > 可以满足自定义更多的渲染需求，注意会覆盖默认值，建议阅读中文地址[react-beautiful-dnd](https://github.com/chinanf-boy/react-beautiful-dnd-zh) 以及当前[代码示例](https://github.com/open-hand/choerodon-ui/blob/master/components-pro/table/TableTBody.tsx)。
 控制 renderClone 拖拽起来的时候会在 body 下面新增加一个 table 会在这个 table 注入元素比如下面的示例可以实现在类名为 c7n-pro-table-drag-container 的 table 里面渲染对应的元素，这里你可以增加样式覆盖完成你想要的拖拽样式，由于拖拽使用的 Fixed 定位所以会导致 table 长度变化，可以根据业务修改合适的 columns 的宽度来让表现更加自然。renderIcon 来渲染拖拽的自定义 Icon。
+在 1.5.7 版本扩展 draggableProps.isDragDisabled 属性支持回调函数：(record?: Record) => boolean，可以更灵活地对每一行进行拖拽控制。
 
 可以注意一下设置
 新增拖拽例的key值 DRAG_KEY = '__drag-column__';
