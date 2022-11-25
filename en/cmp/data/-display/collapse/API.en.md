@@ -29,5 +29,5 @@ title: API
 | showArrow	| If false, panel will not show arrow icon	| boolean	|  true ||
 | extra	| The extra element in the corner | ReactNode | - |	|
 | dataSet	| The dataset object will be expanded automatically when the dataset verification fails | DataSet \| DataSet[] |  |1.5.3|	
-| collapsible | Whether to collapse or specify a collapsible trigger area, with priority over disabled | `header` \| `icon` \| `disabled` | | 1.5.7 |
-| hidden | 是否隐藏 | boolean  | false | 1.5.7 |
+| collapsible | Whether to collapse or specify a collapsible trigger area, with priority over disabled | `header` \| `icon` \| `disabled` | | 1.5.7 
+| hidden | 是否隐藏 | boolean  | false | 1.5.7 |	

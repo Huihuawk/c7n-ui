@@ -59,3 +59,4 @@ title: API
 | disabled         | 是否禁用          | boolean | 无     |
 | dot         | 是否显示小红点          | boolean | 无     |
 | defaultActiveKey         | 初始化组时默认展示的 TabPane 对应的 key          | string | 无     |
+| hidden | 是否隐藏 | boolean  | false | 1.5.7 |

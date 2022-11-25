@@ -29,4 +29,4 @@ title: API
 | extra	| 自定义渲染每个面板右上角的内容 | ReactNode | 无 |	 |
 | dataSet	| 数据集对象，当数据集校验失败时会自动展开 | DataSet \| DataSet[] |  | 1.5.3 |
 | collapsible | 是否可折叠或指定可折叠触发区域，优先级高于 disabled | `header` \| `icon` \| `disabled` | | 1.5.7 |
-| hidden | 是否隐藏 | boolean  | false | 1.5.7 |
+| hidden | 是否隐藏 | boolean  | false | 1.5.7 |	
