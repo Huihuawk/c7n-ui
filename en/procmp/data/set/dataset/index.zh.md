@@ -341,7 +341,7 @@ abstract: true
 | chunkSize | 附件分片大小 | number | [AttachmentConfig.defaultChunkSize](zh/procmp/configure/configure#attachmentconfig)  | 1.5.2 |
 | chunkThreads | 附件分片上传并发数 | number | [AttachmentConfig.defaultChunkThreads](zh/procmp/configure/configure#attachmentconfig) | 1.5.2 |
 | processValue | 值变更时，拦截并返回一个新的值 | (value: any, range?: 0 \| 1) => any |   | 1.4.4 |
-| help | 额外信息，常用于提示 | string |  |
+| help | 额外信息，常用于提示 | ReactNode |  |
 | dateMode | 日期组件显示模式,可选值: `date` `dateTime` `time` `year` `month` `week` | string | date  | 1.5.6 |
 | accept | Attachment 接受上传的文件类型 [input accept Attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-accept) | string[] |  | 1.5.7 |
 

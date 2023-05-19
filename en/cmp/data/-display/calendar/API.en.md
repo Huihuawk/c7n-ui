@@ -31,6 +31,6 @@ title: API
 | monthFullCellRender | Customize the display of the month cell, the returned content will override the cell | function(date: moment): ReactNode | - | |
 | validRange | to set valid range | \[[moment](http://momentjs.com/), [moment](http://momentjs.com/)] | - | |
 | value | The current selected date | [moment](http://momentjs.com/) | current date | |
-| headerRender | Customize header | function(object:{value: moment, type: string, onChange: f(), onTypeChange: f()}) | - | 1.5.9 |
+| headerRender | Customize header | function(object:{value: moment, type: string, onChange: f(), onTypeChange: f()}) | - | 1.6.0 |
 | onPanelChange | Callback for when panel changes | function(date: moment, mode: string) | - | |
 | onSelect | Callback for when a date is selected | function(date: moment） | - | |
