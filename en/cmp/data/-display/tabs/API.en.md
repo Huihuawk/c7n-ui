@@ -19,8 +19,6 @@ title: API
 | type | Basic style of tabs | `line` \| `card` \| `editable-card` \| `second-level`(1.5.0) | `line` |
 | onChange | Callback executed when active tab is changed | (activeKey) => void | - ||
 | onEdit | Callback executed when tab is added or removed. Only works while `type="editable-card"` | (targetKey, action): void | - ||
-| onNextClick | Callback executed when next button is clicked | (e) => void | - ||
-| onPrevClick | Callback executed when prev button is clicked | (e) => void | - ||
 | onTabClick | Callback executed when tab is clicked | (tabKey) => void | - ||
 | tabBarGutter | The gap between tabs | number | - ||
 | keyboard| keyboard events| boolean | true | ||

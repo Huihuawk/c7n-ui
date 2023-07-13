@@ -330,7 +330,7 @@
         "en": "Virtual Scroll"
       },
       "description": {
-        "zh": "虚拟滚动，virtual && virtualCell。\n\n 在大数据需求并同时对功能性需求很高的情况下建议开启。\n\n",
+        "zh": "虚拟滚动，virtual \n\n 在大数据需求并同时对功能性需求很高的情况下建议开启。\n\n",
         "en": "Virtual Scroll.\n"
       },
       "order": 20,
