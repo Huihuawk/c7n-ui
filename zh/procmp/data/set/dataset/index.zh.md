@@ -25,7 +25,7 @@ abstract: true
 | autoLocateAfterCreate | 自动定位到新建记录 | boolean | true | |
 | autoLocateAfterRemove | 当前数据被删除后自动定位到其他记录 | boolean | true | |
 | validateBeforeQuery | 查询时是否校验查询字段或查询数据集 | boolean | true | 1.0.0  |
-| [selection](/zh/datasetapi/dataset-props/selection) | 选择的模式, 可选值: false 'multiple' 'single' | boolean \| string | multiple |    |
+| [selection](/zh/tutorials/table-select-record) | 选择的模式, 可选值: false 'multiple' 'single' | boolean \| string | multiple |    |
 | selectionStrategy | 树形选择记录策略， SHOW\_ALL \| SHOW\_CHILD \| SHOW\_PARENT | string | 'SHOW_ALL' | 1.4.2 |
 | modifiedCheck | 翻页查询前，当有记录更改过时，是否警告提示。 | boolean | true |   |
 | modifiedCheckMessage | 翻页查询前，当有记录更改过时，警告提示。 | ReactNode \| ModalProps |  |    |
