@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { DataSet, Table, TextArea } from 'choerodon-ui/pro';
 import { Tag, Badge } from 'choerodon-ui';
 
@@ -164,4 +165,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+ReactDOM.render(<App />, document.getElementById('container'));
