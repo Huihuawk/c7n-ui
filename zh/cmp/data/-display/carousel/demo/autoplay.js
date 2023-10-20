@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Carousel } from 'choerodon-ui';
 
 ReactDOM.render(
-  <Carousel autoplay>
+  <Carousel autoplay className="c7n-slick-slide">
     <div><h3>1</h3></div>
     <div><h3>2</h3></div>
     <div><h3>3</h3></div>
