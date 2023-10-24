@@ -172,6 +172,7 @@ abstract: true
 | modifiedCheck(message) | 变更检查 | message - 同 modifiedCheckMessage， 优先级高于 modifiedCheckMessage | | 1.3.1 |
 | setAllPageSelection(enabled) | 切换是否跨页全选。 | enabled - 是否开启 |  | 1.4.0 |
 | getValidationErrors() | 获取校验错误信息 |  |  | 1.4.0 |
+| generateOrderQueryString() | 获取排序信息。设置 combineSort 属性为 true 时，返回字符串数组，数组形如：\['age,desc', 'name,asc'\]；否则返回 object |  | { sortname?: string; sortorder?: string; } \| string[] | 1.6.4 |
 
 ### DataSet Events
 
