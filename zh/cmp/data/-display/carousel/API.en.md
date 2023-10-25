@@ -2,26 +2,26 @@
 title: API
 ---
 
-| Property | Description | Type | Default |
-| -------- | ----------- | ---- | ------- |
-| afterChange | Callback function called after the current index changes | function(current) | - |
-| autoplay | Whether to scroll automatically | boolean | `false` |
-| beforeChange | Callback function called before the current index changes | function(from, to) | - |
-| dots | Whether to show the dots at the bottom of the gallery | boolean | `true` |
-| easing | Transition interpolation function name | string | `linear` |
-| effect | Transition effect | `scrollx` \| `fade` | `scrollx` |
-| vertical | Whether to use a vertical display | boolean | `false` |
-| className | Component Custom Class Names | string | |
-| dotsClass | Indicator class name | string | |
-| prevArrow | Customize the previous arrow | HTMLElement | |
-| nextArrow | Customize the next arrow | HTMLElement | |
-| theme | Arrow and Indicator Theme | dark \| light| light |
-| arrows | Whether to show arrows | boolean | false |
-| dotsActionType | Indicator Trigger Mode | [['click', 'hover']] | ['ckick'] |
-| slidesToShow | How many sheets are displayed in a screen (can be decimal) | number ｜1 ｜
-| verticalSwiping | Vertical Drag | boolean | false |
-| pauseOnDotsHover | Mouse over indicator to stop playback | boolean | true |
-| pauseOnArrowsHover | Mouse over arrows to stop playback | boolean | true |
+| Property | Description | Type | Default | Version |
+| -------- | ----------- | ---- | ------- | ------------------- |
+| afterChange | Callback function called after the current index changes | function(current) | - | |
+| autoplay | Whether to scroll automatically | boolean | `false` | |
+| beforeChange | Callback function called before the current index changes | function(from, to) | - | |
+| dots | Whether to show the dots at the bottom of the gallery | boolean | `true` | |
+| easing | Transition interpolation function name | string | `linear` | |
+| effect | Transition effect | `scrollx` \| `fade` | `scrollx` | |
+| vertical | Whether to use a vertical display | boolean | `false` | |
+| className | Component Custom Class Names | string | | 1.6.4 |
+| dotsClass | Indicator class name | string | | 1.6.4 |
+| prevArrow | Customize the previous arrow | HTMLElement | | 1.6.4 |
+| nextArrow | Customize the next arrow | HTMLElement | | 1.6.4 |
+| theme | Arrow and Indicator Theme | dark \| light| light | 1.6.4 |
+| arrows | Whether to show arrows | boolean | false | 1.6.4 |
+| dotsActionType | Indicator Trigger Mode | [['click', 'hover']] | ['ckick'] | 1.6.4 |
+| slidesToShow | How many sheets are displayed in a screen (can be decimal) | number ｜1 ｜ 1.6.4 |
+| verticalSwiping | Vertical Drag | boolean | false | 1.6.4 |
+| pauseOnDotsHover | Mouse over indicator to stop playback | boolean | true | 1.6.4 |
+| pauseOnArrowsHover | Mouse over arrows to stop playback | boolean | true | 1.6.4 |
 
 ## Methods
 
@@ -58,18 +58,22 @@ For more info on the parameters, refer to the <https://github.com/akiran/react-s
   color: #fff;
 }
 
+.pic-carousel .slick-list{
+  height: 200px !important;
+}
+
 .slick-slide img {
   margin: auto;
 }
 
 .my-class .slick-next::before {
-  content: "->";
+  content: "👉";
   font-size: 12px;
   line-height: 1.5;
   padding-left: 5px;
 }
 .my-class .slick-prev::before {
-  content: "<-";
+  content: "👈";
   font-size: 12px;
   line-height: 1.5;
   padding-left: 5px;
@@ -85,8 +89,13 @@ For more info on the parameters, refer to the <https://github.com/akiran/react-s
   color: #fff;
 }
 
+.c7n-carousel .mydot-class .slick-active li button {
+  background: rgb(214, 74, 242) !important;
+}
 .c7n-carousel .mydot-class li button{
-  background: red;
+  background: white;
   opacity: 1;
+  height: 10px !important;
+  width: 10px !important;;
 }
 </style>

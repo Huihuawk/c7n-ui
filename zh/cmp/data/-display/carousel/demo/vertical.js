@@ -3,7 +3,14 @@ import ReactDOM from 'react-dom';
 import { Carousel } from 'choerodon-ui';
 
 ReactDOM.render(
-  <Carousel vertical draggable theme="dark" verticalSwiping>
+  <Carousel
+    vertical
+    draggable
+    theme="dark"
+    verticalSwiping
+    style={{ height: 200 }}
+    className="pic-carousel"
+  >
     <div>
       <div>
         <img alt="1" src="http://placekitten.com/g/400/200" />

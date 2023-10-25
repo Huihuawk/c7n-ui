@@ -7,7 +7,7 @@ function SampleNextArrow(props) {
   return (
     <div
       className={className}
-      style={{ ...style, display: "block", background: "red" }}
+      style={{ ...style, display: 'block' }}
       onClick={onClick}
     />
   );
@@ -18,16 +18,31 @@ function SamplePrevArrow(props) {
   return (
     <div
       className={className}
-      style={{ ...style, display: "block", background: "green" }}
+      style={{ ...style, display: 'block' }}
       onClick={onClick}
     />
   );
 }
 
 ReactDOM.render(
-  <Carousel arrows className="my-class" prevArrow={<SamplePrevArrow />} nextArrow={<SampleNextArrow />}>
-    <div><h3>1</h3></div>
-    <div><h3>2</h3></div>
-    <div><h3>3</h3></div>
-    <div><h3>4</h3></div>
-  </Carousel>, document.getElementById('container'));
+  <Carousel
+    arrows
+    className="my-class"
+    prevArrow={<SamplePrevArrow />}
+    nextArrow={<SampleNextArrow />}
+  >
+    <div>
+      <h3>1</h3>
+    </div>
+    <div>
+      <h3>2</h3>
+    </div>
+    <div>
+      <h3>3</h3>
+    </div>
+    <div>
+      <h3>4</h3>
+    </div>
+  </Carousel>,
+  document.getElementById('container'),
+);
