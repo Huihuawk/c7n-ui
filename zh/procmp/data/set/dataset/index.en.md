@@ -63,7 +63,7 @@ abstract: true
 | exportMode | 导出模式选择：前端导出，后端导出 | client \| server | server |   |
 | combineSort | 是否开启组件列排序传参 | boolean | false | 1.4.2 |
 | [forceValidate](/en/datasetapi/dataset-props/force-validate) | 始终校验全部数据 | boolean | false | 1.4.5 |
-| [validationRules](/en/datasetapi/dataset-props/validation-rules) | dataSet校验规则，详见[ValidationRule](#validationrule) | ValidationRule\[\] |  |  1.5.1  |
+| [validationRules](/en/datasetapi/dataset-props/validation-rules) | 针对 dataSet 主体的校验规则，详见[ValidationRule](#validationrule) | ValidationRule\[\] |  |  1.5.1  |
 
 ### DataSet Values
 
@@ -204,8 +204,8 @@ abstract: true
 | beforeRemove | 数据临时删除前的事件， 返回值为 false 将阻止临时删除 | ({ dataSet, records }) =&gt; boolean | dataSet - 数据集 records - 记录集 | 否 | |
 | beforeDelete | 数据删除前的事件， 返回值为 false 将阻止删除 | ({ dataSet, records }) =&gt; boolean | dataSet - 数据集 records - 记录集 | 是 | 1.0.0 |
 | reset | 数据重置事件 | ({ dataSet, records }) =&gt; void | dataSet - 数据集 records - 记录集 | 是 |   |
-| validate | 校验事件 | ({ dataSet, result }) =&gt; void | dataSet - 数据集 result - 校验结果集 | 是 |  |
-| validateSelf | 校验dataSet事件 | ({ dataSet, result }) =&gt; void | `dataSet` - 数据集 `result` - 校验结果 | 是 |  1.5.1  |
+| validate | 校验事件，针对DS数据，区别于 validateSelf | ({ dataSet, result }) =&gt; void | dataSet - 数据集 result - 校验结果集 | 是 |  |
+| validateSelf | 校验dataSet事件,校验只针对DS主体，参考ValidationRule | ({ dataSet, result }) =&gt; void | `dataSet` - 数据集 `result` - 校验结果 | 是 |  1.5.1  |
 
 
 ### Record Props

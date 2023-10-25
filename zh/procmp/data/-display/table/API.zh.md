@@ -105,6 +105,7 @@ title: API
 | fullColumnWidth | 所有列都设置列宽且没有超出表格宽度时最后一列宽度是否自动填满表格  | boolean | true | 1.5.6 |
 | clipboard | 配置 Table 是否可复制粘贴。参考[配置项](#clipboard)  | Clipboard | { copy: false, paste: false } | 1.6.4 |
 | customDragDropContenxt | 是否开启自定义 DragDropContenxt, 一般用于自定义 react-beautiful-dnd 的 DragDropContenxt 实现多表拖拽 | boolean | false | 1.6.4 |
+| selectionColumnProps | 行选择列属性扩展  | ColumnProps  |  | 1.6.4 |
 
 更多属性请参考 [DataSetComponent](/zh/procmp/abstract/ViewComponent#datasetcomponent)。
 
@@ -171,6 +172,7 @@ title: API
 | ----------- | ---------------------- | ------ | -------- |
 | paramName   | 输入的过滤条件的字段名 | string | params |
 | placeholder | 输入框的占位符         | string | 过滤表 |
+| queryBarProps.editorProps(1.6.4) | 扩展弹出编辑器属性         | (props: { name: string, record?: Record, editor: ReactElement<FormFieldProps> }) => object; |  |
 
 更多属性请参考 `Table` `queryBar` 属性的钩子参数。
 
@@ -205,7 +207,8 @@ title: API
 | refreshBtn | 刷新按钮 | boolean | true | 1.5.1 |
 | onQuery | 查询回调 | () => void |  | 1.4.5 |
 | onReset | 重置回调 | () => void |  | 1.4.5 |
-| onRefresh | 刷新按钮回调，返回false | Promise.resolve(false)或Promise.reject()不会刷新查询， 其他自动查询 | () => Promise&lt;boolean&gt; | 1.5.7 |
+| onRefresh | 刷新按钮回调，返回false \| Promise.resolve(false)或Promise.reject()不会刷新查询， 其他自动查询 | () => Promise&lt;boolean&gt; | | 1.5.7 |
+| onFieldEnterDown | 字段回车回调 | () => void  | | 1.6.4 |
 
 #### DynamicFilterBarConfig
 

@@ -509,16 +509,16 @@
     {
       "filename": "clipboard-paste.js",
       "title": {
-        "zh": "复制粘贴",
+        "zh": "数据复制&粘贴",
         "en": "Clipboard-Paste"
       },
       "description": {
-        "zh": "实现 Table 与 Excel 表格之间的双向复制。",
-        "en": "Two-way copy between Table and Excel table."
+        "zh": "实现 Table 与 Excel 表格之间的数据复制、粘贴功能。可编辑区域需要按下 shift 进行鼠标框选。",
+        "en": "Data copy and paste between Table and Excel tables. Editable areas need to be selected by holding down shift."
       },
       "order": 32,
       "screenshot": "",
-      "height": 450,
+      "height": 806,
       "category": "pro"
     },
     {
