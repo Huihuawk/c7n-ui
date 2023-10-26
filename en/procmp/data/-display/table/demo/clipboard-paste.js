@@ -104,6 +104,7 @@ const App = () => {
 
   return (
     <Table
+      border
       buttons={['add', 'delete', 'export']}
       customizedCode="sortTable"
       rowNumber
