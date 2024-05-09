@@ -123,11 +123,11 @@ title: API
 | footer          | 列脚                                                                                                                                                                                              | ReactNode \| ({ dataSet, name, aggregationTree: ReactElement[] }) => ReactNode                                                                                           |           |  |
 | renderer        | 单元格渲染回调                                                                                                                                                                                    | ({ value, text, name, record, dataSet, rowGroup: [Group](/zh/procmp/dataset/dataset#group-values), headerGroup: [Group](/zh/procmp/dataset/dataset#group-values), aggregationTree: ReactElement[]  }) => ReactNode                                                                              |           |  |
 | tagRenderer        | 多值 Tag 渲染器 | ({ value, text, key, readOnly, invalid, disabled, onClose, className }: TagRendererProps) => ReactNode |  | 1.6.2 |
-| editor          | 编辑器, 设为 true 时会根据 field 的 type 自动匹配编辑器。不可编辑请使用 false 值，而不是在控件上加 disabled。                                                                                   | FormField \| ((record, name) => FormField \| boolean) \| boolean                                                                   |           |  |
+| editor          | 编辑器, 设为 true 时会根据 field 的 type 自动匹配编辑器。不可编辑请使用 false 值，而不是在控件上加 disabled。如果有对输入框组件二次封装的需求，需要使用 React.forwardRef 转发 ref。                                                                                   | FormField \| ((record, name) => FormField \| boolean) \| boolean                                                                   |           |  |
 | lock            | 是否锁定， 可选值 false \| true \| 'left' \| 'right'                                                                                                                                                   | boolean\| string                                                                                                                   | false     | |
 | align           | 文字对齐方式，可选值： left \| center \| right                                                                                                                                                    | string                                                                                                                             |      [globalConfig.tableColumnAlign](/zh/procmp/configure/configure)     |  |
 | resizable       | 是否可调整宽度                                                                                                                                                                                    | boolean                                                                                                                            | [globalConfig.tableColumnResizable](/zh/procmp/configure/configure)      |  |
-| sortable | 是否可排序，前端排序(1.6.0)请定义 CompareFn | boolean \|CompareFn  | false | |
+| sortable | 是否可排序，前端排序(1.6.0)请定义 [CompareFn](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn): (v1, v2, order) => number | boolean \| CompareFn  | false | |
 | filter | 是否可前端过滤 | boolean \| ((props: { record: Record, filterText?: string }) => boolean)  | false | 1.6.0 |
 | filterPopover | 前端过滤自定义筛选，此函数只负责渲染图层，需要自行编写各种交互 | ReactNode \| ((props: FilterPopoverProps) => ReactNode)  |  | 1.6.0 |
 | hideable | 是否可隐藏 | boolean | [globalConfig.tableColumnHideable](/zh/procmp/configure/configure)  |  |
@@ -304,6 +304,8 @@ configure({
 | copy | 是否开启表格复制 | boolean | false |
 | paste | 是否开启表格粘贴，开启后只有可编辑的单元格才能被粘贴数据。 | boolean | false |
 | description | 开启表格复制或粘贴，自定义修改描述信息 | string \| ReactNode | - |
+| arrangeCalc | 开启范围计数 | boolean \| ReactNode | false |
+| hiddenTip | 关闭提示 | boolean | false |
 
 ### 导出配置
 
