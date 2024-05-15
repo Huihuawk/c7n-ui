@@ -26,7 +26,7 @@ title: API
 | summaryBarFieldWidth | 汇总条单字段宽度 | number | 170 | |
 | summaryFieldsLimit | 头部显示的汇总字段的数量，超出限制的查询字段收起 | number |  |   |
 | useMouseBatchChoose   | 是否使用鼠标批量选择,开启后在 rowbox 的情况下可以进行鼠标拖动批量选择,在起始的 rowbox 处按下,在结束位置松开                                                                                                                    | boolean                                                                                                | [globalConfig.tableUseMouseBatchChoose](/zh/procmp/configure/configure)    |    |
-| rowHeight             | 行高                                                                                                                                                                                                                           | number \| auto \| ({ size }) => number \| auto                                                                                         | [globalConfig.tableRowHeight](/zh/procmp/configure/configure)       |  1.5.2(支持钩子)  |
+| rowHeight             | 行高，设置为 auto 时，若单元格中内容超长则会换行显示  | number \| auto \| ({ size }) => number \| auto | [globalConfig.tableRowHeight](/zh/procmp/configure/configure)       |  1.5.2(支持钩子)  |
 | headerRowHeight | 头行高 | number \| auto \| ({ size }) => number \| auto | rowHeight | 1.5.1 |
 | footerRowHeight | 脚行高 | number \| auto \| ({ size }) => number \| auto | rowHeight | 1.5.1 |
 | defaultRowExpanded    | 默认行是否展开，当 dataSet 没有设置 expandField 时才有效                                                                                                                                                                       | boolean                                                                                                | false    |    |
@@ -103,9 +103,10 @@ title: API
 | autoValidationLocate | 校验失败自动定位。如果多个组件的定位有冲突， 可以关闭自动定位， 通过手动调用 focus 方法来定位 | boolean | true | 1.5.3 |
 | boxSizing | 样式高度影响的范围，默认 content， 如果指定为 wrapper, 样式的高度会包括表格前后内容的高度， 且该高度发生变化会自动调整表格高度 | 'content' \| 'wrapper' | 'content' | 1.5.6 |
 | fullColumnWidth | 所有列都设置列宽且没有超出表格宽度时最后一列宽度是否自动填满表格  | boolean | true | 1.5.6 |
-| clipboard | 配置 Table 是否可复制粘贴。参考[配置项](#clipboard)  | Clipboard | { copy: false, paste: false } | 1.6.4 |
+| clipboard | 配置 Table 是否可复制粘贴，仅支持普通列表下使用，数据分组、虚拟滚动等特殊场景暂不支持。参考[配置项](#clipboard)  | Clipboard | { copy: false, paste: false } | 1.6.4 |
 | customDragDropContenxt | 是否开启自定义 DragDropContenxt, 一般用于自定义 react-beautiful-dnd 的 DragDropContenxt 实现多表拖拽 | boolean | false | 1.6.4 |
 | selectionColumnProps | 行选择列属性扩展  | ColumnProps  |  | 1.6.4 |
+| rowNumberColumnProps | 行号列属性 |	ColumnProps \| ((defaultProps: ColumnProps) => ColumnProps) |	 | 1.6.5 |
 
 更多属性请参考 [DataSetComponent](/zh/procmp/abstract/ViewComponent#datasetcomponent)。
 
@@ -209,12 +210,13 @@ title: API
 | onReset | 重置回调 | () => void |  | 1.4.5 |
 | onRefresh | 刷新按钮回调，返回false \| Promise.resolve(false)或Promise.reject()不会刷新查询， 其他自动查询 | () => Promise&lt;boolean&gt; | | 1.5.7 |
 | onFieldEnterDown | 字段回车回调 | () => void  | | 1.6.4 |
+| showSingleLine | 筛选条是否单行显示 | boolean |  | 1.6.5 |
 
 #### DynamicFilterBarConfig
 
 | 参数        | 说明                   | 类型   | 默认值   |
 | ----------- | ---------------------- | ------ | -------- |
-| searchText | 模糊查询参数名 | string | params |
+| searchText | 模糊查询参数名，参数值可通过 dataSet.getState('\_\_SEARCHTEXT\_\_') 获取 | string | params |
 | suffixes | 过滤条后缀渲染区 | React.ReactElement<any>[]，数组元素支持 'filter' |  |
 | prefixes | 过滤条前缀渲染区 | React.ReactElement<any>[]，数组元素支持 'filter' |  |
 | tableFilterAdapter | 过滤条请求适配器 | TransportProps |  |
