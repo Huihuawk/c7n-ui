@@ -14,7 +14,7 @@ title: API
 
 ### RichText.RichTextViewer
 
-| 参数 | 说明 | 类型 | 
+| 属性名 | 说明 | 类型 | 
 | --- | --- | --- | 
 | deltaOps | 编辑器渲染值 | Delta.ops |
 

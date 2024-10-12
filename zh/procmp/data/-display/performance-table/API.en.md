@@ -2,7 +2,7 @@
 title: API
 ---
 
-### Table
+### PerformanceTable
 
 | Property                 | Type `(Default)`                                                                  | Description                                                                                   | Supported version  |
 | ------------------------ | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --- |
@@ -59,7 +59,7 @@ title: API
 | onDragEnd`(1.4.4)` |  (resultDrag: DropResult, provided: ResponderProvided, data) => void | 完成拖拽后的触发事件 |
 | onDragEndBefore`(1.4.4)` |  (resultDrag: DropResult, provided: ResponderProvided) => void | 完成拖拽前的触发事件 |
 | onDragStart`(1.5.0-beta.0)` |  (initial: DragStart, provided: ResponderProvided) => void | 拖拽前触发事件 |
-| components |  [TableComponents](#tablecomponents) | 覆盖默认的 table 元素 |
+| components |  [TableComponents](#tablecomponents) | 覆盖默认的 table 元素 | 1.6.5 ｜
 
 ### Form methods
 
@@ -149,7 +149,7 @@ scrollLeft: (left: number) => void;
 
 选择功能的配置，使用请指明 rowKey。
 
-| 参数 | 说明 | 类型 | 默认值 | 
+| 属性名 | 说明 | 类型 | 默认值 | 
 | --- | --- | --- | --- | 
 | columnWidth | 自定义列表选择框宽度 | string\|number | `60px` | 
 | columnTitle | 自定义列表选择框标题 | string\|React.ReactNode |  | 
@@ -169,7 +169,7 @@ scrollLeft: (left: number) => void;
 
 ### selection
 
-| 参数     | 说明                       | 类型                        |
+| 属性名 | 说明                       | 类型                        |
 | -------- | -------------------------- | --------------------------- |
 | key      | React 需要的 key，建议设置 | string                      |
 | text     | 选择项显示的文字           | string\|React.ReactNode     |

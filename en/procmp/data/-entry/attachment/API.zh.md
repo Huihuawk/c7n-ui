@@ -42,6 +42,10 @@ title: API
 | onUploadError | 上传出错的回调 | (error: Error, attachment: AttachmentFile) => void |  | | |
 | onRemove | 删除文件回调，用于发送删除请求, 返回 false 或抛出异常将中止删除 | ({ attachment: AttachmentFile, bucketName?: string, bucketDirectory?: string, storageCode?:string, attachmentUUID: string, isPublic?: boolean }, multiple: boolean) => boolean | | |
 | getPreviewUrl | 获取预览地址，默认使用 AttachmentFile.url，返回空则不可预览。其中函数的返回值为 (() => string \| Promise< string>) 时，仅支持 listType 为 text 的情况 | ({ attachment: AttachmentFile, bucketName?: string, bucketDirectory?: string, storageCode?:string, attachmentUUID: string, isPublic?: boolean }) => (string \| (() => string \| Promise< string>) \| undefined) | | 1.6.3 |
+| removeImmediately | 是否立即删除 | boolean | true | 1.6.5 |
+| onTempRemovedAttachmentsChange | 临时删除文件变化回调，`removeImmediately` 为 false 时生效 | (tempRemovedAttachments?: AttachmentFile[]) => void |  | 1.6.5 |
+| filesLengthLimitNotice | 上传文件时，数量超过限定数量的自定义提示 | (defaultInfo: string) => void | (defaultInfo) => Modal.error(defaultInfo) | 1.6.6 |
+| countTextRenderer | 上传按钮中数量显示 renderer | (count?: number, max?: number, defaultCountText?: ReactNode) => ReactNode |  | 1.6.6 |
 
 更多属性请参考 [FormField](/zh/procmp/abstract/field#formfield) 和 [Button](/zh/procmp/general/button#API)。
 
@@ -66,3 +70,9 @@ title: API
 ### Attachment.Dragger
 
 > 1.5.2 版本新增组件。
+
+### Attachment Instance Methods
+| 属性 | 说明 | 属性名 | 返回值类型 | 版本 |
+| --- | --- | --- | --- | --- |
+| remove | 删除临时移除文件 |  | void | 1.6.5 |
+| reset | 还原临时移除文件 |  | void | 1.6.5 |
