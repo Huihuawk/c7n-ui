@@ -61,7 +61,7 @@ abstract: true
 | [dataToJSON](/en/datasetapi/dataset-props/data-to-json) | 数据转为 json 的方式，详见[DataToJSON](#datatojson) | DataToJSON | dirty |   |
 | [cascadeParams](/en/datasetapi/dataset-props/children) | 级联查询参数 | (record, primaryKey) => object | (record, primaryKey) => primaryKey ? record.get(primaryKey) : record.toData() |   |
 | exportMode | 导出模式选择：前端导出，后端导出 | client \| server | server |   |
-| combineSort | 是否开启组件列排序传参 | boolean | false | 1.4.2 |
+| combineSort | 是否开启组件列排序传参; 前端排序和后端排序具体配置参考 Table API | boolean | false | 1.4.2 |
 | [forceValidate](/en/datasetapi/dataset-props/force-validate) | 始终校验全部数据 | boolean | false | 1.4.5 |
 | [validationRules](/en/datasetapi/dataset-props/validation-rules) | 针对 dataSet 主体的校验规则，详见[ValidationRule](#validationrule) | ValidationRule\[\] |  |  1.5.1  |
 
@@ -110,7 +110,7 @@ abstract: true
 | query(page, params, cache) | 查询 | `page`&lt;optional,default:1&gt; - 指定页码 `params`&lt;optional&gt; - 临时查询参数  `cache`&lt;optional&gt;(1.5.0-beta.0) - 是否保留缓存的变更记录  | Promise&lt;any&gt; | |
 | queryMore(page, params) | 查询更多， 保留原数据 | page&lt;optional,default:1&gt; - 指定页码 params&lt;optional&gt; - 临时查询参数  | Promise&lt;any&gt; | 1.1.0 |
 | [submit()](/en/datasetapi/dataset-methods/submit) | 将数据集中的增删改的记录先进行校验再进行远程提交。submit 会抛出请求的异常，请用 promise.catch 或 try-await-catch 来处理异常。 |  | Promise&lt;any&gt; false - 校验失败，undefined - 无数据提交或提交相关配置不全，如没有 submitUrl。 | |
-| submitRecord(record) | 将单条记录先进行校验再进行远程提交。submit 会抛出请求的异常，请用 promise.catch 或 try-await-catch 来处理异常。 |  | Promise&lt;any&gt; `false` - 校验失败，`undefined` - 无数据提交或提交相关配置不全，如没有 submitUrl。 | 1.6.5 |
+| submitRecord(record, strictPageSize = false) | 将单条记录先进行校验再进行远程提交。submit 会抛出请求的异常，请用 promise.catch 或 try-await-catch 来处理异常。 |  | Promise&lt;any&gt; `false` - 校验失败，`undefined` - 无数据提交或提交相关配置不全，如没有 submitUrl。 | 1.6.5 |
 | forceSubmit() | 强制提交，绕过校验。 | | Promise&lt;any&gt; undefined - 无数据提交或提交相关配置不全，如没有 submitUrl。 | 1.5.2 |
 | [reset()](/en/datasetapi/dataset-methods/reset) | 重置更改, 并清除校验状态 |  |  |    |
 | locate(index) | 定位到指定记录, 如果paging 为 true和server，则做远程查询 为server指代的是根节点节点的index坐标| index - 记录索引 | Promise&lt;Record&gt; |  |
@@ -317,7 +317,7 @@ abstract: true
 | lookupCode | 值列表代码 | string |  | |
 | lookupUrl | 值列表请求地址 | string \| (code) => string |  |  |
 | lovDefineUrl | lov 配置请求地址 | string \| (code) => string |  | |
-| lovQueryUrl | lov 查询请求地址 | string \| (code, config, { dataSet, params, data }) => string |  |   |
+| lovQueryUrl | lov 查询请求地址 | string \| (code: string, lovConfig?: LovConfig, { dataSet, params, data, lovQueryDetail }) => string |  |   |
 | lookupAxiosConfig | 值列表请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure#axiosrequestconfig)。配置中默认 url 为 lookupUrl， method 为 post。 | AxiosRequestConfig\| ({ dataSet, record, params, lookupCode }) => AxiosRequestConfig |  |  |
 | lovDefineAxiosConfig | lov 配置的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure#axiosrequestconfig)。 配置中默认 url 为 lovDefineUrl， method 为 post。 | AxiosRequestConfig\| (code: string, field?: Field) => AxiosRequestConfig |  |  |
 | lovDefineBatchAxiosConfig | 返回 lov 配置批量查询配置的钩子，优先级高于全局配置的 lovDefineBatchAxiosConfig ，根据返回配置的url的不同分别做批量查询，详见[AxiosRequestConfig](/components/configure/#AxiosRequestConfig)。 | (codes: string[]) => AxiosRequestConfig | - | 1.6.3 |

@@ -12899,6 +12899,8 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
       if (strictPageSize && paging && allData.length > pageSize && (!total || total && allData.length >= total)) {
         this.cacheAllData = allData;
+      } else {
+        this.cacheAllData = [];
       }
 
       this.performance.timing.loadStart = Date.now();

@@ -218,6 +218,7 @@ title: API
 | onRefresh | 刷新按钮回调，返回false \| Promise.resolve(false)或Promise.reject()不会刷新查询， 其他自动查询 | () => Promise&lt;boolean&gt; | | 1.5.7 |
 | onFieldEnterDown | 字段回车回调 | () => void  | | 1.6.4 |
 | showSingleLine | 筛选条是否单行显示 | boolean |  | 1.6.5 |
+| tableFilterBarButtonIcon | Table 动态筛选条按钮是否展示icon。true 展示默认icon，false不展示，对象类型可以分别设置具体icon | boolean \| { saveIconType?: string \| boolean; saveAsIconType?: string \| boolean; resetIconType?: string \| boolean; } |  | 1.6.6 |
 
 #### DynamicFilterBarConfig
 

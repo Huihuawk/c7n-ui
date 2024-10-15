@@ -41,7 +41,7 @@ title: API
 
 | 属性名 | 说明       | 类型   | 
 | ----- | ---------- | ------ | 
-| label | 选项组标题 | string |
+| label | 选项组标题 | ReactNode |
 
 ### Select.Option
 
