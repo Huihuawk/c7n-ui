@@ -45,7 +45,7 @@ title: API
 | pagination            | 分页器，参考[配置项](#pagination)或 [pagination](/zh/procmp/navigation/pagination/)，设为 false 时不展示分页                                                                                                                             | object \| false                                                                                        |          |    |
 | highLightRow | 当前行高亮, 可选值: boolean \| focus \| click, true - 始终显示高亮行, 'click' - 点击行后始终显示高亮行， 'focus' - 表格获焦时显示高亮行 | boolean \| string | [globalConfig.tableHighLightRow](/zh/procmp/configure/configure) |   |
 | selectedHighLightRow  | 勾选行高亮                                                                                                                                                                                                                     | boolean                                                                                                | [globalConfig.tableSelectedHighLightRow](/zh/procmp/configure/configure)    |    |
-| columnResizable       | 可调整列宽                                                                                                                                                                                                                     | boolean                                                                                                | [globalConfig.tableColumnResizable](/zh/procmp/configure/configure)    |   |
+| columnResizable | 可调整列宽, 可以传入 xZoom 矫正横向缩放引起的计算误差 | boolean \| { xZoom: number } | [globalConfig.tableColumnResizable](/zh/procmp/configure/configure)    |   |
 | columnHideable | 可调整列显示, customizable 为 true 才起作用 | boolean | [globalConfig.tableColumnHideable](/zh/procmp/configure/configure) | 1.2.0  |
 | columnTitleEditable | 可编辑列标题, customizable 为 true 才起作用 | boolean | [globalConfig.tableColumnTitleEditable](/zh/procmp/configure/configure) | 1.2.0   |
 | columnDraggable | 列拖拽, customizable 为 true 才起作用 | boolean | [globalConfig.tableColumnDraggable](/zh/procmp/configure/configure) | 1.2.0  |
@@ -210,7 +210,7 @@ title: API
 | fuzzyQueryOnly | 是否仅使用模糊查询 | boolean | false | 1.5.1 |
 | fuzzyQueryPlaceholder | 模糊查询 placeholder  | string |  | 1.4.5 |
 | fuzzyQueryProps | 模糊查询输入框属性  | TextFieldProps |  | 1.6.6 |
-| filterQueryCallback | 查询回调  | ({ dataSet })=> void |  | 1.6.6 |
+| filterQueryCallback | 筛选接口查询回调  | ({ dataSet })=> void |  | 1.6.6 |
 | autoQuery | 条件变更是否自动查询  | boolean | true |1.4.5 |
 | refreshBtn | 刷新按钮  | boolean | true | 1.5.1 |
 | onQuery | 查询回调 | () => void |  | 1.4.5 |
