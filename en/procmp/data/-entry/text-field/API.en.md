@@ -16,7 +16,7 @@ title: API
 | addonAfter   | 设置后置标签                              | string \| ReactNode |        |     |
 | addonBeforeStyle | 设置前置标签样式 | CSSProperties |  |      |
 | addonAfterStyle | 设置后置标签样式 | CSSProperties |  |       |
-| restrict | 限制可输入的字符 | string \| RegExp |  |       |
+| restrict | 限制可输入的字符，string 类型的效果为允许输入的字符规则，RegExp 类型的效果为不允许输入的字符规则 | string \| RegExp |  |       |
 | valueChangeAction | 触发值变更的动作, 可选值：blur \| input | blur |  | 1.1.0      |
 | wait | 设置值变更间隔时间，只有在 valueChangeAction 为 input 时起作用 | number | | 1.1.0     |
 | waitType | 设置值变更间隔类型，可选值：throttle \| debounce | string | debounce | 1.1.0    |

@@ -9033,7 +9033,7 @@ var _interopRequireDefault = __webpack_require__("63Ad")["default"];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CHILDREN_PAGE_INFO = void 0;
+exports.QUERY_CANCELABLE = exports.CHILDREN_PAGE_INFO = void 0;
 exports.addDataSetField = addDataSetField;
 exports["default"] = void 0;
 exports.initDataSetField = initDataSetField;
@@ -9138,6 +9138,8 @@ var TOTAL_KEY = '__TOTAL__'; // TODO:Symbol
 
 var CHILDREN_PAGE_INFO = '__CHILDREN_PAGE_INFO__';
 exports.CHILDREN_PAGE_INFO = CHILDREN_PAGE_INFO;
+var QUERY_CANCELABLE = '__QUERY_CANCELABLE__';
+exports.QUERY_CANCELABLE = QUERY_CANCELABLE;
 
 function addDataSetField(dataSet, name) {
   var field = new _Field["default"]({
@@ -9277,6 +9279,24 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     _this.cacheAllData = [];
     _this.resetInBatch = false;
     _this.validating = false;
+
+    _this.flattenTreeData = function (records) {
+      var result = [];
+
+      function traverse(nodes) {
+        nodes.forEach(function (node) {
+          result.push(node);
+
+          if (node.children && node.children.length > 0) {
+            traverse(node.children);
+          }
+        });
+      }
+
+      traverse(records);
+      return result;
+    };
+
     _this.inBatchSelection = false;
     _this.syncChildrenRemote = (0, _debounce["default"])(function (remoteKeys, current) {
       var _assertThisInitialize = (0, _assertThisInitialized2["default"])(_this),
@@ -9869,6 +9889,17 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
       return this.filter(function (record) {
         return !record.parent;
       });
+    }
+  }, {
+    key: "sortedTreeData",
+    get: function get() {
+      var treeData = this.treeData;
+
+      if (treeData.length === 0) {
+        return [];
+      }
+
+      return this.flattenTreeData(treeData);
     }
   }, {
     key: "paging",
@@ -11956,7 +11987,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
   }, {
     key: "unSelectAll",
-    value: function unSelectAll() {
+    value: function unSelectAll(filter) {
       var _this20 = this;
 
       if (this.selection) {
@@ -11965,9 +11996,11 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         try {
           var records = [];
           this.currentSelected.forEach(function (record) {
-            _this20.unSelect(record);
+            if (!filter || filter(record) !== false) {
+              _this20.unSelect(record);
 
-            records.push(record);
+              records.push(record);
+            }
           });
           this.fireEvent(_enum.DataSetEvents.unSelectAll, {
             dataSet: this,
@@ -13311,12 +13344,15 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
             more,
             paging,
             queryChildren,
+            canChangeStatus,
             data,
             newConfig,
             noPagingParams,
             queryEventResult,
+            _this$lastRequestSour,
             result,
             _args15 = arguments;
+
         return _regenerator["default"].wrap(function _callee15$(_context15) {
           while (1) {
             switch (_context15.prev = _context15.next) {
@@ -13328,20 +13364,21 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 queryChildren = _args15.length > 4 ? _args15[4] : undefined;
 
                 if (!this.checkReadable(this.parent)) {
-                  _context15.next = 37;
+                  _context15.next = 43;
                   break;
                 }
 
-                _context15.prev = 6;
+                canChangeStatus = true;
+                _context15.prev = 7;
 
                 if (!more) {
                   this.changeStatus(_enum.DataSetStatus.loading);
                 }
 
-                _context15.next = 10;
+                _context15.next = 11;
                 return this.generateQueryParameter(params);
 
-              case 10:
+              case 11:
                 data = _context15.sent;
                 newConfig = (0, _utils2.axiosConfigAdapter)('read', this, data, this.generateQueryString(page, undefined, undefined, paging), this.getState('__LOV_QUERY_STATE__'));
 
@@ -13355,22 +13392,22 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 }
 
                 if (!newConfig.url) {
-                  _context15.next = 28;
+                  _context15.next = 29;
                   break;
                 }
 
-                _context15.next = 16;
+                _context15.next = 17;
                 return this.fireEvent(_enum.DataSetEvents.query, {
                   dataSet: this,
                   params: newConfig.params,
                   data: newConfig.data
                 });
 
-              case 16:
+              case 17:
                 queryEventResult = _context15.sent;
 
                 if (!queryEventResult) {
-                  _context15.next = 28;
+                  _context15.next = 29;
                   break;
                 }
 
@@ -13378,16 +13415,19 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 this.performance.url = newConfig.url;
 
                 if (this.lastRequestSource) {
-                  this.lastRequestSource.cancel('New request started, cancelling the previous one.');
+                  this.lastRequestSource.cancel("New request started, cancelling the previous one. Please check request, now request url: ".concat(newConfig.url));
                 }
 
-                this.lastRequestSource = _axios["default"].CancelToken.source();
-                _context15.next = 24;
+                if (this.getState(QUERY_CANCELABLE) !== false) {
+                  this.lastRequestSource = _axios["default"].CancelToken.source();
+                }
+
+                _context15.next = 25;
                 return this.axios((0, _objectSpread3["default"])({
-                  cancelToken: this.lastRequestSource.token
+                  cancelToken: (_this$lastRequestSour = this.lastRequestSource) === null || _this$lastRequestSour === void 0 ? void 0 : _this$lastRequestSour.token
                 }, (0, _utils2.fixAxiosConfig)(newConfig)));
 
-              case 24:
+              case 25:
                 result = _context15.sent;
                 this.performance.timing.fetchEnd = Date.now();
                 (0, _mobx.runInAction)(function () {
@@ -13415,31 +13455,43 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 });
                 return _context15.abrupt("return", this.handleLoadSuccess(result));
 
-              case 28:
-                _context15.next = 34;
+              case 29:
+                _context15.next = 40;
                 break;
 
-              case 30:
-                _context15.prev = 30;
-                _context15.t0 = _context15["catch"](6);
+              case 31:
+                _context15.prev = 31;
+                _context15.t0 = _context15["catch"](7);
+
+                if (!(_context15.t0.code === 'ERR_CANCELED')) {
+                  _context15.next = 38;
+                  break;
+                }
+
+                canChangeStatus = false;
+                console.warn(_context15.t0.message);
+                _context15.next = 40;
+                break;
+
+              case 38:
                 this.handleLoadFail(_context15.t0);
                 throw new _DataSetRequestError["default"](_context15.t0);
 
-              case 34:
-                _context15.prev = 34;
+              case 40:
+                _context15.prev = 40;
 
-                if (!more) {
+                if (!more && canChangeStatus) {
                   this.changeStatus(_enum.DataSetStatus.ready);
                 }
 
-                return _context15.finish(34);
+                return _context15.finish(40);
 
-              case 37:
+              case 43:
               case "end":
                 return _context15.stop();
             }
           }
-        }, _callee15, this, [[6, 30, 34, 37]]);
+        }, _callee15, this, [[7, 31, 40, 43]]);
       }));
 
       function read() {
@@ -13549,6 +13601,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
           if (index !== -1) {
             var cached = cachedRecords.splice(index, 1)[0];
+            record.parentSelectToChildrenSynced = cached.parentSelectToChildrenSynced;
 
             if (cacheSelectionKeys) {
               record.isSelected = cached.isSelected;
@@ -13626,7 +13679,10 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
       this.fireEvent(_enum.DataSetEvents.loadFailed, {
         dataSet: this
       });
-      loadFailed(e);
+
+      if (e.code !== 'ERR_CANCELED') {
+        loadFailed(e);
+      }
     }
   }, {
     key: "handleSubmitSuccess",
@@ -13957,16 +14013,17 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     key: "generateQueryParameter",
     value: function () {
       var _generateQueryParameter = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee17(params) {
-        var queryDataSet, validateBeforeQuery, parentParams, validationMessage, data, current;
+        var queryDataSet, _this$props10, validateBeforeQuery, customIntlFun, parentParams, validationMessage, defaultIntl, customIntl, data, current;
+
         return _regenerator["default"].wrap(function _callee17$(_context17) {
           while (1) {
             switch (_context17.prev = _context17.next) {
               case 0:
-                queryDataSet = this.queryDataSet, validateBeforeQuery = this.props.validateBeforeQuery;
+                queryDataSet = this.queryDataSet, _this$props10 = this.props, validateBeforeQuery = _this$props10.validateBeforeQuery, customIntlFun = _this$props10.customIntlFun;
                 parentParams = this.getParentParams();
 
                 if (!queryDataSet) {
-                  _context17.next = 13;
+                  _context17.next = 15;
                   break;
                 }
 
@@ -13989,16 +14046,27 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
               case 10:
                 if (!_context17.t0) {
-                  _context17.next = 13;
+                  _context17.next = 15;
                   break;
                 }
 
                 validationMessage = queryDataSet.current.getValidationErrors().map(function (error) {
                   return error.errors[0].validationMessage;
                 }).join(' ');
-                throw new Error("".concat((0, _localeContext.$l)('DataSet', 'invalid_query_dataset'), ": ").concat(validationMessage));
+                defaultIntl = (0, _localeContext.$l)('DataSet', 'invalid_query_dataset');
 
-              case 13:
+                if (typeof customIntlFun === 'function') {
+                  customIntl = customIntlFun({
+                    component: 'DataSet',
+                    key: 'invalid_query_dataset',
+                    lang: this.lang,
+                    defaultIntl: defaultIntl
+                  });
+                }
+
+                throw new Error("".concat(customIntl || defaultIntl, ": ").concat(validationMessage));
+
+              case 15:
                 data = {};
 
                 if (queryDataSet) {
@@ -14020,7 +14088,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                   return p;
                 }, {}));
 
-              case 17:
+              case 19:
               case "end":
                 return _context17.stop();
             }
@@ -271029,6 +271097,4660 @@ module.exports = {
   hits: __webpack_require__("a3+6"),
   popularIn: __webpack_require__("3/ts")
 };
+
+/***/ }),
+
+/***/ "u+UA":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+__webpack_require__("UKgA");
+
+var _interopRequireDefault = __webpack_require__("63Ad")["default"];
+
+var _interopRequireWildcard = __webpack_require__("vdEC")["default"];
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = exports.VIRTUAL_ROOT_MARGIN = exports.SELECTION_KEY = exports.ROW_NUMBER_KEY = exports.EXPAND_KEY = exports.DRAG_KEY = exports.CUSTOMIZED_KEY = exports.COMBOBAR_KEY = exports.BODY_EXPANDED = exports.AGGREGATION_EXPAND_CELL_KEY = void 0;
+exports.getIdList = getIdList;
+exports.normalizeGroupColumns = normalizeGroupColumns;
+
+var _regenerator = _interopRequireDefault(__webpack_require__("NthX"));
+
+var _typeof2 = _interopRequireDefault(__webpack_require__("e+GP"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(__webpack_require__("RiSW"));
+
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__("SDJZ"));
+
+var _createClass2 = _interopRequireDefault(__webpack_require__("NToG"));
+
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__("fFdx"));
+
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__("5WRv"));
+
+var _slicedToArray2 = _interopRequireDefault(__webpack_require__("nxTg"));
+
+var _objectSpread2 = _interopRequireDefault(__webpack_require__("yO+l"));
+
+var _extends2 = _interopRequireDefault(__webpack_require__("8VmE"));
+
+var _tslib = __webpack_require__("Qno7");
+
+var _react = _interopRequireWildcard(__webpack_require__("mXGw"));
+
+var _mobx = __webpack_require__("cneo");
+
+var _classnames = _interopRequireDefault(__webpack_require__("zmui"));
+
+var _sortBy = _interopRequireDefault(__webpack_require__("As4l"));
+
+var _debounce = _interopRequireDefault(__webpack_require__("5Zwl"));
+
+var _isNil = _interopRequireDefault(__webpack_require__("MIf1"));
+
+var _isObject = _interopRequireDefault(__webpack_require__("9aUh"));
+
+var _isPlainObject = _interopRequireDefault(__webpack_require__("NfLg"));
+
+var _isString = _interopRequireDefault(__webpack_require__("4e1R"));
+
+var _isNumber = _interopRequireDefault(__webpack_require__("XQLF"));
+
+var _get2 = _interopRequireDefault(__webpack_require__("edSL"));
+
+var _defaultTo = _interopRequireDefault(__webpack_require__("v7Po"));
+
+var _utils = __webpack_require__("wGa2");
+
+var _measureScrollbar = _interopRequireDefault(__webpack_require__("Lc4s"));
+
+var _UnitConvertor = __webpack_require__("ut9x");
+
+var _icon = _interopRequireDefault(__webpack_require__("gTEN"));
+
+var _isFunction = _interopRequireDefault(__webpack_require__("RqPZ"));
+
+var _omit = _interopRequireDefault(__webpack_require__("PWxN"));
+
+var _pick = _interopRequireDefault(__webpack_require__("gTDC"));
+
+var _noop = _interopRequireDefault(__webpack_require__("7IP4"));
+
+var _moment = __webpack_require__("TiKg");
+
+var _DataSet = __webpack_require__("0tEP");
+
+var _Column = __webpack_require__("ctwC");
+
+var _CustomizationSettings = _interopRequireDefault(__webpack_require__("0Puq"));
+
+var _isFragment = _interopRequireDefault(__webpack_require__("PXst"));
+
+var _CheckBox = _interopRequireDefault(__webpack_require__("7zsw"));
+
+var _Radio = _interopRequireDefault(__webpack_require__("KLCI"));
+
+var _enum = __webpack_require__("8cQ7");
+
+var _enum2 = __webpack_require__("dOYA");
+
+var _EventManager = __webpack_require__("4Yuj");
+
+var _utils2 = __webpack_require__("3lXc");
+
+var _getReactNodeText = _interopRequireDefault(__webpack_require__("Nsv4"));
+
+var _ColumnGroups = _interopRequireDefault(__webpack_require__("N0++"));
+
+var _autobind = _interopRequireDefault(__webpack_require__("ceV4"));
+
+var _enum3 = __webpack_require__("aYLu");
+
+var _localeContext = __webpack_require__("rhpN");
+
+var _CustomizationColumnHeader = _interopRequireDefault(__webpack_require__("RpMP"));
+
+var _comboCustomizationSettings = _interopRequireDefault(__webpack_require__("REgv"));
+
+var _Dropdown = _interopRequireDefault(__webpack_require__("LQIc"));
+
+var _menu = _interopRequireDefault(__webpack_require__("NVhz"));
+
+var _Modal = _interopRequireDefault(__webpack_require__("HJdw"));
+
+var _treeUtils = __webpack_require__("A5Q1");
+
+var _utils3 = __webpack_require__("jkz7");
+
+var _BatchRunner = _interopRequireDefault(__webpack_require__("cq88"));
+
+var _enum4 = __webpack_require__("PdsU");
+
+var _TableCell = __webpack_require__("5Nn7");
+
+var _utils4 = __webpack_require__("8NaI");
+
+var _excluded = ["lock", "className", "headerClassName", "footerClassName"];
+var SELECTION_KEY = '__selection-column__'; // TODO:Symbol
+
+exports.SELECTION_KEY = SELECTION_KEY;
+var COMBOBAR_KEY = '__combo-column__'; // TODO:Symbol
+
+exports.COMBOBAR_KEY = COMBOBAR_KEY;
+var ROW_NUMBER_KEY = '__row-number-column__'; // TODO:Symbol
+
+exports.ROW_NUMBER_KEY = ROW_NUMBER_KEY;
+var DRAG_KEY = '__drag-column__'; // TODO:Symbol
+
+exports.DRAG_KEY = DRAG_KEY;
+var EXPAND_KEY = '__expand-column__'; // TODO:Symbol
+
+exports.EXPAND_KEY = EXPAND_KEY;
+var CUSTOMIZED_KEY = '__customized-column__'; // TODO:Symbol
+
+exports.CUSTOMIZED_KEY = CUSTOMIZED_KEY;
+var AGGREGATION_EXPAND_CELL_KEY = '__aggregation-expand-cell__'; // TODO:Symbol
+
+exports.AGGREGATION_EXPAND_CELL_KEY = AGGREGATION_EXPAND_CELL_KEY;
+var BODY_EXPANDED = '__body_expanded__'; // TODO:Symbol
+
+exports.BODY_EXPANDED = BODY_EXPANDED;
+var VIRTUAL_ROOT_MARGIN = 50;
+exports.VIRTUAL_ROOT_MARGIN = VIRTUAL_ROOT_MARGIN;
+
+function columnFilter(column) {
+  return Boolean(column);
+}
+
+function getOverScanCount(tableStore, index, next) {
+  var rowMetaData = tableStore.rowMetaData;
+
+  if (rowMetaData) {
+    var count = 0;
+    var height = 0;
+
+    while (height < VIRTUAL_ROOT_MARGIN) {
+      index += next ? 1 : -1;
+
+      if (index < 0 || index >= rowMetaData.length) {
+        return count;
+      }
+
+      var metaData = rowMetaData[index];
+
+      if (!metaData) {
+        return count;
+      }
+
+      height += metaData.height;
+      count++;
+    }
+
+    return count;
+  }
+
+  return Math.ceil(VIRTUAL_ROOT_MARGIN / tableStore.virtualRowHeight);
+}
+
+function getItemMetadata(rowMetaData, index, tableStore) {
+  var lastMeasuredIndex = tableStore.lastMeasuredIndex;
+
+  if (index > lastMeasuredIndex) {
+    tableStore.lastMeasuredIndex = index;
+  }
+
+  return rowMetaData[index];
+}
+
+function findNearestItemBinarySearch(rowMetaData, tableStore, high, low, offset) {
+  while (low <= high) {
+    var middle = low + Math.floor((high - low) / 2);
+    var item = getItemMetadata(rowMetaData, middle, tableStore);
+
+    if (!item) {
+      return 0;
+    }
+
+    var currentOffset = item.offset;
+
+    if (currentOffset === offset) {
+      return middle;
+    }
+
+    if (currentOffset < offset) {
+      low = middle + 1;
+    }
+
+    if (currentOffset > offset) {
+      high = middle - 1;
+    }
+  }
+
+  if (low > 0) {
+    return low - 1;
+  }
+
+  return 0;
+}
+
+function overOffset(rowMetaData, tableStore, index, offset) {
+  var item = getItemMetadata(rowMetaData, index, tableStore);
+
+  if (item) {
+    return item.offset < offset;
+  }
+
+  return false;
+}
+
+function findNearestItemExponentialSearch(rowMetaData, tableStore, index, offset) {
+  var virtualEstimatedRows = tableStore.virtualEstimatedRows;
+  var interval = 1;
+
+  while (index < virtualEstimatedRows && overOffset(rowMetaData, tableStore, index, offset)) {
+    index += interval;
+    interval *= 2;
+  }
+
+  return findNearestItemBinarySearch(rowMetaData, tableStore, Math.min(index, virtualEstimatedRows - 1), Math.floor(index / 2), offset);
+}
+
+function getVisibleStartIndex(tableStore) {
+  var getLastScrollTop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.lastScrollTop;
+  };
+  var height = tableStore.height,
+      virtualEstimatedRows = tableStore.virtualEstimatedRows;
+
+  if (height === undefined || !virtualEstimatedRows) {
+    return 0;
+  }
+
+  var lastScrollTop = getLastScrollTop();
+  var virtualRowHeight = tableStore.virtualRowHeight,
+      rowMetaData = tableStore.rowMetaData;
+
+  if (rowMetaData) {
+    if (!rowMetaData.length) {
+      return 0;
+    }
+
+    var lastMeasuredIndex = tableStore.lastMeasuredIndex;
+    var lastRowMetaData = lastMeasuredIndex > 0 ? rowMetaData[lastMeasuredIndex] : undefined;
+    var lastMeasuredItemOffset = lastRowMetaData ? lastRowMetaData.offset : 0;
+
+    if (lastMeasuredItemOffset >= lastScrollTop) {
+      return findNearestItemBinarySearch(rowMetaData, tableStore, lastMeasuredIndex, 0, lastScrollTop);
+    }
+
+    return findNearestItemExponentialSearch(rowMetaData, tableStore, Math.max(0, lastMeasuredIndex), lastScrollTop);
+  }
+
+  return Math.max(0, Math.min(virtualEstimatedRows, Math.floor(lastScrollTop / virtualRowHeight)));
+}
+
+function getVisibleEndIndex(tableStore) {
+  var getVirtualVisibleStartIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.virtualVisibleStartIndex;
+  };
+  var getLastScrollTop = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {
+    return tableStore.lastScrollTop;
+  };
+  var height = tableStore.height,
+      virtualEstimatedRows = tableStore.virtualEstimatedRows;
+
+  if (height === undefined) {
+    return virtualEstimatedRows;
+  }
+
+  var virtualVisibleStartIndex = getVirtualVisibleStartIndex();
+  var virtualRowHeight = tableStore.virtualRowHeight,
+      rowMetaData = tableStore.rowMetaData;
+
+  if (rowMetaData) {
+    if (!rowMetaData.length) {
+      return 0;
+    }
+
+    var itemMetadata = getItemMetadata(rowMetaData, virtualVisibleStartIndex, tableStore);
+
+    if (!itemMetadata) {
+      return 0;
+    }
+
+    var maxOffset = getLastScrollTop() + height;
+    var offset = itemMetadata.offset + itemMetadata.height;
+    var stopIndex = virtualVisibleStartIndex;
+
+    while (stopIndex < virtualEstimatedRows - 1 && offset < maxOffset) {
+      stopIndex++;
+      var item = getItemMetadata(rowMetaData, stopIndex, tableStore);
+
+      if (item) {
+        offset += item.height;
+      }
+    }
+
+    return Math.max(0, Math.min(virtualEstimatedRows, stopIndex + 1));
+  }
+
+  var numVisibleItems = Math.ceil(height / virtualRowHeight);
+  return Math.max(0, Math.min(virtualEstimatedRows, virtualVisibleStartIndex + numVisibleItems));
+}
+
+function getStartIndex(tableStore) {
+  var getVirtualVisibleStartIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.virtualVisibleStartIndex;
+  };
+  var virtualVisibleStartIndex = getVirtualVisibleStartIndex();
+  return Math.max(0, virtualVisibleStartIndex - getOverScanCount(tableStore, virtualVisibleStartIndex));
+}
+
+function getEndIndex(tableStore) {
+  var getVirtualVisibleEndIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.virtualVisibleEndIndex;
+  };
+  var virtualVisibleEndIndex = getVirtualVisibleEndIndex();
+  var virtualEstimatedRows = tableStore.virtualEstimatedRows;
+  return Math.min(virtualEstimatedRows, virtualVisibleEndIndex + getOverScanCount(tableStore, virtualVisibleEndIndex, true));
+}
+
+function getIdList(store) {
+  var mouseBatchChooseStartId = store.mouseBatchChooseStartId,
+      mouseBatchChooseEndId = store.mouseBatchChooseEndId,
+      element = store.node.element,
+      prefixCls = store.prefixCls;
+  var rows = Array.from(element.querySelectorAll(".".concat(prefixCls, "-row")));
+  var endId;
+  var idList = [];
+  rows.some(function (row) {
+    var index = Number(row.dataset.index);
+
+    if (!endId) {
+      if (mouseBatchChooseStartId === index) {
+        endId = mouseBatchChooseEndId;
+      } else if (mouseBatchChooseEndId === index) {
+        endId = mouseBatchChooseStartId;
+      }
+    }
+
+    if (endId) {
+      idList.push(index);
+    }
+
+    return endId === index;
+  });
+  return idList;
+}
+
+function getRowNumbers(record, dataSet, isTree) {
+  if (record && dataSet) {
+    if (record.isCached) {
+      return [];
+    }
+
+    var paging = dataSet.paging,
+        currentPage = dataSet.currentPage,
+        pageSize = dataSet.pageSize;
+    var pageIndex = (isTree ? paging === 'server' : paging) ? (currentPage - 1) * pageSize : 0;
+
+    if (isTree) {
+      return record.path.map(function (r, index) {
+        return r.indexInParent + 1 + (index === 0 ? pageIndex : 0);
+      });
+    }
+
+    return [record.index + 1 + pageIndex];
+  }
+
+  return [0];
+}
+
+function hasCheckField(_ref, checkField) {
+  var editor = _ref.editor,
+      name = _ref.name,
+      hidden = _ref.hidden;
+  return !hidden && !!editor && checkField === name;
+}
+
+function _renderSelectionBox(_ref2) {
+  var record = _ref2.record,
+      store = _ref2.store;
+  var dataSet = record.dataSet;
+
+  if (dataSet) {
+    var selection = dataSet.selection;
+
+    var handleChange = function handleChange(value) {
+      if (store.props.selectionMode === _enum2.SelectionMode.mousedown) {
+        // 将处理逻辑交给 mousedown 的处理逻辑 不然会两次触发导致不被勾选上
+        return;
+      }
+
+      if (value) {
+        dataSet.select(record);
+      } else {
+        dataSet.unSelect(record);
+      }
+    };
+
+    var handleClick = function handleClick(e) {
+      (0, _EventManager.stopPropagation)(e);
+
+      if (selection === _enum.DataSetSelection.multiple) {
+        var lastSelected = store.lastSelected;
+
+        if (lastSelected) {
+          var nativeEvent = e.nativeEvent;
+          var startIndex = -1;
+          var endIndex = -1;
+
+          if (nativeEvent.shiftKey) {
+            var pointKeys = new Set([lastSelected.key, record.key]);
+            dataSet.some(function (pointRecord, index) {
+              if (pointKeys.has(pointRecord.key)) {
+                if (startIndex === -1) {
+                  startIndex = index;
+                } else {
+                  endIndex = index;
+                  return true;
+                }
+              }
+
+              return false;
+            });
+          }
+
+          if (endIndex !== -1 && startIndex !== endIndex) {
+            // Batch update selections
+            var rangeRecords = dataSet.slice(startIndex, endIndex + 1);
+            var changedRecords = [];
+            var selectedKeys = new Set(dataSet.selected.map(function (selected) {
+              return selected.key;
+            }));
+
+            if (record.isSelected) {
+              rangeRecords.forEach(function (rangeRecord) {
+                if (selectedKeys.has(rangeRecord.key)) {
+                  changedRecords.push(rangeRecord);
+                }
+              });
+              dataSet.batchUnSelect(changedRecords);
+            } else {
+              rangeRecords.forEach(function (rangeRecord) {
+                if (!selectedKeys.has(rangeRecord.key)) {
+                  changedRecords.push(rangeRecord);
+                }
+              });
+              dataSet.batchSelect(changedRecords);
+            }
+          }
+        }
+
+        store.lastSelected = record;
+      } else if (record.isSelected) {
+        dataSet.unSelect(record);
+      }
+    };
+
+    if (selection === _enum.DataSetSelection.multiple) {
+      var batchSelectProps = {};
+      var handleDragMouseUp = (0, _mobx.action)(function () {
+        var mouseBatchChooseIdList = store.mouseBatchChooseIdList;
+
+        if (store.mouseBatchChooseState) {
+          store.mouseBatchChooseState = false;
+          store.changeMouseBatchChooseIdList([]);
+          var mouseBatchChooseStartId = store.mouseBatchChooseStartId,
+              mouseBatchChooseEndId = store.mouseBatchChooseEndId;
+
+          if (mouseBatchChooseStartId === mouseBatchChooseEndId) {
+            return;
+          }
+
+          var startRecord = dataSet.findRecordById(mouseBatchChooseStartId);
+
+          var _ref3 = startRecord || {},
+              isSelected = _ref3.isSelected;
+
+          if (isSelected) {
+            dataSet.batchUnSelect(mouseBatchChooseIdList);
+          } else {
+            dataSet.batchSelect(mouseBatchChooseIdList);
+          }
+        }
+
+        document.removeEventListener('pointerup', handleDragMouseUp);
+      });
+
+      if (store.useMouseBatchChoose) {
+        batchSelectProps.onMouseDown = (0, _mobx.action)(function () {
+          store.mouseBatchChooseStartId = record.id;
+          store.mouseBatchChooseEndId = record.id;
+          store.mouseBatchChooseState = true; // 为什么使用 pointerup
+          // 因为需要对disabled的元素进行特殊处理
+          // 因为状态的改变依赖 mouseup 而在disabled的元素上 无法触发mouseup事件
+          // 导致状态无法进行修正
+          // 以下两种方案通过 pointer-events:none 进行处理
+          // https://stackoverflow.com/questions/322378/javascript-check-if-mouse-button-down
+          // https://stackoverflow.com/questions/62081666/the-event-of-the-document-is-not-triggered-when-it-is-on-a-disabled-element
+          // 而使用指针事件可以突破disabled的限制
+          // https://stackoverflow.com/questions/62126515/how-to-get-the-state-of-the-mouse-through-javascript/62127845#62127845
+
+          document.addEventListener('pointerup', handleDragMouseUp);
+        });
+
+        batchSelectProps.onMouseEnter = function () {
+          if (store.mouseBatchChooseState) {
+            store.mouseBatchChooseEndId = record.id;
+            store.changeMouseBatchChooseIdList(getIdList(store));
+          }
+        };
+      }
+
+      return /*#__PURE__*/_react["default"].createElement(_CheckBox["default"], (0, _extends2["default"])({}, batchSelectProps, {
+        checked: record.isSelected,
+        onChange: handleChange,
+        onClick: handleClick,
+        disabled: !record.selectable,
+        "data-selection-key": SELECTION_KEY,
+        labelLayout: _enum4.LabelLayout.none,
+        value: true
+      }));
+    }
+
+    if (selection === _enum.DataSetSelection.single) {
+      return /*#__PURE__*/_react["default"].createElement(_Radio["default"], {
+        checked: record.isSelected,
+        onChange: handleChange,
+        onClick: handleClick,
+        disabled: !record.selectable,
+        "data-selection-key": SELECTION_KEY,
+        value: true
+      });
+    }
+  }
+}
+
+function getCustomizedColumnByKey(key, customizedColumns) {
+  if (customizedColumns) {
+    return customizedColumns[key];
+  }
+}
+
+function getCustomizedColumn(column, customizedColumns) {
+  if (customizedColumns) {
+    return getCustomizedColumnByKey((0, _utils2.getColumnKey)(column).toString(), customizedColumns);
+  }
+}
+
+function mergeColumnLock(column, parent, customizedColumn) {
+  if (parent) {
+    column.lock = parent.lock;
+  } else if (customizedColumn && 'lock' in customizedColumn) {
+    column.lock = customizedColumn.lock;
+  }
+}
+
+function mergeCustomizedColumn(column, tableStore, customizedColumn, isChildrenHideDisabled) {
+  if (isChildrenHideDisabled) {
+    column.hideable = false;
+  } else {
+    var field = tableStore.dataSet.getField(column.name);
+
+    if (field) {
+      var dynamicProps = field.get('dynamicProps');
+      var computedProps = field.get('computedProps');
+
+      if (dynamicProps && dynamicProps.required || computedProps && computedProps.required || field.get('required')) {
+        column.hideable = false;
+      }
+    }
+  }
+
+  if (customizedColumn) {
+    if (column.hideable === false || !tableStore.columnHideable) {
+      delete customizedColumn.hidden;
+    }
+
+    if (column.resizable === false || !tableStore.columnResizable) {
+      delete customizedColumn.width;
+    }
+
+    if (column.titleEditable === false || !tableStore.columnTitleEditable) {
+      delete customizedColumn.title;
+    }
+
+    if (!tableStore.columnDraggable) {
+      delete customizedColumn.sort;
+    }
+
+    (0, _extends2["default"])(column, customizedColumn);
+  }
+}
+
+function findAndMergeCustomizedColumn(column, tableStore, customizedColumns, isChildrenHideDisabled) {
+  var customizedColumn = getCustomizedColumn(column, customizedColumns);
+  mergeCustomizedColumn(column, tableStore, customizedColumn, isChildrenHideDisabled);
+}
+
+function mergeDefaultProps(tableStore, originalColumns, tableAggregation, customizedColumns) {
+  var parent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+  var defaultKey = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : [0];
+  var columnSort = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {
+    left: 0,
+    center: 0,
+    right: 0
+  };
+  var columns = [];
+  var leftColumns = [];
+  var rightColumns = [];
+  var hasAggregationColumn = false;
+  var isHideDisabled = false;
+  originalColumns.forEach(function (column) {
+    if ((0, _isPlainObject["default"])(column)) {
+      var newColumn = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, _Column.ColumnDefaultProps), column);
+
+      if ((0, _isNil["default"])((0, _utils2.getColumnKey)(newColumn))) {
+        newColumn.key = "anonymous-".concat(defaultKey[0]++);
+      }
+
+      var children = newColumn.children,
+          aggregation = newColumn.aggregation;
+
+      if (!hasAggregationColumn && aggregation) {
+        hasAggregationColumn = true;
+      }
+
+      if (tableAggregation || !aggregation) {
+        var customizedColumn = getCustomizedColumn(newColumn, customizedColumns);
+        mergeColumnLock(newColumn, parent, customizedColumn);
+
+        if (children) {
+          var _mergeDefaultProps = mergeDefaultProps(tableStore, children, tableAggregation, customizedColumns, newColumn, defaultKey),
+              _mergeDefaultProps2 = (0, _slicedToArray2["default"])(_mergeDefaultProps, 4),
+              childrenColumns = _mergeDefaultProps2[1],
+              _mergeDefaultProps2$ = _mergeDefaultProps2[3],
+              childrenHasAggregationColumn = _mergeDefaultProps2$.hasAggregationColumn,
+              childrenIsHideDisabled = _mergeDefaultProps2$.isHideDisabled;
+
+          newColumn.children = childrenColumns;
+
+          if (!hasAggregationColumn && childrenHasAggregationColumn) {
+            hasAggregationColumn = true;
+          }
+
+          if (!isHideDisabled && childrenIsHideDisabled) {
+            isHideDisabled = true;
+          }
+
+          mergeCustomizedColumn(newColumn, tableStore, customizedColumn, childrenIsHideDisabled);
+        } else {
+          mergeCustomizedColumn(newColumn, tableStore, customizedColumn);
+        }
+
+        if (!isHideDisabled && newColumn.hideable === false) {
+          isHideDisabled = true;
+        }
+
+        if (parent || !newColumn.lock) {
+          if (newColumn.sort === undefined) {
+            newColumn.sort = columnSort.center;
+          }
+
+          columnSort.center++;
+          columns.push(newColumn);
+        } else if (newColumn.lock === true || newColumn.lock === _enum2.ColumnLock.left) {
+          if (newColumn.sort === undefined) {
+            newColumn.sort = columnSort.left;
+          }
+
+          columnSort.left++;
+          leftColumns.push(newColumn);
+        } else {
+          if (newColumn.sort === undefined) {
+            newColumn.sort = columnSort.right;
+          }
+
+          columnSort.right++;
+          rightColumns.push(newColumn);
+        }
+      } else if (children) {
+        var _mergeDefaultProps3 = mergeDefaultProps(tableStore, children, tableAggregation, customizedColumns, parent, defaultKey, parent ? undefined : columnSort),
+            _mergeDefaultProps4 = (0, _slicedToArray2["default"])(_mergeDefaultProps3, 4),
+            leftNodes = _mergeDefaultProps4[0],
+            nodes = _mergeDefaultProps4[1],
+            rightNodes = _mergeDefaultProps4[2],
+            _mergeDefaultProps4$ = _mergeDefaultProps4[3],
+            _childrenHasAggregationColumn = _mergeDefaultProps4$.hasAggregationColumn,
+            _childrenIsHideDisabled = _mergeDefaultProps4$.isHideDisabled;
+
+        if (!hasAggregationColumn && _childrenHasAggregationColumn) {
+          hasAggregationColumn = true;
+        }
+
+        if (!isHideDisabled && _childrenIsHideDisabled) {
+          newColumn.hideable = false;
+          isHideDisabled = true;
+        }
+
+        if (parent) {
+          parent.children = [].concat((0, _toConsumableArray2["default"])(leftNodes), (0, _toConsumableArray2["default"])(nodes), (0, _toConsumableArray2["default"])(rightNodes));
+        } else {
+          leftColumns.push.apply(leftColumns, (0, _toConsumableArray2["default"])(leftNodes));
+          columns.push.apply(columns, (0, _toConsumableArray2["default"])(nodes));
+          rightColumns.push.apply(rightColumns, (0, _toConsumableArray2["default"])(rightNodes));
+        }
+      }
+    }
+  }, []);
+
+  if (parent) {
+    return [[], (0, _sortBy["default"])(columns, function (_ref4) {
+      var sort = _ref4.sort;
+      return sort;
+    }), [], {
+      hasAggregationColumn: hasAggregationColumn,
+      isHideDisabled: isHideDisabled
+    }];
+  }
+
+  return [(0, _sortBy["default"])(leftColumns, function (_ref5) {
+    var sort = _ref5.sort;
+    return sort;
+  }), (0, _sortBy["default"])(columns, function (_ref6) {
+    var sort = _ref6.sort;
+    return sort;
+  }), (0, _sortBy["default"])(rightColumns, function (_ref7) {
+    var sort = _ref7.sort;
+    return sort;
+  }), {
+    hasAggregationColumn: hasAggregationColumn,
+    isHideDisabled: isHideDisabled
+  }];
+}
+
+function normalizeColumns(tableStore, elements, tableAggregation, customizedColumns) {
+  var parent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+  var defaultKey = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : [0];
+  var columnSort = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {
+    left: 0,
+    center: 0,
+    right: 0
+  };
+  var columns = [];
+  var leftColumns = [];
+  var rightColumns = [];
+  var hasAggregationColumn = false;
+  var isHideDisabled = false;
+
+  var normalizeColumn = function normalizeColumn(element) {
+    if ( /*#__PURE__*/(0, _react.isValidElement)(element)) {
+      var props = element.props,
+          key = element.key,
+          type = element.type;
+
+      if ((0, _isFragment["default"])(element)) {
+        var children = props.children;
+
+        if (children) {
+          _react.Children.forEach(children, normalizeColumn);
+        }
+      } else if (type.__PRO_TABLE_COLUMN) {
+        var column = (0, _objectSpread2["default"])({}, props);
+
+        if (key) {
+          column.key = key;
+        } else if ((0, _isNil["default"])((0, _utils2.getColumnKey)(column))) {
+          column.key = "anonymous-".concat(defaultKey[0]++);
+        }
+
+        var _children = column.children,
+            aggregation = column.aggregation;
+
+        if (!hasAggregationColumn && aggregation) {
+          hasAggregationColumn = true;
+        }
+
+        if (tableAggregation || !aggregation) {
+          var customizedColumn = getCustomizedColumn(column, customizedColumns);
+          mergeColumnLock(column, parent, customizedColumn);
+
+          var _normalizeColumns = normalizeColumns(tableStore, _children, tableAggregation, customizedColumns, column, defaultKey),
+              _normalizeColumns2 = (0, _slicedToArray2["default"])(_normalizeColumns, 4),
+              childrenColumns = _normalizeColumns2[1],
+              _normalizeColumns2$ = _normalizeColumns2[3],
+              childrenHasAggregationColumn = _normalizeColumns2$.hasAggregationColumn,
+              childrenIsHideDisabled = _normalizeColumns2$.isHideDisabled;
+
+          column.children = childrenColumns;
+
+          if (!hasAggregationColumn && childrenHasAggregationColumn) {
+            hasAggregationColumn = childrenHasAggregationColumn;
+          }
+
+          if (!isHideDisabled && childrenIsHideDisabled) {
+            isHideDisabled = true;
+          }
+
+          mergeCustomizedColumn(column, tableStore, customizedColumn, childrenIsHideDisabled);
+
+          if (!isHideDisabled && column.hideable === false) {
+            isHideDisabled = true;
+          }
+
+          if (parent || !column.lock) {
+            if (column.sort === undefined) {
+              column.sort = columnSort.center;
+            }
+
+            columnSort.center++;
+            columns.push(column);
+          } else if (column.lock === true || column.lock === _enum2.ColumnLock.left) {
+            if (column.sort === undefined) {
+              column.sort = columnSort.left;
+            }
+
+            columnSort.left++;
+            leftColumns.push(column);
+          } else {
+            if (column.sort === undefined) {
+              column.sort = columnSort.right;
+            }
+
+            columnSort.right++;
+            rightColumns.push(column);
+          }
+        } else {
+          var _normalizeColumns3 = normalizeColumns(tableStore, _children, tableAggregation, customizedColumns, parent, defaultKey, parent ? undefined : columnSort),
+              _normalizeColumns4 = (0, _slicedToArray2["default"])(_normalizeColumns3, 4),
+              leftNodes = _normalizeColumns4[0],
+              nodes = _normalizeColumns4[1],
+              rightNodes = _normalizeColumns4[2],
+              _normalizeColumns4$ = _normalizeColumns4[3],
+              _childrenHasAggregationColumn2 = _normalizeColumns4$.hasAggregationColumn,
+              _childrenIsHideDisabled2 = _normalizeColumns4$.isHideDisabled;
+
+          if (!hasAggregationColumn && _childrenHasAggregationColumn2) {
+            hasAggregationColumn = _childrenHasAggregationColumn2;
+          }
+
+          if (!isHideDisabled && _childrenIsHideDisabled2) {
+            column.hideable = false;
+            isHideDisabled = true;
+          }
+
+          if (parent) {
+            parent.children = [].concat((0, _toConsumableArray2["default"])(leftNodes), (0, _toConsumableArray2["default"])(nodes), (0, _toConsumableArray2["default"])(rightNodes));
+          } else {
+            leftColumns.push.apply(leftColumns, (0, _toConsumableArray2["default"])(leftNodes));
+            columns.push.apply(columns, (0, _toConsumableArray2["default"])(nodes));
+            rightColumns.push.apply(rightColumns, (0, _toConsumableArray2["default"])(rightNodes));
+          }
+        }
+      }
+    }
+  };
+
+  _react.Children.forEach(elements, normalizeColumn);
+
+  if (parent) {
+    return [[], (0, _sortBy["default"])(columns, function (_ref8) {
+      var sort = _ref8.sort;
+      return sort;
+    }), [], {
+      hasAggregationColumn: hasAggregationColumn,
+      isHideDisabled: isHideDisabled
+    }];
+  }
+
+  return [(0, _sortBy["default"])(leftColumns, function (_ref9) {
+    var sort = _ref9.sort;
+    return sort;
+  }), (0, _sortBy["default"])(columns, function (_ref10) {
+    var sort = _ref10.sort;
+    return sort;
+  }), (0, _sortBy["default"])(rightColumns, function (_ref11) {
+    var sort = _ref11.sort;
+    return sort;
+  }), {
+    hasAggregationColumn: hasAggregationColumn,
+    isHideDisabled: isHideDisabled
+  }];
+}
+
+function getColumnGroupedColumns(tableStore, groups, customizedColumns) {
+  var leftGroupedColumns = [];
+  var groupedColumns = [];
+  var rightGroupedColumns = [];
+  var hasAggregation = false;
+  groups.forEach(function (group) {
+    var name = group.name,
+        type = group.type,
+        columnProps = group.columnProps;
+
+    if (type === _enum2.GroupType.column) {
+      var column = (0, _objectSpread2["default"])((0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, _Column.ColumnDefaultProps), {}, {
+        lock: _enum2.ColumnLock.left
+      }, columnProps), {}, {
+        draggable: false,
+        hideable: false,
+        key: "__group-".concat(name),
+        name: name,
+        __tableGroup: group
+      });
+      column.children = columnProps && columnProps.children ? (0, _treeUtils.treeMap)(columnProps.children, function (col, index, parentNode) {
+        var newCol = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, col), {}, {
+          __tableGroup: group,
+          lock: column.lock
+        });
+
+        if (!(0, _utils2.getColumnKey)(col)) {
+          newCol.key = parentNode ? "".concat(parentNode.key, "-").concat(index) : "__group-".concat(name, "-").concat(index);
+        }
+
+        findAndMergeCustomizedColumn(newCol, tableStore, customizedColumns);
+        return newCol;
+      }, function (_ref12, _ref13) {
+        var _ref12$sort = _ref12.sort,
+            sort = _ref12$sort === void 0 ? Infinity : _ref12$sort;
+        var _ref13$sort = _ref13.sort,
+            sort2 = _ref13$sort === void 0 ? Infinity : _ref13$sort;
+        return sort - sort2;
+      }) : undefined;
+      findAndMergeCustomizedColumn(column, tableStore, customizedColumns);
+
+      if (!column.lock) {
+        groupedColumns.push(column);
+      } else if (column.lock === true || column.lock === _enum2.ColumnLock.left) {
+        leftGroupedColumns.push(column);
+      } else {
+        rightGroupedColumns.push(column);
+      }
+
+      if (columnProps && !hasAggregation && columnProps.aggregation) {
+        hasAggregation = true;
+      }
+    }
+  });
+  return [leftGroupedColumns, groupedColumns, rightGroupedColumns, hasAggregation];
+}
+
+function getHeaderGroupedColumns(tableStore, groups, tableGroups, columns, dataSet, groupedColumns, customizedColumns, parentKey) {
+  var generatedColumns = new Set();
+  var headerUsed = false;
+  groups.forEach(function (group) {
+    var name = group.name,
+        subGroups = group.subGroups,
+        value = group.value;
+    var key = parentKey ? "".concat(parentKey, "-").concat(value) : value;
+    var subColumns = subGroups.length ? getHeaderGroupedColumns(tableStore, subGroups, tableGroups, columns, dataSet, groupedColumns, customizedColumns, key) : columns;
+    var tableGroup = tableGroups.find(function ($tableGroup) {
+      return name === $tableGroup.name;
+    });
+
+    if (tableGroup) {
+      var columnProps = tableGroup.columnProps,
+          groupName = tableGroup.name,
+          hidden = tableGroup.hidden;
+
+      if (hidden) {
+        subColumns.forEach(function (col) {
+          var __originalKey = (0, _utils2.getColumnKey)(col);
+
+          var colKey = "".concat(key, "-").concat(__originalKey);
+          var newCol = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, col), {}, {
+            key: colKey,
+            __tableGroup: tableGroup,
+            __group: group,
+            __groups: groups,
+            __originalKey: __originalKey
+          });
+          findAndMergeCustomizedColumn(newCol, tableStore, customizedColumns);
+          newCol.lock = false;
+          generatedColumns.add(newCol);
+        });
+      } else {
+        var length = groupedColumns.length;
+
+        if (length && !headerUsed) {
+          headerUsed = true;
+          var header = (0, _utils2.getHeader)((0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, columnProps), {}, {
+            name: groupName,
+            dataSet: dataSet,
+            group: group,
+            groups: groups
+          }));
+
+          if (header) {
+            var oldColumn = groupedColumns[length - 1];
+            var newKey = "".concat(key, "-").concat((0, _utils2.getColumnKey)(oldColumn));
+            var newColumn = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, columnProps), {}, {
+              lock: oldColumn.lock,
+              titleEditable: false,
+              draggable: false,
+              hideable: false,
+              key: newKey,
+              header: header,
+              children: [oldColumn],
+              __tableGroup: tableGroup
+            });
+            var customizedColumn = getCustomizedColumnByKey(newKey, customizedColumns);
+            mergeCustomizedColumn(newColumn, tableStore, customizedColumn);
+            groupedColumns[length - 1] = newColumn;
+          }
+        }
+
+        var renderer = columnProps && columnProps.renderer || _Column.defaultAggregationRenderer;
+        var column = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, columnProps), {}, {
+          titleEditable: false,
+          key: key,
+          headerStyle: columnProps && columnProps.style,
+          header: function header() {
+            return renderer({
+              dataSet: dataSet,
+              record: group.totalRecords[0],
+              name: groupName,
+              text: value,
+              value: value,
+              headerGroup: group
+            });
+          },
+          children: (0, _treeUtils.treeMap)(subColumns, function (col) {
+            var __originalKey = (0, _utils2.getColumnKey)(col);
+
+            var colKey = "".concat(key, "-").concat(__originalKey);
+            var newCol = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, col), {}, {
+              key: colKey,
+              __originalKey: __originalKey
+            });
+
+            if (customizedColumns) {
+              (0, _extends2["default"])(newCol, customizedColumns[__originalKey], customizedColumns[colKey]);
+            }
+
+            newCol.lock = false;
+            return newCol;
+          }, function (_ref14, _ref15) {
+            var _ref14$sort = _ref14.sort,
+                sort = _ref14$sort === void 0 ? Infinity : _ref14$sort;
+            var _ref15$sort = _ref15.sort,
+                sort2 = _ref15$sort === void 0 ? Infinity : _ref15$sort;
+            return sort - sort2;
+          }),
+          __tableGroup: tableGroup,
+          __group: group,
+          __groups: groups
+        });
+        findAndMergeCustomizedColumn(column, tableStore, customizedColumns);
+        generatedColumns.add(column);
+      }
+    } else if (subColumns.length) {
+      subColumns.forEach(function (column) {
+        return generatedColumns.add(column);
+      });
+    }
+  });
+  return (0, _toConsumableArray2["default"])(generatedColumns);
+}
+
+function normalizeGroupColumns(tableStore, columns, children, aggregation, customizedColumns) {
+  var headerTableGroups = tableStore.headerTableGroups,
+      groups = tableStore.groups,
+      dataSet = tableStore.dataSet;
+  var hasHeaderGroup = headerTableGroups.length > 0;
+  var generatedColumns = columns ? mergeDefaultProps(tableStore, columns, aggregation, customizedColumns) : normalizeColumns(tableStore, children, aggregation, customizedColumns);
+
+  var _generatedColumns = (0, _slicedToArray2["default"])(generatedColumns, 4),
+      leftOriginalColumns = _generatedColumns[0],
+      originalColumns = _generatedColumns[1],
+      rightOriginalColumns = _generatedColumns[2],
+      hasAggregationColumn = _generatedColumns[3].hasAggregationColumn;
+
+  var _ref16 = groups.length ? getColumnGroupedColumns(tableStore, groups, customizedColumns) : [[], [], [], false],
+      _ref17 = (0, _slicedToArray2["default"])(_ref16, 4),
+      leftColumnGroupedColumns = _ref17[0],
+      columnGroupedColumns = _ref17[1],
+      rightColumnGroupedColumns = _ref17[2],
+      hasAggregationColumnGroup = _ref17[3];
+
+  if (hasHeaderGroup) {
+    var groupedColumns = [].concat((0, _toConsumableArray2["default"])(leftColumnGroupedColumns), (0, _toConsumableArray2["default"])(columnGroupedColumns));
+    return [groupedColumns, getHeaderGroupedColumns(tableStore, tableStore.groupedDataWithHeader, headerTableGroups, [].concat((0, _toConsumableArray2["default"])(leftOriginalColumns), (0, _toConsumableArray2["default"])(originalColumns), (0, _toConsumableArray2["default"])(rightOriginalColumns)), dataSet, groupedColumns, customizedColumns), rightColumnGroupedColumns, hasAggregationColumnGroup || hasAggregationColumn];
+  }
+
+  return [[].concat((0, _toConsumableArray2["default"])(leftColumnGroupedColumns), (0, _toConsumableArray2["default"])(leftOriginalColumns)), [].concat((0, _toConsumableArray2["default"])(columnGroupedColumns), (0, _toConsumableArray2["default"])(originalColumns)), [].concat((0, _toConsumableArray2["default"])(rightOriginalColumns), (0, _toConsumableArray2["default"])(rightColumnGroupedColumns)), hasAggregationColumnGroup || hasAggregationColumn];
+}
+
+function getHeaderTexts(_x, _x2, _x3) {
+  return _getHeaderTexts.apply(this, arguments);
+}
+
+function _getHeaderTexts() {
+  _getHeaderTexts = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(dataSet, columns, aggregation) {
+    var headers,
+        column,
+        _args5 = arguments;
+    return _regenerator["default"].wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            headers = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : [];
+            column = columns.shift();
+
+            if (!column) {
+              _context5.next = 10;
+              break;
+            }
+
+            _context5.t0 = headers;
+            _context5.t1 = column.name;
+            _context5.next = 7;
+            return (0, _getReactNodeText["default"])((0, _utils2.getHeader)((0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, column), {}, {
+              dataSet: dataSet,
+              aggregation: aggregation
+            })));
+
+          case 7:
+            _context5.t2 = _context5.sent;
+            _context5.t3 = {
+              name: _context5.t1,
+              label: _context5.t2
+            };
+
+            _context5.t0.push.call(_context5.t0, _context5.t3);
+
+          case 10:
+            if (!columns.length) {
+              _context5.next = 13;
+              break;
+            }
+
+            _context5.next = 13;
+            return getHeaderTexts(dataSet, columns, aggregation, headers);
+
+          case 13:
+            return _context5.abrupt("return", headers);
+
+          case 14:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _getHeaderTexts.apply(this, arguments);
+}
+
+function autoHeightToStyle(autoHeight) {
+  var parentPaddingTop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var type = autoHeight.type,
+      diff = autoHeight.diff;
+  var height = "calc(100% - ".concat(diff + parentPaddingTop, "px)");
+
+  if (type === _enum2.TableAutoHeightType.minHeight) {
+    return {
+      height: height
+    };
+  }
+
+  return {
+    maxHeight: height
+  };
+}
+
+var TableStore = /*#__PURE__*/function () {
+  function TableStore(node) {
+    var _this = this;
+
+    (0, _classCallCheck2["default"])(this, TableStore);
+    this.editors = new Map();
+    this.mouseBatchChooseStartId = 0;
+    this.mouseBatchChooseEndId = 0;
+    this.inBatchExpansion = false;
+    this.performanceOn = false;
+    this.timing = {
+      renderStart: 0,
+      renderEnd: 0
+    };
+    this.lastMeasuredIndex = 0;
+    this.handleSelectAllChange = (0, _mobx.action)(function () {
+      if (_this.allChecked) {
+        _this.unCheckAllCurrent();
+
+        _this.unCheckAllCached();
+      } else {
+        _this.checkAllCurrent();
+
+        _this.checkAllCached();
+      }
+    });
+    this.saveCustomizedDebounce = (0, _debounce["default"])(this.saveCustomized, 1000);
+    this.stopScroll = (0, _debounce["default"])((0, _mobx.action)(function () {
+      _this.scrolling = false;
+    }), 300);
+    (0, _mobx.runInAction)(function () {
+      _this.scrollPosition = _enum2.ScrollPosition.left;
+      _this.mouseBatchChooseIdList = [];
+      _this.mouseBatchChooseState = false;
+      _this.showCachedSelection = false;
+      _this.lockColumnsHeadRowsHeight = {};
+      _this.lockColumnsBodyRowsHeight = {};
+      _this.lockColumnsFootRowsHeight = {};
+      _this.node = node;
+      _this.expandedRows = [];
+      _this.screenHeight = typeof window === 'undefined' ? 0 : document.documentElement.clientHeight;
+      _this.headerHeight = 0;
+      _this.footerHeight = 0;
+      _this.lastScrollTop = 0;
+      _this.lastScrollLeft = 0;
+      _this.customizedActiveKey = ['columns'];
+      _this.leftOriginalColumns = [];
+      _this.originalColumns = [];
+      _this.rightOriginalColumns = [];
+      _this.tempCustomized = {
+        columns: {}
+      };
+      _this.customized = {
+        columns: {}
+      };
+      _this.isCopyPristine = false;
+
+      _this.setProps(node.props);
+
+      if (_this.customizable) {
+        _this.loadCustomized();
+      } else {
+        _this.initColumns();
+      }
+
+      _this.selectedDragRows = [];
+    });
+  }
+
+  (0, _createClass2["default"])(TableStore, [{
+    key: "styleHeight",
+    get: function get() {
+      var autoHeight = this.autoHeight,
+          style = this.props.style,
+          parentPaddingTop = this.parentPaddingTop;
+      return autoHeight ? autoHeightToStyle(autoHeight, parentPaddingTop).height : style && style.height;
+    }
+  }, {
+    key: "styleMaxHeight",
+    get: function get() {
+      var autoHeight = this.autoHeight,
+          style = this.props.style,
+          parentPaddingTop = this.parentPaddingTop;
+      return autoHeight ? autoHeightToStyle(autoHeight, parentPaddingTop).maxHeight : style && style.maxHeight;
+    }
+  }, {
+    key: "styleMinHeight",
+    get: function get() {
+      var style = this.props.style;
+      return style && (0, _UnitConvertor.toPx)(style.minHeight, this.getRelationSize);
+    }
+  }, {
+    key: "computedHeight",
+    get: function get() {
+      if (this.heightChangeable) {
+        var _this$customized = this.customized,
+            heightType = _this$customized.heightType,
+            height = _this$customized.height,
+            heightDiff = _this$customized.heightDiff,
+            tempCustomized = this.tempCustomized;
+        var tempHeightType = (0, _mobx.get)(tempCustomized, 'heightType');
+
+        if (tempHeightType) {
+          if (tempHeightType === _enum2.TableHeightType.fixed) {
+            return (0, _mobx.get)(tempCustomized, 'height');
+          }
+
+          if (tempHeightType === _enum2.TableHeightType.flex) {
+            return this.screenHeight - ((0, _mobx.get)(tempCustomized, 'heightDiff') || 0);
+          }
+
+          return undefined;
+        }
+
+        if (heightType) {
+          if (heightType === _enum2.TableHeightType.fixed) {
+            return height;
+          }
+
+          if (heightType === _enum2.TableHeightType.flex) {
+            return this.screenHeight - (heightDiff || 0);
+          }
+
+          return undefined;
+        }
+      }
+
+      return (0, _UnitConvertor.toPx)(this.styleHeight, this.getRelationSize);
+    }
+  }, {
+    key: "otherHeight",
+    get: function get() {
+      var footerHeight = this.footerHeight,
+          boxSizing = this.props.boxSizing;
+      var footerTotalHeight = footerHeight && this.overflowX ? (0, _measureScrollbar["default"])() + footerHeight : footerHeight;
+      var otherHeight = this.headerHeight + footerTotalHeight;
+
+      if (boxSizing === _enum2.TableBoxSizing.wrapper) {
+        var _ref18 = this.siblingHeihgt || {},
+            _ref18$before = _ref18.before,
+            before = _ref18$before === void 0 ? 0 : _ref18$before,
+            _ref18$after = _ref18.after,
+            after = _ref18$after === void 0 ? 0 : _ref18$after;
+
+        return otherHeight + before + after;
+      }
+
+      return otherHeight;
+    }
+  }, {
+    key: "height",
+    get: function get() {
+      if (!this.isBodyExpanded) {
+        return undefined;
+      }
+
+      var computedHeight = this.computedHeight;
+      var maxHeight = (0, _UnitConvertor.toPx)(this.styleMaxHeight, this.getRelationSize);
+      var minHeight = (0, _UnitConvertor.toPx)(this.styleMinHeight, this.getRelationSize);
+      var isComputedHeight = (0, _isNumber["default"])(computedHeight);
+
+      if (isComputedHeight || (0, _isNumber["default"])(minHeight) || (0, _isNumber["default"])(maxHeight)) {
+        var rowHeight = this.rowHeight,
+            otherHeight = this.otherHeight;
+        var rowMinHeight = ((0, _isNumber["default"])(rowHeight) ? rowHeight : 30) + otherHeight;
+        var minTotalHeight = minHeight ? Math.max(rowMinHeight, minHeight) : rowMinHeight;
+        var height = (0, _defaultTo["default"])(computedHeight, this.bodyHeight + otherHeight);
+        var totalHeight = Math.max(minTotalHeight, maxHeight ? Math.min(maxHeight, height) : height);
+        return isComputedHeight || totalHeight !== height ? totalHeight - otherHeight : undefined;
+      }
+    }
+  }, {
+    key: "totalHeight",
+    get: function get() {
+      var height = this.height,
+          bodyHeight = this.bodyHeight,
+          otherHeight = this.otherHeight;
+      return (0, _defaultTo["default"])(height, bodyHeight) + otherHeight;
+    }
+  }, {
+    key: "bodyHeight",
+    get: function get() {
+      if (this.propVirtual) {
+        var virtualHeight = this.virtualHeight;
+
+        if (virtualHeight > 0) {
+          return virtualHeight;
+        }
+      }
+
+      return this.calcBodyHeight || 0;
+    }
+  }, {
+    key: "stickyLeft",
+    get: function get() {
+      return [_enum2.ScrollPosition.right, _enum2.ScrollPosition.middle].includes(this.scrollPosition);
+    }
+  }, {
+    key: "stickyRight",
+    get: function get() {
+      return [_enum2.ScrollPosition.left, _enum2.ScrollPosition.middle].includes(this.scrollPosition);
+    }
+  }, {
+    key: "performanceEnabled",
+    get: function get() {
+      var performanceEnabled = this.getConfig('performanceEnabled');
+      return performanceEnabled && performanceEnabled.Table;
+    }
+  }, {
+    key: "dataSet",
+    get: function get() {
+      return this.props.dataSet;
+    }
+  }, {
+    key: "prefixCls",
+    get: function get() {
+      return this.node.prefixCls;
+    }
+  }, {
+    key: "customizable",
+    get: function get() {
+      var customizedCode = this.props.customizedCode;
+      var queryBarProps = this.props.queryBarProps;
+      var isSimpleMode = queryBarProps && queryBarProps.simpleMode;
+
+      if (customizedCode || this.queryBar === _enum2.TableQueryBarType.comboBar && !isSimpleMode) {
+        if ('customizable' in this.props) {
+          return this.props.customizable;
+        }
+
+        return this.getConfig('tableCustomizable') || this.node.context.getCustomizable('Table');
+      }
+
+      return false;
+    }
+    /**
+     * board 组件个性化按钮 in buttons
+     */
+
+  }, {
+    key: "customizedBtn",
+    get: function get() {
+      var _this$props = this.props,
+          customizedCode = _this$props.customizedCode,
+          boardCustomized = _this$props.boardCustomized;
+
+      if (customizedCode && boardCustomized) {
+        return boardCustomized.customizedBtn;
+      }
+
+      return false;
+    }
+  }, {
+    key: "aggregation",
+    get: function get() {
+      var aggregation = this.customized.aggregation;
+
+      if (aggregation !== undefined) {
+        return aggregation;
+      }
+
+      var propAggregation = this.props.aggregation;
+      return propAggregation;
+    }
+  }, {
+    key: "aggregationExpandType",
+    get: function get() {
+      return this.customized.aggregationExpandType || 'cell';
+    }
+  }, {
+    key: "autoHeight",
+    get: function get() {
+      var autoHeight = this.props.autoHeight;
+
+      if (autoHeight) {
+        var defaultAutoHeight = {
+          type: _enum2.TableAutoHeightType.minHeight,
+          diff: this.getConfig('tableAutoHeightDiff') || 80
+        };
+
+        if ((0, _isObject["default"])(autoHeight)) {
+          return (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, defaultAutoHeight), autoHeight);
+        }
+
+        return defaultAutoHeight;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "heightType",
+    get: function get() {
+      if (this.heightChangeable) {
+        var tempHeightType = (0, _mobx.get)(this.tempCustomized, 'heightType');
+
+        if (tempHeightType !== undefined) {
+          return tempHeightType;
+        }
+
+        var heightType = this.customized.heightType;
+
+        if (heightType !== undefined) {
+          return heightType;
+        }
+      }
+
+      return this.originalHeightType;
+    }
+  }, {
+    key: "originalHeightType",
+    get: function get() {
+      var styleHeight = this.styleHeight;
+
+      if (styleHeight) {
+        if ((0, _isString["default"])(styleHeight) && (0, _UnitConvertor.isCalcSize)(styleHeight)) {
+          return _enum2.TableHeightType.flex;
+        }
+
+        if ((0, _isNumber["default"])((0, _UnitConvertor.toPx)(styleHeight))) {
+          return _enum2.TableHeightType.fixed;
+        }
+      }
+
+      return _enum2.TableHeightType.auto;
+    }
+  }, {
+    key: "virtualCell",
+    get: function get() {
+      if ('virtualCell' in this.props) {
+        return this.props.virtualCell;
+      }
+
+      return this.getConfig('tableVirtualCell');
+    }
+  }, {
+    key: "isFixedRowHeight",
+    get: function get() {
+      if (!this.aggregation || !this.hasAggregationColumn) {
+        return (0, _isNumber["default"])(this.rowHeight);
+      }
+
+      return false;
+    }
+  }, {
+    key: "propVirtual",
+    get: function get() {
+      if (this.isTree && this.rowDraggable) {
+        return true;
+      }
+
+      if ('virtual' in this.props) {
+        return this.props.virtual;
+      }
+
+      var configTableVirtual = this.getConfig('tableVirtual');
+
+      if (typeof configTableVirtual === 'function') {
+        return configTableVirtual(this.currentData.length, this.columnGroups.leafs.length);
+      }
+
+      return configTableVirtual;
+    }
+  }, {
+    key: "virtual",
+    get: function get() {
+      if (this.height !== undefined) {
+        return this.propVirtual;
+      }
+
+      return false;
+    }
+  }, {
+    key: "columnBuffer",
+    get: function get() {
+      var columnBuffer = this.props.columnBuffer;
+
+      if ('columnBuffer' in this.props && typeof columnBuffer === 'number' && columnBuffer >= 0) {
+        return columnBuffer;
+      }
+
+      var bufferConfig = this.getConfig('tableVirtualBuffer');
+
+      if (bufferConfig && 'columnBuffer' in bufferConfig && typeof bufferConfig.columnBuffer === 'number' && bufferConfig.columnBuffer >= 0) {
+        return bufferConfig.columnBuffer;
+      }
+
+      return 3;
+    }
+  }, {
+    key: "columnThreshold",
+    get: function get() {
+      var columnThreshold = this.props.columnThreshold;
+
+      if ('columnThreshold' in this.props && typeof columnThreshold === 'number' && columnThreshold >= 0) {
+        return columnThreshold;
+      }
+
+      var bufferConfig = this.getConfig('tableVirtualBuffer');
+
+      if (bufferConfig && 'columnThreshold' in bufferConfig && typeof bufferConfig.columnThreshold === 'number' && bufferConfig.columnThreshold >= 0) {
+        return bufferConfig.columnThreshold;
+      }
+
+      return 3;
+    }
+  }, {
+    key: "updateRenderZonePosition",
+    value: function updateRenderZonePosition() {
+      // 获取表格坐标显示范围
+      if (!this.width) {
+        return [0, 0];
+      }
+
+      var _this$columnGroups = this.columnGroups,
+          leafs = _this$columnGroups.leafs,
+          leftLeafs = _this$columnGroups.leftLeafs,
+          rightLeafs = _this$columnGroups.rightLeafs,
+          leftLeafColumnsWidth = _this$columnGroups.leftLeafColumnsWidth,
+          rightLeafColumnsWidth = _this$columnGroups.rightLeafColumnsWidth,
+          columnThreshold = this.columnThreshold,
+          nextRenderColIndex = this.nextRenderColIndex;
+      var scrollLeft = this.lastScrollLeft || 0;
+      var visibleColumnWidth = 0;
+      var firstIndex = -1;
+      var lastIndex = -1;
+      var centerLeafsLength = leafs.length - rightLeafs.length;
+
+      for (var i = leftLeafs.length ? leftLeafs.length - 1 : 0; i < centerLeafsLength; i++) {
+        var width = leafs[i].width;
+        visibleColumnWidth += width;
+
+        if (firstIndex === -1 && visibleColumnWidth > scrollLeft) {
+          firstIndex = i;
+        }
+
+        if (lastIndex === -1 && i === centerLeafsLength - 1 || this.width && visibleColumnWidth >= scrollLeft + this.width - leftLeafColumnsWidth - rightLeafColumnsWidth - (this.overflowY ? (0, _measureScrollbar["default"])() : 0)) {
+          lastIndex = i;
+        }
+
+        if (lastIndex !== -1 && firstIndex !== -1) {
+          break;
+        }
+      }
+
+      if (!nextRenderColIndex || nextRenderColIndex && nextRenderColIndex.includes(lastIndex) || firstIndex < nextRenderColIndex[0] || lastIndex > nextRenderColIndex[1]) {
+        this.nextRenderColIndex = [lastIndex - columnThreshold, Math.min(lastIndex + columnThreshold, leafs.length)];
+        this.prevRenderColIndex = [firstIndex, lastIndex];
+        return [firstIndex, lastIndex];
+      }
+
+      return this.prevRenderColIndex || [0, 0];
+    }
+  }, {
+    key: "virtualColumnRange",
+    get: function get() {
+      var _this$columnGroups2 = this.columnGroups,
+          leafs = _this$columnGroups2.leafs,
+          leftLeafs = _this$columnGroups2.leftLeafs,
+          rightLeafs = _this$columnGroups2.rightLeafs,
+          columnBuffer = this.columnBuffer;
+
+      if (!this.propVirtual || !this.overflowX) {
+        return {
+          center: [0, leafs.length]
+        };
+      }
+
+      var rangeThreshold = {
+        center: [0, 0]
+      }; // 左右固定列的坐标范围
+
+      var leftColLength = leftLeafs.length;
+      var rightColLength = rightLeafs.length;
+
+      if (leftColLength) {
+        rangeThreshold.left = [0, leftColLength];
+      }
+
+      if (rightColLength) {
+        rangeThreshold.right = [leafs.length - rightColLength, leafs.length];
+      }
+
+      var _this$updateRenderZon = this.updateRenderZonePosition(),
+          _this$updateRenderZon2 = (0, _slicedToArray2["default"])(_this$updateRenderZon, 2),
+          start = _this$updateRenderZon2[0],
+          end = _this$updateRenderZon2[1];
+
+      var first = Math.max(leftColLength, start - columnBuffer);
+      var last = Math.min(leafs.length - rightColLength, end + columnBuffer + 1);
+      rangeThreshold.center = [first, last];
+      return rangeThreshold;
+    }
+  }, {
+    key: "isRenderRange",
+    value: function isRenderRange(index, isGroup) {
+      var virtualColumnRange = this.virtualColumnRange,
+          propVirtual = this.propVirtual;
+
+      if (!propVirtual || isGroup) {
+        return true;
+      }
+
+      if (virtualColumnRange.left && index >= virtualColumnRange.left[0] && index < virtualColumnRange.left[1]) {
+        return true;
+      }
+
+      if (index >= virtualColumnRange.center[0] && index < virtualColumnRange.center[1]) {
+        return true;
+      }
+
+      if (virtualColumnRange.right && index >= virtualColumnRange.right[0] && index <= virtualColumnRange.right[1]) {
+        return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "blankVirtualCell",
+    get: function get() {
+      var virtualColumnRange = this.virtualColumnRange;
+      var left = virtualColumnRange.left,
+          center = virtualColumnRange.center,
+          right = virtualColumnRange.right;
+      return {
+        left: (0, _toConsumableArray2["default"])(Array(center[0] - (left ? left[1] : 0)).keys()).map(function (key) {
+          return /*#__PURE__*/_react["default"].createElement("td", {
+            key: "empty-left-".concat(key)
+          });
+        }),
+        right: right ? (0, _toConsumableArray2["default"])(Array(right[0] - center[1]).keys()).map(function (key) {
+          return /*#__PURE__*/_react["default"].createElement("td", {
+            key: "empty-right-".concat(key)
+          });
+        }) : []
+      };
+    }
+  }, {
+    key: "tableColumnResizeTransition",
+    get: function get() {
+      return this.getConfig('tableColumnResizeTransition');
+    }
+  }, {
+    key: "virtualRowHeight",
+    get: function get() {
+      var rowHeight = this.rowHeight,
+          _this$cellVerticalSiz = this.cellVerticalSize,
+          cellVerticalSize = _this$cellVerticalSiz === void 0 ? 3 : _this$cellVerticalSiz;
+      var normalRowHeight = (0, _UnitConvertor.scaleSize)((0, _isNumber["default"])(rowHeight) ? rowHeight + cellVerticalSize : 30 + cellVerticalSize);
+      return this.aggregation && this.hasAggregationColumn ? normalRowHeight * 4 : normalRowHeight;
+    }
+  }, {
+    key: "virtualEstimatedRows",
+    get: function get() {
+      var rowMetaData = this.rowMetaData;
+
+      if (rowMetaData) {
+        return rowMetaData.length;
+      }
+
+      var actualRows = this.actualRows;
+
+      if (actualRows !== undefined) {
+        return actualRows;
+      }
+
+      return this.data.length;
+    }
+  }, {
+    key: "virtualHeight",
+    get: function get() {
+      var virtualRowHeight = this.virtualRowHeight,
+          virtualEstimatedRows = this.virtualEstimatedRows;
+
+      if (!virtualEstimatedRows) {
+        return 0;
+      }
+
+      var rowMetaData = this.rowMetaData;
+
+      if (rowMetaData) {
+        var lastMeasuredIndex = this.lastMeasuredIndex;
+        var totalSizeOfMeasuredItems = 0;
+
+        if (lastMeasuredIndex >= virtualEstimatedRows) {
+          lastMeasuredIndex = virtualEstimatedRows - 1;
+        }
+
+        if (lastMeasuredIndex >= 0) {
+          var itemMetadata = rowMetaData[lastMeasuredIndex];
+
+          if (itemMetadata) {
+            totalSizeOfMeasuredItems = itemMetadata.offset + itemMetadata.height;
+          }
+        }
+
+        var numUnmeasuredItems = virtualEstimatedRows - lastMeasuredIndex - 1;
+        var totalSizeOfUnmeasuredItems = numUnmeasuredItems * virtualRowHeight;
+        return totalSizeOfMeasuredItems + totalSizeOfUnmeasuredItems;
+      }
+
+      return Math.round(virtualEstimatedRows * virtualRowHeight);
+    }
+  }, {
+    key: "virtualVisibleStartIndex",
+    get: function get() {
+      return getVisibleStartIndex(this);
+    }
+  }, {
+    key: "virtualVisibleEndIndex",
+    get: function get() {
+      return getVisibleEndIndex(this);
+    }
+  }, {
+    key: "virtualStartIndex",
+    get: function get() {
+      return getStartIndex(this);
+    }
+  }, {
+    key: "virtualEndIndex",
+    get: function get() {
+      return getEndIndex(this);
+    }
+  }, {
+    key: "virtualTop",
+    get: function get() {
+      var virtualRowHeight = this.virtualRowHeight,
+          virtualStartIndex = this.virtualStartIndex;
+      var rowMetaData = this.rowMetaData;
+
+      if (rowMetaData && rowMetaData.length) {
+        return rowMetaData[virtualStartIndex].offset;
+      }
+
+      return virtualStartIndex * virtualRowHeight;
+    }
+  }, {
+    key: "hidden",
+    get: function get() {
+      return this.styledHidden || this.props.hidden;
+    }
+  }, {
+    key: "alwaysShowRowBox",
+    get: function get() {
+      if ('alwaysShowRowBox' in this.props) {
+        return this.props.alwaysShowRowBox;
+      }
+
+      var alwaysShowRowBox = this.getConfig('tableAlwaysShowRowBox');
+
+      if (typeof alwaysShowRowBox !== 'undefined') {
+        return alwaysShowRowBox;
+      }
+
+      return false;
+    }
+  }, {
+    key: "keyboard",
+    get: function get() {
+      if ('keyboard' in this.props) {
+        return this.props.keyboard;
+      }
+
+      var keyboard = this.getConfig('tableKeyboard');
+
+      if (typeof keyboard !== 'undefined') {
+        return keyboard;
+      }
+
+      return false;
+    }
+  }, {
+    key: "columnResizable",
+    get: function get() {
+      if (this.currentEditRecord) {
+        return false;
+      }
+
+      if ('columnResizable' in this.props) {
+        return this.props.columnResizable !== false;
+      }
+
+      return this.getConfig('tableColumnResizable') !== false;
+    }
+    /**
+     * 自定义样式对表格的横向缩放倍数，用于矫正列宽拖拽的计算
+     */
+
+  }, {
+    key: "xZoom",
+    get: function get() {
+      var _this$props$columnRes = this.props.columnResizable,
+          columnResizable = _this$props$columnRes === void 0 ? this.getConfig('tableColumnResizable') : _this$props$columnRes;
+
+      if (typeof columnResizable === 'boolean') {
+        return 1;
+      }
+
+      var _ref19 = columnResizable || {},
+          _ref19$xZoom = _ref19.xZoom,
+          xZoom = _ref19$xZoom === void 0 ? 1 : _ref19$xZoom;
+
+      return xZoom;
+    }
+  }, {
+    key: "columnHideable",
+    get: function get() {
+      if ('columnHideable' in this.props) {
+        return this.props.columnHideable;
+      }
+
+      return this.getConfig('tableColumnHideable') !== false;
+    }
+    /**
+     * 表头支持编辑
+     */
+
+  }, {
+    key: "columnTitleEditable",
+    get: function get() {
+      if ('columnTitleEditable' in this.props) {
+        return this.props.columnTitleEditable;
+      }
+
+      return this.getConfig('tableColumnTitleEditable') === true;
+    }
+  }, {
+    key: "heightChangeable",
+    get: function get() {
+      if ('heightChangeable' in this.props) {
+        return this.props.heightChangeable;
+      }
+
+      return this.getConfig('tableHeightChangeable') === true;
+    }
+  }, {
+    key: "pagination",
+    get: function get() {
+      if ('pagination' in this.props) {
+        return this.props.pagination;
+      }
+
+      return this.getConfig('pagination');
+    }
+  }, {
+    key: "pageSizeChangeable",
+    get: function get() {
+      if ('pageSizeChangeable' in this.props) {
+        return this.props.pageSizeChangeable;
+      }
+
+      return this.getConfig('tablePageSizeChangeable') === true;
+    }
+  }, {
+    key: "dragColumnAlign",
+    get: function get() {
+      if ('dragColumnAlign' in this.props) {
+        return this.props.dragColumnAlign;
+      }
+
+      return this.getConfig('tableDragColumnAlign');
+    }
+  }, {
+    key: "columnDraggable",
+    get: function get() {
+      if ('columnDraggable' in this.props) {
+        return this.props.columnDraggable;
+      }
+
+      if ('dragColumn' in this.props) {
+        return this.props.dragColumn;
+      }
+
+      if (this.getConfig('tableColumnDraggable') === true) {
+        return true;
+      }
+
+      return this.getConfig('tableDragColumn') === true;
+    }
+  }, {
+    key: "rowDraggable",
+    get: function get() {
+      if (this.groups.length) {
+        return false;
+      }
+
+      if ('rowDraggable' in this.props) {
+        return this.props.rowDraggable;
+      }
+
+      if ('dragRow' in this.props) {
+        return this.props.dragRow;
+      }
+
+      var tableRowDraggable = this.getConfig('tableRowDraggable');
+
+      if (tableRowDraggable === true || tableRowDraggable === 'multiDrag') {
+        return tableRowDraggable;
+      }
+
+      return this.getConfig('tableDragRow') === true;
+    }
+  }, {
+    key: "customDragDropContenxt",
+    get: function get() {
+      if ('customDragDropContenxt' in this.props) {
+        return this.rowDraggable && this.props.customDragDropContenxt;
+      }
+
+      return false;
+    }
+  }, {
+    key: "size",
+    get: function get() {
+      var size = this.customized.size;
+      var tableSize = this.getConfig('tableSize');
+
+      if (size !== undefined) {
+        return size;
+      }
+
+      return this.props.size || tableSize || _enum3.Size["default"];
+    }
+  }, {
+    key: "rowHeight",
+    get: function get() {
+      var _this$props$rowHeight = this.props.rowHeight,
+          rowHeight = _this$props$rowHeight === void 0 ? (0, _defaultTo["default"])(this.getConfig('tableRowHeight'), 30) : _this$props$rowHeight;
+      var size = this.size;
+
+      if (typeof rowHeight === 'function') {
+        return rowHeight({
+          size: size
+        });
+      }
+
+      if ((0, _isNumber["default"])(rowHeight)) {
+        switch (size) {
+          case _enum3.Size.large:
+            return rowHeight + 2;
+
+          case _enum3.Size.small:
+            return rowHeight - 2;
+
+          default:
+        }
+      }
+
+      return rowHeight;
+    }
+  }, {
+    key: "headerRowHeight",
+    get: function get() {
+      var _this$props$headerRow = this.props.headerRowHeight,
+          headerRowHeight = _this$props$headerRow === void 0 ? this.getConfig('tableHeaderRowHeight') : _this$props$headerRow;
+
+      if (headerRowHeight === undefined) {
+        return this.rowHeight;
+      }
+
+      var size = this.size;
+
+      if (typeof headerRowHeight === 'function') {
+        return headerRowHeight({
+          size: size
+        });
+      }
+
+      if ((0, _isNumber["default"])(headerRowHeight)) {
+        switch (size) {
+          case _enum3.Size.large:
+            return headerRowHeight + 2;
+
+          case _enum3.Size.small:
+            return headerRowHeight - 2;
+
+          default:
+        }
+      }
+
+      return headerRowHeight;
+    }
+  }, {
+    key: "footerRowHeight",
+    get: function get() {
+      var _this$props$footerRow = this.props.footerRowHeight,
+          footerRowHeight = _this$props$footerRow === void 0 ? this.getConfig('tableFooterRowHeight') : _this$props$footerRow;
+
+      if (footerRowHeight === undefined) {
+        return this.rowHeight;
+      }
+
+      var size = this.size;
+
+      if (typeof footerRowHeight === 'function') {
+        return footerRowHeight({
+          size: size
+        });
+      }
+
+      if ((0, _isNumber["default"])(footerRowHeight)) {
+        switch (size) {
+          case _enum3.Size.large:
+            return footerRowHeight + 2;
+
+          case _enum3.Size.small:
+            return footerRowHeight - 2;
+
+          default:
+        }
+      }
+
+      return footerRowHeight;
+    }
+  }, {
+    key: "autoFootHeight",
+    get: function get() {
+      if ('autoFootHeight' in this.props) {
+        return this.props.autoFootHeight;
+      }
+
+      return false;
+    }
+  }, {
+    key: "emptyText",
+    get: function get() {
+      var renderEmpty = this.props.renderEmpty;
+
+      if (renderEmpty) {
+        return renderEmpty();
+      }
+
+      return this.getConfig('renderEmpty')('Table');
+    }
+  }, {
+    key: "highLightRow",
+    get: function get() {
+      if ('highLightRow' in this.props) {
+        return this.props.highLightRow;
+      }
+
+      return this.getConfig('tableHighLightRow');
+    }
+  }, {
+    key: "parityRow",
+    get: function get() {
+      var parityRow = this.customized.parityRow;
+
+      if (parityRow !== undefined) {
+        return parityRow;
+      }
+
+      if ('parityRow' in this.props) {
+        return this.props.parityRow;
+      }
+
+      return this.getConfig('tableParityRow') === true;
+    }
+  }, {
+    key: "showRemovedRow",
+    get: function get() {
+      if ('showRemovedRow' in this.props) {
+        return this.props.showRemovedRow;
+      }
+
+      return this.getConfig('tableShowRemovedRow') === true;
+    }
+  }, {
+    key: "autoFocus",
+    get: function get() {
+      if ('autoFocus' in this.props) {
+        return this.props.autoFocus;
+      }
+
+      return this.getConfig('tableAutoFocus') !== false;
+    }
+  }, {
+    key: "selectedHighLightRow",
+    get: function get() {
+      if ('selectedHighLightRow' in this.props) {
+        return this.props.selectedHighLightRow;
+      }
+
+      return this.getConfig('tableSelectedHighLightRow') !== false;
+    }
+  }, {
+    key: "editorNextKeyEnterDown",
+    get: function get() {
+      if ('editorNextKeyEnterDown' in this.props) {
+        return this.props.editorNextKeyEnterDown;
+      }
+
+      return this.getConfig('tableEditorNextKeyEnterDown') !== false;
+    }
+  }, {
+    key: "border",
+    get: function get() {
+      if ('border' in this.props) {
+        return this.props.border;
+      }
+
+      return this.getConfig('tableBorder') !== false;
+    }
+  }, {
+    key: "columnEditorBorder",
+    get: function get() {
+      if ('columnEditorBorder' in this.props) {
+        return this.props.columnEditorBorder;
+      }
+
+      var tableColumnEditorBorder = this.getConfig('tableColumnEditorBorder');
+
+      if (tableColumnEditorBorder !== undefined) {
+        return tableColumnEditorBorder;
+      }
+
+      return this.border;
+    }
+  }, {
+    key: "queryBar",
+    get: function get() {
+      return this.props.queryBar || this.getConfig('queryBar');
+    }
+  }, {
+    key: "expandIcon",
+    get: function get() {
+      return this.props.expandIcon || this.getConfig('tableExpandIcon');
+    }
+  }, {
+    key: "tableColumnResizeTrigger",
+    get: function get() {
+      return this.getConfig('tableColumnResizeTrigger');
+    } // get pristine(): boolean | undefined {
+    //   return this.props.pristine;
+    // }
+
+  }, {
+    key: "currentEditRecord",
+    get: function get() {
+      return this.dataSet.find(function (record) {
+        return record.editing === true;
+      });
+    },
+    set: function set(record) {
+      var _this2 = this;
+
+      (0, _mobx.runInAction)(function () {
+        var currentEditRecord = _this2.currentEditRecord,
+            dataSet = _this2.dataSet;
+
+        if (currentEditRecord) {
+          if (currentEditRecord.isNew) {
+            dataSet.remove(currentEditRecord);
+          } else {
+            currentEditRecord.reset();
+            currentEditRecord.editing = false;
+          }
+        }
+
+        if (record) {
+          record.editing = true;
+        }
+      });
+    }
+  }, {
+    key: "computedRecordCachedType",
+    get: function get() {
+      return this.recordCachedType || this.defaultRecordCachedType;
+    }
+  }, {
+    key: "isTree",
+    get: function get() {
+      return this.props.mode === _enum2.TableMode.tree;
+    }
+  }, {
+    key: "editing",
+    get: function get() {
+      return this.currentEditorName !== undefined || this.currentEditRecord !== undefined;
+    }
+  }, {
+    key: "hasRowBox",
+    get: function get() {
+      var _this$props2 = this.props,
+          dataSet = _this$props2.dataSet,
+          selectionMode = _this$props2.selectionMode;
+      var alwaysShowRowBox = this.alwaysShowRowBox;
+
+      if (dataSet) {
+        var selection = dataSet.selection;
+        return selection && (selectionMode && [_enum2.SelectionMode.rowbox, _enum2.SelectionMode.dblclick].includes(selectionMode) || alwaysShowRowBox);
+      }
+
+      return false;
+    }
+  }, {
+    key: "useMouseBatchChoose",
+    get: function get() {
+      var useMouseBatchChoose = this.props.useMouseBatchChoose;
+
+      if (useMouseBatchChoose !== undefined) {
+        return useMouseBatchChoose;
+      }
+
+      return this.getConfig('tableUseMouseBatchChoose');
+    }
+  }, {
+    key: "showCachedTips",
+    get: function get() {
+      var showCachedTips = this.props.showCachedTips;
+
+      if (showCachedTips !== undefined) {
+        return showCachedTips;
+      }
+
+      var tableShowCachedTips = this.getConfig('tableShowCachedTips');
+
+      if (tableShowCachedTips !== undefined) {
+        return tableShowCachedTips;
+      }
+
+      return false;
+    }
+  }, {
+    key: "showSelectionTips",
+    get: function get() {
+      var showSelectionTips = this.props.showSelectionTips;
+
+      if (showSelectionTips !== undefined) {
+        return showSelectionTips;
+      }
+
+      var tableShowSelectionTips = this.getConfig('tableShowSelectionTips');
+
+      if (tableShowSelectionTips !== undefined) {
+        return tableShowSelectionTips;
+      }
+
+      return false;
+    }
+  }, {
+    key: "overflowX",
+    get: function get() {
+      var width = this.width;
+
+      if (width !== undefined) {
+        return this.columnGroups.width > width;
+      }
+
+      return false;
+    }
+  }, {
+    key: "overflowY",
+    get: function get() {
+      var bodyHeight = this.bodyHeight,
+          height = this.height;
+      return bodyHeight !== undefined && height !== undefined && height < bodyHeight + (!this.hasFooter && this.overflowX ? (0, _measureScrollbar["default"])() : 0);
+    }
+  }, {
+    key: "hasRowGroups",
+    get: function get() {
+      if (this.cachedData.length) {
+        return true;
+      }
+
+      var groups = this.groups;
+
+      if (groups) {
+        return groups.some(function (_ref20) {
+          var type = _ref20.type;
+          return type === _enum2.GroupType.row;
+        });
+      }
+
+      return false;
+    }
+  }, {
+    key: "headerTableGroups",
+    get: function get() {
+      var groups = this.groups;
+      return groups ? groups.filter(function (_ref21) {
+        var type = _ref21.type;
+        return type === _enum2.GroupType.header;
+      }) : [];
+    }
+  }, {
+    key: "customizedColumnHeader",
+    value: function customizedColumnHeader() {
+      if (this.queryBar === _enum2.TableQueryBarType.comboBar) {
+        return /*#__PURE__*/_react["default"].createElement(_comboCustomizationSettings["default"], null);
+      }
+
+      return /*#__PURE__*/_react["default"].createElement(_CustomizationColumnHeader["default"], {
+        customizedBtn: this.customizedBtn,
+        onHeaderClick: this.openCustomizationModal
+      });
+    }
+  }, {
+    key: "customizedColumn",
+    get: function get() {
+      if (this.customizable && !this.customizedBtn && (!this.rowDraggable || this.dragColumnAlign !== _enum2.DragColumnAlign.right)) {
+        return {
+          key: CUSTOMIZED_KEY,
+          resizable: false,
+          titleEditable: false,
+          align: _enum2.ColumnAlign.center,
+          width: (0, _UnitConvertor.scaleSize)(30),
+          lock: _enum2.ColumnLock.right,
+          header: this.customizedColumnHeader,
+          headerClassName: "".concat(this.prefixCls, "-customized-column")
+        };
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "expandColumn",
+    get: function get() {
+      if (this.expandIconAsCell) {
+        return {
+          key: EXPAND_KEY,
+          resizable: false,
+          titleEditable: false,
+          align: _enum2.ColumnAlign.center,
+          width: (0, _UnitConvertor.scaleSize)(50),
+          lock: true
+        };
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "rowNumberColumn",
+    get: function get() {
+      var _this$props3 = this.props,
+          rowNumber = _this$props3.rowNumber,
+          _this$props3$rowNumbe = _this$props3.rowNumberColumnProps,
+          rowNumberColumnProps = _this$props3$rowNumbe === void 0 ? {} : _this$props3$rowNumbe;
+
+      if (rowNumber) {
+        var defaultProps = {
+          key: ROW_NUMBER_KEY,
+          resizable: true,
+          titleEditable: false,
+          headerClassName: "".concat(this.prefixCls, "-row-number-column"),
+          renderer: this.renderRowNumber,
+          tooltip: _enum2.TableColumnTooltip.overflow,
+          align: _enum2.ColumnAlign.center,
+          width: (0, _UnitConvertor.scaleSize)(50),
+          lock: true
+        };
+        return (0, _isFunction["default"])(rowNumberColumnProps) ? (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, defaultProps), rowNumberColumnProps(defaultProps)) : (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, defaultProps), rowNumberColumnProps);
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "selectionColumn",
+    get: function get() {
+      if (this.hasRowBox) {
+        var dataSet = this.dataSet,
+            prefixCls = this.prefixCls;
+        var _this$props4 = this.props,
+            rowBoxPlacement = _this$props4.rowBoxPlacement,
+            _this$props4$selectio = _this$props4.selectionColumnProps,
+            selectionColumnProps = _this$props4$selectio === void 0 ? {} : _this$props4$selectio;
+        var sLock = selectionColumnProps.lock,
+            className = selectionColumnProps.className,
+            headerClassName = selectionColumnProps.headerClassName,
+            footerClassName = selectionColumnProps.footerClassName,
+            rest = (0, _objectWithoutProperties2["default"])(selectionColumnProps, _excluded);
+        var sClassName = "".concat(prefixCls, "-selection-column");
+        var lock = sLock || _enum2.ColumnLock.left;
+
+        if (rowBoxPlacement === _enum2.RowBoxPlacement.start) {
+          lock = _enum2.ColumnLock.left;
+        } else if (rowBoxPlacement === _enum2.RowBoxPlacement.end) {
+          lock = _enum2.ColumnLock.right;
+        } else {
+          lock = false;
+        }
+
+        var selectionColumn = (0, _objectSpread2["default"])({
+          key: SELECTION_KEY,
+          resizable: false,
+          titleEditable: false,
+          renderer: this.renderSelectionBox,
+          align: _enum2.ColumnAlign.center,
+          width: (0, _UnitConvertor.scaleSize)(50),
+          headerClassName: (0, _classnames["default"])(sClassName, headerClassName),
+          className: (0, _classnames["default"])(sClassName, className),
+          footerClassName: (0, _classnames["default"])(sClassName, footerClassName),
+          lock: lock
+        }, rest);
+
+        if (dataSet && dataSet.selection === _enum.DataSetSelection.multiple) {
+          selectionColumn.header = this.multipleSelectionRenderer;
+          selectionColumn.footer = this.multipleSelectionRenderer;
+        }
+
+        return selectionColumn;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "comboQueryColumn",
+    get: function get() {
+      var _this3 = this;
+
+      if (this.queryBar === _enum2.TableQueryBarType.comboBar) {
+        var prefixCls = this.prefixCls,
+            queryBarProps = this.props.queryBarProps;
+        var showInlineSearch = queryBarProps && queryBarProps.inlineSearch;
+        var showInlineSearchRender = queryBarProps && queryBarProps.inlineSearchRender;
+        var className = "".concat(prefixCls, "-inline-query");
+        var lock = _enum2.ColumnLock.left;
+        var queryColumn = {
+          key: COMBOBAR_KEY,
+          header: showInlineSearch && /*#__PURE__*/_react["default"].createElement(_icon["default"], {
+            type: "manage_search",
+            className: className,
+            onClick: (0, _mobx.action)(function () {
+              _this3.comboBarStatus = !_this3.comboBarStatus;
+
+              _this3.node.handleHeightTypeChange();
+            })
+          }),
+          resizable: false,
+          titleEditable: false,
+          headerClassName: className,
+          className: className,
+          footerClassName: className,
+          renderer: function renderer() {
+            return queryBarProps && queryBarProps.inlineSearchRender;
+          },
+          align: _enum2.ColumnAlign.center,
+          width: (0, _UnitConvertor.scaleSize)(50),
+          lock: lock
+        };
+        return showInlineSearch === true || showInlineSearchRender ? queryColumn : undefined;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "draggableColumn",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          rowDraggable = this.rowDraggable,
+          prefixCls = this.prefixCls;
+
+      if (dragColumnAlign && rowDraggable) {
+        var draggableColumn = {
+          key: DRAG_KEY,
+          resizable: false,
+          titleEditable: false,
+          className: "".concat(prefixCls, "-drag-column"),
+          renderer: this.renderDragBox,
+          align: _enum2.ColumnAlign.center,
+          width: (0, _UnitConvertor.scaleSize)(50)
+        };
+
+        if (dragColumnAlign === _enum2.DragColumnAlign.left) {
+          draggableColumn.lock = _enum2.ColumnLock.left;
+        }
+
+        if (dragColumnAlign === _enum2.DragColumnAlign.right) {
+          draggableColumn.lock = _enum2.ColumnLock.right;
+          draggableColumn.header = this.customizable && this.customizedColumnHeader;
+        }
+
+        return draggableColumn;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "leftColumns",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          leftOriginalColumns = this.leftOriginalColumns,
+          expandColumn = this.expandColumn,
+          expandIconColumnIndex = this.expandIconColumnIndex,
+          draggableColumn = this.draggableColumn,
+          rowNumberColumn = this.rowNumberColumn,
+          selectionColumn = this.selectionColumn,
+          comboQueryColumn = this.comboQueryColumn;
+      var rowSelectCols = rowNumberColumn && (rowNumberColumn.rowNumberIndex || 0) > 0 ? [selectionColumn && selectionColumn.lock === _enum2.ColumnLock.left ? selectionColumn : undefined, rowNumberColumn] : [rowNumberColumn, selectionColumn && selectionColumn.lock === _enum2.ColumnLock.left ? selectionColumn : undefined];
+      return _mobx.observable.array([expandIconColumnIndex ? undefined : expandColumn, dragColumnAlign === _enum2.DragColumnAlign.left ? draggableColumn : undefined].concat(rowSelectCols, [comboQueryColumn], (0, _toConsumableArray2["default"])(leftOriginalColumns)).filter(columnFilter));
+    }
+  }, {
+    key: "rightColumns",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          rightOriginalColumns = this.rightOriginalColumns,
+          draggableColumn = this.draggableColumn,
+          customizedColumn = this.customizedColumn,
+          selectionColumn = this.selectionColumn;
+      return _mobx.observable.array([].concat((0, _toConsumableArray2["default"])(rightOriginalColumns), [dragColumnAlign === _enum2.DragColumnAlign.right ? draggableColumn : undefined, selectionColumn && selectionColumn.lock === _enum2.ColumnLock.right ? selectionColumn : undefined, customizedColumn]).filter(columnFilter));
+    }
+  }, {
+    key: "columns",
+    get: function get() {
+      var leftColumns = this.leftColumns,
+          rightColumns = this.rightColumns,
+          selectionColumn = this.selectionColumn,
+          expandColumn = this.expandColumn,
+          expandIconColumnIndex = this.expandIconColumnIndex,
+          rowBoxPlacement = this.props.rowBoxPlacement;
+      var originalColumns = this.originalColumns.slice();
+
+      if ((0, _isNumber["default"])(rowBoxPlacement) && selectionColumn) {
+        originalColumns.splice(rowBoxPlacement, 0, selectionColumn);
+      }
+
+      var allColumns = Array.from([].concat((0, _toConsumableArray2["default"])(leftColumns), (0, _toConsumableArray2["default"])(originalColumns), (0, _toConsumableArray2["default"])(rightColumns)));
+
+      if (expandIconColumnIndex && expandColumn) {
+        var lock = true;
+
+        if (expandIconColumnIndex > leftColumns.length && expandIconColumnIndex <= leftColumns.length + originalColumns.length) {
+          lock = false;
+        } else if (expandIconColumnIndex > leftColumns.length + originalColumns.length) {
+          lock = _enum2.ColumnLock.right;
+        }
+
+        allColumns.splice(expandIconColumnIndex, 0, (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, expandColumn), {}, {
+          lock: lock
+        }));
+      }
+
+      return _mobx.observable.array([].concat(allColumns));
+    }
+  }, {
+    key: "columnGroups",
+    get: function get() {
+      return new _ColumnGroups["default"](this.columns, this);
+    }
+  }, {
+    key: "leftColumnGroups",
+    get: function get() {
+      return new _ColumnGroups["default"](this.leftColumns, this);
+    }
+  }, {
+    key: "rightColumnGroups",
+    get: function get() {
+      return new _ColumnGroups["default"](this.rightColumns, this);
+    }
+  }, {
+    key: "leafNamedColumns",
+    get: function get() {
+      return this.columnGroups.allLeafs.reduce(function (list, _ref22) {
+        var column = _ref22.column;
+        return column.name ? list.concat(column) : list;
+      }, []);
+    }
+  }, {
+    key: "hasEmptyWidthColumn",
+    get: function get() {
+      return this.columnGroups.leafs.some(function (_ref23) {
+        var column = _ref23.column;
+        return (0, _isNil["default"])((0, _mobx.get)(column, 'width'));
+      });
+    }
+  }, {
+    key: "getLastEmptyWidthColumn",
+    get: function get() {
+      var emptyWidthColumns = this.columnGroups.leafs.filter(function (_ref24) {
+        var column = _ref24.column;
+        return (0, _isNil["default"])((0, _mobx.get)(column, 'width'));
+      });
+      return emptyWidthColumns.length ? emptyWidthColumns[emptyWidthColumns.length - 1].column : undefined;
+    }
+  }, {
+    key: "hasCheckFieldColumn",
+    get: function get() {
+      var checkField = this.dataSet.props.checkField;
+
+      if (checkField) {
+        var aggregation = this.aggregation;
+        return this.columnGroups.leafs.some(function (_ref25) {
+          var column = _ref25.column;
+          return aggregation ? (0, _treeUtils.treeSome)([column], function (c) {
+            return hasCheckField(c, checkField);
+          }) : hasCheckField(column, checkField);
+        });
+      }
+
+      return false;
+    }
+  }, {
+    key: "hasFooter",
+    get: function get() {
+      return this.columnGroups.leafs.some(function (_ref26) {
+        var column = _ref26.column;
+        return !!column.footer && column.key !== SELECTION_KEY;
+      });
+    }
+  }, {
+    key: "isAnyColumnsLeftLock",
+    get: function get() {
+      return this.leftColumns.length > 0;
+    }
+  }, {
+    key: "isAnyColumnsRightLock",
+    get: function get() {
+      return this.rightColumns.length > 0;
+    }
+  }, {
+    key: "isAnyColumnsLock",
+    get: function get() {
+      return this.isAnyColumnsLeftLock || this.isAnyColumnsRightLock;
+    }
+  }, {
+    key: "isCombinedColumn",
+    get: function get() {
+      var columns = this.columns;
+      var combinedColumn = columns.find(function (column) {
+        return !column.aggregation && column.children && column.children.length > 0;
+      });
+      return !(0, _isNil["default"])(combinedColumn);
+    }
+  }, {
+    key: "cachedDataInType",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection,
+          _this$computedRecordC = this.computedRecordCachedType,
+          computedRecordCachedType = _this$computedRecordC === void 0 ? _enum.RecordCachedType.selected : _this$computedRecordC;
+
+      if (showCachedSelection) {
+        switch (computedRecordCachedType) {
+          case _enum.RecordCachedType.selected:
+            return dataSet.cachedSelected;
+
+          case _enum.RecordCachedType.add:
+            return dataSet.cachedCreated;
+
+          case _enum.RecordCachedType.update:
+            return dataSet.cachedUpdated;
+
+          case _enum.RecordCachedType["delete"]:
+            return dataSet.cachedDestroyed;
+
+          default:
+        }
+      }
+
+      return [];
+    }
+  }, {
+    key: "cachedData",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection;
+
+      if (showCachedSelection) {
+        return dataSet.cachedRecords;
+      }
+
+      return [];
+    }
+  }, {
+    key: "currentData",
+    get: function get() {
+      var _this$props5 = this.props,
+          pristine = _this$props5.pristine,
+          recordFilter = _this$props5.filter,
+          treeFilter = _this$props5.treeFilter;
+      var dataSet = this.dataSet,
+          isTree = this.isTree,
+          headerFilterArr = this.headerFilter;
+      var filter = isTree ? typeof treeFilter === 'function' ? treeFilter : recordFilter : recordFilter;
+      var data = isTree ? dataSet.treeRecords : dataSet.records;
+
+      if (typeof filter === 'function') {
+        data = data.filter(filter);
+      }
+
+      if (pristine) {
+        data = data.filter(function (record) {
+          return !record.isNew;
+        });
+      }
+
+      if (headerFilterArr && headerFilterArr.length) {
+        headerFilterArr.forEach(function (headerFilter) {
+          var filter = headerFilter.filter,
+              filterText = headerFilter.filterText;
+
+          if (typeof filter === 'function') {
+            data = data.filter(function (record) {
+              return filter({
+                record: record,
+                filterText: filterText
+              });
+            });
+          } else {
+            var field = dataSet.getField(headerFilter.fieldName);
+            var type = field && field.get('type');
+            var multiple = field && field.get('multiple');
+            var isLookUp = false;
+
+            if (field && (field.get('lookupCode') || (0, _isString["default"])(field.get('lookupUrl')) || type !== _enum.FieldType.object && (field.get('lovCode') || field.getLookup() || field.get('options')) || field.get('lovCode'))) {
+              isLookUp = true;
+            }
+
+            data = data.filter(function (record) {
+              var recordText;
+              var fieldValue = record.get(headerFilter.fieldName);
+
+              if (multiple) {
+                if (isLookUp) {
+                  recordText = fieldValue.map(function (value) {
+                    return field.getText(value);
+                  }).join('');
+                } else {
+                  recordText = fieldValue.map(function (value) {
+                    return (0, _moment.isMoment)(value) ? value.format((0, _utils4.getDateFormatByField)(field, undefined, record)) : value;
+                  }).join('');
+                }
+              } else {
+                recordText = isLookUp ? String(field.getText(fieldValue)) : String((0, _moment.isMoment)(fieldValue) ? fieldValue.format((0, _utils4.getDateFormatByField)(field, undefined, record)) : fieldValue);
+              }
+
+              return recordText.toLocaleLowerCase().includes(String(headerFilter.filterText).toLocaleLowerCase());
+            });
+          }
+        });
+      }
+
+      return data;
+    }
+  }, {
+    key: "treeFilter",
+    get: function get() {
+      var treeFilter = this.props.treeFilter;
+      return treeFilter;
+    }
+  }, {
+    key: "data",
+    get: function get() {
+      return [].concat((0, _toConsumableArray2["default"])(this.cachedData), (0, _toConsumableArray2["default"])(this.currentData));
+    }
+  }, {
+    key: "cachedIndeterminate",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection;
+
+      if (dataSet) {
+        var _ref27 = showCachedSelection ? (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips) : [0, 0],
+            _ref28 = (0, _slicedToArray2["default"])(_ref27, 2),
+            cachedSelectedLength = _ref28[0],
+            cachedRecordsLength = _ref28[1];
+
+        if (cachedSelectedLength) {
+          return cachedSelectedLength !== cachedRecordsLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "allCachedChecked",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection;
+
+      if (dataSet) {
+        var _ref29 = showCachedSelection ? (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips) : [0, 0],
+            _ref30 = (0, _slicedToArray2["default"])(_ref29, 2),
+            cachedSelectedLength = _ref30[0],
+            cachedRecordsLength = _ref30[1];
+
+        if (cachedSelectedLength) {
+          return cachedSelectedLength === cachedRecordsLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "currentIndeterminate",
+    get: function get() {
+      var _this$props6 = this.props,
+          dataSet = _this$props6.dataSet,
+          filter = _this$props6.filter;
+
+      if (dataSet) {
+        var _getCurrentSelectable = (0, _utils2.getCurrentSelectableCounts)(dataSet, filter),
+            _getCurrentSelectable2 = (0, _slicedToArray2["default"])(_getCurrentSelectable, 2),
+            selectedLength = _getCurrentSelectable2[0],
+            currentLength = _getCurrentSelectable2[1];
+
+        if (selectedLength) {
+          return selectedLength !== currentLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "allCurrentChecked",
+    get: function get() {
+      var _this$props7 = this.props,
+          dataSet = _this$props7.dataSet,
+          filter = _this$props7.filter;
+
+      if (dataSet) {
+        var _getCurrentSelectable3 = (0, _utils2.getCurrentSelectableCounts)(dataSet, filter),
+            _getCurrentSelectable4 = (0, _slicedToArray2["default"])(_getCurrentSelectable3, 2),
+            selectedLength = _getCurrentSelectable4[0],
+            currentLength = _getCurrentSelectable4[1];
+
+        if (selectedLength) {
+          return selectedLength === currentLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "indeterminate",
+    get: function get() {
+      var showCachedSelection = this.showCachedSelection;
+
+      if (showCachedSelection) {
+        var dataSet = this.dataSet;
+
+        var _getCachedSelectableC = (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips),
+            _getCachedSelectableC2 = (0, _slicedToArray2["default"])(_getCachedSelectableC, 2),
+            cachedSelectedLength = _getCachedSelectableC2[0],
+            cachedRecordsLength = _getCachedSelectableC2[1];
+
+        var allLength = cachedSelectedLength + dataSet.currentSelected.length;
+        return !!allLength && allLength !== cachedRecordsLength + dataSet.records.filter(function (r) {
+          return r.selectable;
+        }).length;
+      }
+
+      return this.currentIndeterminate;
+    }
+  }, {
+    key: "allChecked",
+    get: function get() {
+      var showCachedSelection = this.showCachedSelection;
+
+      if (showCachedSelection) {
+        var dataSet = this.dataSet;
+
+        var _getCachedSelectableC3 = (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips),
+            _getCachedSelectableC4 = (0, _slicedToArray2["default"])(_getCachedSelectableC3, 2),
+            cachedSelectedLength = _getCachedSelectableC4[0],
+            cachedRecordsLength = _getCachedSelectableC4[1];
+
+        var allLength = cachedSelectedLength + dataSet.currentSelected.length;
+        return !!allLength && allLength === cachedRecordsLength + dataSet.records.filter(function (r) {
+          return r.selectable;
+        }).length;
+      }
+
+      return this.allCurrentChecked;
+    }
+  }, {
+    key: "expandIconAsCell",
+    get: function get() {
+      var _this$props8 = this.props,
+          expandedRowRenderer = _this$props8.expandedRowRenderer,
+          expandIconAsCell = _this$props8.expandIconAsCell;
+
+      if (expandIconAsCell !== undefined) {
+        return expandIconAsCell;
+      }
+
+      return !!expandedRowRenderer && !this.isTree;
+    }
+  }, {
+    key: "expandIconColumnIndex",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          rowDraggable = this.rowDraggable,
+          _this$props9 = this.props,
+          _this$props9$expandIc = _this$props9.expandIconColumnIndex,
+          expandIconColumnIndex = _this$props9$expandIc === void 0 ? 0 : _this$props9$expandIc,
+          rowNumber = _this$props9.rowNumber;
+
+      if ((!expandIconColumnIndex || typeof expandIconColumnIndex !== 'number') && !this.isTree) {
+        return 0;
+      }
+
+      return expandIconColumnIndex + [this.hasRowBox, rowNumber, dragColumnAlign && rowDraggable, !!this.comboQueryColumn].filter(Boolean).length;
+    }
+  }, {
+    key: "inlineEdit",
+    get: function get() {
+      return this.props.editMode === _enum2.TableEditMode.inline;
+    }
+  }, {
+    key: "clipboard",
+    get: function get() {
+      if ('clipboard' in this.props) {
+        return this.props.clipboard;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "combineSortConfig",
+    get: function get() {
+      var combineSortConfig = this.props.combineSortConfig; // 如果存在 showSortOption，走历史逻辑
+
+      if (combineSortConfig && combineSortConfig.showSortOption) {
+        return combineSortConfig;
+      }
+
+      if (combineSortConfig) {
+        var currentDataSort = combineSortConfig.currentDataSort,
+            allDataSort = combineSortConfig.allDataSort;
+        var processConfig = {
+          showSortOption: _enum2.SortRangeOption.allDataSort
+        }; // 兼容 currentDataSort
+
+        if ((0, _typeof2["default"])(currentDataSort) === 'object' && currentDataSort.enable === false) {
+          processConfig.currentDataSort = false;
+        } else if ((0, _typeof2["default"])(currentDataSort) === 'object') {
+          processConfig.currentDataSort = true;
+        }
+
+        if ((0, _typeof2["default"])(currentDataSort) === 'object' && typeof currentDataSort.customFn === 'function') {
+          processConfig.currentDataSort = currentDataSort.customFn;
+        } // 兼容 allDataSort
+
+
+        if ((0, _typeof2["default"])(allDataSort) === 'object' && allDataSort.enable !== false) {
+          processConfig.allDataSort = true;
+        } else {
+          processConfig.allDataSort = false;
+        } // 兼容 showSortOption, allDataSort 优先级更高
+
+
+        if ((0, _typeof2["default"])(currentDataSort) === 'object' && currentDataSort.show) {
+          processConfig.showSortOption = _enum2.SortRangeOption.currentDataSort;
+        }
+
+        if ((0, _typeof2["default"])(allDataSort) === 'object' && allDataSort.show) {
+          processConfig.showSortOption = _enum2.SortRangeOption.allDataSort;
+        }
+
+        return processConfig;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "addNewButton",
+    get: function get() {
+      var _this$props10 = this.props,
+          addNewButton = _this$props10.addNewButton,
+          pristine = _this$props10.pristine;
+      return addNewButton && !pristine;
+    }
+  }, {
+    key: "checkAllCurrent",
+    value: function checkAllCurrent() {
+      var _this$props11 = this.props,
+          dataSet = _this$props11.dataSet,
+          filter = _this$props11.filter;
+      dataSet.selectAll(filter);
+    }
+  }, {
+    key: "unCheckAllCurrent",
+    value: function unCheckAllCurrent() {
+      var _this$props12 = this.props,
+          dataSet = _this$props12.dataSet,
+          filter = _this$props12.filter;
+      dataSet.unSelectAll(filter);
+    }
+  }, {
+    key: "checkAllCached",
+    value: function checkAllCached() {
+      if (this.showCachedSelection) {
+        var _this$props13 = this.props,
+            dataSet = _this$props13.dataSet,
+            filter = _this$props13.filter;
+        dataSet.batchSelect((0, _utils2.getCachedSelectableRecords)(dataSet, this.computedRecordCachedType, this.showCachedTips, filter));
+      }
+    }
+  }, {
+    key: "unCheckAllCached",
+    value: function unCheckAllCached() {
+      if (this.showCachedSelection) {
+        var _this$props14 = this.props,
+            dataSet = _this$props14.dataSet,
+            filter = _this$props14.filter;
+        dataSet.batchUnSelect((0, _utils2.getCachedSelectableRecords)(dataSet, this.computedRecordCachedType, this.showCachedTips, filter));
+      }
+    }
+  }, {
+    key: "isBuiltInColumn",
+    value: function isBuiltInColumn(_ref31) {
+      var key = _ref31.key;
+
+      if ((0, _isString["default"])(key)) {
+        return [DRAG_KEY, SELECTION_KEY, ROW_NUMBER_KEY, CUSTOMIZED_KEY, EXPAND_KEY, COMBOBAR_KEY].includes(key);
+      }
+    }
+  }, {
+    key: "getColumnTooltip",
+    value: function getColumnTooltip(column) {
+      var tooltip = column.tooltip;
+
+      if (tooltip) {
+        return tooltip;
+      }
+
+      return this.node.context.getTooltip('table-cell');
+    }
+  }, {
+    key: "getColumnHeaders",
+    value: function getColumnHeaders() {
+      var leafNamedColumns = this.leafNamedColumns,
+          dataSet = this.dataSet;
+      return getHeaderTexts(dataSet, leafNamedColumns.slice(), this.aggregation);
+    }
+  }, {
+    key: "getColumnTagRenderer",
+    value: function getColumnTagRenderer(column) {
+      var tagRenderer = column.tagRenderer;
+      return tagRenderer;
+    }
+  }, {
+    key: "showEditor",
+    value: function showEditor(name) {
+      this.currentEditorName = name;
+    }
+  }, {
+    key: "setLastScrollTop",
+    value: function setLastScrollTop(lastScrollTop) {
+      this.lastScrollTop = lastScrollTop;
+      this.startScroll();
+    }
+  }, {
+    key: "setLastScrollLeft",
+    value: function setLastScrollLeft(lastScrollLeft) {
+      this.lastScrollLeft = lastScrollLeft;
+      this.startScroll();
+
+      if (this.clipboard && this.clipboard.copy && this.startChooseCell && this.endChooseCell) {
+        var _this$calcDrawBorderF = this.calcDrawBorderFixColumn(this.startChooseCell.target, this.endChooseCell.target),
+            fixLeftLength = _this$calcDrawBorderF.fixLeftLength,
+            fixRightLength = _this$calcDrawBorderF.fixRightLength;
+
+        if (fixLeftLength || fixRightLength) {
+          this.drawCopyBorder();
+        }
+      }
+    }
+  }, {
+    key: "hideEditor",
+    value: function hideEditor() {
+      this.currentEditorName = undefined;
+    }
+  }, {
+    key: "changeMouseBatchChooseIdList",
+    value: function changeMouseBatchChooseIdList(idList) {
+      this.mouseBatchChooseIdList = idList;
+    }
+  }, {
+    key: "showNextEditor",
+    value: function showNextEditor(name, reserve) {
+      var dataSet = this.dataSet;
+      var currentIndex = dataSet.currentIndex;
+      var record = dataSet.get(reserve ? currentIndex - 1 : currentIndex + 1);
+
+      if (record && !(0, _utils2.isDisabledRow)(record)) {
+        dataSet.current = record;
+        this.showEditor(name);
+        return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "setProps",
+    value: function setProps(props) {
+      this.props = props;
+      this.initGroups();
+      var showCachedSelection = props.showCachedSelection;
+
+      if (showCachedSelection !== undefined) {
+        this.showCachedSelection = showCachedSelection;
+      }
+    }
+  }, {
+    key: "updateProps",
+    value: function updateProps(props) {
+      var _this$props15 = this.props,
+          customizedCode = _this$props15.customizedCode,
+          oldAggregation = _this$props15.aggregation;
+      this.setProps(props);
+
+      if (this.customizable) {
+        if (customizedCode !== props.customizedCode) {
+          this.loadCustomized();
+          return;
+        }
+
+        var aggregation = props.aggregation;
+
+        if (oldAggregation !== aggregation) {
+          var customized = this.customized;
+
+          if (!(0, _isNil["default"])(aggregation) && aggregation !== customized.aggregation) {
+            customized.aggregation = aggregation;
+            this.saveCustomized();
+          }
+        }
+      }
+
+      this.initColumns();
+    }
+  }, {
+    key: "disposeGroupReaction",
+    value: function disposeGroupReaction() {
+      var groupReaction = this.groupReaction;
+
+      if (groupReaction) {
+        groupReaction();
+      }
+    }
+  }, {
+    key: "dispose",
+    value: function dispose() {
+      this.disposeGroupReaction();
+    }
+  }, {
+    key: "initGroups",
+    value: function initGroups() {
+      var _this4 = this;
+
+      this.disposeGroupReaction();
+      var _this$props$groups = this.props.groups,
+          groups = _this$props$groups === void 0 ? [] : _this$props$groups;
+
+      if (groups.length) {
+        this.groupReaction = (0, _mobx.reaction)(function () {
+          return dataSet.data;
+        }, function () {
+          return _this4.initGroups();
+        });
+        var headerGroupNames = [];
+        var rowGroupNames = [];
+        var groupNames = [];
+        var parentFields = new Map();
+        var dataSet = this.dataSet;
+        var header = [];
+        var row = [];
+        var column = [];
+        groups.forEach(function (group) {
+          var type = group.type,
+              name = group.name,
+              parentField = group.parentField;
+
+          switch (type) {
+            case _enum2.GroupType.header:
+              header.push(group);
+              headerGroupNames.push(name);
+              break;
+
+            case _enum2.GroupType.row:
+              row.push(group);
+              rowGroupNames.push(name);
+              break;
+
+            case _enum2.GroupType.none:
+              break;
+
+            default:
+              {
+                column.push(group);
+                groupNames.push(name);
+              }
+          }
+
+          if (parentField) {
+            parentFields.set(name, parentField);
+          }
+        });
+        this.groupedData = (0, _utils3.mergeGroupStates)((0, _utils3.normalizeGroups)(rowGroupNames.concat(groupNames), headerGroupNames, this.currentData, parentFields), this.groupedData);
+        this.groupedDataWithHeader = (0, _utils3.mergeGroupStates)((0, _utils3.normalizeGroups)(headerGroupNames.concat(rowGroupNames, groupNames), [], this.currentData), this.groupedDataWithHeader);
+        this.groups = [].concat(header, row, column);
+      } else {
+        this.groups = [];
+        this.groupedData = [];
+        this.groupedDataWithHeader = [];
+      }
+    }
+  }, {
+    key: "initColumns",
+    value: function initColumns() {
+      var customized = this.customized,
+          customizable = this.customizable,
+          aggregation = this.aggregation,
+          dataSet = this.dataSet;
+      var _this$props16 = this.props,
+          columns = _this$props16.columns,
+          children = _this$props16.children;
+      var customizedColumns = customizable ? customized.columns : undefined;
+      dataSet.setState('__CUSCOLUMNS__', customized);
+
+      var _normalizeGroupColumn = normalizeGroupColumns(this, columns, children, aggregation, customizedColumns),
+          _normalizeGroupColumn2 = (0, _slicedToArray2["default"])(_normalizeGroupColumn, 4),
+          leftOriginalColumns = _normalizeGroupColumn2[0],
+          originalColumns = _normalizeGroupColumn2[1],
+          rightOriginalColumns = _normalizeGroupColumn2[2],
+          hasAggregationColumn = _normalizeGroupColumn2[3];
+
+      this.leftOriginalColumns = leftOriginalColumns;
+      this.originalColumns = originalColumns;
+      this.rightOriginalColumns = rightOriginalColumns;
+      this.hasAggregationColumn = hasAggregationColumn;
+    }
+  }, {
+    key: "isAggregationCellExpanded",
+    value: function isAggregationCellExpanded(record, key) {
+      var expandedKeys = record.getState(AGGREGATION_EXPAND_CELL_KEY);
+
+      if (expandedKeys) {
+        return expandedKeys.get(key);
+      }
+    }
+  }, {
+    key: "setAggregationCellExpanded",
+    value: function setAggregationCellExpanded(record, key, expanded) {
+      var expandedKeys = record.getState(AGGREGATION_EXPAND_CELL_KEY) || _mobx.observable.map();
+
+      expandedKeys.set(key, expanded);
+      record.setState(AGGREGATION_EXPAND_CELL_KEY, expandedKeys);
+    }
+  }, {
+    key: "isBodyExpanded",
+    get: function get() {
+      if (!this.props.bodyExpandable) {
+        return true;
+      }
+
+      var bodyExpanded = this.props.bodyExpanded;
+
+      if (bodyExpanded !== undefined) {
+        return bodyExpanded;
+      }
+
+      var isBodyExpanded = this.dataSet.getState(BODY_EXPANDED);
+
+      if (isBodyExpanded !== undefined) {
+        return isBodyExpanded;
+      }
+
+      return (0, _defaultTo["default"])(this.props.defaultBodyExpanded, true);
+    }
+  }, {
+    key: "setBodyExpanded",
+    value: function setBodyExpanded(isBodyExpanded) {
+      var _this$props17 = this.props,
+          bodyExpanded = _this$props17.bodyExpanded,
+          _this$props17$onBodyE = _this$props17.onBodyExpand,
+          onBodyExpand = _this$props17$onBodyE === void 0 ? _noop["default"] : _this$props17$onBodyE;
+
+      if (bodyExpanded === undefined) {
+        this.dataSet.setState(BODY_EXPANDED, isBodyExpanded);
+      }
+
+      onBodyExpand(isBodyExpanded);
+    }
+  }, {
+    key: "isGroupExpanded",
+    value: function isGroupExpanded(group) {
+      return group.isExpanded && (!group.parent || this.isGroupExpanded(group.parent));
+    }
+  }, {
+    key: "setGroupExpanded",
+    value: function setGroupExpanded(group, isExpanded) {
+      group.isExpanded = isExpanded;
+    }
+  }, {
+    key: "isRowExpanded",
+    value: function isRowExpanded(record) {
+      var _record$isExpanded = record.isExpanded,
+          isExpanded = _record$isExpanded === void 0 ? this.expandedRows.indexOf(record.key) !== -1 : _record$isExpanded;
+      return isExpanded && (!this.isTree || !record.parent || this.isRowExpanded(record.parent));
+    }
+    /**
+     *
+     * @param record 想修改的record
+     * @param expanded 设置是否展开
+     * @param disHandler 设置是否需要触发展开事件
+     */
+
+  }, {
+    key: "setRowExpanded",
+    value: function setRowExpanded(record, expanded, disHandler) {
+      record.isExpanded = expanded;
+
+      if (!this.inBatchExpansion) {
+        var index = this.expandedRows.indexOf(record.key);
+
+        if (expanded) {
+          if (index === -1) {
+            this.expandedRows.push(record.key);
+          }
+        } else if (index !== -1) {
+          this.expandedRows.splice(index, 1);
+        }
+      }
+
+      var onExpand = this.props.onExpand;
+
+      if (onExpand && !disHandler) {
+        onExpand(expanded, record);
+      }
+
+      if (expanded && this.canTreeLoadData) {
+        this.onTreeNodeLoad({
+          record: record
+        });
+      }
+    }
+  }, {
+    key: "isRowPending",
+    value: function isRowPending(record) {
+      return record.pending === true;
+    }
+  }, {
+    key: "setRowPending",
+    value: function setRowPending(record, pending) {
+      record.pending = pending;
+    }
+  }, {
+    key: "isRowLoaded",
+    value: function isRowLoaded(record) {
+      return record.childrenLoaded === true;
+    }
+  }, {
+    key: "setRowLoaded",
+    value: function setRowLoaded(record, loaded) {
+      record.childrenLoaded = loaded;
+    }
+  }, {
+    key: "isRowHover",
+    value: function isRowHover(record) {
+      return this.hoverRow === record;
+    }
+  }, {
+    key: "canTreeLoadData",
+    get: function get() {
+      var _this$props18 = this.props,
+          treeLoadData = _this$props18.treeLoadData,
+          treeAsync = _this$props18.treeAsync;
+      return treeAsync || !!treeLoadData;
+    }
+  }, {
+    key: "cellHighlightRenderer",
+    get: function get() {
+      var _this$props$cellHighl = this.props.cellHighlightRenderer,
+          cellHighlightRenderer = _this$props$cellHighl === void 0 ? this.getConfig('highlightRenderer') : _this$props$cellHighl;
+      return cellHighlightRenderer;
+    }
+  }, {
+    key: "setRowHover",
+    value: function setRowHover(record, hover) {
+      this.hoverRow = hover ? record : undefined;
+    }
+  }, {
+    key: "expandAll",
+    value: function expandAll() {
+      var _this5 = this;
+
+      this.inBatchExpansion = true;
+      this.expandedRows = this.dataSet.records.map(function (record) {
+        _this5.setRowExpanded(record, true);
+
+        return record.key;
+      });
+      this.inBatchExpansion = false;
+    }
+  }, {
+    key: "collapseAll",
+    value: function collapseAll() {
+      var _this6 = this;
+
+      this.inBatchExpansion = true;
+      this.dataSet.records.forEach(function (record) {
+        return _this6.setRowExpanded(record, false);
+      });
+      this.expandedRows = [];
+      this.inBatchExpansion = false;
+    }
+  }, {
+    key: "onTreeNodeLoad",
+    value: function () {
+      var _onTreeNodeLoad = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(_ref32) {
+        var record, _this$props19, dataSet, treeLoadData, treeAsync, selectionMode, promises, _ref33, _ref33$currentPage, currentPage, parentSelect;
+
+        return _regenerator["default"].wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                record = _ref32.record;
+                _this$props19 = this.props, dataSet = _this$props19.dataSet, treeLoadData = _this$props19.treeLoadData, treeAsync = _this$props19.treeAsync, selectionMode = _this$props19.selectionMode;
+                promises = [];
+                this.setRowPending(record, true);
+
+                if (treeAsync && dataSet) {
+                  if (dataSet.paging) {
+                    _ref33 = record.getState(_DataSet.CHILDREN_PAGE_INFO) || {}, _ref33$currentPage = _ref33.currentPage, currentPage = _ref33$currentPage === void 0 ? 1 : _ref33$currentPage;
+                    promises.push(dataSet.queryMoreChild(record, currentPage));
+                  } else {
+                    promises.push(dataSet.queryMoreChild(record));
+                  }
+                }
+
+                if (treeLoadData) {
+                  promises.push(treeLoadData({
+                    record: record,
+                    dataSet: dataSet
+                  }));
+                } // 由子选父
+
+
+                parentSelect = function parentSelect(parent) {
+                  if (!parent.isSelected && parent.children && parent.children.length > 0 && parent.children.every(function (child) {
+                    return child.isSelected;
+                  })) {
+                    dataSet.select(parent);
+
+                    if (parent.parent) {
+                      parentSelect(parent.parent);
+                    }
+                  }
+                };
+
+                _context.prev = 7;
+                _context.next = 10;
+                return Promise.all(promises);
+
+              case 10:
+                if (selectionMode === _enum2.SelectionMode.treebox) {
+                  // 由父选子
+                  if (record.isSelected) {
+                    if (!record.parentSelectToChildrenSynced) {
+                      (0, _defaultTo["default"])(record.children, []).forEach(function (child) {
+                        if (!child.isSelected) {
+                          dataSet.select(child);
+                        }
+                      });
+                    }
+                  } else {
+                    parentSelect(record);
+                  }
+
+                  record.parentSelectToChildrenSynced = true;
+                }
+
+                this.setRowLoaded(record, true);
+
+              case 12:
+                _context.prev = 12;
+                this.setRowLoaded(record, true);
+                this.setRowPending(record, false);
+                return _context.finish(12);
+
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[7,, 12, 16]]);
+      }));
+
+      function onTreeNodeLoad(_x4) {
+        return _onTreeNodeLoad.apply(this, arguments);
+      }
+
+      return onTreeNodeLoad;
+    }()
+  }, {
+    key: "renderSelectionBox",
+    value: function renderSelectionBox(_ref34) {
+      var record = _ref34.record;
+      var selectionBoxRenderer = this.props.selectionBoxRenderer;
+
+      if (selectionBoxRenderer && (0, _isFunction["default"])(selectionBoxRenderer)) {
+        var element = _renderSelectionBox({
+          record: record,
+          store: this
+        });
+
+        return selectionBoxRenderer({
+          record: record,
+          element: element
+        });
+      }
+
+      return _renderSelectionBox({
+        record: record,
+        store: this
+      });
+    }
+  }, {
+    key: "renderRowNumber",
+    value: function renderRowNumber(_ref35) {
+      var record = _ref35.record,
+          dataSet = _ref35.dataSet;
+      var isTree = this.isTree,
+          rowNumber = this.props.rowNumber;
+      var numbers = getRowNumbers(record, dataSet, isTree);
+      var number = numbers.join('-');
+
+      if (typeof rowNumber === 'function') {
+        return rowNumber({
+          record: record,
+          dataSet: dataSet,
+          text: number,
+          pathNumbers: numbers
+        });
+      }
+
+      return number;
+    }
+  }, {
+    key: "renderDragBox",
+    value: function renderDragBox(_ref36) {
+      var record = _ref36.record;
+      var rowDragRender = this.props.rowDragRender;
+
+      if (rowDragRender && (0, _isFunction["default"])(rowDragRender.renderIcon)) {
+        return rowDragRender.renderIcon({
+          record: record
+        });
+      }
+
+      return /*#__PURE__*/_react["default"].createElement(_icon["default"], {
+        type: "baseline-drag_indicator"
+      });
+    }
+  }, {
+    key: "findColumnGroup",
+    value: function findColumnGroup(indexOrKeyOrName) {
+      var allLeafs = this.columnGroups.allLeafs;
+      return (0, _isNumber["default"])(indexOrKeyOrName) ? allLeafs[indexOrKeyOrName] : allLeafs.find(function (_ref37) {
+        var key = _ref37.key;
+        return String(key) === indexOrKeyOrName;
+      });
+    }
+  }, {
+    key: "setColumnWidth",
+    value: function setColumnWidth(columnGroup, width) {
+      var saveToCustomization = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var column = columnGroup.column;
+
+      if (width !== column.width) {
+        this.changeCustomizedColumnValue(column, {
+          width: width
+        }, saveToCustomization);
+        var onColumnResize = this.props.onColumnResize;
+
+        if (onColumnResize) {
+          var index = this.columnGroups.allLeafs.indexOf(columnGroup);
+          /**
+           * onColumnResize 事件回调
+           * 回调参数：
+           * @param column
+           * @param width
+           */
+
+          onColumnResize({
+            column: column,
+            width: width,
+            index: index
+          });
+        }
+      }
+    }
+  }, {
+    key: "calcDrawBorderFixColumn",
+    value: function calcDrawBorderFixColumn(startTarget, endTarget) {
+      var startAndTargetClassValues = "".concat(startTarget.classList.value, " ").concat(endTarget.classList.value).split(" ");
+      var fixLeftClassname = "".concat(this.prefixCls, "-cell-fix-left");
+      var fixRightClassname = "".concat(this.prefixCls, "-cell-fix-right");
+      var fixLeftLength = startAndTargetClassValues.filter(function (x) {
+        return x === fixLeftClassname;
+      }).length; // 选中左固定列的数量  0 ~ 2
+
+      var fixRightLength = startAndTargetClassValues.filter(function (x) {
+        return x === fixRightClassname;
+      }).length; // 选中右固定列的数量 0 ～ 2
+
+      return {
+        fixLeftClassname: fixLeftClassname,
+        fixRightClassname: fixRightClassname,
+        fixLeftLength: fixLeftLength,
+        fixRightLength: fixRightLength
+      };
+    } // 动态改变固定列层级
+
+  }, {
+    key: "changeFixIndex",
+    value: function changeFixIndex(classname) {
+      var zIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+      var _this$node = this.node,
+          tableContentWrap = _this$node.tableContentWrap,
+          tableBodyWrap = _this$node.tableBodyWrap;
+      var positionWrapper = tableBodyWrap || tableContentWrap;
+
+      if (positionWrapper) {
+        var fixElements = positionWrapper.querySelectorAll("td.".concat(classname));
+        var choosedRows = Array.from(fixElements);
+        choosedRows.forEach(function (element) {
+          element.style.zIndex = zIndex;
+        });
+      }
+    }
+  }, {
+    key: "drawCopyBorder",
+    value: function drawCopyBorder(sTarget, eTarget) {
+      var _this$node2 = this.node,
+          rangeBorder = _this$node2.rangeBorder,
+          tableContentWrap = _this$node2.tableContentWrap,
+          tableBodyWrap = _this$node2.tableBodyWrap,
+          startChooseCell = this.startChooseCell,
+          endChooseCell = this.endChooseCell,
+          lastScrollLeft = this.lastScrollLeft,
+          columnGroups = this.columnGroups,
+          leftColumnGroups = this.leftColumnGroups,
+          customizable = this.customizable;
+      var startTarget = sTarget || startChooseCell && startChooseCell.target;
+      var endTarget = eTarget || endChooseCell && endChooseCell.target;
+      var positionWrapper = tableBodyWrap || tableContentWrap;
+      var maxScrollLeft = positionWrapper.scrollWidth - positionWrapper.clientWidth;
+
+      if (rangeBorder && startTarget && endTarget) {
+        var _this$calcDrawBorderF2 = this.calcDrawBorderFixColumn(startTarget, endTarget),
+            fixLeftClassname = _this$calcDrawBorderF2.fixLeftClassname,
+            fixRightClassname = _this$calcDrawBorderF2.fixRightClassname,
+            fixLeftLength = _this$calcDrawBorderF2.fixLeftLength,
+            fixRightLength = _this$calcDrawBorderF2.fixRightLength;
+
+        var rectStart = startTarget.getBoundingClientRect();
+        var rectEnd = endTarget.getBoundingClientRect();
+        var minX = Math.min(rectStart.left, rectEnd.left);
+        var maxX = Math.max(rectStart.right, rectEnd.right);
+        var minY = Math.min(rectStart.top, rectEnd.top);
+        var maxY = Math.max(rectStart.bottom, rectEnd.bottom);
+        var left = Math.min(startTarget.offsetLeft, endTarget.offsetLeft);
+        var top = Math.min(startTarget.offsetTop, endTarget.offsetTop);
+        var width = maxX - minX;
+        var height = maxY - minY;
+        rangeBorder.style.top = (0, _UnitConvertor.pxToRem)(top);
+        rangeBorder.style.height = (0, _UnitConvertor.pxToRem)(height);
+        rangeBorder.style.display = 'block';
+
+        if (!fixLeftLength && !fixRightLength || fixLeftLength && fixRightLength || fixLeftLength > 1 || fixRightLength > 1 || !this.overflowX) {
+          // 一般选框处理
+          rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(width);
+          rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(left);
+        } else {
+          // 动态选框处理
+          var extraDistance = 0;
+          var fixChoosedWidth = 0; // 获取框选的固定列的宽度
+
+          if (startChooseCell && endChooseCell) {
+            var _sort = [startChooseCell.colIndex, endChooseCell.colIndex].sort(function (a, b) {
+              return a - b;
+            }),
+                _sort2 = (0, _slicedToArray2["default"])(_sort, 2),
+                firstColIndex = _sort2[0],
+                lastColIndex = _sort2[1];
+
+            var leafs = columnGroups.leafs;
+            var totalWidth = leafs.slice(firstColIndex, lastColIndex + 1).reduce(function (total, col) {
+              return total + (col.width || 0);
+            }, 0); // 存在自定义列的情况
+
+            var lastLeafs = leafs[lastColIndex + 1];
+
+            if (customizable && lastLeafs && lastLeafs.key === CUSTOMIZED_KEY) {
+              totalWidth += leafs[lastColIndex + 1].width || 0;
+            }
+
+            if (fixLeftLength) {
+              extraDistance = lastScrollLeft > endTarget.offsetLeft ? lastScrollLeft - (endTarget.offsetLeft - leftColumnGroups.width + endTarget.offsetWidth) : 0;
+              var fixChoosedLeft = 0;
+
+              for (var i = firstColIndex; i <= lastColIndex; i++) {
+                var col = leafs[i];
+
+                if (col.column.lock === _enum2.ColumnLock.left || col.column.lock === true) {
+                  fixChoosedWidth += col.width || 0;
+
+                  if (i === firstColIndex) {
+                    fixChoosedLeft = startChooseCell.colIndex === firstColIndex ? startChooseCell.target.offsetLeft : endChooseCell.target.offsetLeft;
+                  }
+                }
+              }
+
+              rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(fixChoosedLeft);
+              rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(Math.max(fixChoosedWidth, totalWidth - lastScrollLeft));
+            } else if (fixRightLength) {
+              var unFixedWidth = 0;
+              var minLeft = 0;
+
+              for (var _i = lastColIndex; _i >= firstColIndex; _i--) {
+                var _col = leafs[_i];
+
+                if (_col.column.lock === _enum2.ColumnLock.right) {
+                  fixChoosedWidth += _col.width || 0;
+
+                  if (lastColIndex === _i && customizable && lastColIndex === columnGroups.leafs.length - 2) {
+                    fixChoosedWidth += leafs[_i + 1].width || 0;
+                  }
+                } else if (!_col.column.lock) {
+                  unFixedWidth += _col.width || 0;
+                  minLeft = _col.left;
+                }
+              }
+
+              extraDistance = maxScrollLeft - lastScrollLeft > unFixedWidth ? maxScrollLeft - lastScrollLeft - unFixedWidth : 0;
+              rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(minLeft - extraDistance);
+              rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(Math.max(fixChoosedWidth, totalWidth - (maxScrollLeft - lastScrollLeft)));
+            }
+          }
+        } // 动态改变固定列层级
+
+
+        if (fixLeftLength && fixRightLength) {
+          rangeBorder.style.zIndex = "2";
+          this.changeFixIndex(fixLeftClassname);
+          this.changeFixIndex(fixRightClassname);
+        } else if (fixLeftLength) {
+          rangeBorder.style.zIndex = "2";
+
+          if (fixLeftLength === 1) {
+            this.changeFixIndex(fixRightClassname, "3");
+          }
+
+          this.changeFixIndex(fixLeftClassname);
+        } else if (fixRightLength) {
+          rangeBorder.style.zIndex = "2";
+
+          if (fixRightLength === 1) {
+            this.changeFixIndex(fixLeftClassname, "3");
+          }
+
+          this.changeFixIndex(fixRightClassname);
+        } else {
+          rangeBorder.style.zIndex = "1";
+        }
+      }
+    }
+  }, {
+    key: "drawExpandArea",
+    value: function drawExpandArea(event) {
+      // 说明有起点 & 终点
+      var _this$node3 = this.node,
+          rangeBorder = _this$node3.rangeBorder,
+          expandBorder = _this$node3.expandBorder,
+          startChooseCell = this.startChooseCell,
+          endChooseCell = this.endChooseCell;
+      var sTarget = startChooseCell && startChooseCell.target;
+      var eTarget = endChooseCell && endChooseCell.target;
+      var pointTarget = (0, _TableCell.getTdElementByTarget)(event.target);
+      var targetTop = pointTarget.offsetTop + pointTarget.offsetHeight; // 分析对比两点的位置，第一个点是 右下角。第二个点是 左上角
+      // 计算右下角的位置
+
+      if (rangeBorder) {
+        var cornerTop = rangeBorder.offsetTop + rangeBorder.offsetHeight;
+
+        if (targetTop > cornerTop && sTarget && eTarget) {
+          // 往下绘制扩展区域
+          // 起点
+          var LT = {
+            x: Math.min(sTarget.offsetLeft, eTarget.offsetLeft),
+            y: Math.max(sTarget.offsetTop + sTarget.offsetHeight, eTarget.offsetTop + eTarget.offsetHeight)
+          }; // 终点
+
+          var RB = {
+            x: Math.max(sTarget.offsetLeft + sTarget.offsetWidth, eTarget.offsetLeft + eTarget.offsetWidth),
+            y: pointTarget.offsetTop + pointTarget.offsetHeight
+          };
+
+          if (expandBorder) {
+            expandBorder.style.left = (0, _UnitConvertor.pxToRem)(rangeBorder.offsetLeft);
+            expandBorder.style.top = (0, _UnitConvertor.pxToRem)(LT.y);
+            expandBorder.style.width = (0, _UnitConvertor.pxToRem)(rangeBorder.offsetWidth);
+            expandBorder.style.height = (0, _UnitConvertor.pxToRem)(RB.y - LT.y);
+            expandBorder.style.borderTop = "none";
+            expandBorder.style.display = "block";
+            expandBorder.style.zIndex = rangeBorder.style.zIndex;
+          }
+
+          var rows = (RB.y - LT.y + 1) / pointTarget.offsetHeight;
+          this.batchExpandRowNumber = Math.floor(rows);
+        } else {
+          this.batchExpandRowNumber = 0;
+
+          if (expandBorder) {
+            expandBorder.style.display = "none";
+          }
+        }
+      }
+    } // 批量赋值款选单元格的值
+
+  }, {
+    key: "batchSetCellValue",
+    value: function batchSetCellValue() {
+      var _this$node4 = this.node,
+          tableBodyWrap = _this$node4.tableBodyWrap,
+          expandBorder = _this$node4.expandBorder,
+          dataSet = this.dataSet;
+      if (!this.batchExpandRowNumber) return; // 记录初始框选的值
+
+      var _this$startChooseCell = this.startChooseCell,
+          startColIndex = _this$startChooseCell.colIndex,
+          startRowIndex = _this$startChooseCell.rowIndex,
+          sTarget = _this$startChooseCell.target;
+      var _this$endChooseCell = this.endChooseCell,
+          endColIndex = _this$endChooseCell.colIndex,
+          endRowIndex = _this$endChooseCell.rowIndex,
+          eTarget = _this$endChooseCell.target;
+      var minRowIndex = Math.min(startRowIndex, endRowIndex);
+      var minColIndex = Math.min(startColIndex, endColIndex);
+      var maxRowIndex = Math.max(startRowIndex, endRowIndex);
+      var maxColIndex = Math.max(startColIndex, endColIndex);
+      var data = this.currentData.map(function (x) {
+        return x.toData();
+      });
+      var cols = this.columns.filter(function (x) {
+        return !x.hidden;
+      });
+      var i = minRowIndex;
+
+      for (var k = 1; k <= this.batchExpandRowNumber; k++) {
+        for (var j = minColIndex; j <= maxColIndex; j++) {
+          var cField = cols[j].name;
+          var cValue = data[i][cField];
+          var record = this.currentData[maxRowIndex + k];
+          var field = dataSet.fields.get(cField);
+          var colEditor = cols[j].editor;
+
+          if (typeof colEditor === 'function') {
+            colEditor = colEditor(record, cField);
+          }
+
+          if (colEditor && field && !field.get('readOnly', record) && !field.get('disabled', record)) {
+            record.set(cField, cValue);
+          }
+        }
+
+        if (i < maxRowIndex && k % (maxRowIndex - minRowIndex + 1) !== 0) {
+          i++;
+        } else {
+          i = minRowIndex;
+        }
+      } // 新起点
+
+
+      var newSTarget = startRowIndex > endRowIndex ? eTarget : sTarget; // 新终点
+
+      var trs = tableBodyWrap === null || tableBodyWrap === void 0 ? void 0 : tableBodyWrap.querySelectorAll('.c7n-pro-table-tbody tr');
+
+      if (trs) {
+        var dataIndex = (startRowIndex > endRowIndex ? sTarget : eTarget).getAttribute('data-index');
+        var newETarget = trs[(startRowIndex > endRowIndex ? startRowIndex : endRowIndex) + this.batchExpandRowNumber].querySelector("td[data-index=\"".concat(dataIndex, "\"]"));
+
+        if (newETarget) {
+          this.drawCopyBorder(newSTarget, newETarget);
+        } // 更新起始点
+
+
+        this.startChooseCell = {
+          rowIndex: startRowIndex > endRowIndex ? endRowIndex : startRowIndex,
+          colIndex: startRowIndex > endRowIndex ? endColIndex : startColIndex,
+          target: newSTarget
+        };
+        this.endChooseCell = {
+          rowIndex: (startRowIndex > endRowIndex ? startRowIndex : endRowIndex) + this.batchExpandRowNumber,
+          colIndex: startRowIndex > endRowIndex ? startColIndex : endColIndex,
+          target: newETarget
+        };
+      }
+
+      if (expandBorder) {
+        expandBorder.style.display = "none";
+      }
+
+      if (this.clipboard && this.clipboard.copy) {
+        this.calcArrangeValue();
+      }
+    }
+  }, {
+    key: "changeCustomizedColumnValue",
+    value: function changeCustomizedColumnValue(column, value) {
+      var saveToCustomization = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var columns = this.customized.columns;
+      (0, _mobx.set)(column, value);
+      var columnKey = (0, _utils2.getColumnKey)(column).toString();
+      var oldCustomized = (0, _mobx.get)(columns, columnKey) || (0, _get2["default"])(columns, columnKey);
+      (0, _mobx.set)(columns, columnKey, (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, oldCustomized), value));
+
+      if (saveToCustomization) {
+        this.saveCustomizedDebounce();
+      }
+    }
+  }, {
+    key: "saveCustomized",
+    value: function () {
+      var _saveCustomized = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(customized, otherInfo) {
+        var _this$props20, customizedCode, boardCustomized, tableCustomizedSave, tableCustomizedLoad, currentRecord, res, dataJson;
+
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(this.customizable && this.customizedLoaded)) {
+                  _context2.next = 23;
+                  break;
+                }
+
+                _this$props20 = this.props, customizedCode = _this$props20.customizedCode, boardCustomized = _this$props20.boardCustomized;
+
+                if (customized) {
+                  this.customized = customized;
+                }
+
+                if (!customizedCode) {
+                  _context2.next = 23;
+                  break;
+                }
+
+                tableCustomizedSave = this.getConfig('tableCustomizedSave') || this.getConfig('customizedSave');
+                tableCustomizedLoad = this.getConfig('tableCustomizedLoad') || this.getConfig('customizedLoad'); // board 组件列表视图配置保存
+
+                if (!(this.customizedBtn && boardCustomized && boardCustomized.customizedDS)) {
+                  _context2.next = 17;
+                  break;
+                }
+
+                currentRecord = boardCustomized.customizedDS.current; // @ts-ignore
+
+                _context2.next = 10;
+                return tableCustomizedSave(customizedCode, (0, _objectSpread2["default"])((0, _objectSpread2["default"])({
+                  dataJson: JSON.stringify((0, _omit["default"])(this.customized, ['dataJson', 'creationDate', 'createdBy', 'lastUpdateDate', 'lastUpdatedBy', '_token', 'userId', 'tenantId', 'id']))
+                }, (0, _omit["default"])(this.customized, ['dataJson'])), {}, {
+                  defaultFlag: 1,
+                  viewType: 'table',
+                  id: currentRecord.get('id'),
+                  objectVersionNumber: currentRecord.get('objectVersionNumber')
+                }), this.customizedBtn ? 'Board' : 'Table', otherInfo);
+
+              case 10:
+                if (!customizedCode) {
+                  _context2.next = 15;
+                  break;
+                }
+
+                _context2.next = 13;
+                return tableCustomizedLoad(customizedCode, 'Board', {
+                  type: 'detail',
+                  id: currentRecord.get('id')
+                });
+
+              case 13:
+                res = _context2.sent;
+
+                try {
+                  dataJson = res.dataJson ? (0, _pick["default"])(JSON.parse(res.dataJson), ['size', 'parityRow', 'pageSize', 'columns', 'combineSort', 'defaultFlag', 'height', 'heightDiff', 'viewName']) : {}; // @ts-ignore
+
+                  this.customized = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({
+                    columns: {}
+                  }, (0, _omit["default"])(res, 'dataJson')), dataJson);
+                  currentRecord.set({
+                    objectVersionNumber: res.objectVersionNumber,
+                    dataJson: dataJson,
+                    viewName: res.viewName
+                  });
+                  this.dataSet.setState('__CUSTOMIZED__', this.customized);
+                } catch (error) {
+                  (0, _utils.warning)(false, error.message);
+                }
+
+              case 15:
+                _context2.next = 23;
+                break;
+
+              case 17:
+                _context2.next = 19;
+                return tableCustomizedSave(customizedCode, this.customized, 'Table', otherInfo);
+
+              case 19:
+                this.dataSet.setState('__CUSTOMIZED__', this.customized);
+
+                if (!(otherInfo && otherInfo.params)) {
+                  _context2.next = 23;
+                  break;
+                }
+
+                _context2.next = 23;
+                return this.loadCustomized();
+
+              case 23:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function saveCustomized(_x5, _x6) {
+        return _saveCustomized.apply(this, arguments);
+      }
+
+      return saveCustomized;
+    }()
+  }, {
+    key: "openCustomizationModal",
+    value: function openCustomizationModal(context) {
+      var customizedCode = this.props.customizedCode;
+      var modalProps = {
+        key: 'TABLE_CUSTOMIZATION_MODAL',
+        drawer: true,
+        size: _enum3.Size.small,
+        title: this.customizedBtn ? '表格视图配置' : (0, _localeContext.$l)('Table', 'customization_settings'),
+        children: /*#__PURE__*/_react["default"].createElement(_CustomizationSettings["default"], {
+          context: context
+        }),
+        bodyStyle: {
+          overflow: 'hidden auto',
+          padding: 0
+        }
+      };
+
+      if (customizedCode) {
+        modalProps.okText = (0, _localeContext.$l)('Table', 'save_button');
+      }
+
+      _Modal["default"].open(modalProps);
+    }
+  }, {
+    key: "loadCustomized",
+    value: function () {
+      var _loadCustomized = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(customizedProps) {
+        var _this7 = this;
+
+        var _this$props21, customizedCode, boardCustomized, _this$props21$onCusto, onCustomizedLoad, dataSet, queryBarProps, showSimpleMode, tableCustomizedLoad, customized, res, dataJson;
+
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _this$props21 = this.props, customizedCode = _this$props21.customizedCode, boardCustomized = _this$props21.boardCustomized, _this$props21$onCusto = _this$props21.onCustomizedLoad, onCustomizedLoad = _this$props21$onCusto === void 0 ? _noop["default"] : _this$props21$onCusto, dataSet = _this$props21.dataSet;
+                queryBarProps = this.props.queryBarProps;
+                showSimpleMode = queryBarProps && queryBarProps.simpleMode;
+
+                if (!(this.customizable && customizedCode || this.queryBar === _enum2.TableQueryBarType.comboBar && !showSimpleMode)) {
+                  _context4.next = 22;
+                  break;
+                }
+
+                tableCustomizedLoad = this.getConfig('tableCustomizedLoad') || this.getConfig('customizedLoad');
+                (0, _mobx.runInAction)(function () {
+                  delete _this7.customizedLoaded;
+                  _this7.tempCustomized = {
+                    columns: {}
+                  };
+                  _this7.loading = true;
+                });
+                _context4.prev = 6;
+                customized = customizedProps;
+
+                if (!(customizedCode && !boardCustomized && !customized)) {
+                  _context4.next = 12;
+                  break;
+                }
+
+                _context4.next = 11;
+                return tableCustomizedLoad(customizedCode, 'Table');
+
+              case 11:
+                customized = _context4.sent;
+
+              case 12:
+                if (!(customizedCode && boardCustomized && boardCustomized.customizedDS && !customized)) {
+                  _context4.next = 17;
+                  break;
+                }
+
+                _context4.next = 15;
+                return tableCustomizedLoad(customizedCode, 'Board', {
+                  type: 'detail',
+                  id: boardCustomized.customizedDS.current.get('id')
+                });
+
+              case 15:
+                res = _context4.sent;
+
+                try {
+                  dataJson = res.dataJson ? (0, _pick["default"])(JSON.parse(res.dataJson), ['size', 'parityRow', 'pageSize', 'columns', 'combineSort', 'defaultFlag', 'height', 'heightDiff', 'viewName']) : {};
+                  boardCustomized.customizedDS.current.set({
+                    objectVersionNumber: res.objectVersionNumber,
+                    dataJson: dataJson,
+                    viewName: res.viewName
+                  }); // @ts-ignore
+
+                  customized = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, (0, _omit["default"])(res, 'dataJson')), dataJson);
+                } catch (error) {
+                  (0, _utils.warning)(false, error.message);
+                }
+
+              case 17:
+                (0, _mobx.runInAction)( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+                  var newCustomized, customAggregation, _this7$props, onAggregationChange, aggregation;
+
+                  return _regenerator["default"].wrap(function _callee3$(_context3) {
+                    while (1) {
+                      switch (_context3.prev = _context3.next) {
+                        case 0:
+                          newCustomized = (0, _objectSpread2["default"])({
+                            columns: {}
+                          }, customized);
+                          _this7.customized = newCustomized;
+                          dataSet.setState('__CUSTOMIZED__', newCustomized);
+
+                          _this7.initColumns(); // autoQuery：fasle 且分页参数与个性化不一致时进行修改
+
+
+                          if (newCustomized.pageSize && dataSet.pageSize !== Number(newCustomized.pageSize) && !dataSet.props.autoQuery) {
+                            dataSet.pageSize = Number(newCustomized.pageSize); // 手动加载个性化时, 重新查询
+
+                            if (customizedProps) {
+                              dataSet.currentPage = 1;
+                              dataSet.query(1, undefined, true);
+                            }
+                          }
+
+                          _context3.next = 7;
+                          return onCustomizedLoad(newCustomized);
+
+                        case 7:
+                          customAggregation = newCustomized.aggregation;
+
+                          if (customAggregation !== undefined) {
+                            _this7$props = _this7.props, onAggregationChange = _this7$props.onAggregationChange, aggregation = _this7$props.aggregation;
+
+                            if (onAggregationChange && customAggregation !== aggregation) {
+                              onAggregationChange(customAggregation);
+                            }
+                          }
+
+                        case 9:
+                        case "end":
+                          return _context3.stop();
+                      }
+                    }
+                  }, _callee3);
+                })));
+
+              case 18:
+                _context4.prev = 18;
+                this.customizedLoaded = true;
+                (0, _mobx.runInAction)(function () {
+                  _this7.loading = false;
+                });
+                return _context4.finish(18);
+
+              case 22:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[6,, 18, 22]]);
+      }));
+
+      function loadCustomized(_x7) {
+        return _loadCustomized.apply(this, arguments);
+      }
+
+      return loadCustomized;
+    }()
+  }, {
+    key: "handleAllPageSelectionMenuClick",
+    value: function handleAllPageSelectionMenuClick(_ref39) {
+      var key = _ref39.key;
+      var dataSet = this.dataSet;
+      var isAllPageSelection = dataSet.isAllPageSelection;
+
+      switch (key) {
+        case 'current':
+          {
+            if (this.allChecked) {
+              this.unCheckAllCurrent();
+              this.unCheckAllCached();
+            } else {
+              this.checkAllCurrent();
+              this.checkAllCached();
+            }
+
+            break;
+          }
+
+        case 'all':
+          dataSet.setAllPageSelection(!isAllPageSelection);
+          break;
+
+        default:
+      }
+    }
+  }, {
+    key: "renderAllPageSelectionMenu",
+    value: function renderAllPageSelectionMenu() {
+      var isAllPageSelection = this.dataSet.isAllPageSelection,
+          allChecked = this.allChecked,
+          prefixCls = this.prefixCls;
+      return /*#__PURE__*/_react["default"].createElement(_menu["default"], {
+        prefixCls: "".concat(prefixCls, "-dropdown-menu"),
+        onClick: this.handleAllPageSelectionMenuClick
+      }, /*#__PURE__*/_react["default"].createElement(_menu["default"].Item, {
+        key: "current"
+      }, (0, _localeContext.$l)('Table', allChecked ? 'unselect_current_page' : 'select_current_page')), /*#__PURE__*/_react["default"].createElement(_menu["default"].Item, {
+        key: "all"
+      }, (0, _localeContext.$l)('Table', isAllPageSelection ? 'unselect_all_page' : 'select_all_page')));
+    }
+  }, {
+    key: "getConfig",
+    value: function getConfig(key) {
+      return this.node.getContextConfig(key);
+    }
+  }, {
+    key: "getProPrefixCls",
+    value: function getProPrefixCls(suffixCls, customizePrefixCls) {
+      return this.node.getContextProPrefixCls(suffixCls, customizePrefixCls);
+    }
+  }, {
+    key: "multipleSelectionRenderer",
+    value: function multipleSelectionRenderer() {
+      var buttons = [/*#__PURE__*/_react["default"].createElement(_CheckBox["default"], {
+        key: "selectAll",
+        checked: this.allChecked,
+        indeterminate: this.indeterminate,
+        onChange: this.handleSelectAllChange,
+        labelLayout: _enum4.LabelLayout.none,
+        value: true
+      })];
+
+      if (this.props.showAllPageSelectionButton) {
+        buttons.push( /*#__PURE__*/_react["default"].createElement(_Dropdown["default"], {
+          key: "selectAllPage",
+          overlay: this.renderAllPageSelectionMenu
+        }, /*#__PURE__*/_react["default"].createElement(_icon["default"], {
+          type: "baseline-arrow_drop_down",
+          className: "".concat(this.prefixCls, "-page-all-select")
+        })));
+      }
+
+      return buttons;
+    }
+  }, {
+    key: "getRelationSize",
+    value: function getRelationSize(type) {
+      if (type === '%') {
+        return this.parentHeight;
+      }
+
+      return this.screenHeight;
+    }
+  }, {
+    key: "startScroll",
+    value: function startScroll() {
+      this.scrolling = true;
+      this.stopScroll();
+    }
+  }, {
+    key: "batchSetRowHeight",
+    value: function batchSetRowHeight(key, callback) {
+      var batchRunner = (0, _utils3.getIf)(this, 'batchRunner', function () {
+        return new _BatchRunner["default"]();
+      });
+      batchRunner.addTask(key, callback);
+    }
+  }, {
+    key: "isRowInView",
+    value: function isRowInView(index) {
+      var _this8 = this;
+
+      var propVirtual = this.propVirtual;
+
+      if (propVirtual) {
+        return true;
+      }
+
+      if (this.height === undefined) {
+        return index <= 10;
+      }
+
+      var tableBodyWrap = this.node.tableBodyWrap;
+      var scrollTop = tableBodyWrap ? tableBodyWrap.scrollTop : 0;
+      var visibleStartIndex = getVisibleStartIndex(this, function () {
+        return scrollTop;
+      });
+      return index >= getStartIndex(this, function () {
+        return visibleStartIndex;
+      }) && index <= getEndIndex(this, function () {
+        return getVisibleEndIndex(_this8, function () {
+          return visibleStartIndex;
+        }, function () {
+          return scrollTop;
+        });
+      });
+    }
+  }, {
+    key: "alignEditor",
+    value: function alignEditor() {
+      var currentEditorName = this.currentEditorName;
+
+      if (currentEditorName) {
+        var currentEditor = this.editors.get(currentEditorName);
+
+        if (currentEditor) {
+          currentEditor.alignEditor();
+        }
+      }
+    }
+  }, {
+    key: "blurEditor",
+    value: function blurEditor() {
+      var currentEditorName = this.currentEditorName;
+
+      if (currentEditorName) {
+        var currentEditor = this.editors.get(currentEditorName);
+
+        if (currentEditor) {
+          currentEditor.blur();
+        }
+      }
+    }
+  }, {
+    key: "clearArrangeValue",
+    value: function clearArrangeValue() {
+      this.arrangeValue = {
+        avg: 0,
+        sum: 0,
+        max: 0,
+        min: 0,
+        count: 0
+      };
+    }
+  }, {
+    key: "calcArrangeValue",
+    value: function calcArrangeValue() {
+      this.dragCorner = false;
+      var _this$startChooseCell2 = this.startChooseCell,
+          startColIndex = _this$startChooseCell2.colIndex,
+          startRowIndex = _this$startChooseCell2.rowIndex;
+      var _this$endChooseCell2 = this.endChooseCell,
+          endColIndex = _this$endChooseCell2.colIndex,
+          endRowIndex = _this$endChooseCell2.rowIndex;
+      var data = this.currentData.map(function (x) {
+        return x.toData();
+      });
+      var cols = this.columns.filter(function (x) {
+        return !x.hidden;
+      });
+      var sum = 0;
+      var avg = 0;
+      var count = 0;
+      var max = 0;
+      var min = 0;
+      var cellCount = 0;
+      var arrayValue = [];
+      var minRowIndex = Math.min(startRowIndex, endRowIndex);
+      var minColIndex = Math.min(startColIndex, endColIndex);
+      var maxRowIndex = Math.max(startRowIndex, endRowIndex);
+      var maxColIndex = Math.max(startColIndex, endColIndex);
+
+      for (var i = minRowIndex; i <= maxRowIndex; i++) {
+        for (var j = minColIndex; j <= maxColIndex; j++) {
+          var field = cols[j].name;
+          var value = data[i][field];
+
+          if (!isNaN(parseFloat(value)) && isFinite(value)) {
+            sum += Number(value);
+            arrayValue.push(Number(value));
+            count++;
+          }
+
+          cellCount++;
+        }
+      }
+
+      avg = count ? Number((sum / count).toFixed(3)) : 0;
+      max = arrayValue.length ? Math.max.apply(Math, arrayValue) : 0;
+      min = arrayValue.length ? Math.min.apply(Math, arrayValue) : 0;
+      this.arrangeValue = {
+        avg: avg,
+        sum: sum,
+        max: max,
+        min: min,
+        count: cellCount
+      };
+    }
+  }]);
+  return TableStore;
+}();
+
+exports["default"] = TableStore;
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "props", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "customized", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "tempCustomized", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "loading", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "leftOriginalColumns", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "originalColumns", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "rightOriginalColumns", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "hasAggregationColumn", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "calcBodyHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "width", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "lastScrollTop", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "lastScrollLeft", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "lockColumnsBodyRowsHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "lockColumnsFootRowsHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "lockColumnsHeadRowsHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "expandedRows", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "hoverRow", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "rowClicked", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "currentEditorName", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "styledHidden", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "customizedActiveKey", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "mouseBatchChooseState", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "mouseBatchChooseIdList", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "columnResizing", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "scrollPosition", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "comboBarStatus", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "siblingHeihgt", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "parentHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "parentPaddingTop", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "screenHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "headerHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "footerHeight", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "headerFilter", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "startChooseCell", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "endChooseCell", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "isFinishChooseCell", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "isCopyPristine", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "shiftKey", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "autoScrollRAF", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "arrangeValue", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "dragCorner", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "dragCornerPosition", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "batchExpandRowNumber", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "selectedDragRows", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "dragUpdateState", void 0);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "computedHeight", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "height", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "autoHeight", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "virtualColumnRange", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "isRenderRange", null);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "actualRows", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "rowMetaData", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "scrolling", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "cellVerticalSize", void 0);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "virtualRowHeight", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "virtualVisibleStartIndex", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "virtualVisibleEndIndex", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "virtualStartIndex", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "virtualEndIndex", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "currentEditRecord", null);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "showCachedSelection", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "defaultRecordCachedType", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "recordCachedType", void 0);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "overflowX", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "overflowY", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "hasRowGroups", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "headerTableGroups", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "customizedColumnHeader", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "customizedColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "expandColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "rowNumberColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "selectionColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "comboQueryColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "draggableColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "leftColumns", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "rightColumns", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "columns", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "columnGroups", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "leftColumnGroups", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "rightColumnGroups", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "leafNamedColumns", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "hasEmptyWidthColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "getLastEmptyWidthColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "hasCheckFieldColumn", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "isCombinedColumn", null);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "groups", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "groupedData", void 0);
+(0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "groupedDataWithHeader", void 0);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "currentData", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "data", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "cachedIndeterminate", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "allCachedChecked", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "currentIndeterminate", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "allCurrentChecked", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "indeterminate", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "allChecked", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "showEditor", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setLastScrollTop", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setLastScrollLeft", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "hideEditor", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "changeMouseBatchChooseIdList", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setProps", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "updateProps", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "initGroups", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "initColumns", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setAggregationCellExpanded", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setRowExpanded", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setRowPending", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setRowLoaded", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "cellHighlightRenderer", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "setRowHover", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "expandAll", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "collapseAll", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "onTreeNodeLoad", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "renderSelectionBox", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "renderRowNumber", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "renderDragBox", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "drawCopyBorder", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "drawExpandArea", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "batchSetCellValue", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "changeCustomizedColumnValue", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "saveCustomized", null);
+(0, _tslib.__decorate)([_autobind["default"], _mobx.action], TableStore.prototype, "openCustomizationModal", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "loadCustomized", null);
+(0, _tslib.__decorate)([_autobind["default"], _mobx.action], TableStore.prototype, "handleAllPageSelectionMenuClick", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "renderAllPageSelectionMenu", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "getConfig", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "getProPrefixCls", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "multipleSelectionRenderer", null);
+(0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "getRelationSize", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "startScroll", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "clearArrangeValue", null);
+(0, _tslib.__decorate)([_mobx.action], TableStore.prototype, "calcArrangeValue", null);
 
 /***/ }),
 
