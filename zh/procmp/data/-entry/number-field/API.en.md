@@ -16,6 +16,7 @@ title: API
 | precision | 转换小数点位数 | number |  | 1.3.0 |
 | numberGrouping | 千分位分组显示 | boolean | true | 1.3.0 |
 | keyboard | 是否启用UP DOWN键盘事件 | boolean | true | 1.5.0 |
+| numberRoundMode | 数字取整方式, 默认四舍五入 | round \| ceil \| floor |  | 1.6.7 |
 
 更多属性请参考 [TextField](/zh/procmp/data-entry/text-field/#TextField)。
 

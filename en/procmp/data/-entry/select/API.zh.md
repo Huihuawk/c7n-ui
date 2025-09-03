@@ -34,6 +34,9 @@ title: API
 | searchFieldInPopup | 搜索框显示在下拉框中  | boolean |  | 1.4.4 |
 | searchFieldProps | 搜索框显示在下拉框中时，可以设置输入框的属性  | TextFieldProps |  | 1.4.4 |
 | reserveParam | 多选模式下，搜索选中后是否保留参数显示 | boolean | [globalConfig.selectReserveParam](/zh/procmp/configure/configure#api)  | 1.5.7 |
+| scrollLoad | 是否开启选项滚动加载  | boolean |  | 1.6.7 |
+| popupShowComboValue | popup 弹窗中的选项是否显示 combo 复合值; 当不展示复合值时, defaultActiveFirstOption 无效, enter 或者 失焦选中复合值; | boolean | true | 1.6.7 |
+| virtual | 支持虚拟滚动 | boolean| false | 1.6.7 |
 
 更多属性请参考 [TriggerField](/zh/procmp/abstract/trigger-field/#TriggerField)。
 
