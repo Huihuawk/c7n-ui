@@ -314,15 +314,15 @@ configure({
 
 剪贴板配置项
 
-| 名称 | 说明 | 参数 | 返回值类型 | 版本 |
-| --- | --- | --- | --- | --- |
-| copy | 是否开启表格复制 | boolean | false | - |
-| paste | 是否开启表格粘贴，开启后只有可编辑的单元格才能被粘贴数据。 | boolean | false | - |
-| description | 开启表格复制或粘贴，自定义修改描述信息 | string \| ReactNode | - | |
-| arrangeCalc | 开启范围计数 | boolean \| ReactNode | false | 1.6.5 |
-| hiddenTip | 关闭提示 | boolean | false | 1.6.5 |
-| tipCallback | copy and paste successful or failed callbacks | (type: 'copy' | 'paste', success: boolean) => void | - | 1.6.7 |
-| onlyTemplateHeader | only retain the template header | boolean | false | 1.6.7 |
+| 属性名 | 说明       | 类型         | 默认值 | 版本 |
+| --------- | ---------- | ------------ | ------ | ------ |
+| copy | 是否开启表格复制 | boolean | false | ｜
+| paste | 是否开启表格粘贴，开启后只有可编辑的单元格才能被粘贴数据。 | boolean | false | ｜
+| description | 开启表格复制或粘贴，自定义修改描述信息 | string \| ReactNode | - | ｜
+| arrangeCalc | 开启范围计数 | boolean \| ReactNode | false | 1.6.5 ｜
+| hiddenTip | 关闭提示 | boolean | false | 1.6.5 ｜
+| tipCallback | 复制、粘贴成功或者失败的回调 | (type: 'copy' \| 'paste', success: boolean) => void | - | 1.6.7 |
+| onlyTemplateHeader | 是否只导出模板头部 | boolean | false | 1.6.7 |
 
 ### 导出配置
 

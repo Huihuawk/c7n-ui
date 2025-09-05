@@ -27,9 +27,3 @@ title: API
 | format(value, lang, options) | 数字格式化 | `value` - number \| BigNumber `lang` - 语言代码 `options` - 详见[Intl.NumberFormatOptions](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) |
 
 组件库使用外部库`bignumber.js`实现大数字，具体使用参见文档[大数字支持](/zh/docs/other/big-number)。
-
-<style>
-.Pane.horizontal.Pane1 .c7n-pro-input-number-wrapper {
-  margin-bottom: .1rem;
-}
-</style>

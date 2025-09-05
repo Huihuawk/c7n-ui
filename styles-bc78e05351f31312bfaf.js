@@ -10891,14 +10891,15 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     /**
      * 定位到指定页码，如果paging为true或`server`，则做远程查询，约定当为Tree 状态的server时候 跳转到下一页也就是index为当前的index加上1
      * @param page 页码
+     * @param modifiedCheckResult 数据变更检查结果
      * @return Promise
      */
 
   }, {
     key: "page",
-    value: function page(_page) {
+    value: function page(_page, modifiedCheckResult) {
       if (_page > 0 && this.paging) {
-        return this.locate((_page - 1) * this.pageSize + (_page > this.currentPage ? this.created.length - this.cachedCreated.length - this.destroyed.length + this.cachedDestroyed.length : 0), true);
+        return this.locate((_page - 1) * this.pageSize + (_page > this.currentPage ? this.created.length - this.cachedCreated.length - this.destroyed.length + this.cachedDestroyed.length : 0), true, modifiedCheckResult);
       }
 
       (0, _utils.warning)(_page > 0, 'Page number is incorrect.');
@@ -10930,13 +10931,14 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
      * 定位记录
      * @param index 索引
      * @param forceQuery 是否强制查询，仅内部使用
+     * @param modifiedCheckResult 数据变更检查结果，如果不存在，则会执行变更检查后再判断是否查询
      * @return Promise
      */
 
   }, {
     key: "locate",
     value: function () {
-      var _locate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(index, forceQuery) {
+      var _locate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(index, forceQuery, modifiedCheckResult) {
         var paging, pageSize, totalCount, autoLocateFirst, currentRecord;
         return _regenerator["default"].wrap(function _callee8$(_context8) {
           while (1) {
@@ -10956,7 +10958,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
               case 6:
                 if (!(paging === true || paging === 'server' || paging === 'noCount')) {
-                  _context8.next = 18;
+                  _context8.next = 20;
                   break;
                 }
 
@@ -10965,38 +10967,46 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 }
 
                 if (!(index >= 0 && (index < totalCount || paging === 'noCount'))) {
-                  _context8.next = 18;
+                  _context8.next = 20;
                   break;
                 }
 
-                _context8.next = 11;
+                if (!(modifiedCheckResult === undefined)) {
+                  _context8.next = 13;
+                  break;
+                }
+
+                _context8.next = 12;
                 return this.modifiedCheck();
 
-              case 11:
-                if (!_context8.sent) {
-                  _context8.next = 18;
+              case 12:
+                modifiedCheckResult = _context8.sent;
+
+              case 13:
+                if (!modifiedCheckResult) {
+                  _context8.next = 20;
                   break;
                 }
 
-                _context8.next = 14;
+                _context8.next = 16;
                 return this.pending.add(this.doQuery(Math.floor(index / pageSize) + 1, undefined, true, true));
 
-              case 14:
+              case 16:
                 currentRecord = this.findInAllPage(index);
 
                 if (!currentRecord) {
-                  _context8.next = 18;
+                  _context8.next = 20;
                   break;
                 }
 
                 this.current = autoLocateFirst ? currentRecord : undefined;
                 return _context8.abrupt("return", currentRecord);
 
-              case 18:
+              case 20:
                 (0, _utils.warning)(false, 'Located index of Record is out of boundary.');
                 return _context8.abrupt("return", Promise.resolve(undefined));
 
-              case 20:
+              case 22:
               case "end":
                 return _context8.stop();
             }
@@ -11004,7 +11014,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee8, this);
       }));
 
-      function locate(_x15, _x16) {
+      function locate(_x15, _x16, _x17) {
         return _locate.apply(this, arguments);
       }
 
@@ -11315,7 +11325,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee9, this);
       }));
 
-      function _delete(_x17, _x18) {
+      function _delete(_x18, _x19) {
         return _delete2.apply(this, arguments);
       }
 
@@ -11463,7 +11473,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee10, this);
       }));
 
-      function deleteAll(_x19) {
+      function deleteAll(_x20) {
         return _deleteAll.apply(this, arguments);
       }
 
@@ -11836,7 +11846,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee11, this);
       }));
 
-      function sort(_x20) {
+      function sort(_x21) {
         return _sort.apply(this, arguments);
       }
 
@@ -12351,7 +12361,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee12, this, [[1,, 12, 15]]);
       }));
 
-      function validate(_x21, _x22) {
+      function validate(_x22, _x23) {
         return _validate.apply(this, arguments);
       }
 
@@ -12417,7 +12427,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee13, this, [[4,, 14, 17]]);
       }));
 
-      function validateRecords(_x23) {
+      function validateRecords(_x24) {
         return _validateRecords.apply(this, arguments);
       }
 
@@ -13327,7 +13337,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee14, this, [[7, 19, 23, 26]]);
       }));
 
-      function write(_x24, _x25) {
+      function write(_x25, _x26) {
         return _write.apply(this, arguments);
       }
 
@@ -14096,7 +14106,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }, _callee17, this);
       }));
 
-      function generateQueryParameter(_x26) {
+      function generateQueryParameter(_x27) {
         return _generateQueryParameter.apply(this, arguments);
       }
 

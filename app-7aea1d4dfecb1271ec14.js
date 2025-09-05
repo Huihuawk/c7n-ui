@@ -36079,7 +36079,9 @@ var PerformanceTable = /*#__PURE__*/function (_React$Component) {
       var wheelWrapper = this.wheelWrapperRef.current;
 
       if (tableBody) {
-        if ((0, _isMobile["default"])()) {
+        var isTouchSupported = navigator.maxTouchPoints > 0;
+
+        if ((0, _isMobile["default"])() || isTouchSupported) {
           this.initBScroll(tableBody); // 移动端适配缩放功能
 
           if (wheelWrapper) {
@@ -36267,8 +36269,9 @@ var PerformanceTable = /*#__PURE__*/function (_React$Component) {
         var options = {
           passive: false
         };
+        var isTouchSupported = navigator.maxTouchPoints > 0;
 
-        if ((0, _isMobile["default"])()) {
+        if ((0, _isMobile["default"])() || isTouchSupported) {
           this.initBScroll(tableBody);
         }
 
@@ -57892,7 +57895,7 @@ var FormField = /*#__PURE__*/function (_DataSetComponent) {
           var value = e.target.value;
 
           if (value !== '') {
-            this.syncValueOnBlur(value);
+            this.syncValueOnBlur(value, e);
             e.preventDefault();
           }
         }
@@ -57902,7 +57905,7 @@ var FormField = /*#__PURE__*/function (_DataSetComponent) {
     }
   }, {
     key: "syncValueOnBlur",
-    value: function syncValueOnBlur(value) {
+    value: function syncValueOnBlur(value, _) {
       this.prepareSetValue(value);
     }
   }, {
@@ -69603,7 +69606,8 @@ var _enum = __webpack_require__("kBwZ");
 
 var Toolbar = function Toolbar(props) {
   var id = props.id,
-      prefixCls = props.prefixCls;
+      prefixCls = props.prefixCls,
+      fontFamilies = props.fontFamilies;
   return /*#__PURE__*/_react["default"].createElement("div", {
     id: id || 'toolbar',
     className: "".concat(prefixCls, "-toolbar")
@@ -69638,7 +69642,16 @@ var Toolbar = function Toolbar(props) {
     className: "ql-link"
   }), /*#__PURE__*/_react["default"].createElement("select", {
     className: "ql-color"
-  }));
+  }), fontFamilies && /*#__PURE__*/_react["default"].createElement("select", {
+    className: "ql-font"
+  }, fontFamilies.map(function (_ref) {
+    var name = _ref.name,
+        family = _ref.family;
+    return /*#__PURE__*/_react["default"].createElement("option", {
+      key: family,
+      value: family
+    }, name);
+  })));
 };
 
 var RichTextToolbar = /*#__PURE__*/function (_Component) {
@@ -69654,19 +69667,22 @@ var RichTextToolbar = /*#__PURE__*/function (_Component) {
   (0, _createClass2["default"])(RichTextToolbar, [{
     key: "renderToolBar",
     value: function renderToolBar(props) {
-      var prefixCls = this.props.prefixCls;
+      var _this$props = this.props,
+          prefixCls = _this$props.prefixCls,
+          fontFamilies = _this$props.fontFamilies;
       return /*#__PURE__*/_react["default"].createElement(Toolbar, (0, _extends2["default"])({
         key: "toolbar",
-        prefixCls: prefixCls
+        prefixCls: prefixCls,
+        fontFamilies: fontFamilies
       }, props));
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props = this.props,
-          id = _this$props.id,
-          toolbar = _this$props.toolbar,
-          dataSet = _this$props.dataSet;
+      var _this$props2 = this.props,
+          id = _this$props2.id,
+          toolbar = _this$props2.toolbar,
+          dataSet = _this$props2.dataSet;
       var props = {
         id: id,
         dataSet: dataSet
@@ -70016,7 +70032,7 @@ webpackEmptyContext.id = "9Mtl";
 /***/ "9NL3":
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"name\":\"choerodon-ui\",\"version\":\"1.6.7-alpha.46\",\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"title\":\"Choerodon UI\",\"description\":\"An enterprise-class UI design language and React-based implementation\",\"homepage\":\"https://open-hand.github.io/choerodon-ui/\",\"keywords\":[\"choerodon\",\"design\",\"react\",\"react-component\",\"component\",\"components\",\"ui\",\"framework\",\"frontend\"],\"contributors\":[\"choerodon\"],\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/open-hand/choerodon-ui\"},\"bugs\":{\"url\":\"https://github.com/open-hand/choerodon-ui/issues\"},\"main\":\"lib/index.js\",\"module\":\"es/index.js\",\"unpkg\":\"dist/choerodon-ui.min.js\",\"main-pro\":\"pro/lib/index.js\",\"module-pro\":\"pro/es/index.js\",\"unpkg-pro\":\"dist/choerodon-ui-pro.min.js\",\"files\":[\"dist\",\"lib\",\"es\",\"pro\",\"dataset\",\"shared\",\"outer-scripts\"],\"typings\":\"lib/index.d.ts\",\"license\":\"MIT\",\"peerDependencies\":{\"@babel/runtime\":\"^7.17.2\",\"axios\":\"~1.0.0\",\"lodash\":\">=4.17.0\",\"mobx\":\">4.5.0 <4.8.0 >=4.15.7\",\"mobx-react\":\">=5.1.0 <6.2.0\",\"react\":\">=16.8.6\",\"react-dom\":\">=16.8.6\"},\"dependencies\":{\"@babel/runtime\":\"^7.17.2\",\"@better-scroll/core\":\"^2.4.1\",\"@ctrl/tinycolor\":\"^3.2.0\",\"add-dom-event-listener\":\"1.x\",\"array-tree-filter\":\"^2.0.0\",\"async-validator\":\"1.x\",\"bignumber.js\":\"^9.0.2\",\"choerodon-ui-font\":\"~0.2.13\",\"classnames\":\"~2.3.1\",\"codemirror\":\"5.58.2\",\"component-classes\":\"1.x\",\"copy-to-clipboard\":\"^3.3.1\",\"core-js\":\"^2.5.1\",\"create-react-class\":\"^15.6.0\",\"css-animation\":\"^1.5.0\",\"css-unit-converter\":\"^1.1.2\",\"dom-closest\":\"^0.2.0\",\"dom-lib\":\"^1.3.1\",\"dom-scroll-into-view\":\"1.x\",\"element-resize-event\":\"^3.0.2\",\"enquire.js\":\"^2.1.6\",\"htmlhint\":\"1.1.2\",\"insert-css\":\"^2.0.0\",\"is-promise\":\"^4.0.0\",\"js-yaml\":\"^3.12.2\",\"jsbarcode\":\"^3.11.5\",\"jshint\":\"^2.13.4\",\"jsonlint\":\"^1.6.3\",\"jsonlint-mod\":\"^1.7.5\",\"mini-store\":\"^2.0.0\",\"moment\":\"^2.24.0\",\"mutationobserver-shim\":\"^0.3.3\",\"prettier\":\"~1.18.2\",\"qrcode.react\":\"^1.0.1\",\"querystringify\":\"^2.1.0\",\"quill-delta-to-html\":\"^0.9.7\",\"raf\":\"^3.4.1\",\"rc-motion\":\"^2.4.1\",\"rc-virtual-list\":\"^3.2.6\",\"react-beautiful-dnd\":\"13.0.0\",\"react-codemirror2\":\"5.1.0\",\"react-easy-crop\":\"^3.1.0\",\"react-image-lightbox\":\"^4.6.0\",\"react-intersection-observer\":\"^8.31.1\",\"react-is\":\"^16.12.0\",\"react-lazy-load\":\"^3.0.13\",\"react-quill\":\"^1.3.5\",\"react-redux\":\"7.2.0\",\"react-slick\":\"~0.25.2\",\"react-virtualized\":\"~9.18.5\",\"resize-observer-polyfill\":\"^1.5.1\",\"rmc-feedback\":\"^1.0.0\",\"scroll-into-view-if-needed\":\"^2.2.25\",\"shallowequal\":\"^1.1.0\",\"smooth-scroll-into-view-if-needed\":\"^1.1.28\",\"tslib\":\"^1.9.3\",\"underscore\":\"1.12.1\",\"warning\":\"~4.0.3\",\"uuid\":\"^3.4.0\"},\"devDependencies\":{\"@babel/core\":\"^7.17.5\",\"@babel/plugin-proposal-class-properties\":\"^7.16.7\",\"@babel/plugin-proposal-decorators\":\"^7.17.2\",\"@babel/plugin-proposal-export-default-from\":\"^7.16.7\",\"@babel/plugin-proposal-export-namespace-from\":\"^7.16.7\",\"@babel/plugin-proposal-object-rest-spread\":\"^7.17.3\",\"@babel/plugin-transform-member-expression-literals\":\"^7.16.7\",\"@babel/plugin-transform-object-assign\":\"^7.16.7\",\"@babel/plugin-transform-property-literals\":\"^7.16.7\",\"@babel/plugin-transform-proto-to-assign\":\"^7.16.7\",\"@babel/plugin-transform-runtime\":\"^7.17.0\",\"@babel/plugin-transform-spread\":\"^7.16.7\",\"@babel/plugin-transform-template-literals\":\"^7.16.7\",\"@babel/preset-env\":\"^7.16.11\",\"@babel/preset-react\":\"^7.16.7\",\"@dnd-kit/core\":\"^6.1.0\",\"@dnd-kit/sortable\":\"^8.0.0\",\"@dnd-kit/utilities\":\"^3.2.2\",\"@stackblitz/sdk\":\"^1.3.0\",\"@types/classnames\":\"~2.2.8\",\"@types/codemirror\":\"0.0.72\",\"@types/element-resize-event\":\"^3.0.0\",\"@types/enzyme\":\"^3.10.5\",\"@types/faker\":\"^5.5.8\",\"@types/insert-css\":\"^2.0.1\",\"@types/jest\":\"^25.0.0\",\"@types/jsbarcode\":\"^3.11.1\",\"@types/lodash\":\"4.14.182\",\"@types/prettier\":\"1.16.1\",\"@types/qrcode.react\":\"^1.0.2\",\"@types/raf\":\"^3.4.0\",\"@types/react\":\"^16.14.25\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^16.9.15\",\"@types/react-is\":\"^16.7.1\",\"@types/react-slick\":\"~0.23.3\",\"@types/warning\":\"~3.0.0\",\"@typescript-eslint/eslint-plugin\":\"^4.33.0\",\"@typescript-eslint/parser\":\"^4.33.0\",\"ansi-styles\":\"^4.0.0\",\"autoprefixer\":\"^9.6.0\",\"axios\":\"~1.0.0\",\"babel-core\":\"^7.0.0-0\",\"babel-eslint\":\"10.0.3\",\"babel-jest\":\"^25.1.0\",\"babel-loader\":\"^8.0.6\",\"babel-plugin-import\":\"^1.12.0\",\"babel-plugin-inline-import-data-uri\":\"^1.0.1\",\"bisheng\":\"^1.3.0\",\"bisheng-plugin-choerodon-ui\":\"~0.2.0\",\"bisheng-plugin-description\":\"^0.1.4\",\"bisheng-plugin-react\":\"^1.1.0\",\"bisheng-plugin-toc\":\"^0.4.4\",\"case-sensitive-paths-webpack-plugin\":\"^2.1.1\",\"chalk\":\"^2.4.2\",\"colorful\":\"^2.1.0\",\"commander\":\"^2.11.0\",\"cross-env\":\"^5.2.1\",\"css-loader\":\"^3.2.0\",\"css-split-webpack-plugin\":\"^0.2.6\",\"csstype\":\"3.1.0\",\"dekko\":\"^0.2.1\",\"enquire-js\":\"^0.2.1\",\"enzyme\":\"^3.10.0\",\"enzyme-adapter-react-16\":\"^1.14.0\",\"enzyme-to-json\":\"^3.3.5\",\"eslint\":\"^7.32.0\",\"eslint-config-airbnb\":\"^18.0.1\",\"eslint-config-prettier\":\"^6.2.0\",\"eslint-plugin-babel\":\"^5.3.0\",\"eslint-plugin-import\":\"^2.18.2\",\"eslint-plugin-jest\":\"^25.0.1\",\"eslint-plugin-jsx-a11y\":\"^6.4.1\",\"eslint-plugin-markdown\":\"^1.0.0\",\"eslint-plugin-react\":\"^7.14.3\",\"eslint-tinker\":\"^0.5.0\",\"extract-text-webpack-plugin\":\"^3.0.0\",\"faker\":\"^4.1.0\",\"fetch-jsonp\":\"^1.1.3\",\"file-loader\":\"^4.2.0\",\"friendly-errors-webpack-plugin\":\"^1.7.0\",\"gh-pages\":\"^2.1.1\",\"glob\":\"^7.1.4\",\"gulp\":\"^4.0.2\",\"gulp-babel\":\"^8.0.0\",\"gulp-sourcemaps\":\"^2.6.5\",\"gulp-strip-code\":\"^0.1.4\",\"gulp-typescript\":\"^5.0.1\",\"husky\":\"^3.0.2\",\"identity-obj-proxy\":\"^3.0.0\",\"immutability-helper\":\"^3.0.0\",\"intersection-observer\":\"^0.7.0\",\"jest\":\"^25.1.0\",\"jsdom\":\"^16.2.1\",\"jsonml.js\":\"^0.1.0\",\"less\":\"^3.10.3\",\"less-plugin-npm-import\":\"^2.1.0\",\"lint-staged\":\"^7.0.0\",\"lodash\":\"^4.17.15\",\"lz-string\":\"^1.4.4\",\"majo\":\"^0.8.0\",\"mark-twain\":\"^2.0.2\",\"merge2\":\"^1.2.4\",\"mini-css-extract-plugin\":\"^0.8.0\",\"minimist\":\"^1.2.5\",\"mkdirp\":\"^1.0.3\",\"mobx\":\"~4.15.7\",\"mobx-react\":\"~6.1.1\",\"mockdate\":\"^2.0.1\",\"mockjs\":\"^1.0.1-beta3\",\"moment-timezone\":\"^0.5.23\",\"object-assign\":\"~4.1.1\",\"optimize-css-assets-webpack-plugin\":\"^5.0.3\",\"postcss\":\"^8.2.10\",\"postcss-loader\":\"^3.0.0\",\"pretty-quick\":\"^1.11.0\",\"rc-drawer\":\"^1.5.3\",\"rc-queue-anim\":\"^1.6.7\",\"rc-scroll-anim\":\"^2.2.1\",\"rc-tween-one\":\"^1.7.2\",\"react\":\"~16.12.0\",\"react-color\":\"^2.11.7\",\"react-copy-to-clipboard\":\"^5.0.0\",\"react-dnd\":\"^11.1.1\",\"react-dnd-html5-backend\":\"^11.1.1\",\"react-document-title\":\"^2.0.1\",\"react-dom\":\">=16.8.6\",\"react-github-button\":\"^0.1.1\",\"react-infinite-scroller\":\"^1.0.15\",\"react-intl\":\"^2.7.2\",\"react-sublime-video\":\"^0.2.0\",\"remark-frontmatter\":\"^1.3.2\",\"remark-parse\":\"^7.0.1\",\"remark-stringify\":\"^7.0.3\",\"remark-yaml-config\":\"^4.1.0\",\"remove-files-webpack-plugin\":\"1.5.0\",\"reqwest\":\"^2.0.5\",\"rimraf\":\"^3.0.0\",\"rucksack-css\":\"^1.0.2\",\"scrollama\":\"^2.1.0\",\"stylelint\":\"^10.0.1\",\"stylelint-config-prettier\":\"^5.2.0\",\"stylelint-config-rational-order\":\"^0.1.2\",\"stylelint-config-standard\":\"^18.3.0\",\"stylelint-declaration-block-no-ignored-properties\":\"^2.1.0\",\"stylelint-order\":\"^3.0.0\",\"terser-webpack-plugin\":\"^4.1.0\",\"through2\":\"^3.0.1\",\"ts-loader\":\"^6.0.4\",\"typescript\":\"~3.7.2\",\"unified\":\"^8.3.2\",\"url-loader\":\"^2.1.0\",\"values.js\":\"^1.0.3\",\"vfile-message\":\"1.0.x\",\"webpack\":\"^4.39.3\",\"webpack-filter-warnings-plugin\":\"^1.2.1\",\"webpack-merge\":\"^4.2.2\",\"webpackbar\":\"^4.0.0\",\"xhr-mock\":\"^2.5.1\",\"xhr2\":\"^0.2.0\",\"xlsx\":\"^0.17.0\"},\"scripts\":{\"test\":\"jest --config .jest.js --cache=false\",\"test:update\":\"jest --config .jest.js --cache=false -u\",\"test-all\":\"sh -e ./scripts/test-all.sh\",\"test-node\":\"jest --config .jest.node.js --cache=false\",\"test-all-skip\":\"sh ./scripts/test-all.sh --skip\",\"lint\":\"npm run lint:script && npm run lint:demo && npm run lint:style\",\"lint:tsc\":\"npm run tsc\",\"lint:script\":\"eslint **/*.{js,jsx,ts,tsx} --ext '.js,.jsx,.ts,.tsx'\",\"lint:md\":\"remark components/\",\"lint:demo\":\"cross-env RUN_ENV=DEMO eslint components/*/demo/*.md --ext '.md'\",\"lint:style\":\"stylelint {site,components,components-pro}/**/*.less --syntax less\",\"lint-fix\":\"npm run lint-fix:script && npm run lint-fix:demo && npm run lint-fix:style\",\"lint-fix:script\":\"npm run lint:script -- --fix\",\"lint-fix:demo\":\"npm run lint:demo -- --fix\",\"lint-fix:style\":\"npm run lint:style -- --fix\",\"sort-api\":\"node ./scripts/sort-api-table.js\",\"dist\":\"gulp dist\",\"compile\":\"gulp compile\",\"tsc\":\"tsc\",\"start\":\"rimraf _site && node ./scripts/generateColorLess.js && cross-env NODE_ENV=development BROWSER=chrome bisheng start -c ./site/bisheng.config.js\",\"site\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js\",\"site-with-test\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js && jest choerodon-ui --notify --config=.jest.js --no-cache --coverage\",\"site-dev\":\"rimraf _site && cross-env NODE_ENV=development bisheng build --ssr -c ./site/bisheng.config.js && node ./scripts/generateColorLess.js\",\"predeploy\":\"npm run site\",\"deploy\":\"bisheng gh-pages --push-only\",\"pub\":\"npm run test-all-skip && npm publish --with-tools\",\"prepublish\":\"gulp guard\",\"authors\":\"git log --format='%aN <%aE>' | sort -u | grep -v 'hand-china.com' > AUTHORS\",\"prettier\":\"prettier -c --write '**/*'\",\"pretty-quick\":\"pretty-quick\"},\"husky\":{\"hooks\":{\"pre-commit\":\"lint-staged\"}},\"lint-staged\":{\"**/*.{js,jsx,ts,tsx}\":[\"npm run lint:script\"],\"{site,components,components-pro}/**/*.less\":[\"npm run lint:style\"],\"components/*/demo/*.md\":[\"npm run lint:demo\",\"git add\"]},\"sideEffects\":[\"dist/*\",\"es/**/style/*\",\"lib/**/style/*\",\"pro/es/**/style/*\",\"pro/lib/**/style/*\",\"*.less\"],\"browserslist\":[\"last 2 version\",\"Firefox ESR\",\"> 1%\",\"ie >= 9\"]}");
+module.exports = JSON.parse("{\"name\":\"choerodon-ui\",\"version\":\"1.6.7-alpha.49\",\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"title\":\"Choerodon UI\",\"description\":\"An enterprise-class UI design language and React-based implementation\",\"homepage\":\"https://open-hand.github.io/choerodon-ui/\",\"keywords\":[\"choerodon\",\"design\",\"react\",\"react-component\",\"component\",\"components\",\"ui\",\"framework\",\"frontend\"],\"contributors\":[\"choerodon\"],\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/open-hand/choerodon-ui\"},\"bugs\":{\"url\":\"https://github.com/open-hand/choerodon-ui/issues\"},\"main\":\"lib/index.js\",\"module\":\"es/index.js\",\"unpkg\":\"dist/choerodon-ui.min.js\",\"main-pro\":\"pro/lib/index.js\",\"module-pro\":\"pro/es/index.js\",\"unpkg-pro\":\"dist/choerodon-ui-pro.min.js\",\"files\":[\"dist\",\"lib\",\"es\",\"pro\",\"dataset\",\"shared\",\"outer-scripts\"],\"typings\":\"lib/index.d.ts\",\"license\":\"MIT\",\"peerDependencies\":{\"@babel/runtime\":\"^7.17.2\",\"axios\":\"~1.0.0\",\"lodash\":\">=4.17.0\",\"mobx\":\">4.5.0 <4.8.0 >=4.15.7\",\"mobx-react\":\">=5.1.0 <6.2.0\",\"react\":\">=16.8.6\",\"react-dom\":\">=16.8.6\"},\"dependencies\":{\"@babel/runtime\":\"^7.17.2\",\"@better-scroll/core\":\"^2.4.1\",\"@ctrl/tinycolor\":\"^3.2.0\",\"add-dom-event-listener\":\"1.x\",\"array-tree-filter\":\"^2.0.0\",\"async-validator\":\"1.x\",\"bignumber.js\":\"^9.0.2\",\"choerodon-ui-font\":\"~0.2.13\",\"classnames\":\"~2.3.1\",\"codemirror\":\"5.58.2\",\"component-classes\":\"1.x\",\"copy-to-clipboard\":\"^3.3.1\",\"core-js\":\"^2.5.1\",\"create-react-class\":\"^15.6.0\",\"css-animation\":\"^1.5.0\",\"css-unit-converter\":\"^1.1.2\",\"dom-closest\":\"^0.2.0\",\"dom-lib\":\"^1.3.1\",\"dom-scroll-into-view\":\"1.x\",\"element-resize-event\":\"^3.0.2\",\"enquire.js\":\"^2.1.6\",\"htmlhint\":\"1.1.2\",\"insert-css\":\"^2.0.0\",\"is-promise\":\"^4.0.0\",\"js-yaml\":\"^3.12.2\",\"jsbarcode\":\"^3.11.5\",\"jshint\":\"^2.13.4\",\"jsonlint\":\"^1.6.3\",\"jsonlint-mod\":\"^1.7.5\",\"mini-store\":\"^2.0.0\",\"moment\":\"^2.24.0\",\"mutationobserver-shim\":\"^0.3.3\",\"prettier\":\"~1.18.2\",\"qrcode.react\":\"^1.0.1\",\"querystringify\":\"^2.1.0\",\"quill-delta-to-html\":\"^0.9.7\",\"raf\":\"^3.4.1\",\"rc-motion\":\"^2.4.1\",\"rc-virtual-list\":\"^3.2.6\",\"react-beautiful-dnd\":\"13.0.0\",\"react-codemirror2\":\"5.1.0\",\"react-easy-crop\":\"^3.1.0\",\"react-image-lightbox\":\"^4.6.0\",\"react-intersection-observer\":\"^8.31.1\",\"react-is\":\"^16.12.0\",\"react-lazy-load\":\"^3.0.13\",\"react-quill\":\"^1.3.5\",\"react-redux\":\"7.2.0\",\"react-slick\":\"~0.25.2\",\"react-virtualized\":\"~9.18.5\",\"resize-observer-polyfill\":\"^1.5.1\",\"rmc-feedback\":\"^1.0.0\",\"scroll-into-view-if-needed\":\"^2.2.25\",\"shallowequal\":\"^1.1.0\",\"smooth-scroll-into-view-if-needed\":\"^1.1.28\",\"tslib\":\"^1.9.3\",\"underscore\":\"1.12.1\",\"warning\":\"~4.0.3\",\"uuid\":\"^3.4.0\"},\"devDependencies\":{\"@babel/core\":\"^7.17.5\",\"@babel/plugin-proposal-class-properties\":\"^7.16.7\",\"@babel/plugin-proposal-decorators\":\"^7.17.2\",\"@babel/plugin-proposal-export-default-from\":\"^7.16.7\",\"@babel/plugin-proposal-export-namespace-from\":\"^7.16.7\",\"@babel/plugin-proposal-object-rest-spread\":\"^7.17.3\",\"@babel/plugin-transform-member-expression-literals\":\"^7.16.7\",\"@babel/plugin-transform-object-assign\":\"^7.16.7\",\"@babel/plugin-transform-property-literals\":\"^7.16.7\",\"@babel/plugin-transform-proto-to-assign\":\"^7.16.7\",\"@babel/plugin-transform-runtime\":\"^7.17.0\",\"@babel/plugin-transform-spread\":\"^7.16.7\",\"@babel/plugin-transform-template-literals\":\"^7.16.7\",\"@babel/preset-env\":\"^7.16.11\",\"@babel/preset-react\":\"^7.16.7\",\"@dnd-kit/core\":\"^6.1.0\",\"@dnd-kit/sortable\":\"^8.0.0\",\"@dnd-kit/utilities\":\"^3.2.2\",\"@stackblitz/sdk\":\"^1.3.0\",\"@types/classnames\":\"~2.2.8\",\"@types/codemirror\":\"0.0.72\",\"@types/element-resize-event\":\"^3.0.0\",\"@types/enzyme\":\"^3.10.5\",\"@types/faker\":\"^5.5.8\",\"@types/insert-css\":\"^2.0.1\",\"@types/jest\":\"^25.0.0\",\"@types/jsbarcode\":\"^3.11.1\",\"@types/lodash\":\"4.14.182\",\"@types/prettier\":\"1.16.1\",\"@types/qrcode.react\":\"^1.0.2\",\"@types/raf\":\"^3.4.0\",\"@types/react\":\"^16.14.25\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^16.9.15\",\"@types/react-is\":\"^16.7.1\",\"@types/react-slick\":\"~0.23.3\",\"@types/warning\":\"~3.0.0\",\"@typescript-eslint/eslint-plugin\":\"^4.33.0\",\"@typescript-eslint/parser\":\"^4.33.0\",\"ansi-styles\":\"^4.0.0\",\"autoprefixer\":\"^9.6.0\",\"axios\":\"~1.0.0\",\"babel-core\":\"^7.0.0-0\",\"babel-eslint\":\"10.0.3\",\"babel-jest\":\"^25.1.0\",\"babel-loader\":\"^8.0.6\",\"babel-plugin-import\":\"^1.12.0\",\"babel-plugin-inline-import-data-uri\":\"^1.0.1\",\"bisheng\":\"^1.3.0\",\"bisheng-plugin-choerodon-ui\":\"~0.2.0\",\"bisheng-plugin-description\":\"^0.1.4\",\"bisheng-plugin-react\":\"^1.1.0\",\"bisheng-plugin-toc\":\"^0.4.4\",\"case-sensitive-paths-webpack-plugin\":\"^2.1.1\",\"chalk\":\"^2.4.2\",\"colorful\":\"^2.1.0\",\"commander\":\"^2.11.0\",\"cross-env\":\"^5.2.1\",\"css-loader\":\"^3.2.0\",\"css-split-webpack-plugin\":\"^0.2.6\",\"csstype\":\"3.1.0\",\"dekko\":\"^0.2.1\",\"enquire-js\":\"^0.2.1\",\"enzyme\":\"^3.10.0\",\"enzyme-adapter-react-16\":\"^1.14.0\",\"enzyme-to-json\":\"^3.3.5\",\"eslint\":\"^7.32.0\",\"eslint-config-airbnb\":\"^18.0.1\",\"eslint-config-prettier\":\"^6.2.0\",\"eslint-plugin-babel\":\"^5.3.0\",\"eslint-plugin-import\":\"^2.18.2\",\"eslint-plugin-jest\":\"^25.0.1\",\"eslint-plugin-jsx-a11y\":\"^6.4.1\",\"eslint-plugin-markdown\":\"^1.0.0\",\"eslint-plugin-react\":\"^7.14.3\",\"eslint-tinker\":\"^0.5.0\",\"extract-text-webpack-plugin\":\"^3.0.0\",\"faker\":\"^4.1.0\",\"fetch-jsonp\":\"^1.1.3\",\"file-loader\":\"^4.2.0\",\"friendly-errors-webpack-plugin\":\"^1.7.0\",\"gh-pages\":\"^2.1.1\",\"glob\":\"^7.1.4\",\"gulp\":\"^4.0.2\",\"gulp-babel\":\"^8.0.0\",\"gulp-sourcemaps\":\"^2.6.5\",\"gulp-strip-code\":\"^0.1.4\",\"gulp-typescript\":\"^5.0.1\",\"husky\":\"^3.0.2\",\"identity-obj-proxy\":\"^3.0.0\",\"immutability-helper\":\"^3.0.0\",\"intersection-observer\":\"^0.7.0\",\"jest\":\"^25.1.0\",\"jsdom\":\"^16.2.1\",\"jsonml.js\":\"^0.1.0\",\"less\":\"^3.10.3\",\"less-plugin-npm-import\":\"^2.1.0\",\"lint-staged\":\"^7.0.0\",\"lodash\":\"^4.17.15\",\"lz-string\":\"^1.4.4\",\"majo\":\"^0.8.0\",\"mark-twain\":\"^2.0.2\",\"merge2\":\"^1.2.4\",\"mini-css-extract-plugin\":\"^0.8.0\",\"minimist\":\"^1.2.5\",\"mkdirp\":\"^1.0.3\",\"mobx\":\"~4.15.7\",\"mobx-react\":\"~6.1.1\",\"mockdate\":\"^2.0.1\",\"mockjs\":\"^1.0.1-beta3\",\"moment-timezone\":\"^0.5.23\",\"object-assign\":\"~4.1.1\",\"optimize-css-assets-webpack-plugin\":\"^5.0.3\",\"postcss\":\"^8.2.10\",\"postcss-loader\":\"^3.0.0\",\"pretty-quick\":\"^1.11.0\",\"rc-drawer\":\"^1.5.3\",\"rc-queue-anim\":\"^1.6.7\",\"rc-scroll-anim\":\"^2.2.1\",\"rc-tween-one\":\"^1.7.2\",\"react\":\"~16.12.0\",\"react-color\":\"^2.11.7\",\"react-copy-to-clipboard\":\"^5.0.0\",\"react-dnd\":\"^11.1.1\",\"react-dnd-html5-backend\":\"^11.1.1\",\"react-document-title\":\"^2.0.1\",\"react-dom\":\">=16.8.6\",\"react-github-button\":\"^0.1.1\",\"react-infinite-scroller\":\"^1.0.15\",\"react-intl\":\"^2.7.2\",\"react-sublime-video\":\"^0.2.0\",\"remark-frontmatter\":\"^1.3.2\",\"remark-parse\":\"^7.0.1\",\"remark-stringify\":\"^7.0.3\",\"remark-yaml-config\":\"^4.1.0\",\"remove-files-webpack-plugin\":\"1.5.0\",\"reqwest\":\"^2.0.5\",\"rimraf\":\"^3.0.0\",\"rucksack-css\":\"^1.0.2\",\"scrollama\":\"^2.1.0\",\"stylelint\":\"^10.0.1\",\"stylelint-config-prettier\":\"^5.2.0\",\"stylelint-config-rational-order\":\"^0.1.2\",\"stylelint-config-standard\":\"^18.3.0\",\"stylelint-declaration-block-no-ignored-properties\":\"^2.1.0\",\"stylelint-order\":\"^3.0.0\",\"terser-webpack-plugin\":\"^4.1.0\",\"through2\":\"^3.0.1\",\"ts-loader\":\"^6.0.4\",\"typescript\":\"~3.7.2\",\"unified\":\"^8.3.2\",\"url-loader\":\"^2.1.0\",\"values.js\":\"^1.0.3\",\"vfile-message\":\"1.0.x\",\"webpack\":\"^4.39.3\",\"webpack-filter-warnings-plugin\":\"^1.2.1\",\"webpack-merge\":\"^4.2.2\",\"webpackbar\":\"^4.0.0\",\"xhr-mock\":\"^2.5.1\",\"xhr2\":\"^0.2.0\",\"xlsx\":\"^0.17.0\"},\"scripts\":{\"test\":\"jest --config .jest.js --cache=false\",\"test:update\":\"jest --config .jest.js --cache=false -u\",\"test-all\":\"sh -e ./scripts/test-all.sh\",\"test-node\":\"jest --config .jest.node.js --cache=false\",\"test-all-skip\":\"sh ./scripts/test-all.sh --skip\",\"lint\":\"npm run lint:script && npm run lint:demo && npm run lint:style\",\"lint:tsc\":\"npm run tsc\",\"lint:script\":\"eslint **/*.{js,jsx,ts,tsx} --ext '.js,.jsx,.ts,.tsx'\",\"lint:md\":\"remark components/\",\"lint:demo\":\"cross-env RUN_ENV=DEMO eslint components/*/demo/*.md --ext '.md'\",\"lint:style\":\"stylelint {site,components,components-pro}/**/*.less --syntax less\",\"lint-fix\":\"npm run lint-fix:script && npm run lint-fix:demo && npm run lint-fix:style\",\"lint-fix:script\":\"npm run lint:script -- --fix\",\"lint-fix:demo\":\"npm run lint:demo -- --fix\",\"lint-fix:style\":\"npm run lint:style -- --fix\",\"sort-api\":\"node ./scripts/sort-api-table.js\",\"dist\":\"gulp dist\",\"compile\":\"gulp compile\",\"tsc\":\"tsc\",\"start\":\"rimraf _site && node ./scripts/generateColorLess.js && cross-env NODE_ENV=development BROWSER=chrome bisheng start -c ./site/bisheng.config.js\",\"site\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js\",\"site-with-test\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js && jest choerodon-ui --notify --config=.jest.js --no-cache --coverage\",\"site-dev\":\"rimraf _site && cross-env NODE_ENV=development bisheng build --ssr -c ./site/bisheng.config.js && node ./scripts/generateColorLess.js\",\"predeploy\":\"npm run site\",\"deploy\":\"bisheng gh-pages --push-only\",\"pub\":\"npm run test-all-skip && npm publish --with-tools\",\"prepublish\":\"gulp guard\",\"authors\":\"git log --format='%aN <%aE>' | sort -u | grep -v 'hand-china.com' > AUTHORS\",\"prettier\":\"prettier -c --write '**/*'\",\"pretty-quick\":\"pretty-quick\"},\"husky\":{\"hooks\":{\"pre-commit\":\"lint-staged\"}},\"lint-staged\":{\"**/*.{js,jsx,ts,tsx}\":[\"npm run lint:script\"],\"{site,components,components-pro}/**/*.less\":[\"npm run lint:style\"],\"components/*/demo/*.md\":[\"npm run lint:demo\",\"git add\"]},\"sideEffects\":[\"dist/*\",\"es/**/style/*\",\"lib/**/style/*\",\"pro/es/**/style/*\",\"pro/lib/**/style/*\",\"*.less\"],\"browserslist\":[\"last 2 version\",\"Firefox ESR\",\"> 1%\",\"ie >= 9\"]}");
 
 /***/ }),
 
@@ -132836,6 +132852,9 @@ var TableFooter_TableFooter = function TableFooter(props) {
 
 TableFooter_TableFooter.displayName = 'TableFooter';
 /* harmony default export */ var table_TableFooter = (Object(index_module["observer"])(TableFooter_TableFooter));
+// EXTERNAL MODULE: ../node_modules/lodash/lodash.js
+var lodash = __webpack_require__("9va6");
+
 // CONCATENATED MODULE: ../node_modules/choerodon-ui/pro/es/table/query-bar/TableButtons.js
 
 /* harmony default export */ var query_bar_TableButtons = (/*#__PURE__*/Object(react["memo"])(function TableButtons(_ref) {
@@ -137637,6 +137656,27 @@ function isEqualDynamicProps(originalValue, newValue, dataSet, record, name) {
       if (field && field.get('lovCode') && oldValue && value) {
         var valueField = dataSet.getField(key).get('valueField', record);
         var textField = dataSet.getField(key).get('textField', record);
+
+        if (field.get('multiple', record)) {
+          if (isArray_default()(oldValue) && isArray_default()(value)) {
+            if (oldValue.length !== value.length) {
+              return false;
+            }
+
+            var oldValueArr = oldValue.map(function (v) {
+              var _ref;
+
+              return _ref = {}, defineProperty_default()(_ref, valueField, v[valueField]), defineProperty_default()(_ref, textField, v[textField]), _ref;
+            });
+            var valueArr = value.map(function (v) {
+              var _ref2;
+
+              return _ref2 = {}, defineProperty_default()(_ref2, valueField, v[valueField]), defineProperty_default()(_ref2, textField, v[textField]), _ref2;
+            });
+            return isEqual_default()(oldValueArr, valueArr);
+          }
+        }
+
         return value[valueField] === oldValue[valueField] && value[textField] === oldValue[textField];
       }
 
@@ -138086,9 +138126,9 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
   }, {
     key: "processDataSetListener",
     value: function processDataSetListener(flag, nextProps) {
-      var _ref = nextProps || this.props,
-          queryDataSet = _ref.queryDataSet,
-          dataSet = _ref.dataSet;
+      var _ref3 = nextProps || this.props,
+          queryDataSet = _ref3.queryDataSet,
+          dataSet = _ref3.dataSet;
 
       if (queryDataSet) {
         var handler = flag ? queryDataSet.addEventListener : queryDataSet.removeEventListener;
@@ -138104,14 +138144,14 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
   }, {
     key: "handleDataSetQuery",
     value: function () {
-      var _handleDataSetQuery = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee(_ref2) {
-        var dataSet, res, defaultMenus, _ref3, conditionList, initQueryData, _this$props6, queryDataSet, _this$props6$filterQu, filterQueryCallback;
+      var _handleDataSetQuery = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee(_ref4) {
+        var dataSet, res, defaultMenus, _ref5, conditionList, initQueryData, _this$props6, queryDataSet, _this$props6$filterQu, filterQueryCallback;
 
         return regenerator_default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                dataSet = _ref2.dataSet;
+                dataSet = _ref4.dataSet;
 
                 if (!(!dataSet.getState(MENURESULT) && this.tableFilterAdapter && !dataSet.getState(HASINIT))) {
                   _context.next = 18;
@@ -138135,9 +138175,9 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
                 defaultMenus = res.filter(function (menu) {
                   return menu.defaultFlag;
                 });
-                _ref3 = defaultMenus.length > 1 ? defaultMenus.find(function (menu) {
+                _ref5 = defaultMenus.length > 1 ? defaultMenus.find(function (menu) {
                   return menu.isTenant !== 1;
-                }) : defaultMenus[0], conditionList = _ref3.conditionList;
+                }) : defaultMenus[0], conditionList = _ref5.conditionList;
                 initQueryData = {};
 
                 if (!(conditionList && conditionList.length)) {
@@ -138193,7 +138233,7 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
   }, {
     key: "handleDataSetValidate",
     value: function () {
-      var _handleDataSetValidate = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee2(_ref4) {
+      var _handleDataSetValidate = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee2(_ref6) {
         var _this4 = this;
 
         var dataSet, result, refSingleWrapper;
@@ -138201,7 +138241,7 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                dataSet = _ref4.dataSet, result = _ref4.result;
+                dataSet = _ref6.dataSet, result = _ref6.result;
                 _context2.next = 3;
                 return result;
 
@@ -138261,14 +138301,14 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
   }, {
     key: "handleDataSetUpdate",
     value: function () {
-      var _handleDataSetUpdate = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee3(_ref5) {
+      var _handleDataSetUpdate = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee3(_ref7) {
         var record, name, oldValue, value, _this$props7, dataSet, queryDataSet, _this$props7$onQuery, onQuery, autoQuery, _this$props7$onBefore, onBeforeQuery, field, shouldQuery, rangeKeys, _record$set, _record$set2, rangeValue, rangeOldValue, status, _this$moreFields, shouldUpdate, selectStatus, hasFocus, i, queryField, editor;
 
         return regenerator_default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                record = _ref5.record, name = _ref5.name, oldValue = _ref5.oldValue, value = _ref5.value;
+                record = _ref7.record, name = _ref7.name, oldValue = _ref7.oldValue, value = _ref7.value;
                 _this$props7 = this.props, dataSet = _this$props7.dataSet, queryDataSet = _this$props7.queryDataSet, _this$props7$onQuery = _this$props7.onQuery, onQuery = _this$props7$onQuery === void 0 ? noop_default.a : _this$props7$onQuery, autoQuery = _this$props7.autoQuery, _this$props7$onBefore = _this$props7.onBeforeQuery, onBeforeQuery = _this$props7$onBefore === void 0 ? noop_default.a : _this$props7$onBefore;
                 field = queryDataSet && queryDataSet.getField(name);
                 shouldQuery = true;
@@ -138434,8 +138474,8 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
 
   }, {
     key: "handleDataSetLoad",
-    value: function handleDataSetLoad(_ref6) {
-      var dataSet = _ref6.dataSet;
+    value: function handleDataSetLoad(_ref8) {
+      var dataSet = _ref8.dataSet;
 
       if (!this.tableFilterAdapter && !dataSet.length) {
         dataSet.create();
@@ -138505,8 +138545,8 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
               fieldProps = _field$fieldProps === void 0 ? {} : _field$fieldProps;
           var fieldName = alias || name;
 
-          var dynamicRequired = function dynamicRequired(_ref7) {
-            var record = _ref7.record;
+          var dynamicRequired = function dynamicRequired(_ref9) {
+            var record = _ref9.record;
             var isNullOperater = [OPERATOR.IS_NULL.value, OPERATOR.IS_NOT_NULL.value].includes(record.get(AdvancedFieldSet.comparator));
 
             if (fieldName === record.get(AdvancedFieldSet.fieldName) && !isNullOperater) {
@@ -138570,12 +138610,12 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
 
   }, {
     key: "loadConditionData",
-    value: function loadConditionData(_ref8) {
-      var conditionDataSet = _ref8.conditionDataSet,
-          newFilterDataSet = _ref8.newFilterDataSet,
-          menuRecord = _ref8.menuRecord,
-          dataSet = _ref8.dataSet,
-          searchText = _ref8.searchText;
+    value: function loadConditionData(_ref10) {
+      var conditionDataSet = _ref10.conditionDataSet,
+          newFilterDataSet = _ref10.newFilterDataSet,
+          menuRecord = _ref10.menuRecord,
+          dataSet = _ref10.dataSet,
+          searchText = _ref10.searchText;
       var comparatorData = [];
       var regularData = [];
       var newObj = dataSet.getState(ORIGINALVALUEOBJ) || {};
@@ -139494,8 +139534,8 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
               className: "".concat(prefixCls, "-new-filter-popover-item-tag")
             }, Number(props.pos.split('0-')[1]) + 1);
           },
-          renderer: function renderer(_ref9) {
-            var record = _ref9.record;
+          renderer: function renderer(_ref11) {
+            var record = _ref11.record;
             if (!record) return null;
             var comparator = record.get(AdvancedFieldSet.comparator);
             var fieldName = record.get(AdvancedFieldSet.fieldName);
@@ -139552,14 +139592,14 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
               showValidation: form_enum["e" /* ShowValidation */].tooltip
             }, selectOptions), /*#__PURE__*/react_default.a.createElement(es_select, {
               name: AdvancedFieldSet.comparator,
-              renderer: function renderer(_ref10) {
-                var value = _ref10.value,
-                    text = _ref10.text;
+              renderer: function renderer(_ref12) {
+                var value = _ref12.value,
+                    text = _ref12.text;
                 return value ? Object(locale_context["a" /* $l */])('Operator', value.toLowerCase()) : text;
               },
-              optionRenderer: function optionRenderer(_ref11) {
-                var value = _ref11.value,
-                    text = _ref11.text;
+              optionRenderer: function optionRenderer(_ref13) {
+                var value = _ref13.value,
+                    text = _ref13.text;
                 return value ? Object(locale_context["a" /* $l */])('Operator', value.toLowerCase()) : text;
               },
               style: {
@@ -139849,8 +139889,8 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
             _queryDataSet$props$f = queryDataSet.props.fields,
             propFields = _queryDataSet$props$f === void 0 ? [] : _queryDataSet$props$f;
         var cloneFields = fields.toJS();
-        propFields.forEach(function (_ref12) {
-          var name = _ref12.name;
+        propFields.forEach(function (_ref14) {
+          var name = _ref14.name;
 
           if (name) {
             var field = cloneFields.get(name);
@@ -139926,11 +139966,11 @@ var TableDynamicFilterBar_TableDynamicFilterBar = /*#__PURE__*/function (_Compon
 
   }, {
     key: "getLabel",
-    value: function getLabel(_ref13) {
-      var field = _ref13.field,
-          value = _ref13.value,
-          record = _ref13.record,
-          placeholder = _ref13.placeholder;
+    value: function getLabel(_ref15) {
+      var field = _ref15.field,
+          value = _ref15.value,
+          record = _ref15.record,
+          placeholder = _ref15.placeholder;
 
       if (value) {
         return field.get('label', record);
@@ -142974,6 +143014,7 @@ var query_bar_excluded = ["afterClick"],
 
 
 
+
 var ExportBody = Object(mobxreact_esm["observer"])(function (props) {
   var dataSet = props.dataSet,
       prefixCls = props.prefixCls;
@@ -143656,24 +143697,23 @@ var query_bar_TableQueryBar = /*#__PURE__*/function (_Component) {
     }
     /**
      * buttons 大于 buttonsLimits 放入下拉
-     * @param buttonsLimits
-     * @param hasCombineSort
+     * @param moreButtons 更多的按钮
      */
 
   }, {
     key: "getMoreButton",
-    value: function getMoreButton(buttonsLimits, hasCombineSort) {
+    value: function getMoreButton(moreButtons) {
       var _this5 = this;
 
-      var buttons = this.props.buttons;
+      var buttons = moreButtons;
       var _this$context8 = this.context,
           prefixCls = _this$context8.prefixCls,
           tableStore = _this$context8.tableStore;
       var tableButtonProps = tableStore.getConfig('tableButtonProps');
       var children = [];
 
-      if (buttons && buttons.length && buttonsLimits) {
-        buttons.slice(hasCombineSort ? buttonsLimits - 1 : buttonsLimits).forEach(function (button) {
+      if (buttons && buttons.length) {
+        buttons.forEach(function (button) {
           var props = {};
 
           if (Object(mobx_module["isArrayLike"])(button)) {
@@ -143806,8 +143846,15 @@ var query_bar_TableQueryBar = /*#__PURE__*/function (_Component) {
         // 汇总条存在下 buttons 大于 3 个放入下拉
         var buttonsLimits = summaryBar ? buttonsLimit || 3 : buttonsLimit;
         var tableButtonProps = tableStore.getConfig('tableButtonProps');
-        var buttonsArr = buttons.slice(0, buttonsLimits);
-        buttonsArr.forEach(function (button) {
+        var showButtonLength = 0;
+        var moreButtons = [];
+        buttons.forEach(function (button) {
+          // 以实际显示的按钮计算 buttonsLimits
+          if (!Object(lodash["isNil"])(buttonsLimits) && showButtonLength === buttonsLimits) {
+            moreButtons.push(button);
+            return;
+          }
+
           var props = {};
 
           if (Object(mobx_module["isArrayLike"])(button)) {
@@ -143856,19 +143903,37 @@ var query_bar_TableQueryBar = /*#__PURE__*/function (_Component) {
                 }();
               }
 
+              var allButtons = objectSpread2_default()(objectSpread2_default()(objectSpread2_default()({}, tableButtonProps), defaultButtonProps), buttonProps);
+
+              if (!allButtons || !allButtons.hidden) {
+                showButtonLength++;
+              }
+
               children.push( /*#__PURE__*/react_default.a.createElement(Button["a" /* default */], extends_default()({
                 key: button
-              }, tableButtonProps, defaultButtonProps, buttonProps)));
+              }, allButtons)));
             }
           } else if ( /*#__PURE__*/Object(react["isValidElement"])(button)) {
-            children.push( /*#__PURE__*/Object(react["cloneElement"])(button, objectSpread2_default()(objectSpread2_default()({}, tableButtonProps), button.props)));
+            var _allButtons = objectSpread2_default()(objectSpread2_default()({}, tableButtonProps), button.props);
+
+            if (!_allButtons || !_allButtons.hidden) {
+              showButtonLength++;
+            }
+
+            children.push( /*#__PURE__*/Object(react["cloneElement"])(button, objectSpread2_default()({}, _allButtons)));
           } else if (isObject_default()(button)) {
-            children.push( /*#__PURE__*/react_default.a.createElement(Button["a" /* default */], extends_default()({}, tableButtonProps, button)));
+            var _allButtons2 = objectSpread2_default()(objectSpread2_default()({}, tableButtonProps), button);
+
+            if (!_allButtons2 || !_allButtons2.hidden) {
+              showButtonLength++;
+            }
+
+            children.push( /*#__PURE__*/react_default.a.createElement(Button["a" /* default */], extends_default()({}, _allButtons2)));
           }
         });
 
-        if (buttonsLimits && buttons.length > buttonsLimits) {
-          var moreButton = this.getMoreButton(buttonsLimits, hasCombineSort);
+        if (moreButtons && moreButtons.length > 0) {
+          var moreButton = this.getMoreButton(moreButtons);
           children.push(moreButton);
         }
       }
@@ -149601,6 +149666,9 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
             }, modalProps) || {});
             this.afterOpen(options, fetchSingle);
           }
+
+          this.searchText = undefined;
+          this.setText(undefined);
         }
       }
     }
@@ -149828,7 +149896,7 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
     }
   }, {
     key: "syncValueOnBlur",
-    value: function syncValueOnBlur(value) {
+    value: function syncValueOnBlur(value, event) {
       var _this4 = this;
 
       var textField = this.textField;
@@ -149859,8 +149927,8 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
               _this4.openModal(fetchSingle);
             }
           });
-        } else if (!this.multiple) {
-          helpers_get_default()(getPrototypeOf_default()(Lov.prototype), "syncValueOnBlur", this).call(this, value);
+        } else if (!this.multiple || this.multiple && this.observableProps.combo && !this.popupShowComboValue) {
+          helpers_get_default()(getPrototypeOf_default()(Lov.prototype), "syncValueOnBlur", this).call(this, value, event);
         } else if (this.getProp('required')) {
           var oldValues = this.getValues();
           this.validate(oldValues, false);
@@ -149970,7 +150038,11 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
     }()
   }, {
     key: "handleOpenModal",
-    value: function handleOpenModal() {
+    value: function handleOpenModal(e) {
+      if (e && e.currentTarget && e.target && !e.currentTarget.contains(e.target)) {
+        return;
+      }
+
       if (this.showDetailWhenReadonly) {
         this.openModal();
       } else if (!this.disabled && !this.readOnly) {
@@ -157884,56 +157956,42 @@ function endsWith(str, suffix) {
   return true;
 });
 // CONCATENATED MODULE: ../node_modules/choerodon-ui/es/rc-components/upload/traverseFileTree.js
+var traverseFileTree = function traverseFileTree(files, callback, isAccepted) {
+  var dataTransfer = new DataTransfer();
 
-
-var traverseFileTree_traverseFileTree = function traverseFileTree(files, callback, isAccepted) {
-  var _traverseFileTree = function _traverseFileTree(item, path) {
-    path = path || '';
-
-    if (item.isFile) {
-      item.file(function (file) {
-        if (isAccepted(file)) {
-          callback([file]);
-        }
-      });
-    } else if (item.isDirectory) {
-      var dirReader = item.createReader();
-      dirReader.readEntries(function (entries) {
-        var _iterator = createForOfIteratorHelper_default()(entries),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var entrieItem = _step.value;
-
-            _traverseFileTree(entrieItem, "".concat(path).concat(item.name, "/"));
+  var _traverseFileTree = function _traverseFileTree(item) {
+    var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    return new Promise(function (resolve) {
+      if (item.isFile) {
+        item.file(function (file) {
+          if (isAccepted(file)) {
+            dataTransfer.items.add(file);
           }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-      });
-    }
+
+          resolve();
+        });
+      } else if (item.isDirectory) {
+        var dirReader = item.createReader();
+        dirReader.readEntries(function (entries) {
+          // 遍历所有子项，等待全部完成
+          Promise.all(entries.map(function (entrieItem) {
+            return _traverseFileTree(entrieItem, "".concat(path).concat(item.name, "/"));
+          })).then(resolve);
+        });
+      } else {
+        resolve();
+      }
+    });
   };
 
-  var _iterator2 = createForOfIteratorHelper_default()(files),
-      _step2;
-
-  try {
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      var file = _step2.value;
-
-      _traverseFileTree(file.webkitGetAsEntry());
-    }
-  } catch (err) {
-    _iterator2.e(err);
-  } finally {
-    _iterator2.f();
-  }
+  Promise.all(Array.from(files).map(function (file) {
+    return _traverseFileTree(file.webkitGetAsEntry());
+  })).then(function () {
+    callback(dataTransfer.files);
+  });
 };
 
-/* harmony default export */ var upload_traverseFileTree = (traverseFileTree_traverseFileTree);
+/* harmony default export */ var upload_traverseFileTree = (traverseFileTree);
 // CONCATENATED MODULE: ../node_modules/choerodon-ui/es/rc-components/upload/AjaxUploader.js
 
 
@@ -190613,6 +190671,8 @@ var _placements = _interopRequireDefault(__webpack_require__("qs8+"));
 
 var _autobind = _interopRequireDefault(__webpack_require__("ceV4"));
 
+var _isFragment = _interopRequireDefault(__webpack_require__("PXst"));
+
 var _excluded = ["children", "placement", "onHiddenChange", "onHiddenBeforeChange", "trigger", "defaultHidden", "hidden", "getRootDomNode"];
 
 var splitObject = function splitObject(obj, keys) {
@@ -190667,6 +190727,12 @@ function getDisabledCompatableChildren(element) {
       style: spanStyle,
       className: className
     }, child);
+  }
+
+  if ((0, _isFragment["default"])(element)) {
+    return /*#__PURE__*/_react["default"].createElement("span", {
+      key: "text-".concat(element)
+    }, element);
   }
 
   return element;
@@ -230981,8 +231047,6 @@ var _objectWithoutProperties2 = _interopRequireDefault(__webpack_require__("RiSW
 
 var _regenerator = _interopRequireDefault(__webpack_require__("NthX"));
 
-var _defineProperty2 = _interopRequireDefault(__webpack_require__("OvAC"));
-
 var _objectSpread3 = _interopRequireDefault(__webpack_require__("yO+l"));
 
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__("fFdx"));
@@ -230998,6 +231062,8 @@ var _inherits2 = _interopRequireDefault(__webpack_require__("eef+"));
 var _createSuper2 = _interopRequireDefault(__webpack_require__("Pe5x"));
 
 var _typeof2 = _interopRequireDefault(__webpack_require__("e+GP"));
+
+var _defineProperty2 = _interopRequireDefault(__webpack_require__("OvAC"));
 
 var _tslib = __webpack_require__("Qno7");
 
@@ -231172,6 +231238,27 @@ function isEqualDynamicProps(originalValue, newValue, dataSet, record, name) {
       if (field && field.get('lovCode') && oldValue && value) {
         var valueField = dataSet.getField(key).get('valueField', record);
         var textField = dataSet.getField(key).get('textField', record);
+
+        if (field.get('multiple', record)) {
+          if ((0, _isArray["default"])(oldValue) && (0, _isArray["default"])(value)) {
+            if (oldValue.length !== value.length) {
+              return false;
+            }
+
+            var oldValueArr = oldValue.map(function (v) {
+              var _ref;
+
+              return _ref = {}, (0, _defineProperty2["default"])(_ref, valueField, v[valueField]), (0, _defineProperty2["default"])(_ref, textField, v[textField]), _ref;
+            });
+            var valueArr = value.map(function (v) {
+              var _ref2;
+
+              return _ref2 = {}, (0, _defineProperty2["default"])(_ref2, valueField, v[valueField]), (0, _defineProperty2["default"])(_ref2, textField, v[textField]), _ref2;
+            });
+            return (0, _isEqual["default"])(oldValueArr, valueArr);
+          }
+        }
+
         return value[valueField] === oldValue[valueField] && value[textField] === oldValue[textField];
       }
 
@@ -231641,9 +231728,9 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
   }, {
     key: "processDataSetListener",
     value: function processDataSetListener(flag, nextProps) {
-      var _ref = nextProps || this.props,
-          queryDataSet = _ref.queryDataSet,
-          dataSet = _ref.dataSet;
+      var _ref3 = nextProps || this.props,
+          queryDataSet = _ref3.queryDataSet,
+          dataSet = _ref3.dataSet;
 
       if (queryDataSet) {
         var handler = flag ? queryDataSet.addEventListener : queryDataSet.removeEventListener;
@@ -231659,14 +231746,14 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleDataSetQuery",
     value: function () {
-      var _handleDataSetQuery = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(_ref2) {
-        var dataSet, res, defaultMenus, _ref3, conditionList, initQueryData, _this$props6, queryDataSet, _this$props6$filterQu, filterQueryCallback;
+      var _handleDataSetQuery = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(_ref4) {
+        var dataSet, res, defaultMenus, _ref5, conditionList, initQueryData, _this$props6, queryDataSet, _this$props6$filterQu, filterQueryCallback;
 
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                dataSet = _ref2.dataSet;
+                dataSet = _ref4.dataSet;
 
                 if (!(!dataSet.getState(MENURESULT) && this.tableFilterAdapter && !dataSet.getState(HASINIT))) {
                   _context.next = 18;
@@ -231690,9 +231777,9 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
                 defaultMenus = res.filter(function (menu) {
                   return menu.defaultFlag;
                 });
-                _ref3 = defaultMenus.length > 1 ? defaultMenus.find(function (menu) {
+                _ref5 = defaultMenus.length > 1 ? defaultMenus.find(function (menu) {
                   return menu.isTenant !== 1;
-                }) : defaultMenus[0], conditionList = _ref3.conditionList;
+                }) : defaultMenus[0], conditionList = _ref5.conditionList;
                 initQueryData = {};
 
                 if (!(conditionList && conditionList.length)) {
@@ -231748,7 +231835,7 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleDataSetValidate",
     value: function () {
-      var _handleDataSetValidate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(_ref4) {
+      var _handleDataSetValidate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(_ref6) {
         var _this4 = this;
 
         var dataSet, result, refSingleWrapper;
@@ -231756,7 +231843,7 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                dataSet = _ref4.dataSet, result = _ref4.result;
+                dataSet = _ref6.dataSet, result = _ref6.result;
                 _context2.next = 3;
                 return result;
 
@@ -231816,14 +231903,14 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleDataSetUpdate",
     value: function () {
-      var _handleDataSetUpdate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(_ref5) {
+      var _handleDataSetUpdate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(_ref7) {
         var record, name, oldValue, value, _this$props7, dataSet, queryDataSet, _this$props7$onQuery, onQuery, autoQuery, _this$props7$onBefore, onBeforeQuery, field, shouldQuery, rangeKeys, _record$set, _record$set2, rangeValue, rangeOldValue, status, _this$moreFields, shouldUpdate, selectStatus, hasFocus, i, queryField, editor;
 
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                record = _ref5.record, name = _ref5.name, oldValue = _ref5.oldValue, value = _ref5.value;
+                record = _ref7.record, name = _ref7.name, oldValue = _ref7.oldValue, value = _ref7.value;
                 _this$props7 = this.props, dataSet = _this$props7.dataSet, queryDataSet = _this$props7.queryDataSet, _this$props7$onQuery = _this$props7.onQuery, onQuery = _this$props7$onQuery === void 0 ? _noop["default"] : _this$props7$onQuery, autoQuery = _this$props7.autoQuery, _this$props7$onBefore = _this$props7.onBeforeQuery, onBeforeQuery = _this$props7$onBefore === void 0 ? _noop["default"] : _this$props7$onBefore;
                 field = queryDataSet && queryDataSet.getField(name);
                 shouldQuery = true;
@@ -231989,8 +232076,8 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
 
   }, {
     key: "handleDataSetLoad",
-    value: function handleDataSetLoad(_ref6) {
-      var dataSet = _ref6.dataSet;
+    value: function handleDataSetLoad(_ref8) {
+      var dataSet = _ref8.dataSet;
 
       if (!this.tableFilterAdapter && !dataSet.length) {
         dataSet.create();
@@ -232060,8 +232147,8 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
               fieldProps = _field$fieldProps === void 0 ? {} : _field$fieldProps;
           var fieldName = alias || name;
 
-          var dynamicRequired = function dynamicRequired(_ref7) {
-            var record = _ref7.record;
+          var dynamicRequired = function dynamicRequired(_ref9) {
+            var record = _ref9.record;
             var isNullOperater = [_Operator.OPERATOR.IS_NULL.value, _Operator.OPERATOR.IS_NOT_NULL.value].includes(record.get(_QuickFilterDataSet.AdvancedFieldSet.comparator));
 
             if (fieldName === record.get(_QuickFilterDataSet.AdvancedFieldSet.fieldName) && !isNullOperater) {
@@ -232125,12 +232212,12 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
 
   }, {
     key: "loadConditionData",
-    value: function loadConditionData(_ref8) {
-      var conditionDataSet = _ref8.conditionDataSet,
-          newFilterDataSet = _ref8.newFilterDataSet,
-          menuRecord = _ref8.menuRecord,
-          dataSet = _ref8.dataSet,
-          searchText = _ref8.searchText;
+    value: function loadConditionData(_ref10) {
+      var conditionDataSet = _ref10.conditionDataSet,
+          newFilterDataSet = _ref10.newFilterDataSet,
+          menuRecord = _ref10.menuRecord,
+          dataSet = _ref10.dataSet,
+          searchText = _ref10.searchText;
       var comparatorData = [];
       var regularData = [];
       var newObj = dataSet.getState(ORIGINALVALUEOBJ) || {};
@@ -233050,8 +233137,8 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
               className: "".concat(prefixCls, "-new-filter-popover-item-tag")
             }, Number(props.pos.split('0-')[1]) + 1);
           },
-          renderer: function renderer(_ref9) {
-            var record = _ref9.record;
+          renderer: function renderer(_ref11) {
+            var record = _ref11.record;
             if (!record) return null;
             var comparator = record.get(_QuickFilterDataSet.AdvancedFieldSet.comparator);
             var fieldName = record.get(_QuickFilterDataSet.AdvancedFieldSet.fieldName);
@@ -233109,14 +233196,14 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
               showValidation: _enum7.ShowValidation.tooltip
             }, selectOptions), /*#__PURE__*/_react["default"].createElement(_select["default"], {
               name: _QuickFilterDataSet.AdvancedFieldSet.comparator,
-              renderer: function renderer(_ref10) {
-                var value = _ref10.value,
-                    text = _ref10.text;
+              renderer: function renderer(_ref12) {
+                var value = _ref12.value,
+                    text = _ref12.text;
                 return value ? (0, _localeContext.$l)('Operator', value.toLowerCase()) : text;
               },
-              optionRenderer: function optionRenderer(_ref11) {
-                var value = _ref11.value,
-                    text = _ref11.text;
+              optionRenderer: function optionRenderer(_ref13) {
+                var value = _ref13.value,
+                    text = _ref13.text;
                 return value ? (0, _localeContext.$l)('Operator', value.toLowerCase()) : text;
               },
               style: {
@@ -233407,8 +233494,8 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
             _queryDataSet$props$f = queryDataSet.props.fields,
             propFields = _queryDataSet$props$f === void 0 ? [] : _queryDataSet$props$f;
         var cloneFields = fields.toJS();
-        propFields.forEach(function (_ref12) {
-          var name = _ref12.name;
+        propFields.forEach(function (_ref14) {
+          var name = _ref14.name;
 
           if (name) {
             var field = cloneFields.get(name);
@@ -233484,11 +233571,11 @@ var TableDynamicFilterBar = /*#__PURE__*/function (_Component) {
 
   }, {
     key: "getLabel",
-    value: function getLabel(_ref13) {
-      var field = _ref13.field,
-          value = _ref13.value,
-          record = _ref13.record,
-          placeholder = _ref13.placeholder;
+    value: function getLabel(_ref15) {
+      var field = _ref15.field,
+          value = _ref15.value,
+          record = _ref15.record,
+          placeholder = _ref15.placeholder;
 
       if (value) {
         return field.get('label', record);
@@ -244875,6 +244962,9 @@ function objectFitPolyfill($media, fit, position) {
     }
   }
 }
+// EXTERNAL MODULE: ../node_modules/choerodon-ui/pro/es/_util/isEmpty.js
+var isEmpty = __webpack_require__("0hZS");
+
 // EXTERNAL MODULE: ../node_modules/choerodon-ui/pro/es/picture/PictureContext.js
 var PictureContext = __webpack_require__("oWQ+");
 
@@ -244891,6 +244981,7 @@ var spin = __webpack_require__("nr5+");
 
 
 var _excluded = ["src", "downloadUrl", "previewUrl", "previewTarget", "lazy", "className", "width", "height", "prefixCls", "style", "sources", "alt", "title", "block", "preview", "modalProps", "objectFit", "objectPosition", "status", "border", "index", "onClick", "children", "onPreview"];
+
 
 
 
@@ -245006,6 +245097,10 @@ function Picture(props, ref) {
   }
 
   Object(react["useEffect"])(function () {
+    if (!propStatus && Object(isEmpty["a" /* default */])(src)) {
+      setStatus('empty');
+    }
+
     if (!propStatus && inView && src) {
       if (src !== oldPropsRef.current.src) {
         setStatus('loading');
@@ -252239,6 +252334,7 @@ exports["default"] = Pagination;
 /* harmony import */ var _es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("SNvr");
 /* harmony import */ var _placements__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("GSlN");
 /* harmony import */ var _util_autobind__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__("/dZo");
+/* harmony import */ var _util_isFragment__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__("X0H9");
 
 
 
@@ -252247,6 +252343,7 @@ exports["default"] = Pagination;
 
 
 var _excluded = ["children", "placement", "onHiddenChange", "onHiddenBeforeChange", "trigger", "defaultHidden", "hidden", "getRootDomNode"];
+
 
 
 
@@ -252312,6 +252409,12 @@ function getDisabledCompatableChildren(element) {
       style: spanStyle,
       className: className
     }, child);
+  }
+
+  if (Object(_util_isFragment__WEBPACK_IMPORTED_MODULE_17__[/* default */ "a"])(element)) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_8___default.a.createElement("span", {
+      key: "text-".concat(element)
+    }, element);
   }
 
   return element;
@@ -255555,6 +255658,15 @@ var Menu = /*#__PURE__*/function (_Component) {
       if ('openKeys' in this.props) {
         this.store.setState({
           openKeys: this.props.openKeys || []
+        });
+      } // 强制清除 activeKey
+
+
+      if (this.props.forceClearActiveKey) {
+        this.store.setState({
+          activeKey: {
+            '0-menu-': null
+          }
         });
       }
     }
@@ -266104,7 +266216,8 @@ var TextField = /*#__PURE__*/function (_FormField) {
       var prefixCls = this.prefixCls,
           multiple = this.multiple,
           range = this.range,
-          border = this.border;
+          border = this.border,
+          isFlat = this.props.isFlat;
       var suffix = this.getSuffix();
       var prefix = this.getPrefix();
 
@@ -266112,7 +266225,7 @@ var TextField = /*#__PURE__*/function (_FormField) {
         args[_key] = arguments[_key];
       }
 
-      return (_get2 = (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "getWrapperClassNames", this)).call.apply(_get2, [this, (_ref3 = {}, (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-suffix-button"), /*#__PURE__*/(0, _react.isValidElement)(suffix)), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-multiple"), multiple), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-range"), range), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-border"), border), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-prefix-button"), /*#__PURE__*/(0, _react.isValidElement)(prefix)), _ref3)].concat(args));
+      return (_get2 = (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "getWrapperClassNames", this)).call.apply(_get2, [this, (_ref3 = {}, (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-suffix-button"), /*#__PURE__*/(0, _react.isValidElement)(suffix)), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-multiple"), multiple), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-range"), range), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-border"), border), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-prefix-button"), /*#__PURE__*/(0, _react.isValidElement)(prefix)), (0, _defineProperty2["default"])(_ref3, "".concat(prefixCls, "-flat"), isFlat), _ref3)].concat(args));
     }
   }, {
     key: "renderWrapper",
@@ -266638,12 +266751,15 @@ var TextField = /*#__PURE__*/function (_FormField) {
       }
 
       var editorTextInfo = this.getEditorTextInfo();
+      var editorTextInfoText = editorTextInfo.text;
 
       if (renderedValue && (!this.editable || !this.isFocused)) {
         otherProps.style = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, otherProps.style), {}, {
           textIndent: -100000,
           color: 'transparent'
-        });
+        }); // 优化输入框在有横向滚动条的表格中, 且有自定义renderer, 且空值, 聚焦输入框会引起表格滚动的问题
+
+        editorTextInfoText = (0, _isEmpty2["default"])(editorTextInfoText) ? ' ' : editorTextInfoText;
       } // 筛选条默认宽度处理
 
 
@@ -266669,7 +266785,7 @@ var TextField = /*#__PURE__*/function (_FormField) {
         onMouseEnter: onMouseEnter,
         onMouseLeave: onMouseLeave,
         placeholder: editorTextInfo.placeholder,
-        value: editorTextInfo.text,
+        value: editorTextInfoText,
         readOnly: !this.editable
       }))];
 
@@ -267250,7 +267366,7 @@ var TextField = /*#__PURE__*/function (_FormField) {
     value: function handleBlur(e) {
       if (!e.isDefaultPrevented()) {
         if (this.editable || this.isEditableLike()) {
-          this.syncValueOnBlur(e.target.value);
+          this.syncValueOnBlur(e.target.value, e);
         } else if (!this.getValues().length) {
           this.setValue(null);
         }
@@ -276691,7 +276807,7 @@ var FormField = /*#__PURE__*/function (_DataSetComponent) {
           var value = e.target.value;
 
           if (value !== '') {
-            this.syncValueOnBlur(value);
+            this.syncValueOnBlur(value, e);
             e.preventDefault();
           }
         }
@@ -276701,7 +276817,7 @@ var FormField = /*#__PURE__*/function (_DataSetComponent) {
     }
   }, {
     key: "syncValueOnBlur",
-    value: function syncValueOnBlur(value) {
+    value: function syncValueOnBlur(value, _) {
       this.prepareSetValue(value);
     }
   }, {
@@ -300873,6 +300989,9 @@ var Lov = /*#__PURE__*/function (_Select) {
             }, modalProps) || {});
             this.afterOpen(options, fetchSingle);
           }
+
+          this.searchText = undefined;
+          this.setText(undefined);
         }
       }
     }
@@ -301099,7 +301218,7 @@ var Lov = /*#__PURE__*/function (_Select) {
     }
   }, {
     key: "syncValueOnBlur",
-    value: function syncValueOnBlur(value) {
+    value: function syncValueOnBlur(value, event) {
       var _this4 = this;
 
       var textField = this.textField;
@@ -301130,8 +301249,8 @@ var Lov = /*#__PURE__*/function (_Select) {
               _this4.openModal(fetchSingle);
             }
           });
-        } else if (!this.multiple) {
-          (0, _get2["default"])((0, _getPrototypeOf2["default"])(Lov.prototype), "syncValueOnBlur", this).call(this, value);
+        } else if (!this.multiple || this.multiple && this.observableProps.combo && !this.popupShowComboValue) {
+          (0, _get2["default"])((0, _getPrototypeOf2["default"])(Lov.prototype), "syncValueOnBlur", this).call(this, value, event);
         } else if (this.getProp('required')) {
           var oldValues = this.getValues();
           this.validate(oldValues, false);
@@ -301240,7 +301359,11 @@ var Lov = /*#__PURE__*/function (_Select) {
     }()
   }, {
     key: "handleOpenModal",
-    value: function handleOpenModal() {
+    value: function handleOpenModal(e) {
+      if (e && e.currentTarget && e.target && !e.currentTarget.contains(e.target)) {
+        return;
+      }
+
       if (this.showDetailWhenReadonly) {
         this.openModal();
       } else if (!this.disabled && !this.readOnly) {
@@ -302611,7 +302734,7 @@ module.exports = baseIsMatch;
 /***/ "VZ7k":
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/themes\",\"version\":\"4.1.7-alpha.18\",\"main\":\"lib/index.js\",\"license\":\"MIT\",\"description\":\"主题包\",\"scripts\":{\"prepublish\":\"yarn transpile\",\"tsc\":\"tsc --emitDeclarationOnly true\",\"transpile\":\"cross-env NODE_ENV=production BABEL_ENV=production npx babel src --delete-dir-on-start --out-dir lib --extensions '.ts,.tsx,.js,.jsx' --copy-files --config-file ./.babelrc.js && tsc\"},\"dependencies\":{\"@hzero-front-ui/font\":\"4.1.7-alpha.1\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\"},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"lib\"],\"gitHead\":\"521c404946cdaed0d873cda3ab2f8563b3451014\"}");
+module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/themes\",\"version\":\"4.1.7-alpha.20\",\"main\":\"lib/index.js\",\"license\":\"MIT\",\"description\":\"主题包\",\"scripts\":{\"prepublish\":\"yarn transpile\",\"tsc\":\"tsc --emitDeclarationOnly true\",\"transpile\":\"cross-env NODE_ENV=production BABEL_ENV=production npx babel src --delete-dir-on-start --out-dir lib --extensions '.ts,.tsx,.js,.jsx' --copy-files --config-file ./.babelrc.js && tsc\"},\"dependencies\":{\"@hzero-front-ui/font\":\"4.1.7-alpha.1\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\"},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"lib\"],\"gitHead\":\"91f7bfa8b8d622e2ba245ded15d6c997c417ccea\"}");
 
 /***/ }),
 
@@ -325852,31 +325975,51 @@ var Pagination_Pagination = /*#__PURE__*/function (_DataSetComponent) {
     key: "jumpPage",
     value: function () {
       var _jumpPage = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee2(page) {
-        var _this$props2, dataSet, _this$props2$beforeCh, beforeChange;
+        var _this$props2, dataSet, _this$props2$beforeCh, beforeChange, modifiedCheckResult;
 
         return regenerator_default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _this$props2 = this.props, dataSet = _this$props2.dataSet, _this$props2$beforeCh = _this$props2.beforeChange, beforeChange = _this$props2$beforeCh === void 0 ? noop_default.a : _this$props2$beforeCh;
-                _context2.next = 3;
-                return beforeChange(page, this.pageSize);
 
-              case 3:
-                _context2.t0 = _context2.sent;
-
-                if (!(_context2.t0 !== false)) {
+                if (!dataSet) {
                   _context2.next = 7;
                   break;
                 }
 
+                _context2.next = 4;
+                return dataSet.modifiedCheck();
+
+              case 4:
+                modifiedCheckResult = _context2.sent;
+
+                if (!(modifiedCheckResult === false)) {
+                  _context2.next = 7;
+                  break;
+                }
+
+                return _context2.abrupt("return");
+
+              case 7:
+                _context2.next = 9;
+                return beforeChange(page, this.pageSize);
+
+              case 9:
+                _context2.t0 = _context2.sent;
+
+                if (!(_context2.t0 !== false)) {
+                  _context2.next = 13;
+                  break;
+                }
+
                 if (dataSet) {
-                  dataSet.page(page);
+                  dataSet.page(page, modifiedCheckResult);
                 }
 
                 this.handleChange(page, this.pageSize);
 
-              case 7:
+              case 13:
               case "end":
                 return _context2.stop();
             }
@@ -337447,7 +337590,8 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
       var prefixCls = this.prefixCls,
           multiple = this.multiple,
           range = this.range,
-          border = this.border;
+          border = this.border,
+          isFlat = this.props.isFlat;
       var suffix = this.getSuffix();
       var prefix = this.getPrefix();
 
@@ -337455,7 +337599,7 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
         args[_key] = arguments[_key];
       }
 
-      return (_get2 = get_default()(getPrototypeOf_default()(TextField.prototype), "getWrapperClassNames", this)).call.apply(_get2, [this, (_ref3 = {}, defineProperty_default()(_ref3, "".concat(prefixCls, "-suffix-button"), /*#__PURE__*/Object(react["isValidElement"])(suffix)), defineProperty_default()(_ref3, "".concat(prefixCls, "-multiple"), multiple), defineProperty_default()(_ref3, "".concat(prefixCls, "-range"), range), defineProperty_default()(_ref3, "".concat(prefixCls, "-border"), border), defineProperty_default()(_ref3, "".concat(prefixCls, "-prefix-button"), /*#__PURE__*/Object(react["isValidElement"])(prefix)), _ref3)].concat(args));
+      return (_get2 = get_default()(getPrototypeOf_default()(TextField.prototype), "getWrapperClassNames", this)).call.apply(_get2, [this, (_ref3 = {}, defineProperty_default()(_ref3, "".concat(prefixCls, "-suffix-button"), /*#__PURE__*/Object(react["isValidElement"])(suffix)), defineProperty_default()(_ref3, "".concat(prefixCls, "-multiple"), multiple), defineProperty_default()(_ref3, "".concat(prefixCls, "-range"), range), defineProperty_default()(_ref3, "".concat(prefixCls, "-border"), border), defineProperty_default()(_ref3, "".concat(prefixCls, "-prefix-button"), /*#__PURE__*/Object(react["isValidElement"])(prefix)), defineProperty_default()(_ref3, "".concat(prefixCls, "-flat"), isFlat), _ref3)].concat(args));
     }
   }, {
     key: "renderWrapper",
@@ -337979,12 +338123,15 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
       }
 
       var editorTextInfo = this.getEditorTextInfo();
+      var editorTextInfoText = editorTextInfo.text;
 
       if (renderedValue && (!this.editable || !this.isFocused)) {
         otherProps.style = objectSpread2_default()(objectSpread2_default()({}, otherProps.style), {}, {
           textIndent: -100000,
           color: 'transparent'
-        });
+        }); // 优化输入框在有横向滚动条的表格中, 且有自定义renderer, 且空值, 聚焦输入框会引起表格滚动的问题
+
+        editorTextInfoText = Object(_util_isEmpty["a" /* default */])(editorTextInfoText) ? ' ' : editorTextInfoText;
       } // 筛选条默认宽度处理
 
 
@@ -338010,7 +338157,7 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
         onMouseEnter: onMouseEnter,
         onMouseLeave: onMouseLeave,
         placeholder: editorTextInfo.placeholder,
-        value: editorTextInfo.text,
+        value: editorTextInfoText,
         readOnly: !this.editable
       }))];
 
@@ -338595,7 +338742,7 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
     value: function handleBlur(e) {
       if (!e.isDefaultPrevented()) {
         if (this.editable || this.isEditableLike()) {
-          this.syncValueOnBlur(e.target.value);
+          this.syncValueOnBlur(e.target.value, e);
         } else if (!this.getValues().length) {
           this.setValue(null);
         }
@@ -363234,6 +363381,8 @@ var _isString = _interopRequireDefault(__webpack_require__("4e1R"));
 
 var _isNumber = _interopRequireDefault(__webpack_require__("XQLF"));
 
+var _lodash = __webpack_require__("9va6");
+
 var _UnitConvertor = __webpack_require__("ut9x");
 
 var _icon = _interopRequireDefault(__webpack_require__("gTEN"));
@@ -363976,24 +364125,23 @@ var TableQueryBar = /*#__PURE__*/function (_Component) {
     }
     /**
      * buttons 大于 buttonsLimits 放入下拉
-     * @param buttonsLimits
-     * @param hasCombineSort
+     * @param moreButtons 更多的按钮
      */
 
   }, {
     key: "getMoreButton",
-    value: function getMoreButton(buttonsLimits, hasCombineSort) {
+    value: function getMoreButton(moreButtons) {
       var _this5 = this;
 
-      var buttons = this.props.buttons;
+      var buttons = moreButtons;
       var _this$context8 = this.context,
           prefixCls = _this$context8.prefixCls,
           tableStore = _this$context8.tableStore;
       var tableButtonProps = tableStore.getConfig('tableButtonProps');
       var children = [];
 
-      if (buttons && buttons.length && buttonsLimits) {
-        buttons.slice(hasCombineSort ? buttonsLimits - 1 : buttonsLimits).forEach(function (button) {
+      if (buttons && buttons.length) {
+        buttons.forEach(function (button) {
           var props = {};
 
           if ((0, _mobx.isArrayLike)(button)) {
@@ -364127,8 +364275,15 @@ var TableQueryBar = /*#__PURE__*/function (_Component) {
         // 汇总条存在下 buttons 大于 3 个放入下拉
         var buttonsLimits = summaryBar ? buttonsLimit || 3 : buttonsLimit;
         var tableButtonProps = tableStore.getConfig('tableButtonProps');
-        var buttonsArr = buttons.slice(0, buttonsLimits);
-        buttonsArr.forEach(function (button) {
+        var showButtonLength = 0;
+        var moreButtons = [];
+        buttons.forEach(function (button) {
+          // 以实际显示的按钮计算 buttonsLimits
+          if (!(0, _lodash.isNil)(buttonsLimits) && showButtonLength === buttonsLimits) {
+            moreButtons.push(button);
+            return;
+          }
+
           var props = {};
 
           if ((0, _mobx.isArrayLike)(button)) {
@@ -364177,19 +364332,37 @@ var TableQueryBar = /*#__PURE__*/function (_Component) {
                 }();
               }
 
+              var allButtons = (0, _objectSpread2["default"])((0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, tableButtonProps), defaultButtonProps), buttonProps);
+
+              if (!allButtons || !allButtons.hidden) {
+                showButtonLength++;
+              }
+
               children.push( /*#__PURE__*/_react["default"].createElement(_Button["default"], (0, _extends2["default"])({
                 key: button
-              }, tableButtonProps, defaultButtonProps, buttonProps)));
+              }, allButtons)));
             }
           } else if ( /*#__PURE__*/(0, _react.isValidElement)(button)) {
-            children.push( /*#__PURE__*/(0, _react.cloneElement)(button, (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, tableButtonProps), button.props)));
+            var _allButtons = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, tableButtonProps), button.props);
+
+            if (!_allButtons || !_allButtons.hidden) {
+              showButtonLength++;
+            }
+
+            children.push( /*#__PURE__*/(0, _react.cloneElement)(button, (0, _objectSpread2["default"])({}, _allButtons)));
           } else if ((0, _isObject["default"])(button)) {
-            children.push( /*#__PURE__*/_react["default"].createElement(_Button["default"], (0, _extends2["default"])({}, tableButtonProps, button)));
+            var _allButtons2 = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, tableButtonProps), button);
+
+            if (!_allButtons2 || !_allButtons2.hidden) {
+              showButtonLength++;
+            }
+
+            children.push( /*#__PURE__*/_react["default"].createElement(_Button["default"], (0, _extends2["default"])({}, _allButtons2)));
           }
         });
 
-        if (buttonsLimits && buttons.length > buttonsLimits) {
-          var moreButton = this.getMoreButton(buttonsLimits, hasCombineSort);
+        if (moreButtons && moreButtons.length > 0) {
+          var moreButton = this.getMoreButton(moreButtons);
           children.push(moreButton);
         }
       }
@@ -367507,8 +367680,9 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "optionsWithCombo",
     get: function get() {
-      var comboOptions = this.comboOptions;
-      return comboOptions ? [].concat((0, _toConsumableArray2["default"])(comboOptions.data), (0, _toConsumableArray2["default"])(this.cascadeOptions)) : this.cascadeOptions;
+      var comboOptions = this.comboOptions,
+          popupShowComboValue = this.popupShowComboValue;
+      return comboOptions && popupShowComboValue ? [].concat((0, _toConsumableArray2["default"])(comboOptions.data), (0, _toConsumableArray2["default"])(this.cascadeOptions)) : this.cascadeOptions;
     }
   }, {
     key: "cascadeOptions",
@@ -367598,6 +367772,12 @@ var Select = /*#__PURE__*/function (_TriggerField) {
       var displayName = this.constructor.displayName;
       var scrollLoad = this.observableProps.scrollLoad;
       return displayName === 'Select' && (!(0, _isNil["default"])(scrollLoad) ? scrollLoad : this.getContextConfig('selectScrollLoad'));
+    }
+  }, {
+    key: "popupShowComboValue",
+    get: function get() {
+      var popupShowComboValue = this.observableProps.popupShowComboValue;
+      return !!popupShowComboValue;
     }
   }, {
     key: "saveMenu",
@@ -367761,7 +367941,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "getOmitPropsKeys",
     value: function getOmitPropsKeys() {
-      return (0, _get2["default"])((0, _getPrototypeOf2["default"])(Select.prototype), "getOmitPropsKeys", this).call(this).concat(['searchable', 'reserveParam', 'searchMatcher', 'searchFieldInPopup', 'searchFieldProps', 'paramMatcher', 'combo', 'commonItem', 'maxCommonTagPlaceholder', 'maxCommonTagCount', 'maxCommonTagTextLength', 'multiple', 'value', 'name', 'options', 'optionsFilter', 'dropdownMatchSelectWidth', 'virtual', 'dropdownMenuStyle', 'checkValueOnOptionsChange', 'primitiveValue', 'optionRenderer', 'notFoundContent', 'pagingOptionContent', 'onOption', 'noCache', 'reverse', 'selectAllButton', 'optionTooltip', 'defaultActiveFirstOption', 'scrollLoad']);
+      return (0, _get2["default"])((0, _getPrototypeOf2["default"])(Select.prototype), "getOmitPropsKeys", this).call(this).concat(['searchable', 'reserveParam', 'searchMatcher', 'searchFieldInPopup', 'searchFieldProps', 'paramMatcher', 'combo', 'commonItem', 'maxCommonTagPlaceholder', 'maxCommonTagCount', 'maxCommonTagTextLength', 'multiple', 'value', 'name', 'options', 'optionsFilter', 'dropdownMatchSelectWidth', 'virtual', 'dropdownMenuStyle', 'checkValueOnOptionsChange', 'primitiveValue', 'optionRenderer', 'notFoundContent', 'pagingOptionContent', 'onOption', 'noCache', 'reverse', 'selectAllButton', 'optionTooltip', 'defaultActiveFirstOption', 'scrollLoad', 'popupShowComboValue']);
     }
   }, {
     key: "getObservableProps",
@@ -367781,7 +367961,8 @@ var Select = /*#__PURE__*/function (_TriggerField) {
         defaultActiveFirstOption: props.defaultActiveFirstOption,
         selectReverse: props.reverse,
         optionsFilter: props.optionsFilter,
-        scrollLoad: props.scrollLoad
+        scrollLoad: props.scrollLoad,
+        popupShowComboValue: props.popupShowComboValue
       });
     }
   }, {
@@ -368063,6 +368244,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
         ref: this.saveMenu,
         disabled: menuDisabled,
         defaultActiveFirst: this.defaultActiveFirstOption,
+        forceClearActiveKey: this.forceClearActiveKey,
         multiple: this.menuMultiple,
         selectedKeys: selectedKeys,
         prefixCls: menuPrefix,
@@ -368127,9 +368309,24 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           virtual = _this$observableProps6 === void 0 ? false : _this$observableProps6;
       return virtual;
     }
+    /**
+     * 每次刷新后清除 menu 的 activeKey
+     */
+
+  }, {
+    key: "forceClearActiveKey",
+    get: function get() {
+      var popupShowComboValue = this.popupShowComboValue,
+          combo = this.observableProps.combo;
+      return combo && !popupShowComboValue;
+    }
   }, {
     key: "defaultActiveFirstOption",
     get: function get() {
+      if (this.forceClearActiveKey) {
+        return false;
+      }
+
       var _this$observableProps7 = this.observableProps.defaultActiveFirstOption,
           defaultActiveFirstOption = _this$observableProps7 === void 0 ? this.getContextConfig('defaultActiveFirstOption') : _this$observableProps7;
       return defaultActiveFirstOption && this.options.currentPage === 1 && !this.moreQuerying;
@@ -368399,7 +368596,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
         }
 
         e.preventDefault();
-      } else if (e === _KeyCode["default"].DOWN) {
+      } else if (e.keyCode === _KeyCode["default"].DOWN) {
         this.expand();
         e.preventDefault();
       }
@@ -368444,21 +368641,53 @@ var Select = /*#__PURE__*/function (_TriggerField) {
     }
   }, {
     key: "syncValueOnBlur",
-    value: function syncValueOnBlur(text) {
+    value: function syncValueOnBlur(text, event) {
       var _this7 = this;
 
+      var popupShowComboValue = this.popupShowComboValue,
+          multiple = this.multiple,
+          comboOptions = this.comboOptions,
+          valueField = this.valueField,
+          combo = this.observableProps.combo;
       var value = this.getValue();
+
+      if (event && event.type === 'blur' && multiple && combo && !popupShowComboValue && value && value.length > 0) {
+        // 聚合输入(popupShowComboValue为false时):
+        // 默认失焦会选中聚合值; 在下拉中选择有具体值后，需要按回车才能选中聚合值，失焦不默认选中;
+        if (!comboOptions || value.some(function (val) {
+          return !comboOptions.find(function (com) {
+            return com.get(valueField) === val[valueField];
+          });
+        })) {
+          (0, _mobx.runInAction)(function () {
+            _this7.searchText = undefined;
+
+            _this7.setText(undefined);
+          });
+          return;
+        }
+      }
 
       if (text) {
         if (value !== text) {
           if (!(0, _isObject["default"])(value) || value[this.textField] !== text) {
-            var comboOptions = this.comboOptions;
-            var data = comboOptions ? comboOptions.data : [];
+            var _comboOptions = this.comboOptions;
+            var data = _comboOptions ? _comboOptions.data : [];
             this.options.ready().then(function () {
               var record = _this7.findByTextWithValue(text, data);
 
               if (record) {
                 _this7.choose(record);
+
+                if (multiple && combo && !popupShowComboValue) {
+                  (0, _mobx.runInAction)(function () {
+                    _this7.searchText = undefined;
+
+                    _this7.setText(undefined);
+
+                    _this7.collapse();
+                  });
+                }
               }
             });
           }
@@ -368470,8 +368699,14 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "findByTextWithValue",
     value: function findByTextWithValue(text, data) {
+      var _this8 = this;
+
       var textField = this.textField;
-      var records = [].concat((0, _toConsumableArray2["default"])(data), (0, _toConsumableArray2["default"])(this.filteredOptions)).filter(function (record) {
+      var records = [].concat((0, _toConsumableArray2["default"])(data.filter(function (comRecord) {
+        return _this8.filteredOptions.every(function (record) {
+          return record.get(textField) !== comRecord.get(textField);
+        });
+      })), (0, _toConsumableArray2["default"])(this.filteredOptions)).filter(function (record) {
         return (0, _isSameLike["default"])(record.get(textField), text);
       });
 
@@ -368528,7 +368763,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "generateComboOption",
     value: function generateComboOption(value, callback) {
-      var _this8 = this;
+      var _this9 = this;
 
       var currentComboOption = this.currentComboOption,
           textField = this.textField,
@@ -368536,8 +368771,14 @@ var Select = /*#__PURE__*/function (_TriggerField) {
 
       if (value) {
         if ((0, _mobx.isArrayLike)(value)) {
-          value.forEach(function (v) {
-            return !(0, _isNil["default"])(v) && _this8.generateComboOption(v);
+          var loopValue = (0, _toConsumableArray2["default"])(value);
+
+          if (!(0, _isEmpty2["default"])(this.text)) {
+            loopValue.push(this.text);
+          }
+
+          loopValue.forEach(function (v) {
+            return !(0, _isNil["default"])(v) && _this9.generateComboOption(v);
           });
         } else {
           if ((0, _mobx.isObservableObject)(value)) {
@@ -368570,7 +368811,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "createComboOption",
     value: function createComboOption(value) {
-      var _this9 = this,
+      var _this10 = this,
           _ref6;
 
       var textField = this.textField,
@@ -368578,12 +368819,12 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           menu = this.menu;
       var comboOptions = (0, _utils.getIf)(this, 'comboOptions', function () {
         return new _DataSet["default"](undefined, {
-          getConfig: _this9.getContextConfig
+          getConfig: _this10.getContextConfig
         });
       });
       var initData = !this.primitive && (0, _mobx.isObservableObject)(value) ? value : (_ref6 = {}, (0, _defineProperty2["default"])(_ref6, textField, value), (0, _defineProperty2["default"])(_ref6, valueField, value), _ref6);
       var findOption = comboOptions.find(function (record) {
-        return record.get(valueField) === value.trim();
+        return record.get(valueField) === ((0, _isNil["default"])(value) ? value : value.trim());
       });
       if (findOption) return;
       var record = comboOptions.create(initData, 0);
@@ -368595,13 +368836,13 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "removeComboOptions",
     value: function removeComboOptions() {
-      var _this10 = this;
+      var _this11 = this;
 
       var comboOptions = this.comboOptions;
 
       if (comboOptions) {
         comboOptions.forEach(function (record) {
-          return _this10.removeComboOption(record);
+          return _this11.removeComboOption(record);
         });
       }
     }
@@ -368643,7 +368884,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "handleMenuClick",
     value: function handleMenuClick(_ref7) {
-      var _this11 = this;
+      var _this12 = this;
 
       var key = _ref7.key,
           value = _ref7.item.props.value;
@@ -368663,10 +368904,10 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           options.currentPage = currentPage + 1;
         } else {
           (0, _mobx.runInAction)(function () {
-            _this11.moreQuerying = true;
-            options.queryMore(options.currentPage + 1, (0, _isString["default"])(searchMatcher) ? _this11.getSearchPara(searchMatcher, searchText) : undefined)["finally"](function () {
+            _this12.moreQuerying = true;
+            options.queryMore(options.currentPage + 1, (0, _isString["default"])(searchMatcher) ? _this12.getSearchPara(searchMatcher, searchText) : undefined)["finally"](function () {
               (0, _mobx.runInAction)(function () {
-                return _this11.moreQuerying = false;
+                return _this12.moreQuerying = false;
               });
             });
           });
@@ -368799,7 +369040,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "handleChange",
     value: function handleChange(e) {
-      var _this12 = this;
+      var _this13 = this;
 
       var target = e.target,
           value = e.target.value;
@@ -368817,7 +369058,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
       if (this.observableProps.combo) {
         if (restricted !== beforeText) {
           this.generateComboOption(restricted, function (text) {
-            return _this12.setText(text);
+            return _this13.setText(text);
           });
         }
       }
@@ -368879,7 +369120,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "clear",
     value: function clear() {
-      var _this13 = this;
+      var _this14 = this;
 
       var values = this.getValues();
       var _this$props5 = this.props,
@@ -368894,9 +369135,9 @@ var Select = /*#__PURE__*/function (_TriggerField) {
 
       if (this.multiple) {
         var valuesDisabled = values.slice(0, maxTagCount).filter(function (v) {
-          var recordItem = _this13.findByValue(v);
+          var recordItem = _this14.findByValue(v);
 
-          var findRecord = _this13.findByValue(v);
+          var findRecord = _this14.findByValue(v);
 
           var optionProps = findRecord ? onOption({
             dataSet: options,
@@ -368919,7 +369160,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "setRangeTarget",
     value: function setRangeTarget(target) {
-      var _this14 = this;
+      var _this15 = this;
 
       if (this.text !== undefined) {
         if (!this.searchable || this.isSearchFieldInPopup()) {
@@ -368931,7 +369172,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
 
       (0, _get2["default"])((0, _getPrototypeOf2["default"])(Select.prototype), "setRangeTarget", this).call(this, target);
       (0, _defer["default"])(function () {
-        return _this14.isFocused && _this14.select();
+        return _this15.isFocused && _this15.select();
       });
     }
   }, {
@@ -368981,28 +369222,6 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "chooseAll",
     value: function chooseAll() {
-      var _this15 = this;
-
-      var options = this.options,
-          onOption = this.props.onOption;
-      var values = this.getValues();
-      var selectedOptions = this.filteredOptions.filter(function (record) {
-        var optionProps = onOption({
-          dataSet: options,
-          record: record
-        });
-        var optionDisabled = optionProps && optionProps.disabled;
-        return !optionDisabled && !_this15.optionIsSelected(record, values);
-      });
-      this.choose(selectedOptions);
-    }
-    /**
-     * 反选
-     */
-
-  }, {
-    key: "chooseRe",
-    value: function chooseRe() {
       var _this16 = this;
 
       var options = this.options,
@@ -369014,8 +369233,30 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           record: record
         });
         var optionDisabled = optionProps && optionProps.disabled;
+        return !optionDisabled && !_this16.optionIsSelected(record, values);
+      });
+      this.choose(selectedOptions);
+    }
+    /**
+     * 反选
+     */
 
-        var optionIsSelect = _this16.optionIsSelected(record, values);
+  }, {
+    key: "chooseRe",
+    value: function chooseRe() {
+      var _this17 = this;
+
+      var options = this.options,
+          onOption = this.props.onOption;
+      var values = this.getValues();
+      var selectedOptions = this.filteredOptions.filter(function (record) {
+        var optionProps = onOption({
+          dataSet: options,
+          record: record
+        });
+        var optionDisabled = optionProps && optionProps.disabled;
+
+        var optionIsSelect = _this17.optionIsSelected(record, values);
 
         return !optionDisabled && !optionIsSelect || optionDisabled && optionIsSelect;
       });
@@ -369052,7 +369293,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
     key: "processSelectedData",
     value: function () {
       var _processSelectedData = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-        var _this17 = this;
+        var _this18 = this;
 
         var comboOptions, values, field, filteredOptions, combo;
         return _regenerator["default"].wrap(function _callee$(_context) {
@@ -369080,14 +369321,14 @@ var Select = /*#__PURE__*/function (_TriggerField) {
                 filteredOptions = this.filteredOptions, combo = this.observableProps.combo;
                 (0, _mobx.runInAction)(function () {
                   var newValues = values.filter(function (value) {
-                    var record = _this17.findByValue(value);
+                    var record = _this18.findByValue(value);
 
                     if (record) {
                       return true;
                     }
 
                     if (combo) {
-                      _this17.createComboOption(value);
+                      _this18.createComboOption(value);
 
                       return true;
                     }
@@ -369095,12 +369336,12 @@ var Select = /*#__PURE__*/function (_TriggerField) {
                     return false;
                   });
 
-                  if (_this17.text && combo) {
-                    _this17.generateComboOption(_this17.text);
+                  if (_this18.text && combo) {
+                    _this18.generateComboOption(_this18.text);
                   }
 
-                  if (field && field.get('cascadeMap', _this17.record) && filteredOptions.length && !(0, _isEqual["default"])(newValues, values)) {
-                    _this17.setValue(_this17.multiple ? newValues : newValues[0]);
+                  if (field && field.get('cascadeMap', _this18.record) && filteredOptions.length && !(0, _isEqual["default"])(newValues, values)) {
+                    _this18.setValue(_this18.multiple ? newValues : newValues[0]);
                   }
                 });
 
@@ -369121,13 +369362,13 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "searchData",
     value: function searchData(data) {
-      var _this18 = this;
+      var _this19 = this;
 
       var searchable = this.searchable,
           searchMatcher = this.searchMatcher,
           searchText = this.searchText;
       return searchable && typeof searchMatcher === 'function' && !isSearchTextEmpty(searchText) ? data.filter(function (r) {
-        return _this18.matchRecordBySearch(r, searchText);
+        return _this19.matchRecordBySearch(r, searchText);
       }) : data;
     }
   }, {
@@ -369162,7 +369403,8 @@ Select.defaultProps = (0, _objectSpread3["default"])((0, _objectSpread3["default
   combo: false,
   checkValueOnOptionsChange: true,
   onOption: defaultOnOption,
-  selectAllButton: true
+  selectAllButton: true,
+  popupShowComboValue: true
 });
 Select.Option = _Option["default"];
 Select.OptGroup = _OptGroup["default"];
@@ -369184,6 +369426,7 @@ Select.__PRO_SELECT = true;
 (0, _tslib.__decorate)([_autobind["default"]], Select.prototype, "handleKeyDown", null);
 (0, _tslib.__decorate)([_autobind["default"]], Select.prototype, "isMultipleBlockDisabled", null);
 (0, _tslib.__decorate)([_autobind["default"]], Select.prototype, "handleBlur", null);
+(0, _tslib.__decorate)([_autobind["default"]], Select.prototype, "syncValueOnBlur", null);
 (0, _tslib.__decorate)([_mobx.action], Select.prototype, "createComboOption", null);
 (0, _tslib.__decorate)([_autobind["default"]], Select.prototype, "getValueKey", null);
 (0, _tslib.__decorate)([_autobind["default"]], Select.prototype, "handlePopupAnimateEnd", null);
@@ -373016,31 +373259,51 @@ var Pagination = /*#__PURE__*/function (_DataSetComponent) {
     key: "jumpPage",
     value: function () {
       var _jumpPage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(page) {
-        var _this$props2, dataSet, _this$props2$beforeCh, beforeChange;
+        var _this$props2, dataSet, _this$props2$beforeCh, beforeChange, modifiedCheckResult;
 
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _this$props2 = this.props, dataSet = _this$props2.dataSet, _this$props2$beforeCh = _this$props2.beforeChange, beforeChange = _this$props2$beforeCh === void 0 ? _noop["default"] : _this$props2$beforeCh;
-                _context2.next = 3;
-                return beforeChange(page, this.pageSize);
 
-              case 3:
-                _context2.t0 = _context2.sent;
-
-                if (!(_context2.t0 !== false)) {
+                if (!dataSet) {
                   _context2.next = 7;
                   break;
                 }
 
+                _context2.next = 4;
+                return dataSet.modifiedCheck();
+
+              case 4:
+                modifiedCheckResult = _context2.sent;
+
+                if (!(modifiedCheckResult === false)) {
+                  _context2.next = 7;
+                  break;
+                }
+
+                return _context2.abrupt("return");
+
+              case 7:
+                _context2.next = 9;
+                return beforeChange(page, this.pageSize);
+
+              case 9:
+                _context2.t0 = _context2.sent;
+
+                if (!(_context2.t0 !== false)) {
+                  _context2.next = 13;
+                  break;
+                }
+
                 if (dataSet) {
-                  dataSet.page(page);
+                  dataSet.page(page, modifiedCheckResult);
                 }
 
                 this.handleChange(page, this.pageSize);
 
-              case 7:
+              case 13:
               case "end":
                 return _context2.stop();
             }
@@ -373675,6 +373938,15 @@ var Menu_Menu = /*#__PURE__*/function (_Component) {
       if ('openKeys' in this.props) {
         this.store.setState({
           openKeys: this.props.openKeys || []
+        });
+      } // 强制清除 activeKey
+
+
+      if (this.props.forceClearActiveKey) {
+        this.store.setState({
+          activeKey: {
+            '0-menu-': null
+          }
         });
       }
     }
@@ -389733,7 +390005,7 @@ module.exports = isUndefined;
 /***/ "hzMB":
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/cfg\",\"version\":\"4.1.7-alpha.20\",\"private\":false,\"main\":\"lib/index.js\",\"dependencies\":{\"@hzero-front-ui/c7n-ui\":\"4.1.7-alpha.13\",\"@hzero-front-ui/core\":\"4.1.7-alpha.5\",\"@hzero-front-ui/hzero-ui\":\"4.1.7-alpha.1\",\"@hzero-front-ui/themes\":\"4.1.7-alpha.18\",\"memoize-one\":\"^5.1.1\"},\"devDependencies\":{\"@babel/core\":\"7.12.3\",\"@babel/plugin-proposal-decorators\":\"^7.14.5\",\"@babel/plugin-transform-modules-umd\":\"^7.2.0\",\"@babel/standalone\":\"7.12.3\",\"@pmmmwh/react-refresh-webpack-plugin\":\"0.4.3\",\"@svgr/webpack\":\"5.5.0\",\"@testing-library/jest-dom\":\"^5.11.4\",\"@testing-library/react\":\"^11.1.0\",\"@testing-library/user-event\":\"^12.1.10\",\"@types/classnames\":\"^2.3.1\",\"@types/express\":\"^4.17.12\",\"@types/file-saver\":\"^2.0.3\",\"@types/fs-extra\":\"^9.0.12\",\"@types/jest\":\"^26.0.15\",\"@types/node\":\"^12.0.0\",\"@types/query-string\":\"^6.3.0\",\"@types/react\":\"~16.14.11\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^17.0.0\",\"@types/sockjs\":\"^0.3.32\",\"@types/uuid\":\"^8.3.0\",\"@typescript-eslint/eslint-plugin\":\"^4.5.0\",\"@typescript-eslint/parser\":\"^4.5.0\",\"add-asset-html-webpack-plugin\":\"^3.2.0\",\"axios\":\"^0.21.1\",\"babel-eslint\":\"^10.1.0\",\"babel-jest\":\"^26.6.0\",\"babel-loader\":\"8.1.0\",\"babel-plugin-named-asset-import\":\"^0.3.7\",\"babel-preset-react-app\":\"9.1.0\",\"bfj\":\"^7.0.2\",\"body-parser\":\"^1.19.0\",\"camelcase\":\"^6.1.0\",\"case-sensitive-paths-webpack-plugin\":\"2.3.0\",\"choerodon-ui\":\"1.6.7-alpha.45\",\"clean-webpack-plugin\":\"^4.0.0-alpha.0\",\"concurrently\":\"^6.2.0\",\"css-loader\":\"4.3.0\",\"dotenv\":\"8.2.0\",\"dotenv-expand\":\"5.1.0\",\"eslint-config-react-app\":\"^6.0.0\",\"eslint-plugin-flowtype\":\"^5.2.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jest\":\"^24.1.0\",\"eslint-plugin-jsx-a11y\":\"^6.3.1\",\"eslint-plugin-react\":\"^7.21.5\",\"eslint-plugin-react-hooks\":\"^4.2.0\",\"eslint-plugin-testing-library\":\"^3.9.2\",\"eslint-webpack-plugin\":\"^2.5.2\",\"express\":\"^4.17.1\",\"file-loader\":\"6.1.1\",\"html-webpack-plugin\":\"4.5.0\",\"identity-obj-proxy\":\"3.0.0\",\"jest\":\"26.6.0\",\"jest-circus\":\"26.6.0\",\"jest-resolve\":\"26.6.0\",\"jest-watch-typeahead\":\"0.6.1\",\"less\":\"^3.1.1\",\"less-loader\":\"^7.0.0\",\"lodash\":\"^4.17.21\",\"mini-css-extract-plugin\":\"0.11.3\",\"mobx\":\">=4.7.0 <4.8.0\",\"mobx-react\":\">6.1.1 < 6.1.5\",\"optimize-css-assets-webpack-plugin\":\"5.0.4\",\"pnp-webpack-plugin\":\"1.6.4\",\"postcss-flexbugs-fixes\":\"4.2.1\",\"postcss-loader\":\"3.0.0\",\"postcss-normalize\":\"8.0.1\",\"postcss-preset-env\":\"6.7.0\",\"postcss-safe-parser\":\"5.0.2\",\"prompts\":\"2.4.0\",\"query-string\":\"^7.0.1\",\"react\":\"~16.14.0\",\"react-app-polyfill\":\"^2.0.0\",\"react-beautiful-dnd\":\"^13.1.0\",\"react-dev-utils\":\"^11.0.3\",\"react-dnd\":\"^14.0.2\",\"react-dnd-html5-backend\":\"^14.0.0\",\"react-dom\":\"~16.14.0\",\"react-refresh\":\"^0.8.3\",\"react-router-dom\":\"^4.1.2\",\"resolve\":\"1.18.1\",\"resolve-url-loader\":\"^3.1.2\",\"sass-loader\":\"^10.0.5\",\"semver\":\"7.3.2\",\"sockjs\":\"^0.3.21\",\"sockjs-client\":\"^1.5.1\",\"style-loader\":\"1.3.0\",\"terser-webpack-plugin\":\"4.2.3\",\"ts-node-dev\":\"^1.1.6\",\"ts-pnp\":\"1.2.0\",\"typescript\":\"^4.1.2\",\"url-loader\":\"4.1.1\",\"uuid\":\"^8.3.0\",\"web-vitals\":\"^1.0.1\",\"webpack\":\"4.44.2\",\"webpack-cli\":\"~3\",\"webpack-dev-server\":\"3.11.1\",\"webpack-manifest-plugin\":\"2.2.0\",\"webpackbar\":\"^5.0.0-3\",\"workbox-webpack-plugin\":\"5.1.4\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\",\"styled-components\":\"*\"},\"scripts\":{\"postinstall\":\"node scripts/postinstall.js\",\"prepublish\":\"yarn transpile\",\"start\":\"cross-env TARGET=static node scripts/start.js\",\"build\":\"cross-env TARGET=static node scripts/build.js\",\"test\":\"node scripts/test.js\",\"tsc\":\"tsc --noEmit false --emitDeclarationOnly true\",\"transpile\":\"cross-env UED_BUILD_TARGET=cfg NODE_ENV=production BABEL_ENV=production npx babel -x .js,.ts,.jsx,.tsx src --delete-dir-on-start --out-dir lib --copy-files --ignore 'src/**/*.spec.js','src/**/*.test.js' && npm run tsc\"},\"browserslist\":{\"production\":[\">0.2%\",\"not dead\",\"not op_mini all\"],\"development\":[\"last 1 chrome version\",\"last 1 firefox version\",\"last 1 safari version\"]},\"jest\":{\"roots\":[\"<rootDir>/src\"],\"collectCoverageFrom\":[\"src/**/*.{js,jsx,ts,tsx}\",\"!src/**/*.d.ts\"],\"setupFiles\":[\"react-app-polyfill/jsdom\"],\"setupFilesAfterEnv\":[\"<rootDir>/src/setupTests.ts\"],\"testMatch\":[\"<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}\",\"<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}\"],\"testEnvironment\":\"jest-environment-jsdom-fourteen\",\"transform\":{\"^.+\\\\.(js|jsx|ts|tsx)$\":\"<rootDir>/node_modules/babel-jest\",\"^.+\\\\.css$\":\"<rootDir>/config/jest/cssTransform.js\",\"^(?!.*\\\\.(js|jsx|ts|tsx|css|json)$)\":\"<rootDir>/config/jest/fileTransform.js\"},\"transformIgnorePatterns\":[\"[/\\\\\\\\]node_modules[/\\\\\\\\].+\\\\.(js|jsx|ts|tsx)$\",\"^.+\\\\.module\\\\.(css|sass|scss)$\"],\"modulePaths\":[],\"moduleNameMapper\":{\"^react-native$\":\"react-native-web\",\"^.+\\\\.module\\\\.(css|sass|scss)$\":\"identity-obj-proxy\"},\"moduleFileExtensions\":[\"web.js\",\"js\",\"web.ts\",\"ts\",\"web.tsx\",\"tsx\",\"json\",\"web.jsx\",\"jsx\",\"node\"],\"watchPlugins\":[\"jest-watch-typeahead/filename\",\"jest-watch-typeahead/testname\"]},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"scripts/postinstall.js\",\"lib/assets\",\"lib/components\",\"lib/pages\",\"lib/theme-animations\",\"lib/theme-assets\",\"lib/theme-data\",\"lib/utils\",\"lib/index.js\",\"lib/index.d.ts\",\"index.js\"],\"gitHead\":\"521c404946cdaed0d873cda3ab2f8563b3451014\"}");
+module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/cfg\",\"version\":\"4.1.7-alpha.22\",\"private\":false,\"main\":\"lib/index.js\",\"dependencies\":{\"@hzero-front-ui/c7n-ui\":\"4.1.7-alpha.13\",\"@hzero-front-ui/core\":\"4.1.7-alpha.5\",\"@hzero-front-ui/hzero-ui\":\"4.1.7-alpha.1\",\"@hzero-front-ui/themes\":\"4.1.7-alpha.20\",\"memoize-one\":\"^5.1.1\"},\"devDependencies\":{\"@babel/core\":\"7.12.3\",\"@babel/plugin-proposal-decorators\":\"^7.14.5\",\"@babel/plugin-transform-modules-umd\":\"^7.2.0\",\"@babel/standalone\":\"7.12.3\",\"@pmmmwh/react-refresh-webpack-plugin\":\"0.4.3\",\"@svgr/webpack\":\"5.5.0\",\"@testing-library/jest-dom\":\"^5.11.4\",\"@testing-library/react\":\"^11.1.0\",\"@testing-library/user-event\":\"^12.1.10\",\"@types/classnames\":\"^2.3.1\",\"@types/express\":\"^4.17.12\",\"@types/file-saver\":\"^2.0.3\",\"@types/fs-extra\":\"^9.0.12\",\"@types/jest\":\"^26.0.15\",\"@types/node\":\"^12.0.0\",\"@types/query-string\":\"^6.3.0\",\"@types/react\":\"~16.14.11\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^17.0.0\",\"@types/sockjs\":\"^0.3.32\",\"@types/uuid\":\"^8.3.0\",\"@typescript-eslint/eslint-plugin\":\"^4.5.0\",\"@typescript-eslint/parser\":\"^4.5.0\",\"add-asset-html-webpack-plugin\":\"^3.2.0\",\"axios\":\"^0.21.1\",\"babel-eslint\":\"^10.1.0\",\"babel-jest\":\"^26.6.0\",\"babel-loader\":\"8.1.0\",\"babel-plugin-named-asset-import\":\"^0.3.7\",\"babel-preset-react-app\":\"9.1.0\",\"bfj\":\"^7.0.2\",\"body-parser\":\"^1.19.0\",\"camelcase\":\"^6.1.0\",\"case-sensitive-paths-webpack-plugin\":\"2.3.0\",\"choerodon-ui\":\"1.6.7-alpha.45\",\"clean-webpack-plugin\":\"^4.0.0-alpha.0\",\"concurrently\":\"^6.2.0\",\"css-loader\":\"4.3.0\",\"dotenv\":\"8.2.0\",\"dotenv-expand\":\"5.1.0\",\"eslint-config-react-app\":\"^6.0.0\",\"eslint-plugin-flowtype\":\"^5.2.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jest\":\"^24.1.0\",\"eslint-plugin-jsx-a11y\":\"^6.3.1\",\"eslint-plugin-react\":\"^7.21.5\",\"eslint-plugin-react-hooks\":\"^4.2.0\",\"eslint-plugin-testing-library\":\"^3.9.2\",\"eslint-webpack-plugin\":\"^2.5.2\",\"express\":\"^4.17.1\",\"file-loader\":\"6.1.1\",\"html-webpack-plugin\":\"4.5.0\",\"identity-obj-proxy\":\"3.0.0\",\"jest\":\"26.6.0\",\"jest-circus\":\"26.6.0\",\"jest-resolve\":\"26.6.0\",\"jest-watch-typeahead\":\"0.6.1\",\"less\":\"^3.1.1\",\"less-loader\":\"^7.0.0\",\"lodash\":\"^4.17.21\",\"mini-css-extract-plugin\":\"0.11.3\",\"mobx\":\">=4.7.0 <4.8.0\",\"mobx-react\":\">6.1.1 < 6.1.5\",\"optimize-css-assets-webpack-plugin\":\"5.0.4\",\"pnp-webpack-plugin\":\"1.6.4\",\"postcss-flexbugs-fixes\":\"4.2.1\",\"postcss-loader\":\"3.0.0\",\"postcss-normalize\":\"8.0.1\",\"postcss-preset-env\":\"6.7.0\",\"postcss-safe-parser\":\"5.0.2\",\"prompts\":\"2.4.0\",\"query-string\":\"^7.0.1\",\"react\":\"~16.14.0\",\"react-app-polyfill\":\"^2.0.0\",\"react-beautiful-dnd\":\"^13.1.0\",\"react-dev-utils\":\"^11.0.3\",\"react-dnd\":\"^14.0.2\",\"react-dnd-html5-backend\":\"^14.0.0\",\"react-dom\":\"~16.14.0\",\"react-refresh\":\"^0.8.3\",\"react-router-dom\":\"^4.1.2\",\"resolve\":\"1.18.1\",\"resolve-url-loader\":\"^3.1.2\",\"sass-loader\":\"^10.0.5\",\"semver\":\"7.3.2\",\"sockjs\":\"^0.3.21\",\"sockjs-client\":\"^1.5.1\",\"style-loader\":\"1.3.0\",\"terser-webpack-plugin\":\"4.2.3\",\"ts-node-dev\":\"^1.1.6\",\"ts-pnp\":\"1.2.0\",\"typescript\":\"^4.1.2\",\"url-loader\":\"4.1.1\",\"uuid\":\"^8.3.0\",\"web-vitals\":\"^1.0.1\",\"webpack\":\"4.44.2\",\"webpack-cli\":\"~3\",\"webpack-dev-server\":\"3.11.1\",\"webpack-manifest-plugin\":\"2.2.0\",\"webpackbar\":\"^5.0.0-3\",\"workbox-webpack-plugin\":\"5.1.4\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\",\"styled-components\":\"*\"},\"scripts\":{\"postinstall\":\"node scripts/postinstall.js\",\"prepublish\":\"yarn transpile\",\"start\":\"cross-env TARGET=static node scripts/start.js\",\"build\":\"cross-env TARGET=static node scripts/build.js\",\"test\":\"node scripts/test.js\",\"tsc\":\"tsc --noEmit false --emitDeclarationOnly true\",\"transpile\":\"cross-env UED_BUILD_TARGET=cfg NODE_ENV=production BABEL_ENV=production npx babel -x .js,.ts,.jsx,.tsx src --delete-dir-on-start --out-dir lib --copy-files --ignore 'src/**/*.spec.js','src/**/*.test.js' && npm run tsc\"},\"browserslist\":{\"production\":[\">0.2%\",\"not dead\",\"not op_mini all\"],\"development\":[\"last 1 chrome version\",\"last 1 firefox version\",\"last 1 safari version\"]},\"jest\":{\"roots\":[\"<rootDir>/src\"],\"collectCoverageFrom\":[\"src/**/*.{js,jsx,ts,tsx}\",\"!src/**/*.d.ts\"],\"setupFiles\":[\"react-app-polyfill/jsdom\"],\"setupFilesAfterEnv\":[\"<rootDir>/src/setupTests.ts\"],\"testMatch\":[\"<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}\",\"<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}\"],\"testEnvironment\":\"jest-environment-jsdom-fourteen\",\"transform\":{\"^.+\\\\.(js|jsx|ts|tsx)$\":\"<rootDir>/node_modules/babel-jest\",\"^.+\\\\.css$\":\"<rootDir>/config/jest/cssTransform.js\",\"^(?!.*\\\\.(js|jsx|ts|tsx|css|json)$)\":\"<rootDir>/config/jest/fileTransform.js\"},\"transformIgnorePatterns\":[\"[/\\\\\\\\]node_modules[/\\\\\\\\].+\\\\.(js|jsx|ts|tsx)$\",\"^.+\\\\.module\\\\.(css|sass|scss)$\"],\"modulePaths\":[],\"moduleNameMapper\":{\"^react-native$\":\"react-native-web\",\"^.+\\\\.module\\\\.(css|sass|scss)$\":\"identity-obj-proxy\"},\"moduleFileExtensions\":[\"web.js\",\"js\",\"web.ts\",\"ts\",\"web.tsx\",\"tsx\",\"json\",\"web.jsx\",\"jsx\",\"node\"],\"watchPlugins\":[\"jest-watch-typeahead/filename\",\"jest-watch-typeahead/testname\"]},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"scripts/postinstall.js\",\"lib/assets\",\"lib/components\",\"lib/pages\",\"lib/theme-animations\",\"lib/theme-assets\",\"lib/theme-data\",\"lib/utils\",\"lib/index.js\",\"lib/index.d.ts\",\"index.js\"],\"gitHead\":\"91f7bfa8b8d622e2ba245ded15d6c997c417ccea\"}");
 
 /***/ }),
 
@@ -413367,8 +413639,9 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "optionsWithCombo",
     get: function get() {
-      var comboOptions = this.comboOptions;
-      return comboOptions ? [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(comboOptions.data), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(this.cascadeOptions)) : this.cascadeOptions;
+      var comboOptions = this.comboOptions,
+          popupShowComboValue = this.popupShowComboValue;
+      return comboOptions && popupShowComboValue ? [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(comboOptions.data), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(this.cascadeOptions)) : this.cascadeOptions;
     }
   }, {
     key: "cascadeOptions",
@@ -413458,6 +413731,12 @@ var Select = /*#__PURE__*/function (_TriggerField) {
       var displayName = this.constructor.displayName;
       var scrollLoad = this.observableProps.scrollLoad;
       return displayName === 'Select' && (!lodash_isNil__WEBPACK_IMPORTED_MODULE_20___default()(scrollLoad) ? scrollLoad : this.getContextConfig('selectScrollLoad'));
+    }
+  }, {
+    key: "popupShowComboValue",
+    get: function get() {
+      var popupShowComboValue = this.observableProps.popupShowComboValue;
+      return !!popupShowComboValue;
     }
   }, {
     key: "saveMenu",
@@ -413624,7 +413903,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "getOmitPropsKeys",
     value: function getOmitPropsKeys() {
-      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(Select.prototype), "getOmitPropsKeys", this).call(this).concat(['searchable', 'reserveParam', 'searchMatcher', 'searchFieldInPopup', 'searchFieldProps', 'paramMatcher', 'combo', 'commonItem', 'maxCommonTagPlaceholder', 'maxCommonTagCount', 'maxCommonTagTextLength', 'multiple', 'value', 'name', 'options', 'optionsFilter', 'dropdownMatchSelectWidth', 'virtual', 'dropdownMenuStyle', 'checkValueOnOptionsChange', 'primitiveValue', 'optionRenderer', 'notFoundContent', 'pagingOptionContent', 'onOption', 'noCache', 'reverse', 'selectAllButton', 'optionTooltip', 'defaultActiveFirstOption', 'scrollLoad']);
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(Select.prototype), "getOmitPropsKeys", this).call(this).concat(['searchable', 'reserveParam', 'searchMatcher', 'searchFieldInPopup', 'searchFieldProps', 'paramMatcher', 'combo', 'commonItem', 'maxCommonTagPlaceholder', 'maxCommonTagCount', 'maxCommonTagTextLength', 'multiple', 'value', 'name', 'options', 'optionsFilter', 'dropdownMatchSelectWidth', 'virtual', 'dropdownMenuStyle', 'checkValueOnOptionsChange', 'primitiveValue', 'optionRenderer', 'notFoundContent', 'pagingOptionContent', 'onOption', 'noCache', 'reverse', 'selectAllButton', 'optionTooltip', 'defaultActiveFirstOption', 'scrollLoad', 'popupShowComboValue']);
     }
   }, {
     key: "getObservableProps",
@@ -413644,7 +413923,8 @@ var Select = /*#__PURE__*/function (_TriggerField) {
         defaultActiveFirstOption: props.defaultActiveFirstOption,
         selectReverse: props.reverse,
         optionsFilter: props.optionsFilter,
-        scrollLoad: props.scrollLoad
+        scrollLoad: props.scrollLoad,
+        popupShowComboValue: props.popupShowComboValue
       });
     }
   }, {
@@ -413927,6 +414207,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
         ref: this.saveMenu,
         disabled: menuDisabled,
         defaultActiveFirst: this.defaultActiveFirstOption,
+        forceClearActiveKey: this.forceClearActiveKey,
         multiple: this.menuMultiple,
         selectedKeys: selectedKeys,
         prefixCls: menuPrefix,
@@ -413991,9 +414272,24 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           virtual = _this$observableProps6 === void 0 ? false : _this$observableProps6;
       return virtual;
     }
+    /**
+     * 每次刷新后清除 menu 的 activeKey
+     */
+
+  }, {
+    key: "forceClearActiveKey",
+    get: function get() {
+      var popupShowComboValue = this.popupShowComboValue,
+          combo = this.observableProps.combo;
+      return combo && !popupShowComboValue;
+    }
   }, {
     key: "defaultActiveFirstOption",
     get: function get() {
+      if (this.forceClearActiveKey) {
+        return false;
+      }
+
       var _this$observableProps7 = this.observableProps.defaultActiveFirstOption,
           defaultActiveFirstOption = _this$observableProps7 === void 0 ? this.getContextConfig('defaultActiveFirstOption') : _this$observableProps7;
       return defaultActiveFirstOption && this.options.currentPage === 1 && !this.moreQuerying;
@@ -414262,7 +414558,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
         }
 
         e.preventDefault();
-      } else if (e === _es_util_KeyCode__WEBPACK_IMPORTED_MODULE_33__[/* default */ "a"].DOWN) {
+      } else if (e.keyCode === _es_util_KeyCode__WEBPACK_IMPORTED_MODULE_33__[/* default */ "a"].DOWN) {
         this.expand();
         e.preventDefault();
       }
@@ -414308,21 +414604,53 @@ var Select = /*#__PURE__*/function (_TriggerField) {
     }
   }, {
     key: "syncValueOnBlur",
-    value: function syncValueOnBlur(text) {
+    value: function syncValueOnBlur(text, event) {
       var _this7 = this;
 
+      var popupShowComboValue = this.popupShowComboValue,
+          multiple = this.multiple,
+          comboOptions = this.comboOptions,
+          valueField = this.valueField,
+          combo = this.observableProps.combo;
       var value = this.getValue();
+
+      if (event && event.type === 'blur' && multiple && combo && !popupShowComboValue && value && value.length > 0) {
+        // 聚合输入(popupShowComboValue为false时):
+        // 默认失焦会选中聚合值; 在下拉中选择有具体值后，需要按回车才能选中聚合值，失焦不默认选中;
+        if (!comboOptions || value.some(function (val) {
+          return !comboOptions.find(function (com) {
+            return com.get(valueField) === val[valueField];
+          });
+        })) {
+          Object(mobx__WEBPACK_IMPORTED_MODULE_27__["runInAction"])(function () {
+            _this7.searchText = undefined;
+
+            _this7.setText(undefined);
+          });
+          return;
+        }
+      }
 
       if (text) {
         if (value !== text) {
           if (!lodash_isObject__WEBPACK_IMPORTED_MODULE_22___default()(value) || value[this.textField] !== text) {
-            var comboOptions = this.comboOptions;
-            var data = comboOptions ? comboOptions.data : [];
+            var _comboOptions = this.comboOptions;
+            var data = _comboOptions ? _comboOptions.data : [];
             this.options.ready().then(function () {
               var record = _this7.findByTextWithValue(text, data);
 
               if (record) {
                 _this7.choose(record);
+
+                if (multiple && combo && !popupShowComboValue) {
+                  Object(mobx__WEBPACK_IMPORTED_MODULE_27__["runInAction"])(function () {
+                    _this7.searchText = undefined;
+
+                    _this7.setText(undefined);
+
+                    _this7.collapse();
+                  });
+                }
               }
             });
           }
@@ -414334,8 +414662,14 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "findByTextWithValue",
     value: function findByTextWithValue(text, data) {
+      var _this8 = this;
+
       var textField = this.textField;
-      var records = [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(data), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(this.filteredOptions)).filter(function (record) {
+      var records = [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(data.filter(function (comRecord) {
+        return _this8.filteredOptions.every(function (record) {
+          return record.get(textField) !== comRecord.get(textField);
+        });
+      })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(this.filteredOptions)).filter(function (record) {
         return Object(_util_isSameLike__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"])(record.get(textField), text);
       });
 
@@ -414388,7 +414722,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "generateComboOption",
     value: function generateComboOption(value, callback) {
-      var _this8 = this;
+      var _this9 = this;
 
       var currentComboOption = this.currentComboOption,
           textField = this.textField,
@@ -414396,8 +414730,14 @@ var Select = /*#__PURE__*/function (_TriggerField) {
 
       if (value) {
         if (Object(mobx__WEBPACK_IMPORTED_MODULE_27__["isArrayLike"])(value)) {
-          value.forEach(function (v) {
-            return !lodash_isNil__WEBPACK_IMPORTED_MODULE_20___default()(v) && _this8.generateComboOption(v);
+          var loopValue = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(value);
+
+          if (!Object(_util_isEmpty__WEBPACK_IMPORTED_MODULE_45__[/* default */ "a"])(this.text)) {
+            loopValue.push(this.text);
+          }
+
+          loopValue.forEach(function (v) {
+            return !lodash_isNil__WEBPACK_IMPORTED_MODULE_20___default()(v) && _this9.generateComboOption(v);
           });
         } else {
           if (Object(mobx__WEBPACK_IMPORTED_MODULE_27__["isObservableObject"])(value)) {
@@ -414430,7 +414770,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "createComboOption",
     value: function createComboOption(value) {
-      var _this9 = this,
+      var _this10 = this,
           _ref6;
 
       var textField = this.textField,
@@ -414438,12 +414778,12 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           menu = this.menu;
       var comboOptions = Object(_data_set_utils__WEBPACK_IMPORTED_MODULE_49__["getIf"])(this, 'comboOptions', function () {
         return new _data_set_DataSet__WEBPACK_IMPORTED_MODULE_41___default.a(undefined, {
-          getConfig: _this9.getContextConfig
+          getConfig: _this10.getContextConfig
         });
       });
       var initData = !this.primitive && Object(mobx__WEBPACK_IMPORTED_MODULE_27__["isObservableObject"])(value) ? value : (_ref6 = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_12___default()(_ref6, textField, value), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_12___default()(_ref6, valueField, value), _ref6);
       var findOption = comboOptions.find(function (record) {
-        return record.get(valueField) === value.trim();
+        return record.get(valueField) === (lodash_isNil__WEBPACK_IMPORTED_MODULE_20___default()(value) ? value : value.trim());
       });
       if (findOption) return;
       var record = comboOptions.create(initData, 0);
@@ -414455,13 +414795,13 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "removeComboOptions",
     value: function removeComboOptions() {
-      var _this10 = this;
+      var _this11 = this;
 
       var comboOptions = this.comboOptions;
 
       if (comboOptions) {
         comboOptions.forEach(function (record) {
-          return _this10.removeComboOption(record);
+          return _this11.removeComboOption(record);
         });
       }
     }
@@ -414502,7 +414842,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "handleMenuClick",
     value: function handleMenuClick(_ref7) {
-      var _this11 = this;
+      var _this12 = this;
 
       var key = _ref7.key,
           value = _ref7.item.props.value;
@@ -414522,10 +414862,10 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           options.currentPage = currentPage + 1;
         } else {
           Object(mobx__WEBPACK_IMPORTED_MODULE_27__["runInAction"])(function () {
-            _this11.moreQuerying = true;
-            options.queryMore(options.currentPage + 1, lodash_isString__WEBPACK_IMPORTED_MODULE_18___default()(searchMatcher) ? _this11.getSearchPara(searchMatcher, searchText) : undefined)["finally"](function () {
+            _this12.moreQuerying = true;
+            options.queryMore(options.currentPage + 1, lodash_isString__WEBPACK_IMPORTED_MODULE_18___default()(searchMatcher) ? _this12.getSearchPara(searchMatcher, searchText) : undefined)["finally"](function () {
               Object(mobx__WEBPACK_IMPORTED_MODULE_27__["runInAction"])(function () {
-                return _this11.moreQuerying = false;
+                return _this12.moreQuerying = false;
               });
             });
           });
@@ -414660,7 +415000,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "handleChange",
     value: function handleChange(e) {
-      var _this12 = this;
+      var _this13 = this;
 
       var target = e.target,
           value = e.target.value;
@@ -414678,7 +415018,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
       if (this.observableProps.combo) {
         if (restricted !== beforeText) {
           this.generateComboOption(restricted, function (text) {
-            return _this12.setText(text);
+            return _this13.setText(text);
           });
         }
       }
@@ -414740,7 +415080,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "clear",
     value: function clear() {
-      var _this13 = this;
+      var _this14 = this;
 
       var values = this.getValues();
       var _this$props5 = this.props,
@@ -414755,9 +415095,9 @@ var Select = /*#__PURE__*/function (_TriggerField) {
 
       if (this.multiple) {
         var valuesDisabled = values.slice(0, maxTagCount).filter(function (v) {
-          var recordItem = _this13.findByValue(v);
+          var recordItem = _this14.findByValue(v);
 
-          var findRecord = _this13.findByValue(v);
+          var findRecord = _this14.findByValue(v);
 
           var optionProps = findRecord ? onOption({
             dataSet: options,
@@ -414780,7 +415120,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "setRangeTarget",
     value: function setRangeTarget(target) {
-      var _this14 = this;
+      var _this15 = this;
 
       if (this.text !== undefined) {
         if (!this.searchable || this.isSearchFieldInPopup()) {
@@ -414793,7 +415133,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
       _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_9___default()(Select.prototype), "setRangeTarget", this).call(this, target);
 
       lodash_defer__WEBPACK_IMPORTED_MODULE_24___default()(function () {
-        return _this14.isFocused && _this14.select();
+        return _this15.isFocused && _this15.select();
       });
     }
   }, {
@@ -414844,28 +415184,6 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "chooseAll",
     value: function chooseAll() {
-      var _this15 = this;
-
-      var options = this.options,
-          onOption = this.props.onOption;
-      var values = this.getValues();
-      var selectedOptions = this.filteredOptions.filter(function (record) {
-        var optionProps = onOption({
-          dataSet: options,
-          record: record
-        });
-        var optionDisabled = optionProps && optionProps.disabled;
-        return !optionDisabled && !_this15.optionIsSelected(record, values);
-      });
-      this.choose(selectedOptions);
-    }
-    /**
-     * 反选
-     */
-
-  }, {
-    key: "chooseRe",
-    value: function chooseRe() {
       var _this16 = this;
 
       var options = this.options,
@@ -414877,8 +415195,30 @@ var Select = /*#__PURE__*/function (_TriggerField) {
           record: record
         });
         var optionDisabled = optionProps && optionProps.disabled;
+        return !optionDisabled && !_this16.optionIsSelected(record, values);
+      });
+      this.choose(selectedOptions);
+    }
+    /**
+     * 反选
+     */
 
-        var optionIsSelect = _this16.optionIsSelected(record, values);
+  }, {
+    key: "chooseRe",
+    value: function chooseRe() {
+      var _this17 = this;
+
+      var options = this.options,
+          onOption = this.props.onOption;
+      var values = this.getValues();
+      var selectedOptions = this.filteredOptions.filter(function (record) {
+        var optionProps = onOption({
+          dataSet: options,
+          record: record
+        });
+        var optionDisabled = optionProps && optionProps.disabled;
+
+        var optionIsSelect = _this17.optionIsSelected(record, values);
 
         return !optionDisabled && !optionIsSelect || optionDisabled && optionIsSelect;
       });
@@ -414915,7 +415255,7 @@ var Select = /*#__PURE__*/function (_TriggerField) {
     key: "processSelectedData",
     value: function () {
       var _processSelectedData = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_14___default.a.mark(function _callee() {
-        var _this17 = this;
+        var _this18 = this;
 
         var comboOptions, values, field, filteredOptions, combo;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_14___default.a.wrap(function _callee$(_context) {
@@ -414943,14 +415283,14 @@ var Select = /*#__PURE__*/function (_TriggerField) {
                 filteredOptions = this.filteredOptions, combo = this.observableProps.combo;
                 Object(mobx__WEBPACK_IMPORTED_MODULE_27__["runInAction"])(function () {
                   var newValues = values.filter(function (value) {
-                    var record = _this17.findByValue(value);
+                    var record = _this18.findByValue(value);
 
                     if (record) {
                       return true;
                     }
 
                     if (combo) {
-                      _this17.createComboOption(value);
+                      _this18.createComboOption(value);
 
                       return true;
                     }
@@ -414958,12 +415298,12 @@ var Select = /*#__PURE__*/function (_TriggerField) {
                     return false;
                   });
 
-                  if (_this17.text && combo) {
-                    _this17.generateComboOption(_this17.text);
+                  if (_this18.text && combo) {
+                    _this18.generateComboOption(_this18.text);
                   }
 
-                  if (field && field.get('cascadeMap', _this17.record) && filteredOptions.length && !lodash_isEqual__WEBPACK_IMPORTED_MODULE_19___default()(newValues, values)) {
-                    _this17.setValue(_this17.multiple ? newValues : newValues[0]);
+                  if (field && field.get('cascadeMap', _this18.record) && filteredOptions.length && !lodash_isEqual__WEBPACK_IMPORTED_MODULE_19___default()(newValues, values)) {
+                    _this18.setValue(_this18.multiple ? newValues : newValues[0]);
                   }
                 });
 
@@ -414984,13 +415324,13 @@ var Select = /*#__PURE__*/function (_TriggerField) {
   }, {
     key: "searchData",
     value: function searchData(data) {
-      var _this18 = this;
+      var _this19 = this;
 
       var searchable = this.searchable,
           searchMatcher = this.searchMatcher,
           searchText = this.searchText;
       return searchable && typeof searchMatcher === 'function' && !isSearchTextEmpty(searchText) ? data.filter(function (r) {
-        return _this18.matchRecordBySearch(r, searchText);
+        return _this19.matchRecordBySearch(r, searchText);
       }) : data;
     }
   }, {
@@ -415024,7 +415364,8 @@ Select.defaultProps = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MOD
   combo: false,
   checkValueOnOptionsChange: true,
   onOption: defaultOnOption,
-  selectAllButton: true
+  selectAllButton: true,
+  popupShowComboValue: true
 });
 Select.Option = _option_Option__WEBPACK_IMPORTED_MODULE_38__[/* default */ "a"];
 Select.OptGroup = _option_OptGroup__WEBPACK_IMPORTED_MODULE_39__[/* default */ "a"];
@@ -415063,6 +415404,8 @@ Object(tslib__WEBPACK_IMPORTED_MODULE_15__["__decorate"])([_util_autobind__WEBPA
 Object(tslib__WEBPACK_IMPORTED_MODULE_15__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_37__[/* default */ "a"]], Select.prototype, "isMultipleBlockDisabled", null);
 
 Object(tslib__WEBPACK_IMPORTED_MODULE_15__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_37__[/* default */ "a"]], Select.prototype, "handleBlur", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_15__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_37__[/* default */ "a"]], Select.prototype, "syncValueOnBlur", null);
 
 Object(tslib__WEBPACK_IMPORTED_MODULE_15__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_27__["action"]], Select.prototype, "createComboOption", null);
 
@@ -470692,60 +471035,44 @@ exports["default"] = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__("63Ad")["default"];
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
 
-var _createForOfIteratorHelper2 = _interopRequireDefault(__webpack_require__("vhlT"));
-
 var traverseFileTree = function traverseFileTree(files, callback, isAccepted) {
-  var _traverseFileTree = function _traverseFileTree(item, path) {
-    path = path || '';
+  var dataTransfer = new DataTransfer();
 
-    if (item.isFile) {
-      item.file(function (file) {
-        if (isAccepted(file)) {
-          callback([file]);
-        }
-      });
-    } else if (item.isDirectory) {
-      var dirReader = item.createReader();
-      dirReader.readEntries(function (entries) {
-        var _iterator = (0, _createForOfIteratorHelper2["default"])(entries),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var entrieItem = _step.value;
-
-            _traverseFileTree(entrieItem, "".concat(path).concat(item.name, "/"));
+  var _traverseFileTree = function _traverseFileTree(item) {
+    var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    return new Promise(function (resolve) {
+      if (item.isFile) {
+        item.file(function (file) {
+          if (isAccepted(file)) {
+            dataTransfer.items.add(file);
           }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-      });
-    }
+
+          resolve();
+        });
+      } else if (item.isDirectory) {
+        var dirReader = item.createReader();
+        dirReader.readEntries(function (entries) {
+          // 遍历所有子项，等待全部完成
+          Promise.all(entries.map(function (entrieItem) {
+            return _traverseFileTree(entrieItem, "".concat(path).concat(item.name, "/"));
+          })).then(resolve);
+        });
+      } else {
+        resolve();
+      }
+    });
   };
 
-  var _iterator2 = (0, _createForOfIteratorHelper2["default"])(files),
-      _step2;
-
-  try {
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      var file = _step2.value;
-
-      _traverseFileTree(file.webkitGetAsEntry());
-    }
-  } catch (err) {
-    _iterator2.e(err);
-  } finally {
-    _iterator2.f();
-  }
+  Promise.all(Array.from(files).map(function (file) {
+    return _traverseFileTree(file.webkitGetAsEntry());
+  })).then(function () {
+    callback(dataTransfer.files);
+  });
 };
 
 var _default = traverseFileTree;
@@ -471486,6 +471813,8 @@ var _omit = _interopRequireDefault(__webpack_require__("PWxN"));
 
 var _reactImageLightbox = _interopRequireDefault(__webpack_require__("xhwU"));
 
+var _configure = __webpack_require__("HolX");
+
 var _imageDropAndPaste = _interopRequireDefault(__webpack_require__("XUjY"));
 
 var _autobind = _interopRequireDefault(__webpack_require__("ceV4"));
@@ -471648,6 +471977,7 @@ var BaseEditor = /*#__PURE__*/function (_Component) {
           dataSet = _this$props.dataSet,
           value = _this$props.value,
           mode = _this$props.mode;
+      var richTextFontFamilies = (0, _configure.getConfig)('richTextFontFamilies');
       var deltaOps;
 
       if (!(0, _isObject["default"])(value) && this.editor) {
@@ -471666,7 +471996,8 @@ var BaseEditor = /*#__PURE__*/function (_Component) {
           id: toolbarId,
           dataSet: dataSet,
           toolbar: toolbar,
-          prefixCls: className
+          prefixCls: className,
+          fontFamilies: richTextFontFamilies
         }), /*#__PURE__*/_react["default"].createElement(ReactQuill, (0, _extends2["default"])({}, this.getOtherProps(), {
           className: "".concat(className, "-quill"),
           defaultValue: value,
@@ -499953,6 +500284,8 @@ var _icon = _interopRequireDefault(__webpack_require__("vKVp"));
 
 var _objectFitPolyfill = _interopRequireWildcard(__webpack_require__("bQfP"));
 
+var _isEmpty = _interopRequireDefault(__webpack_require__("LmDR"));
+
 var _PictureContext = _interopRequireWildcard(__webpack_require__("o6EU"));
 
 var _preview = _interopRequireDefault(__webpack_require__("2L50"));
@@ -500061,6 +500394,10 @@ function Picture(props, ref) {
   }
 
   (0, _react.useEffect)(function () {
+    if (!propStatus && (0, _isEmpty["default"])(src)) {
+      setStatus('empty');
+    }
+
     if (!propStatus && inView && src) {
       if (src !== oldPropsRef.current.src) {
         setStatus('loading');
@@ -511817,7 +512154,7 @@ var collapse_collapseData = {
     lheaderLineHeight: 22,
     contentFontSize: 12,
     rightTextFontSize: 12,
-    lessFontWeight: '600',
+    lessFontWeight: '700',
     addPadding: 0
   }],
   onlyTemplate: {
@@ -524391,7 +524728,7 @@ function theme7_templates_Switch_style_getSwitchStyle(props) {
       lineColor2 = _getThemeData3.lineColor2,
       lineColor3 = _getThemeData3.lineColor3;
 
-  return Object(styled_components_browser_esm["c" /* css */])(["form .c7n-pro-switch-wrapper input[type='checkbox']{width:unset;height:unset;}.c7n-pro-field-wrapper.c7n-pro-field-wrapper{.c7n-pro-switch-wrapper{height:", "px;margin-top:", "px;margin-bottom:", "px;}.c7n-pro-switch-sm{height:", "px;margin-top:", "px;margin-bottom:", "px;}}.c7n-pro-switch-wrapper.c7n-pro-switch-wrapper{padding:0;height:", "px;margin-top:", "px;margin-bottom:", "px;&.c7n-pro-switch-loading .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;svg{circle{stroke:#fff;}}}}&.c7n-pro-switch-loading.c7n-pro-switch-lg .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}&.c7n-pro-switch-loading.c7n-pro-switch-sm .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}.icon-help{color:", ";font-size:0.14rem;&:hover{color:", ";}}}.c7n-pro-switch-wrapper{.c7n-pro-switch-label{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:", "px;min-width:", "px;border-radius:", "px;border:1px solid ", ";background:", ";line-height:", "px;text-align:center;font-size:", "px;color:", ";padding-right:", "px;padding-left:", "px;:before{position:absolute;top:0;bottom:0;left:0;width:", "px;height:", "px;margin-top:auto;margin-bottom:auto;margin-left:", "px;background:url(", ") no-repeat center;background-size:5px;z-index:2;cursor:inherit;transition:all 0.36s cubic-bezier(0.78,0.14,0.15,0.86);content:' ';}:after{width:", "px;height:", "px;margin-left:", "px;box-shadow:none;opacity:1;background-color:", ";}.icon{font-size:", "px;color:", ";line-height:0;}}.c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-loading{.c7n-pro-switch-label::before{display:none;}.c7n-pro-switch-label::after{background:", ";}}&.c7n-pro-switch-focused .c7n-pro-switch-label{box-shadow:none;}.c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;.c7n-progress-inner{svg circle{stroke:#fff;}}}&.c7n-pro-switch-lg .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}&.c7n-pro-switch-sm .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{background:", ";padding-left:", "px;padding-right:", "px;color:", ";border:1px solid ", ";:before{left:100%;margin-left:-", "px;transform:translateX(0);}:after{margin-left:-", "px;transform:translateX(0);background-color:", ";border:1px solid transparent;background-image:linear-gradient(", ",", "),linear-gradient( 45deg,#f257b4,#e62ea3,#a98fff,#0840f8,#42e4fc,#ff6673,#ffe27a,#ffe27a );background-origin:border-box;background-clip:padding-box,border-box;}.icon{color:", ";}}.c7n-pro-switch:disabled + .c7n-pro-switch-label,.c7n-pro-switch:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";opacity:1;border:1px solid ", ";&::after{background-color:", ";}}.c7n-pro-switch:checked:disabled + .c7n-pro-switch-label,.c7n-pro-switch:checked:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";border:1px solid ", ";&::after{background-color:", ";background-image:linear-gradient(", ",", ");}}&.c7n-pro-switch-sm{.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-sm .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-sm .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-lg{padding:0;.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-lg .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-lg .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}}"], switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, smSwitchHeight, (inputHeight - smSwitchHeight) / 2, (inputHeight - smSwitchHeight) / 2, switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, loadingInnerDistance, loadingInnerSize, loadingInnerSize, loadingInnerDistance, loadingInnerSize, loadingInnerSize, smLoadingInnerDistance, smLoadingInnerSize, smLoadingInnerSize, titleColor1, primary, switchHeight, switchWidth, switchHeight / 2, lineColor1, lineColor2, switchHeight, fontSize, titleColor3, switchPadding, handleWidth + marginRight + 4, handleWidth, handleHeight, marginRight - 0.5, switch_icon_2x_default.a, handleWidth, handleHeight, marginRight, titleColor3, fontSize, titleColor3, handleWidth, titleColor3, loadingInnerDistance + 0.5, loadingInnerDistance + 0.5, smLoadingInnerDistance + 0.5, primary1, switchPadding, handleWidth + marginRight + 4, primary, primary2, handleWidth + marginRight, handleWidth + marginRight, primary, primary, primary, primary, titleColor4, lineColor3, titleColor4, titleColor4, primary3, primary1, primary2, primary3, primary3, primary3, smHandleWidth + marginRight, smHandleWidth + marginRight, smHandleWidth + marginRight, smSwitchWidth, smSwitchHeight, smSwitchHeight, smSwitchHeight / 2, smHandleWidth, smHandleHeight, smHandleWidth, smHandleHeight, smHandleWidth, handleWidth + marginRight, handleWidth + marginRight, handleWidth + marginRight, switchWidth, switchHeight, switchHeight, switchHeight / 2, handleWidth, handleHeight, handleWidth, handleHeight, handleWidth);
+  return Object(styled_components_browser_esm["c" /* css */])(["form .c7n-pro-switch-wrapper input[type='checkbox']{width:unset;height:unset;}.c7n-pro-field-wrapper.c7n-pro-field-wrapper{.c7n-pro-switch-wrapper{height:", "px;margin-top:", "px;margin-bottom:", "px;}.c7n-pro-switch-sm{height:", "px;margin-top:", "px;margin-bottom:", "px;}}.c7n-pro-switch-wrapper.c7n-pro-switch-wrapper{padding:0;height:", "px;margin-top:", "px;margin-bottom:", "px;&.c7n-pro-switch-loading .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;svg{circle{stroke:#fff;}}}}&.c7n-pro-switch-loading.c7n-pro-switch-lg .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}&.c7n-pro-switch-loading.c7n-pro-switch-sm .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}.icon-help{color:", ";font-size:0.14rem;&:hover{color:", ";}}}.c7n-pro-switch-wrapper{.c7n-pro-switch{z-index:3;}.c7n-pro-switch-label{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:", "px;min-width:", "px;border-radius:", "px;border:1px solid ", ";background:", ";line-height:", "px;text-align:center;font-size:", "px;color:", ";padding-right:", "px;padding-left:", "px;:before{position:absolute;top:0;bottom:0;left:0;width:", "px;height:", "px;margin-top:auto;margin-bottom:auto;margin-left:", "px;background:url(", ") no-repeat center;background-size:5px;z-index:2;cursor:inherit;transition:all 0.36s cubic-bezier(0.78,0.14,0.15,0.86);content:' ';}:after{width:", "px;height:", "px;margin-left:", "px;box-shadow:none;opacity:1;background-color:", ";}.icon{font-size:", "px;color:", ";line-height:0;}}.c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-loading{.c7n-pro-switch-label::before{display:none;}.c7n-pro-switch-label::after{background:", ";}}&.c7n-pro-switch-focused .c7n-pro-switch-label{box-shadow:none;}.c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;.c7n-progress-inner{svg circle{stroke:#fff;}}}&.c7n-pro-switch-lg .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}&.c7n-pro-switch-sm .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{background:", ";padding-left:", "px;padding-right:", "px;color:", ";border:1px solid ", ";:before{left:100%;margin-left:-", "px;transform:translateX(0);}:after{margin-left:-", "px;transform:translateX(0);background-color:", ";border:1px solid transparent;background-image:linear-gradient(", ",", "),linear-gradient( 45deg,#f257b4,#e62ea3,#a98fff,#0840f8,#42e4fc,#ff6673,#ffe27a,#ffe27a );background-origin:border-box;background-clip:padding-box,border-box;}.icon{color:", ";}}.c7n-pro-switch:disabled + .c7n-pro-switch-label,.c7n-pro-switch:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";opacity:1;border:1px solid ", ";&::after{background-color:", ";}}.c7n-pro-switch:checked:disabled + .c7n-pro-switch-label,.c7n-pro-switch:checked:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";border:1px solid ", ";&::after{background-color:", ";background-image:linear-gradient(", ",", ");}}&.c7n-pro-switch-sm{.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-sm .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-sm .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-lg{padding:0;.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-lg .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-lg .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}}"], switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, smSwitchHeight, (inputHeight - smSwitchHeight) / 2, (inputHeight - smSwitchHeight) / 2, switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, loadingInnerDistance, loadingInnerSize, loadingInnerSize, loadingInnerDistance, loadingInnerSize, loadingInnerSize, smLoadingInnerDistance, smLoadingInnerSize, smLoadingInnerSize, titleColor1, primary, switchHeight, switchWidth, switchHeight / 2, lineColor1, lineColor2, switchHeight, fontSize, titleColor3, switchPadding, handleWidth + marginRight + 4, handleWidth, handleHeight, marginRight - 0.5, switch_icon_2x_default.a, handleWidth, handleHeight, marginRight, titleColor3, fontSize, titleColor3, handleWidth, titleColor3, loadingInnerDistance + 0.5, loadingInnerDistance + 0.5, smLoadingInnerDistance + 0.5, primary1, switchPadding, handleWidth + marginRight + 4, primary, primary2, handleWidth + marginRight, handleWidth + marginRight, primary, primary, primary, primary, titleColor4, lineColor3, titleColor4, titleColor4, primary3, primary1, primary2, primary3, primary3, primary3, smHandleWidth + marginRight, smHandleWidth + marginRight, smHandleWidth + marginRight, smSwitchWidth, smSwitchHeight, smSwitchHeight, smSwitchHeight / 2, smHandleWidth, smHandleHeight, smHandleWidth, smHandleHeight, smHandleWidth, handleWidth + marginRight, handleWidth + marginRight, handleWidth + marginRight, switchWidth, switchHeight, switchHeight, switchHeight / 2, handleWidth, handleHeight, handleWidth, handleHeight, handleWidth);
 }
 
 /* harmony default export */ var theme7_templates_Switch_style = (theme7_templates_Switch_style_getSwitchStyle);
@@ -525564,7 +525901,7 @@ var theme7_data_collapse_collapseData = {
     titleHeaderLineHeight: 22,
     headerPaddingTop: 9,
     contentPadding: '8px 0 16px 0',
-    lessFontWeight: '500',
+    lessFontWeight: '700',
     addPadding: 0
   }],
   onlyTemplate: {
@@ -526901,10 +527238,9 @@ var theme8_templates_Button_style_buttonStyle = function buttonStyle(props) {
       raisedDisabledBgColor: cd.lineColor3,
       raisedDisabledBorderColor: cd.lineColor1,
       // flat
-      flatColor: cd.titleColor2,
+      flatColor: cd.primary,
       flatHoverBgColor: cd.primary1,
-      flatHoverColor: cd.primary,
-      // +
+      // flatHoverColor: cd.primary, // +
       flatActiveColor: cd.primary7,
       flatActiveBgColor: cd.primary2,
       flatDisabledColor: cd.titleColor3,
@@ -527417,7 +527753,7 @@ function FormInputs_style_getOneFloatLabelStyle(type, props) {
   var _getThemeData = Object(core_lib["l" /* getThemeData */])(props, 'common'),
       primary = _getThemeData.primary,
       titleColor3 = _getThemeData.titleColor3,
-      lineColor4 = _getThemeData.lineColor4;
+      lineColor3 = _getThemeData.lineColor3;
 
   var _getThemeData2 = Object(core_lib["l" /* getThemeData */])(props, 'input'),
       fontSize = _getThemeData2.fontSize,
@@ -527428,7 +527764,7 @@ function FormInputs_style_getOneFloatLabelStyle(type, props) {
       tagBorderRadius = _getThemeData3.borderRadius;
 
   var selector = "".concat(type, "-wrapper");
-  return Object(styled_components_browser_esm["c" /* css */])([".", "{&.", "-float-label.", "-float-label .c7n-pro-field-label{color:", ";background-color:transparent;font-weight:400;line-height:", "px;}&.", "-float-label.", "-focused,&.", "-float-label:not(.", "-empty){.c7n-pro-field-label-wrapper{padding:0;}.c7n-pro-field-label{color:", ";background-color:#fff;line-height:16px;padding:0 5px;}}&.", "-float-label.", "-invalid .c7n-pro-field-label{color:", ";}&.", "-float-label.", "-focused .c7n-pro-field-label{color:", ";}&.", "-float-label .c7n-pro-field-label,&.", "-float-label.", "-focused .c7n-pro-field-label{font-weight:400;font-size:", "px;}&.", "-float-label .", ":-webkit-autofill + .c7n-pro-field-label-wrapper .c7n-pro-field-label{font-weight:400;font-size:", "px;}&.", "-float-label:not(&-multiple) .", ":not(textarea){height:", "px;border-radius:", "px;}&.", "-float-label .", "{min-height:", "px;border-radius:", "px;}&.", "-float-label.", "-disabled{background-color:", ";}&.", "-float-label .", " > ul{margin:0;padding:2px 0px;> li{height:20px;line-height:20px;}}&.", "-float-label .", "-multiple-block{padding:", ";border-radius:", "px;.icon:hover{color:", ";}}&.", "-float-label::before{display:none;}&.", "-float-label .", ":-webkit-autofill{height:", "px;border-radius:", "px;}&.", "-float-label textarea.", ":-webkit-autofill{height:auto;}}.", "-group-input:not(:last-child) .", "-float-label.", "-float-label{.", ",.", "-wrapper{border-top-right-radius:0;border-bottom-right-radius:0;}}.", "-group-input:not(:first-child) .", "-float-label.", "-float-label{.", ",.", "-wrapper{border-top-left-radius:0;border-bottom-left-radius:0;}}.", "-float-label-group.", "-float-label-group .", "-group-before,.", "-float-label-group.", "-float-label-group .", "-group-after,.", "-float-label-group.", "-float-label-group .", "-group-help{border-radius:", "px;}"], selector, type, type, titleColor3, inputHeight - 4, type, type, type, type, titleColor3, type, type, titleColor3, type, type, primary, type, type, type, fontSize, type, type, fontSize, type, type, inputHeight, radius, type, type, inputHeight, radius, type, type, lineColor4, type, type, type, type, FormInputs_style_multipleTagPadding, tagBorderRadius, primary, type, type, type, inputHeight - 2, radius, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, radius);
+  return Object(styled_components_browser_esm["c" /* css */])([".", "{&.", "-float-label.", "-float-label .c7n-pro-field-label{color:", ";background-color:transparent;font-weight:400;line-height:", "px;}&.", "-float-label.", "-focused,&.", "-float-label:not(.", "-empty){.c7n-pro-field-label-wrapper{padding:0;}.c7n-pro-field-label{color:", ";background-color:#fff;line-height:16px;padding:0 5px;}}&.", "-float-label.", "-invalid .c7n-pro-field-label{color:", ";}&.", "-float-label.", "-focused .c7n-pro-field-label{color:", ";}&.", "-float-label .c7n-pro-field-label,&.", "-float-label.", "-focused .c7n-pro-field-label{font-weight:400;font-size:", "px;}&.", "-float-label .", ":-webkit-autofill + .c7n-pro-field-label-wrapper .c7n-pro-field-label{font-weight:400;font-size:", "px;}&.", "-float-label:not(&-multiple) .", ":not(textarea){height:", "px;border-radius:", "px;}&.", "-float-label .", "{min-height:", "px;border-radius:", "px;}&.", "-float-label.", "-disabled{background-color:", ";}&.", "-float-label .", " > ul{margin:0;padding:2px 0px;> li{height:20px;line-height:20px;}}&.", "-float-label .", "-multiple-block{padding:", ";border-radius:", "px;.icon:hover{color:", ";}}&.", "-float-label::before{display:none;}&.", "-float-label .", ":-webkit-autofill{height:", "px;border-radius:", "px;}&.", "-float-label textarea.", ":-webkit-autofill{height:auto;}}.", "-group-input:not(:last-child) .", "-float-label.", "-float-label{.", ",.", "-wrapper{border-top-right-radius:0;border-bottom-right-radius:0;}}.", "-group-input:not(:first-child) .", "-float-label.", "-float-label{.", ",.", "-wrapper{border-top-left-radius:0;border-bottom-left-radius:0;}}.", "-float-label-group.", "-float-label-group .", "-group-before,.", "-float-label-group.", "-float-label-group .", "-group-after,.", "-float-label-group.", "-float-label-group .", "-group-help{border-radius:", "px;}"], selector, type, type, titleColor3, inputHeight - 4, type, type, type, type, titleColor3, type, type, titleColor3, type, type, primary, type, type, type, fontSize, type, type, fontSize, type, type, inputHeight, radius, type, type, inputHeight, radius, type, type, lineColor3, type, type, type, type, FormInputs_style_multipleTagPadding, tagBorderRadius, primary, type, type, type, inputHeight - 2, radius, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, type, radius);
 }
 
 function theme8_templates_FormInputs_style_getOneStyle(type, props) {
@@ -527445,8 +527781,8 @@ function theme8_templates_FormInputs_style_getOneStyle(type, props) {
       titleColor1 = _getThemeData4.titleColor1,
       titleColor3 = _getThemeData4.titleColor3,
       titleColor4 = _getThemeData4.titleColor4,
-      lineColor1 = _getThemeData4.lineColor1,
-      lineColor4 = _getThemeData4.lineColor4,
+      lineColor2 = _getThemeData4.lineColor2,
+      lineColor3 = _getThemeData4.lineColor3,
       iconfontFamily = _getThemeData4.iconfontFamily;
 
   var _getThemeData5 = Object(core_lib["l" /* getThemeData */])(props, 'input'),
@@ -527459,8 +527795,9 @@ function theme8_templates_FormInputs_style_getOneStyle(type, props) {
       borderColor = _getThemeData5.borderColor,
       suffixWidth = _getThemeData5.suffixWidth;
 
+  var readOnlyBottomBC = theme8_templates_FormInputs_style_tinycolor(titleColor4).setAlpha(0.6).toRgbString();
   var selector = "".concat(type, "-wrapper");
-  return Object(styled_components_browser_esm["c" /* css */])([".", "{&&{border-radius:", "px;}.", "{color:", ";font-size:", "px;border:", "px solid ", ";border-bottom-color:", ";border-radius:", "px;}.", ":not(textarea){height:", "px;padding-top:0;}label{position:relative;z-index:1;}label:hover .", ",.", ":hover{border:", "px solid ", ";border-bottom-color:", ";}.", ".", ":focus,&.", "-focused .", ".", "{border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}&.", "-required{&-colors{background:", ";.", "{border:", "px solid ", ";border-bottom-color:", ";}label:hover .", ",.", ":hover{border:", "px solid ", ";border-bottom-color:", ";}.", ".", ":focus,&.", "-focused .", ".", "{color:", ";border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}}}&.", "-readonly{.", "{border:", "px solid ", ";border-bottom:", "px dashed ", ";}.", ":hover,label:hover .", "{border:", "px solid ", ";border-bottom:", "px solid ", ";}.", ".", ":focus,&.", "-focused .", ".", "{border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}}&.", "-invalid{&.", "-invalid{background:", ";}.", "{color:", ";border:", "px solid ", ";border-bottom:", "px solid ", ";}.", ":hover,label:hover .", "{color:", ";border:", "px solid ", ";border-bottom-color:", ";}.", ".", ":focus,&.", "-focused .", ".", "{color:", ";border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}}&.", "-disabled{.", ",label:hover .", ",.", ":hover{border:", "px solid ", ";border-bottom:", "px solid ", ";}.", "-rendered-value{color:", ";}}.", "-inner-button{color:", ";}.", "-prefix,.", "-suffix{color:", ";width:", "px;i{color:", ";}> *:not(i){color:", ";}&:hover{color:", ";}}&.", "-suffix-button{.", "-placeholder,.", "-rendered-value{padding-right:", "px;}}&.", "-prefix-button{.", "-placeholder,.", "-rendered-value{padding-left:", "px;}}.", ":not(textarea):not(.react-codemirror2):not(:last-child){padding-right:", "px;}.", ":not(textarea):not(:first-child){padding-left:", "px;}.", "-inner-button,.", "-clear-button{display:flex;align-items:center;justify-content:center;.icon-close:before{content:'\\e734';font-family:", ";color:", ";}}&.", "-empty .", "-clear-button{display:none;}.", "-clear-button{&:hover{color:", ";}&:active{color:", ";}}.", "-placeholder,.", "-rendered-value{padding-left:", "px;}.", " > ul > li:not([class*='-multiple-block']):only-child{height:20px;line-height:19px;}.", "-multiple-input{margin-left:", "px;}&.", "-multiple .", "{height:auto;min-height:", "px;padding-left:", "px;}&.", "-multiple .", ":not(textarea) ul li:first-child .", "-multiple-input{margin-left:0;}.", "-range-input{color:", ";font-weight:400;}.", "-range-split{font-size:0;:before{font-size:20px;content:'-';color:", ";}}.", "-length-info{color:", ";letter-spacing:0.015rem;font-size:", "px;}}html label:hover .", "{border:", "px solid ", ";border-bottom-color:", ";}", " .", "{&.", "-disabled{background-color:", ";i{color:", ";}}&.", "-disabled .", ",&.", "-disabled label:hover .", ",.", ":disabled{color:", ";-webkit-text-fill-color:", ";&,&:hover{border:", "px solid ", ";border-bottom-color:", ";}&::selection{color:", ";-webkit-text-fill-color:", ";background:", ";}}}input.", "{padding-left:", "px;padding-right:", "px;}.", "-float-label *{.", "{border:", "px solid ", ";border-bottom-color:", ";}}.", "-group{& &-before,& &-after,& &-help{color:", ";background-color:", ";border:", "px solid ", ";padding-right:", "px;padding-left:", "px;border-bottom-color:", ";border-radius:", "px;}& &-help{.icon-help{color:", ";}}&.", "-float-label-group .", "-group-before,&.", "-float-label-group .", "-group-after,&.", "-float-label-group .", "-group-help{border-radius:", "px;}}.", "-group .", "-group-before .c7n-pro-select{border-bottom-right-radius:0;border-top-right-radius:0;}"], selector, inputWrapperBorderRadius, type, titleColor1, fontSize, borderWidth, borderColor, titleColor3, radius, type, inputHeight, type, type, borderWidth, primary3, primary, type, type, type, type, type, borderWidth, primary, primary1, type, requiredBgColor || bgColor, type, borderWidth, borderColor, warningColor, type, type, borderWidth, primary3, primary, type, type, type, type, type, titleColor1, borderWidth, primary, primary1, type, type, borderWidth, borderColor, borderWidth, titleColor3, type, type, borderWidth, titleColor4, borderWidth, titleColor3, type, type, type, type, type, borderWidth, titleColor3, lineColor1, type, type, requiredBgColor || bgColor, type, titleColor1, borderWidth, borderColor, borderWidth, errorColor, type, type, titleColor1, borderWidth, redColor3, errorColor, type, type, type, type, type, titleColor1, borderWidth, errorColor, redColor1, type, type, type, type, borderWidth, borderColor, borderWidth, titleColor3, type, titleColor3, type, titleColor1, type, type, titleColor1, suffixWidth, titleColor1, titleColor3, primary, type, type, type, suffixWidth, type, type, type, suffixWidth, type, suffixWidth, type, suffixWidth, type, type, iconfontFamily, titleColor4, type, type, type, titleColor4, titleColor4, type, type, FormInputs_style_inputHorizontalPadding, type, type, FormInputs_style_inputHorizontalPadding, type, type, inputHeight, FormInputs_style_inputHorizontalPadding, type, type, type, type, titleColor1, type, titleColor1, type, titleColor3, fontSize, type, borderWidth, primary3, primary, FormInputs_style_getOneFloatLabelStyle(type, props), selector, type, lineColor4, titleColor3, type, type, type, type, type, titleColor3, titleColor3, borderWidth, borderColor, titleColor3, titleColor3, titleColor3, primary2, type, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, type, type, borderWidth, borderColor, titleColor3, type, titleColor1, bgColor, borderWidth, borderColor, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, titleColor3, radius, titleColor1, type, type, type, type, type, type, radius, type, type);
+  return Object(styled_components_browser_esm["c" /* css */])([".", "{&&{border-radius:", "px;}.", "{color:", ";font-size:", "px;border:", "px solid ", ";border-bottom-color:", ";border-radius:", "px;}.", ":not(textarea){height:", "px;padding-top:0;}label{position:relative;z-index:1;}label:hover .", ",.", ":hover{border:", "px solid ", ";border-bottom-color:", ";}.", ".", ":focus,&.", "-focused .", ".", "{border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}&.", "-required{&-colors{background:", ";.", "{border:", "px solid ", ";border-bottom-color:", ";}label:hover .", ",.", ":hover{border:", "px solid ", ";border-bottom-color:", ";}.", ".", ":focus,&.", "-focused .", ".", "{color:", ";border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}}}&.", "-readonly{.", "{color:", ";border:", "px solid ", ";border-bottom-color:", ";}.", ":hover,label:hover .", "{color:", ";border:", "px solid ", ";border-bottom-color:", ";}.", ".", ":focus,&.", "-focused .", ".", "{color:", ";border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}}&.", "-invalid{&.", "-invalid{background:", ";}.", "{color:", ";border:", "px solid ", ";border-bottom-color:", ";}.", ":hover,label:hover .", "{color:", ";border:", "px solid ", ";border-bottom-color:", ";}.", ".", ":focus,&.", "-focused .", ".", "{color:", ";border:", "px solid ", ";box-shadow:0 0 0 2px ", ";}}&.", "-disabled{.", ",label:hover .", ",.", ":hover{border:", "px solid ", ";border-bottom-color:", ";}.", "-rendered-value{color:", ";}}.", "-inner-button{color:", ";}.", "-prefix,.", "-suffix{color:", ";width:", "px;i{color:", ";}> *:not(i){color:", ";}&:hover{color:", ";}}&.", "-suffix-button{.", "-placeholder,.", "-rendered-value{padding-right:", "px;}}&.", "-prefix-button{.", "-placeholder,.", "-rendered-value{padding-left:", "px;}}.", ":not(textarea):not(.react-codemirror2):not(:last-child){padding-right:", "px;}.", ":not(textarea):not(:first-child){padding-left:", "px;}.", "-inner-button,.", "-clear-button{display:flex;align-items:center;justify-content:center;.icon-close:before{content:'\\e734';font-family:", ";color:", ";}}&.", "-empty .", "-clear-button{display:none;}.", "-clear-button{&:hover{color:", ";}&:active{color:", ";}}.", "-placeholder,.", "-rendered-value{padding-left:", "px;line-height:", "px;}.", " > ul > li:not([class*='-multiple-block']):only-child{height:20px;line-height:19px;}.", "-multiple-input{margin-left:", "px;}&.", "-multiple .", "{height:auto;min-height:", "px;padding-left:", "px;}&.", "-multiple .", ":not(textarea) ul li:first-child .", "-multiple-input{margin-left:0;}.", "-range-input{color:", ";font-weight:400;}.", "-range-split{font-size:0;:before{font-size:20px;content:'-';color:", ";}}.", "-length-info{color:", ";letter-spacing:0.015rem;font-size:", "px;}}html label:hover .", "{border:", "px solid ", ";border-bottom-color:", ";}", " .", "{&.", "-disabled{background-color:", ";i{color:", ";}}&.", "-disabled .", ",&.", "-disabled label:hover .", ",.", ":disabled{color:", ";-webkit-text-fill-color:", ";&,&:hover{border:", "px solid ", ";border-bottom-color:", ";}&::selection{color:", ";-webkit-text-fill-color:", ";background:", ";}}}input.", "{padding-left:", "px;padding-right:", "px;}.", "-float-label *{.", "{border:", "px solid ", ";border-bottom-color:", ";}}.", "-group{& &-before,& &-after,& &-help{color:", ";background-color:", ";border:", "px solid ", ";padding-right:", "px;padding-left:", "px;border-bottom-color:", ";border-radius:", "px;}& &-help{.icon-help{color:", ";}}&.", "-float-label-group .", "-group-before,&.", "-float-label-group .", "-group-after,&.", "-float-label-group .", "-group-help{border-radius:", "px;}}.", "-group .", "-group-before .c7n-pro-select{border-bottom-right-radius:0;border-top-right-radius:0;}"], selector, inputWrapperBorderRadius, type, titleColor1, fontSize, borderWidth, borderColor, titleColor3, radius, type, inputHeight, type, type, borderWidth, primary3, primary, type, type, type, type, type, borderWidth, primary, primary1, type, requiredBgColor || bgColor, type, borderWidth, borderColor, warningColor, type, type, borderWidth, primary3, primary, type, type, type, type, type, titleColor1, borderWidth, primary, primary1, type, type, titleColor4, borderWidth, borderColor, readOnlyBottomBC, type, type, titleColor4, borderWidth, borderColor, titleColor4, type, type, type, type, type, titleColor4, borderWidth, titleColor4, lineColor2, type, type, requiredBgColor || bgColor, type, titleColor1, borderWidth, borderColor, errorColor, type, type, titleColor1, borderWidth, redColor3, errorColor, type, type, type, type, type, titleColor1, borderWidth, errorColor, redColor1, type, type, type, type, borderWidth, borderColor, readOnlyBottomBC, type, titleColor4, type, titleColor1, type, type, titleColor1, suffixWidth, titleColor1, titleColor3, primary, type, type, type, suffixWidth, type, type, type, suffixWidth, type, suffixWidth, type, suffixWidth, type, type, iconfontFamily, titleColor4, type, type, type, titleColor4, titleColor4, type, type, FormInputs_style_inputHorizontalPadding, inputHeight - 1, type, type, FormInputs_style_inputHorizontalPadding, type, type, inputHeight, FormInputs_style_inputHorizontalPadding, type, type, type, type, titleColor1, type, titleColor1, type, titleColor3, fontSize, type, borderWidth, primary3, primary, FormInputs_style_getOneFloatLabelStyle(type, props), selector, type, lineColor3, titleColor3, type, type, type, type, type, titleColor4, titleColor4, borderWidth, borderColor, readOnlyBottomBC, titleColor4, titleColor4, primary2, type, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, type, type, borderWidth, borderColor, titleColor3, type, titleColor1, bgColor, borderWidth, borderColor, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, titleColor3, radius, titleColor1, type, type, type, type, type, type, radius, type, type);
 }
 /**
  * 设置单个组件样式
@@ -527477,9 +527814,10 @@ function FormInputs_style_getOtherInputStyle(props) {
       redColor1 = _getThemeData6.redColor1,
       redColor3 = _getThemeData6.redColor3,
       errorColor = _getThemeData6.errorColor,
-      lineColor4 = _getThemeData6.lineColor4,
+      lineColor3 = _getThemeData6.lineColor3,
       titleColor3 = _getThemeData6.titleColor3,
-      titleColor1 = _getThemeData6.titleColor1;
+      titleColor1 = _getThemeData6.titleColor1,
+      titleColor4 = _getThemeData6.titleColor4;
 
   var _getThemeData7 = Object(core_lib["l" /* getThemeData */])(props, 'input'),
       radius = _getThemeData7.radius,
@@ -527488,7 +527826,8 @@ function FormInputs_style_getOtherInputStyle(props) {
       borderColor = _getThemeData7.borderColor,
       suffixWidth = _getThemeData7.suffixWidth;
 
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-input-number-inner-button{&:not(.c7n-pro-input-number-clear-button){opacity:1;}.c7n-pro-input-number-plus{margin:0;}.c7n-pro-input-number-plus,.c7n-pro-input-number-minus{height:", "px;line-height:0;&:hover{color:", ";}&:active{color:", ";}}}.c7n-pro-input-number-placeholder,.c7n-pro-input-number-rendered-value{line-height:", "px;}.c7n-pro-textarea.c7n-pro-textarea,.c7n-pro-textarea-placeholder.c7n-pro-textarea-placeholder{padding:3px ", "px;line-height:22px;}.c7n-pro-textarea-wrapper label textarea.c7n-pro-textarea{padding-right:", "px;}.c7n-pro-textarea{textarea&{min-height:", "px;line-height:", "px;padding-left:", "px;padding-right:", "px;}}.c7n-pro-mentions{textarea&{min-height:", "px;line-height:", "px;padding-left:", "px;padding-right:", "px;}}.c7n-pro-mentions.c7n-pro-mentions,.c7n-pro-mentions-placeholder.c7n-pro-mentions-placeholder{padding:3px ", "px;}.c7n-pro-input-intl{.c7n-pro-input-suffix{height:", "px;border-left:1px solid transparent;}&:hover{.c7n-pro-input-suffix{border-left:1px solid ", ";}}&.c7n-pro-input-focused{.c7n-pro-input-suffix{border-left:1px solid ", ";}}&.c7n-pro-input-invalid{&:hover{.c7n-pro-input-suffix{border-left:1px solid ", ";}}&.c7n-pro-input-focused{.c7n-pro-input-suffix{border-left:1px solid ", ";}}}&.c7n-pro-input-disabled{.c7n-pro-input-suffix{border:none !important;}}}.c7n-pro-textarea-intl.c7n-pro-textarea-intl{.c7n-pro-textarea{border-right:none !important;border-top-right-radius:0;border-bottom-right-radius:0;}.c7n-pro-textarea-suffix.c7n-pro-textarea-suffix{min-width:", "px;border-radius:0;border-top-right-radius:", "px;border-bottom-right-radius:", "px;border-left:none !important;border:", "px solid ", ";border-bottom-color:", ";.icon{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-left:1px solid ", ";color:", ";}&:hover{.icon{color:", ";}}}label:hover .c7n-pro-textarea,.c7n-pro-textarea:hover{~ .c7n-pro-textarea-suffix{border:", "px solid ", ";border-bottom-color:", ";}}&.c7n-pro-textarea-focused{box-shadow:0 0 0 2px ", ";}.c7n-pro-textarea.c7n-pro-textarea:focus,&.c7n-pro-textarea-focused .c7n-pro-textarea.c7n-pro-textarea{box-shadow:none;~ .c7n-pro-textarea-suffix{border:", "px solid ", ";box-shadow:none;}}&.c7n-pro-textarea-required-colors{.c7n-pro-textarea{~ .c7n-pro-textarea-suffix{border-bottom:", "px solid ", ";}}label:hover .c7n-pro-textarea,.c7n-pro-textarea:hover{~ .c7n-pro-textarea-suffix{border:", "px solid ", ";border-bottom-color:", ";}}&.c7n-pro-textarea-focused{box-shadow:0 0 0 2px ", ";}.c7n-pro-textarea.c7n-pro-textarea:focus,&.c7n-pro-textarea-focused .c7n-pro-textarea.c7n-pro-textarea{box-shadow:none;~ .c7n-pro-textarea-suffix{border:", "px solid ", ";box-shadow:none;}}}&.c7n-pro-textarea-invalid.c7n-pro-textarea-invalid{.c7n-pro-textarea{~ .c7n-pro-textarea-suffix{border-bottom:", "px solid ", ";}}.c7n-pro-textarea:hover,label:hover .c7n-pro-textarea{~ .c7n-pro-textarea-suffix{border:", "px solid ", ";border-bottom-color:", ";}}&.c7n-pro-textarea-focused{box-shadow:0 0 2px ", ";}.c7n-pro-textarea.c7n-pro-textarea:focus,&.c7n-pro-textarea-focused .c7n-pro-textarea.c7n-pro-textarea{box-shadow:none;~ .c7n-pro-textarea-suffix{border:", "px solid ", ";box-shadow:none;}}}&.c7n-pro-textarea-disabled{.c7n-pro-textarea,label:hover .c7n-pro-textarea,.c7n-pro-textarea:hover{~ .c7n-pro-textarea-suffix{border:", "px solid ", " !important;border-bottom-color:", " !important;border-left:none !important;.icon{color:", ";}}}}}.c7n-pro-password-wrapper{.c7n-pro-password-inner-button{&:hover{color:", ";}.icon-visibility_off::before{font-family:hzero-c7n-font;content:'\uE796';}.icon-visibility::before{font-family:hzero-c7n-font;content:'\uE797';}}}.c7n-pro-input-secret{&.c7n-pro-input-readonly{height:", "px;}}.c7n-pro-secret-field-modal{.c7n-pro-secret-field-simple-verify-slide{background-color:", ";}}.c7n-pro-select-lov{.c7n-pro-select-suffix{height:", "px;border-left:1px solid transparent;.icon-search:before{content:'\\e769';font-family:'iconfont-c7n-font';}}&:hover{.c7n-pro-select-suffix{border-left:1px solid ", ";}}&.c7n-pro-select-focused{.c7n-pro-select-suffix{border-left:1px solid ", ";}}&.c7n-pro-select-invalid{&:hover{.c7n-pro-select-suffix{border-left:1px solid ", ";}}&.c7n-pro-select-focused{.c7n-pro-select-suffix{border-left:1px solid ", ";}}}&.c7n-pro-select-disabled{.c7n-pro-select-suffix{border:none !important;}}.c7n-pro-select-lov-spin .c7n-progress-inner{width:18px;height:18px;margin-right:3px;}&.c7n-pro-select-lov-readonly-show-detail{&.c7n-pro-select-disabled{.c7n-pro-select-suffix.c7n-pro-select-suffix{background-color:transparent;}i:hover{color:", ";}}.c7n-pro-select-suffix{.icon-manage_search:before{content:'\\e878';font-family:'iconfont-c7n-font';}}}}.c7n-pro-select-lov-popup-mode:not(.c7n-pro-select-lov-readonly-show-detail){.c7n-pro-select-suffix{border-left:none !important;}}.c7n-pro-modal.c7n-pro-modal .c7n-pro-modal-selection-list-below-intro{border-left-color:", ";}.c7n-pro-modal.c7n-pro-modal .c7n-pro-modal-selection-list-container .c7n-pro-modal-selection-list-intro > b{color:", ";}.c7n-pro-code-area-wrapper{.c7n-pro-code-area .CodeMirror{border:none;border-radius:", "px;}* .c7n-pro-code-area{border:", "px solid ", ";border-bottom-color:", ";> *{border-radius:", "px;}}&.c7n-pro-code-area-required-colors * .c7n-pro-code-area{border:", "px solid ", ";border-bottom-color:", ";}&.c7n-pro-code-area-readonly * .c7n-pro-code-area{border:", "px solid ", ";border-bottom:", "px dashed ", ";}&.c7n-pro-code-area-invalid * .c7n-pro-code-area{border:", "px solid ", ";border-bottom-color:", ";}&.c7n-pro-code-area-disabled * .c7n-pro-code-area{border:", "px solid ", " !important;border-bottom-color:", " !important;box-shadow:none !important;}}div.CodeMirror-gutters{background-color:#fff;}.c7n-pro-code-area-disabled{.CodeMirror{background-color:", ";}div.CodeMirror-gutters{background-color:", ";}}"], inputHeight / 2, primary, primary7, inputHeight, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, inputHeight, inputHeight - 3 * 2 - borderWidth * 2, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, inputHeight, inputHeight - 3 * 2 - borderWidth * 2, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, inputHeight - borderWidth * 2, primary3, primary, redColor3, errorColor, suffixWidth, radius, radius, borderWidth, borderColor, titleColor3, borderColor, titleColor1, primary, borderWidth, primary3, primary, primary1, borderWidth, primary, borderWidth, warningColor, borderWidth, primary3, primary, primary1, borderWidth, primary, borderWidth, errorColor, borderWidth, redColor3, errorColor, redColor1, borderWidth, errorColor, borderWidth, borderColor, titleColor3, titleColor1, primary, inputHeight, primary, inputHeight - borderWidth * 2, primary3, primary, redColor3, errorColor, primary, primary, primary, radius, borderWidth, borderColor, titleColor3, radius, borderWidth, borderColor, warningColor, borderWidth, borderColor, borderWidth, titleColor3, borderWidth, borderColor, errorColor, borderWidth, borderColor, titleColor3, lineColor4, lineColor4);
+  var readOnlyBottomBC = theme8_templates_FormInputs_style_tinycolor(titleColor4).setAlpha(0.6).toRgbString();
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-input-number-inner-button{&:not(.c7n-pro-input-number-clear-button){opacity:1;}.c7n-pro-input-number-plus{margin:0;}.c7n-pro-input-number-plus,.c7n-pro-input-number-minus{height:", "px;line-height:0;&:hover{color:", ";}&:active{color:", ";}}}.c7n-pro-input-number-placeholder,.c7n-pro-input-number-rendered-value{line-height:", "px;}.c7n-pro-textarea.c7n-pro-textarea,.c7n-pro-textarea-placeholder.c7n-pro-textarea-placeholder{padding:3px ", "px;line-height:22px;}.c7n-pro-textarea-wrapper label textarea.c7n-pro-textarea{padding-right:", "px;}.c7n-pro-textarea{textarea&{min-height:", "px;line-height:", "px;padding-left:", "px;padding-right:", "px;}}.c7n-pro-mentions{textarea&{min-height:", "px;line-height:", "px;padding-left:", "px;padding-right:", "px;}}.c7n-pro-mentions.c7n-pro-mentions,.c7n-pro-mentions-placeholder.c7n-pro-mentions-placeholder{padding:3px ", "px;}.c7n-pro-input-intl{.c7n-pro-input-suffix{height:", "px;border-left:1px solid transparent;}&:hover{.c7n-pro-input-suffix{border-left:1px solid ", ";}}&.c7n-pro-input-focused{.c7n-pro-input-suffix{border-left:1px solid ", ";}}&.c7n-pro-input-invalid{&:hover{.c7n-pro-input-suffix{border-left:1px solid ", ";}}&.c7n-pro-input-focused{.c7n-pro-input-suffix{border-left:1px solid ", ";}}}&.c7n-pro-input-disabled{.c7n-pro-input-suffix{border:none !important;}}}.c7n-pro-textarea-intl.c7n-pro-textarea-intl{.c7n-pro-textarea{border-right:none !important;border-top-right-radius:0;border-bottom-right-radius:0;}.c7n-pro-textarea-suffix.c7n-pro-textarea-suffix{min-width:", "px;border-radius:0;border-top-right-radius:", "px;border-bottom-right-radius:", "px;border-left:none !important;border:", "px solid ", ";border-bottom-color:", ";.icon{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-left:1px solid ", ";color:", ";}&:hover{.icon{color:", ";}}}label:hover .c7n-pro-textarea,.c7n-pro-textarea:hover{~ .c7n-pro-textarea-suffix{border:", "px solid ", ";border-bottom-color:", ";}}&.c7n-pro-textarea-focused{box-shadow:0 0 0 2px ", ";}.c7n-pro-textarea.c7n-pro-textarea:focus,&.c7n-pro-textarea-focused .c7n-pro-textarea.c7n-pro-textarea{box-shadow:none;~ .c7n-pro-textarea-suffix{border:", "px solid ", ";box-shadow:none;}}&.c7n-pro-textarea-required-colors{.c7n-pro-textarea{~ .c7n-pro-textarea-suffix{border-bottom:", "px solid ", ";}}label:hover .c7n-pro-textarea,.c7n-pro-textarea:hover{~ .c7n-pro-textarea-suffix{border:", "px solid ", ";border-bottom-color:", ";}}&.c7n-pro-textarea-focused{box-shadow:0 0 0 2px ", ";}.c7n-pro-textarea.c7n-pro-textarea:focus,&.c7n-pro-textarea-focused .c7n-pro-textarea.c7n-pro-textarea{box-shadow:none;~ .c7n-pro-textarea-suffix{border:", "px solid ", ";box-shadow:none;}}}&.c7n-pro-textarea-invalid.c7n-pro-textarea-invalid{.c7n-pro-textarea{~ .c7n-pro-textarea-suffix{border-bottom:", "px solid ", ";}}.c7n-pro-textarea:hover,label:hover .c7n-pro-textarea{~ .c7n-pro-textarea-suffix{border:", "px solid ", ";border-bottom-color:", ";}}&.c7n-pro-textarea-focused{box-shadow:0 0 2px ", ";}.c7n-pro-textarea.c7n-pro-textarea:focus,&.c7n-pro-textarea-focused .c7n-pro-textarea.c7n-pro-textarea{box-shadow:none;~ .c7n-pro-textarea-suffix{border:", "px solid ", ";box-shadow:none;}}}&.c7n-pro-textarea-disabled{.c7n-pro-textarea,label:hover .c7n-pro-textarea,.c7n-pro-textarea:hover{~ .c7n-pro-textarea-suffix{border:", "px solid ", " !important;border-bottom-color:", " !important;border-left:none !important;.icon{color:", ";}}}}}.c7n-pro-password-wrapper{.c7n-pro-password-inner-button{&:hover{color:", ";}.icon-visibility_off::before{font-family:hzero-c7n-font;content:'\uE796';}.icon-visibility::before{font-family:hzero-c7n-font;content:'\uE797';}}}.c7n-pro-input-secret{&.c7n-pro-input-readonly{height:", "px;}}.c7n-pro-secret-field-modal{.c7n-pro-secret-field-simple-verify-slide{background-color:", ";}}.c7n-pro-select-lov{.c7n-pro-select-suffix{height:", "px;border-left:1px solid transparent;.icon-search:before{content:'\\e769';font-family:'iconfont-c7n-font';}}&:hover{.c7n-pro-select-suffix{border-left:1px solid ", ";}}&.c7n-pro-select-focused{.c7n-pro-select-suffix{border-left:1px solid ", ";}}&.c7n-pro-select-invalid{&:hover{.c7n-pro-select-suffix{border-left:1px solid ", ";}}&.c7n-pro-select-focused{.c7n-pro-select-suffix{border-left:1px solid ", ";}}}&.c7n-pro-select-disabled{.c7n-pro-select-suffix{border:none !important;}}.c7n-pro-select-lov-spin .c7n-progress-inner{width:18px;height:18px;margin-right:3px;}&.c7n-pro-select-lov-readonly-show-detail{&.c7n-pro-select-disabled{.c7n-pro-select-suffix.c7n-pro-select-suffix{background-color:transparent;}i:hover{color:", ";}}.c7n-pro-select-suffix{.icon-manage_search:before{content:'\\e878';font-family:'iconfont-c7n-font';}}}}.c7n-pro-select-lov-popup-mode:not(.c7n-pro-select-lov-readonly-show-detail){.c7n-pro-select-suffix{border-left:none !important;}}.c7n-pro-modal.c7n-pro-modal .c7n-pro-modal-selection-list-below-intro{border-left-color:", ";}.c7n-pro-modal.c7n-pro-modal .c7n-pro-modal-selection-list-container .c7n-pro-modal-selection-list-intro > b{color:", ";}.c7n-pro-code-area-wrapper{.c7n-pro-code-area .CodeMirror{border:none;border-radius:", "px;}* .c7n-pro-code-area{border:", "px solid ", ";border-bottom-color:", ";> *{border-radius:", "px;}}&.c7n-pro-code-area-required-colors * .c7n-pro-code-area{border:", "px solid ", ";border-bottom-color:", ";}&.c7n-pro-code-area-readonly * .c7n-pro-code-area{border:", "px solid ", ";border-bottom-color:", ";}&.c7n-pro-code-area-invalid * .c7n-pro-code-area{border:", "px solid ", ";border-bottom-color:", ";}&.c7n-pro-code-area-disabled * .c7n-pro-code-area{border:", "px solid ", " !important;border-bottom-color:", " !important;box-shadow:none !important;}}div.CodeMirror-gutters{background-color:#fff;}.c7n-pro-code-area-disabled{.CodeMirror{background-color:", ";}div.CodeMirror-gutters{background-color:", ";}}"], inputHeight / 2, primary, primary7, inputHeight, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, inputHeight, inputHeight - 3 * 2 - borderWidth * 2, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, inputHeight, inputHeight - 3 * 2 - borderWidth * 2, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, FormInputs_style_inputHorizontalPadding, inputHeight - borderWidth * 2, primary3, primary, redColor3, errorColor, suffixWidth, radius, radius, borderWidth, borderColor, titleColor3, borderColor, titleColor1, primary, borderWidth, primary3, primary, primary1, borderWidth, primary, borderWidth, warningColor, borderWidth, primary3, primary, primary1, borderWidth, primary, borderWidth, errorColor, borderWidth, redColor3, errorColor, redColor1, borderWidth, errorColor, borderWidth, borderColor, readOnlyBottomBC, titleColor1, primary, inputHeight, primary, inputHeight - borderWidth * 2, primary3, primary, redColor3, errorColor, primary, primary, primary, radius, borderWidth, borderColor, titleColor3, radius, borderWidth, borderColor, warningColor, borderWidth, borderColor, readOnlyBottomBC, borderWidth, borderColor, errorColor, borderWidth, borderColor, readOnlyBottomBC, lineColor3, lineColor3);
 }
 
 function theme8_templates_FormInputs_style_getInputStyle(props) {
@@ -527514,7 +527853,7 @@ function theme8_templates_FormInputs_style_getInputStyle(props) {
       tagFontWeight = _getThemeData10.fontWeight;
 
   var types = ['c7n-pro-color-picker', 'c7n-pro-cascader', 'c7n-pro-auto-complete', 'c7n-pro-icon-picker', 'c7n-pro-calendar-picker', 'c7n-pro-input', 'c7n-pro-password', 'c7n-pro-textarea', 'c7n-pro-input-number', 'c7n-pro-select', 'c7n-pro-tree-select', 'c7n-pro-rich-text', 'c7n-pro-code-area', 'c7n-pro-mentions'];
-  return Object(styled_components_browser_esm["c" /* css */])(["", " ", " input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}input:-moz-placeholder,textarea:-moz-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}input::-moz-placeholder,textarea::-moz-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}.c7n-pro-select-placeholder.c7n-pro-select-placeholder,.c7n-pro-select-rendered-value.c7n-pro-select-rendered-value{line-height:", "px;}[class$='-placeholder']:not(.c7n-pro-table-customization-tree-group-placeholder){color:", " !important;}[class*='-multiple-block'][class*='-multiple-block']{height:20px;line-height:18px;font-size:", "px;font-weight:", ";padding:", ";margin:2px 4px 2px 0;background-color:", ";color:", ";border:1px solid ", ";border-radius:", "px;vertical-align:middle;&:hover{border-color:", ";}+ li:not([class*='-multiple-block']){height:20px;line-height:18px;}> div:not(:last-child){max-width:calc(100% - 16px);}.icon{&.icon-cancel{color:", ";font-size:", "px;margin-left:4px;line-height:17px;:before{content:'\uE7A1';font-family:", ";}}}&[class*='-multiple-block-invalid']{background-color:", ";color:#fff;border-color:", ";.icon.icon-cancel{color:#fff;}}&[class*='-multiple-block-disabled']{color:", ";-webkit-text-fill-color:", ";background-color:", ";border:1px solid ", ";}}"], types.map(function (t) {
+  return Object(styled_components_browser_esm["c" /* css */])(["", " ", " input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}input:-moz-placeholder,textarea:-moz-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}input::-moz-placeholder,textarea::-moz-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:", " !important;-webkit-text-fill-color:", " !important;opacity:1;}.c7n-pro-select-placeholder.c7n-pro-select-placeholder,.c7n-pro-select-rendered-value.c7n-pro-select-rendered-value{line-height:", "px;}[class$='-placeholder']:not(.c7n-pro-table-customization-tree-group-placeholder){color:", " !important;}[class*='-multiple-block'][class*='-multiple-block']{height:20px;line-height:18px;font-size:", "px;font-weight:", ";padding:", ";margin:2px 4px 2px 0;background-color:", ";color:", ";border:1px solid ", ";border-radius:", "px;vertical-align:middle;&:hover{border-color:", ";}+ li:not([class*='-multiple-block']){height:20px;line-height:18px;}> div:not(:last-child){max-width:calc(100% - 16px);}.icon{&.icon-cancel{color:", ";font-size:", "px;margin-left:4px;line-height:15px;:before{content:'\uE7A1';font-family:", ";}}}&[class*='-multiple-block-invalid']{background-color:", ";color:#fff;border-color:", ";.icon.icon-cancel{color:#fff;}}&[class*='-multiple-block-disabled']{color:", ";-webkit-text-fill-color:", ";background-color:", ";border:1px solid ", ";}}"], types.map(function (t) {
     return theme8_templates_FormInputs_style_getOneStyle(t, props);
   }), FormInputs_style_getOtherInputStyle, titleColor4, titleColor4, titleColor4, titleColor4, titleColor4, titleColor4, titleColor4, titleColor4, inputHeight, titleColor4, tagFontSize, tagFontWeight, FormInputs_style_multipleTagPadding, primary1, primary7, primary2, tagBorderRadius, primary, primary7, tagFontSize, iconfontFamily, errorColor, errorColor, titleColor3, titleColor3, lineColor2, lineColor1);
 }
@@ -527924,7 +528263,7 @@ function theme8_templates_DatePicker_style_getDropdownStyle(props) {
       btnHeight = _getThemeData4.btnHeight;
 
   var inRangeBg = templates_DatePicker_style_tinycolor(primary).setAlpha(0.2).toRgbString();
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-calendar-picker-popup.c7n-pro-calendar-picker-popup{width:240px;&.c7n-pro-calendar-picker-popup-decade,&.c7n-pro-calendar-picker-popup-month,&.c7n-pro-calendar-picker-popup-year{width:268px;}}.c7n-pro-calendar-picker-popup-datetime.c7n-pro-calendar-picker-popup-datetime{width:448px;.c7n-pro-calendar-datetime{width:240px;}.c7n-pro-calendar-time{flex:auto;}}.c7n-pro-calendar-picker-popup-combo-range,.c7n-pro-calendar-picker-popup-datetime{.c7n-pro-calendar-header.c7n-pro-calendar-header{border-bottom:1px solid ", ";}.c7n-pro-calendar-footer-extra.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer.c7n-pro-calendar-footer{border-top:1px solid ", ";}.c7n-pro-calendar-view + .c7n-pro-calendar-view .c7n-pro-calendar-body,.c7n-pro-calendar-time .c7n-pro-calendar-body{border-left:1px solid ", ";}}.c7n-pro-calendar-body.c7n-pro-calendar-body{padding:0 8px;table{font-size:", "px;}th{width:", "px;height:24px;padding:2px 0;font-size:12px;line-height:20px;color:", ";}}.c7n-pro-calendar-cell.c7n-pro-calendar-cell{width:", "px;height:", "px;padding:0;border-radius:", "px;.c7n-pro-calendar-cell-inner{border-radius:", "px;transition:none;}}.c7n-pro-calendar-day-panel.c7n-pro-calendar-day-panel{.c7n-pro-calendar-cell{background-color:transparent !important;}.c7n-pro-calendar-cell-inner{width:", "px;height:", "px;line-height:", "px;border:1px solid transparent;margin:2px;}}.c7n-pro-calendar-cell:hover{background:", ";.c7n-pro-calendar-cell-inner{background:", ";}}.c7n-pro-calendar-cell:active{background:", ";.c7n-pro-calendar-cell-inner{color:inherit;background:", ";}}.c7n-pro-calendar-old.c7n-pro-calendar-old .c7n-pro-calendar-cell-inner,.c7n-pro-calendar-new.c7n-pro-calendar-new .c7n-pro-calendar-cell-inner{color:", ";}.c7n-pro-calendar-today.c7n-pro-calendar-today .c7n-pro-calendar-cell-inner{color:", ";font-weight:400;border-color:", ";position:relative;}.c7n-pro-calendar-cell.c7n-pro-calendar-selected{background:", ";.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:#fff;background:", ";&:hover{background:", ";}}}.c7n-pro-calendar-cell.c7n-pro-calendar-disabled{background:", ";.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:", ";background:", ";border:none;&:hover{background:", ";}}&.c7n-pro-calendar-today{.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:", ";background:", ";&:hover{background:", ";}}}&.c7n-pro-calendar-disabled.c7n-pro-calendar-selected{background:", ";.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:#fff;background:", ";opacity:1;&:hover{background:", ";}}}}.c7n-pro-calendar-time.c7n-pro-calendar-time .c7n-pro-calendar-body{padding:8px;height:216px;}.c7n-pro-calendar-time.c7n-pro-calendar-time .c7n-pro-calendar-cell{&:hover{.c7n-pro-calendar-cell-inner{background:", ";}}&:active{.c7n-pro-calendar-cell-inner{background:", ";}}.c7n-pro-calendar-cell-inner{&:active{color:inherit;}}&.c7n-pro-calendar-disabled{.c7n-pro-calendar-cell-inner{color:", ";background:", ";}}&.c7n-pro-calendar-selected{.c7n-pro-calendar-cell-inner{color:", ";background:", ";}}}.c7n-pro-calendar-time-panel.c7n-pro-calendar-time-panel .c7n-pro-calendar-cell-inner{width:auto;height:", "px;line-height:", "px;}.c7n-pro-calendar-picker-popup.c7n-pro-calendar-picker-popup-time{width:208px;}.c7n-pro-calendar-time-panel-inner.c7n-pro-calendar-time-panel-inner{height:", "px;top:-20px;}.c7n-pro-calendar-time-focus.c7n-pro-calendar-time-focus{display:none;}.c7n-pro-calendar-time-focus-active.c7n-pro-calendar-time-focus-active{display:none;}.c7n-pro-calendar-time-list.c7n-pro-calendar-time-list li{width:64px;height:", "px;padding:2px;}.c7n-pro-calendar-decade-year,.c7n-pro-calendar-month,.c7n-pro-calendar-year{.c7n-pro-calendar-body{padding:0px 4px 4px;}}table.c7n-pro-calendar-month-panel,table.c7n-pro-calendar-year-panel{border-collapse:separate;border-spacing:4px;}.c7n-pro-calendar-month-panel.c7n-pro-calendar-month-panel .c7n-pro-calendar-cell,.c7n-pro-calendar-year-panel.c7n-pro-calendar-year-panel .c7n-pro-calendar-cell{width:80px;height:", "px;padding:0;}.c7n-pro-calendar-month-panel.c7n-pro-calendar-month-panel .c7n-pro-calendar-cell-inner,.c7n-pro-calendar-year-panel.c7n-pro-calendar-year-panel .c7n-pro-calendar-cell-inner{display:block;padding:0;height:", "px;line-height:", "px;border:none;}.c7n-pro-calendar-header.c7n-pro-calendar-header{height:44px;line-height:", "px;padding:8px;border:none;a:hover{color:", ";}}.c7n-pro-calendar-view:not(.c7n-pro-calendar-time) .c7n-pro-calendar-view-select{display:inline-block;width:unset;height:", "px;line-height:", "px;padding:0px 9px;color:", ";font-weight:500;border-radius:", "px;&:hover{background:", ";}&:active{background:", ";}}.c7n-pro-calendar-prev-year,.c7n-pro-calendar-prev-month,.c7n-pro-calendar-next-year,.c7n-pro-calendar-next-month{&&{display:inline-block;width:", "px;height:", "px;padding:0;color:", ";border-radius:", "px;&:hover{background:", ";}&:active{background:", ";}}}.c7n-pro-calendar-view-select.c7n-pro-calendar-view-select{font-weight:500;color:", ";height:", "px;line-height:", "px;}.c7n-pro-calendar-picker-popup-date .c7n-pro-calendar-footer a{display:inline-block;width:100%;height:100%;border-radius:", "px;&:hover{background:", ";}&:active{background:", ";}}.c7n-pro-calendar-footer.c7n-pro-calendar-footer .c7n-pro-calendar-now-selected{color:", ";&:hover{color:", ";}&:active{color:", ";}}.c7n-pro-calendar-footer-extra.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer.c7n-pro-calendar-footer{height:44px;line-height:", "px;padding:8px;border:none;a{color:", ";}}.c7n-pro-calendar-footer.c7n-pro-calendar-footer > .c7n-pro-calendar-footer-view-select{height:", "px;background:", ";padding:0 8px;line-height:", "px;color:#fff;border-radius:", "px;box-shadow:none;top:8px;:hover{background:", ";}}.c7n-pro-calendar-footer.c7n-pro-calendar-footer .c7n-pro-calendar-now-disabled{color:", ";&:hover{color:", ";}}.c7n-pro-calendar-picker-popup.c7n-pro-calendar-picker-popup-week{width:280px;.c7n-pro-calendar-cell{background:transparent !important;}.c7n-pro-calendar-cell-inner{height:", "px;width:", "px;text-align:center;border-radius:", "px !important;line-height:", "px;margin:2px;}}.c7n-pro-calendar-week-panel tbody{tr:hover .c7n-pro-calendar-cell:not(.c7n-pro-calendar-selected):not(.c7n-pro-calendar-disabled){.c7n-pro-calendar-cell-inner{background:", ";}&.c7n-pro-calendar-week-cell{&,&:hover{.c7n-pro-calendar-cell-inner{background:", ";}}}&:hover{.c7n-pro-calendar-cell-inner{background:", ";}}}tr:active .c7n-pro-calendar-cell:not(.c7n-pro-calendar-selected):not(.c7n-pro-calendar-disabled){.c7n-pro-calendar-cell-inner{background:", ";}.c7n-pro-calendar-cell-inner{color:inherit;}}.c7n-pro-calendar-cell.c7n-pro-calendar-selected:not(.c7n-pro-calendar-disabled){&,&:hover{.c7n-pro-calendar-cell-inner{background:", ";color:", ";}&.c7n-pro-calendar-week-cell{.c7n-pro-calendar-cell-inner{color:#fff;background:", ";border:1px solid ", ";}}}}}.c7n-pro-calendar-week-panel .c7n-pro-calendar-week-cell{width:40px;.c7n-pro-calendar-cell-inner{color:", ";font-size:12px;width:36px;}}.c7n-pro-calendar-picker-popup-combo-range.c7n-pro-calendar-picker-popup-combo-range{width:", "px;.c7n-pro-calendar-view{width:240px;}.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer{width:", "px;}&.c7n-pro-calendar-picker-popup-month,&.c7n-pro-calendar-picker-popup-year{width:", "px;.c7n-pro-calendar-view{width:268px;}.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer{width:", "px;}}.c7n-pro-calendar-in-range{.c7n-pro-calendar-cell-inner{background:transparent;}&:before{top:0.02rem;right:0.02rem;bottom:0.02rem;left:0.02rem;height:0.28rem;border-radius:6px;background:", ";}}}.c7n-calendar-picker-input.c7n-calendar-picker-input{display:flex;}.c7n-calendar-range-picker-separator.c7n-calendar-range-picker-separator{line-height:0.28rem;}"], lineColor1, lineColor1, lineColor2, fontSize, btnHeight + 4, titleColor3, btnHeight + 4, btnHeight + 4, defaultRadius, defaultRadius, btnHeight, btnHeight, btnHeight - 2, primary1, primary1, primary1, primary1, titleColor3, primary, primary, primary, primary, primary, lineColor2, titleColor2, lineColor2, lineColor2, primary2, primary2, primary2, primary2, primary2, primary2, lineColor3, lineColor2, titleColor2, lineColor2, titleColor1, primary2, btnHeight, btnHeight, btnHeight + 4, btnHeight + 4, btnHeight, btnHeight, btnHeight, btnHeight, titleColor2, btnHeight, btnHeight, titleColor2, defaultRadius, lineColor3, lineColor2, btnHeight, btnHeight, titleColor2, defaultRadius, lineColor3, lineColor2, titleColor2, btnHeight, btnHeight, defaultRadius, primary1, primary2, titleColor1, primary, primary7, btnHeight, primary, btnHeight, primary, btnHeight, defaultRadius, primary7, titleColor3, titleColor3, btnHeight, btnHeight, defaultRadius, btnHeight - 2, lineColor3, primary1, lineColor3, lineColor3, primary2, titleColor1, primary, primary, titleColor1, 240 * 2, 240 * 2, 268 * 2, 268 * 2, inRangeBg);
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-calendar-picker-popup.c7n-pro-calendar-picker-popup{width:240px;&.c7n-pro-calendar-picker-popup-decade,&.c7n-pro-calendar-picker-popup-month,&.c7n-pro-calendar-picker-popup-year{width:268px;}}.c7n-pro-calendar-picker-popup-datetime.c7n-pro-calendar-picker-popup-datetime{width:448px;.c7n-pro-calendar-datetime{width:240px;}.c7n-pro-calendar-time{flex:auto;}}.c7n-pro-calendar-picker-popup-combo-range,.c7n-pro-calendar-picker-popup-datetime{.c7n-pro-calendar-header.c7n-pro-calendar-header{border-bottom:1px solid ", ";}.c7n-pro-calendar-footer-extra.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer.c7n-pro-calendar-footer{border-top:1px solid ", ";}.c7n-pro-calendar-view + .c7n-pro-calendar-view .c7n-pro-calendar-body,.c7n-pro-calendar-time .c7n-pro-calendar-body{border-left:1px solid ", ";}}.c7n-pro-calendar-body.c7n-pro-calendar-body{padding:0 8px;table{font-size:", "px;}th{width:", "px;height:24px;padding:2px 0;font-size:12px;line-height:20px;color:", ";}}.c7n-pro-calendar-cell.c7n-pro-calendar-cell{width:", "px;height:", "px;padding:0;border-radius:", "px;.c7n-pro-calendar-cell-inner{border-radius:", "px;transition:none;}}.c7n-pro-calendar-day-panel.c7n-pro-calendar-day-panel{.c7n-pro-calendar-cell{background-color:transparent !important;}.c7n-pro-calendar-cell-inner{width:", "px;height:", "px;line-height:", "px;border:1px solid transparent;margin:2px;}}.c7n-pro-calendar-cell:hover{background:", ";.c7n-pro-calendar-cell-inner{background:", ";}}.c7n-pro-calendar-cell:active{background:", ";.c7n-pro-calendar-cell-inner{color:inherit;background:", ";}}.c7n-pro-calendar-old.c7n-pro-calendar-old .c7n-pro-calendar-cell-inner,.c7n-pro-calendar-new.c7n-pro-calendar-new .c7n-pro-calendar-cell-inner{color:", ";}.c7n-pro-calendar-today.c7n-pro-calendar-today .c7n-pro-calendar-cell-inner{color:", ";font-weight:400;border-color:", ";position:relative;}.c7n-pro-calendar-cell.c7n-pro-calendar-selected{background:", ";.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:#fff;background:", ";&:hover{background:", ";}}}.c7n-pro-calendar-cell.c7n-pro-calendar-disabled{background:", ";.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:", ";background:", ";border:none;&:hover{background:", ";}}&.c7n-pro-calendar-today{.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:", ";background:", ";&:hover{background:", ";}}}&.c7n-pro-calendar-disabled.c7n-pro-calendar-selected{background:", ";.c7n-pro-calendar-cell-inner.c7n-pro-calendar-cell-inner{color:#fff;background:", ";opacity:1;&:hover{background:", ";}}}}.c7n-pro-calendar-time.c7n-pro-calendar-time .c7n-pro-calendar-body{padding:8px;height:216px;}.c7n-pro-calendar-time.c7n-pro-calendar-time .c7n-pro-calendar-cell{&:hover{.c7n-pro-calendar-cell-inner{background:", ";}}&:active{.c7n-pro-calendar-cell-inner{background:", ";}}.c7n-pro-calendar-cell-inner{&:active{color:inherit;}}&.c7n-pro-calendar-disabled{.c7n-pro-calendar-cell-inner{color:", ";background:", ";}}&.c7n-pro-calendar-selected{.c7n-pro-calendar-cell-inner{color:", ";background:", ";}}}.c7n-pro-calendar-time-panel.c7n-pro-calendar-time-panel .c7n-pro-calendar-cell-inner{width:auto;height:", "px;line-height:", "px;}.c7n-pro-calendar-picker-popup.c7n-pro-calendar-picker-popup-time{width:208px;}.c7n-pro-calendar-time-panel-inner.c7n-pro-calendar-time-panel-inner{height:", "px;top:-20px;}.c7n-pro-calendar-time-focus.c7n-pro-calendar-time-focus{display:none;}.c7n-pro-calendar-time-focus-active.c7n-pro-calendar-time-focus-active{display:none;}.c7n-pro-calendar-time-list.c7n-pro-calendar-time-list li{width:64px;height:", "px;padding:2px;}.c7n-pro-calendar-time-list.c7n-pro-calendar-time-list[style*='width: 25%'] li{width:50px;}.c7n-pro-calendar-decade-year,.c7n-pro-calendar-month,.c7n-pro-calendar-year{.c7n-pro-calendar-body{padding:0px 4px 4px;}}table.c7n-pro-calendar-month-panel,table.c7n-pro-calendar-year-panel{border-collapse:separate;border-spacing:4px;}.c7n-pro-calendar-month-panel.c7n-pro-calendar-month-panel .c7n-pro-calendar-cell,.c7n-pro-calendar-year-panel.c7n-pro-calendar-year-panel .c7n-pro-calendar-cell{width:80px;height:", "px;padding:0;}.c7n-pro-calendar-month-panel.c7n-pro-calendar-month-panel .c7n-pro-calendar-cell-inner,.c7n-pro-calendar-year-panel.c7n-pro-calendar-year-panel .c7n-pro-calendar-cell-inner{display:block;padding:0;height:", "px;line-height:", "px;border:none;}.c7n-pro-calendar-header.c7n-pro-calendar-header{height:44px;line-height:", "px;padding:8px;border:none;a:hover{color:", ";}}.c7n-pro-calendar-view:not(.c7n-pro-calendar-time) .c7n-pro-calendar-view-select{display:inline-block;width:unset;height:", "px;line-height:", "px;padding:0px 9px;color:", ";font-weight:500;border-radius:", "px;&:hover{background:", ";}&:active{background:", ";}}.c7n-pro-calendar-prev-year,.c7n-pro-calendar-prev-month,.c7n-pro-calendar-next-year,.c7n-pro-calendar-next-month{&&{display:inline-block;width:", "px;height:", "px;padding:0;color:", ";border-radius:", "px;&:hover{background:", ";}&:active{background:", ";}}}.c7n-pro-calendar-view-select.c7n-pro-calendar-view-select{font-weight:500;color:", ";height:", "px;line-height:", "px;}.c7n-pro-calendar-picker-popup-date .c7n-pro-calendar-footer a{display:inline-block;width:100%;height:100%;border-radius:", "px;&:hover{background:", ";}&:active{background:", ";}}.c7n-pro-calendar-footer.c7n-pro-calendar-footer .c7n-pro-calendar-now-selected{color:", ";&:hover{color:", ";}&:active{color:", ";}}.c7n-pro-calendar-footer-extra.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer.c7n-pro-calendar-footer{height:44px;line-height:", "px;padding:8px;border:none;a{color:", ";}}.c7n-pro-calendar-footer.c7n-pro-calendar-footer > .c7n-pro-calendar-footer-view-select{height:", "px;background:", ";padding:0 8px;line-height:", "px;color:#fff;border-radius:", "px;box-shadow:none;top:8px;:hover{background:", ";}}.c7n-pro-calendar-footer.c7n-pro-calendar-footer .c7n-pro-calendar-now-disabled{color:", ";&:hover{color:", ";}}.c7n-pro-calendar-picker-popup.c7n-pro-calendar-picker-popup-week{width:280px;.c7n-pro-calendar-cell{background:transparent !important;}.c7n-pro-calendar-cell-inner{height:", "px;width:", "px;text-align:center;border-radius:", "px !important;line-height:", "px;margin:2px;}}.c7n-pro-calendar-week-panel tbody{tr:hover .c7n-pro-calendar-cell:not(.c7n-pro-calendar-selected):not(.c7n-pro-calendar-disabled){.c7n-pro-calendar-cell-inner{background:", ";}&.c7n-pro-calendar-week-cell{&,&:hover{.c7n-pro-calendar-cell-inner{background:", ";}}}&:hover{.c7n-pro-calendar-cell-inner{background:", ";}}}tr:active .c7n-pro-calendar-cell:not(.c7n-pro-calendar-selected):not(.c7n-pro-calendar-disabled){.c7n-pro-calendar-cell-inner{background:", ";}.c7n-pro-calendar-cell-inner{color:inherit;}}.c7n-pro-calendar-cell.c7n-pro-calendar-selected:not(.c7n-pro-calendar-disabled){&,&:hover{.c7n-pro-calendar-cell-inner{background:", ";color:", ";}&.c7n-pro-calendar-week-cell{.c7n-pro-calendar-cell-inner{color:#fff;background:", ";border:1px solid ", ";}}}}}.c7n-pro-calendar-week-panel .c7n-pro-calendar-week-cell{width:40px;.c7n-pro-calendar-cell-inner{color:", ";font-size:12px;width:36px;}}.c7n-pro-calendar-picker-popup-combo-range.c7n-pro-calendar-picker-popup-combo-range{width:", "px;.c7n-pro-calendar-view{width:240px;}.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer{width:", "px;}&.c7n-pro-calendar-picker-popup-month,&.c7n-pro-calendar-picker-popup-year{width:", "px;.c7n-pro-calendar-view{width:268px;}.c7n-pro-calendar-footer-extra,.c7n-pro-calendar-footer{width:", "px;}}.c7n-pro-calendar-in-range{.c7n-pro-calendar-cell-inner{background:transparent;}&:before{top:0.02rem;right:0.02rem;bottom:0.02rem;left:0.02rem;height:0.28rem;border-radius:6px;background:", ";}}}.c7n-calendar-picker-input.c7n-calendar-picker-input{display:flex;}.c7n-calendar-range-picker-separator.c7n-calendar-range-picker-separator{line-height:0.28rem;}"], lineColor1, lineColor1, lineColor2, fontSize, btnHeight + 4, titleColor3, btnHeight + 4, btnHeight + 4, defaultRadius, defaultRadius, btnHeight, btnHeight, btnHeight - 2, primary1, primary1, primary1, primary1, titleColor3, primary, primary, primary, primary, primary, lineColor2, titleColor2, lineColor2, lineColor2, primary2, primary2, primary2, primary2, primary2, primary2, lineColor3, lineColor2, titleColor2, lineColor2, titleColor1, primary2, btnHeight, btnHeight, btnHeight + 4, btnHeight + 4, btnHeight, btnHeight, btnHeight, btnHeight, titleColor2, btnHeight, btnHeight, titleColor2, defaultRadius, lineColor3, lineColor2, btnHeight, btnHeight, titleColor2, defaultRadius, lineColor3, lineColor2, titleColor2, btnHeight, btnHeight, defaultRadius, primary1, primary2, titleColor1, primary, primary7, btnHeight, primary, btnHeight, primary, btnHeight, defaultRadius, primary7, titleColor3, titleColor3, btnHeight, btnHeight, defaultRadius, btnHeight - 2, lineColor3, primary1, lineColor3, lineColor3, primary2, titleColor1, primary, primary, titleColor1, 240 * 2, 240 * 2, 268 * 2, 268 * 2, inRangeBg);
 }
 
 var theme8_templates_DatePicker_style_allCss = Object(styled_components_browser_esm["c" /* css */])(["", " ", ""], theme8_templates_DatePicker_style_getDatePickerStyle, theme8_templates_DatePicker_style_getDropdownStyle);
@@ -528305,7 +528644,7 @@ var theme8_templates_Modal_style_ModalStyle = function ModalStyle(props) {
 
   var cd = Object(core_lib["l" /* getThemeData */])(props, 'common');
   var buttonData = Object(core_lib["l" /* getThemeData */])(props, 'button');
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-modal.c7n-pro-modal{.c7n-pro-modal-header{padding:", ";border:none;background-color:initial;.c7n-pro-modal-title{font-size:", "px;color:", ";line-height:", "px;margin-right:", ";}.c7n-pro-modal-title:empty + .c7n-pro-modal-header-buttons .c7n-pro-modal-header-button{height:30px;}.c7n-pro-modal-header-buttons{.c7n-pro-modal-header-button{width:48px;height:48px;.icon-close{position:", ";top:", "px;right:6px;z-index:1;width:", "px;height:", "px;line-height:", "px;font-size:", "px;border-radius:", "px;text-align:center;color:", ";background:transparent;&:hover{background:", ";}&:active{background:", ";}}}}}&.c7n-pro-modal-drawer-slide-right .c7n-pro-modal-content{border-top-right-radius:0;border-bottom-right-radius:0;}&.c7n-pro-modal-drawer-slide-left .c7n-pro-modal-content{border-top-left-radius:0;border-bottom-left-radius:0;}&.c7n-pro-modal-drawer-slide-top .c7n-pro-modal-content{border-top-left-radius:0;border-top-right-radius:0;}&.c7n-pro-modal-drawer-slide-bottom .c7n-pro-modal-content{border-bottom-left-radius:0;border-bottom-right-radius:0;}&.c7n-pro-modal-fullscreen .c7n-pro-modal-content{border-radius:0;}.c7n-pro-modal-content{position:relative;padding:", "px;background:", ";line-height:", "px;min-width:auto;border-radius:", "px;border:1px solid ", ";box-shadow:0px 4px 8px 0px rgba(28,36,51,0.15);", ";.c7n-pro-modal-body{font-size:", "px;font-weight:", ";margin:0;box-sizing:border-box;padding:", ";.c7n-pro-confirm{.c7n-pro-confirm-icon{padding-right:0.08rem;.icon{font-size:0.18rem;line-height:", "px;&.icon-warning{&:before{color:", ";content:'\\e79b';font-family:", ";}}&.icon-check_circle{&:before{color:", ";content:'\\e738';font-family:", ";}}&.icon-cancel{&:before{color:", ";content:'\\e734';font-family:", ";}}}}.c7n-pro-confirm-title{font-size:", "px;color:", ";line-height:", "px;}.c7n-pro-confirm-content{color:", ";font-size:", "px;line-height:", "px;}tr > td:nth-last-child(1):first-child{.c7n-pro-confirm-title{&::before{display:inline-block;font-family:", ";content:'\\e77d';width:28px;font-size:18px;color:", ";}}.c7n-pro-confirm-content{margin-left:0;}.c7n-pro-confirm-title:first-child,.c7n-pro-confirm-content:first-child{&::after{content:' ';display:block;width:100%;height:1px;position:absolute;left:0;margin-top:", "px;background:", ";z-index:1;}}}.c7n-pro-confirm-icon + td{.c7n-pro-confirm-title:first-child,.c7n-pro-confirm-content:first-child{&:after{content:' ';display:block;width:100%;height:1px;position:absolute;left:0;margin-top:", "px;background:", ";z-index:1;}}}.c7n-pro-confirm-success + td{.c7n-pro-confirm-title:first-child,.c7n-pro-confirm-content:first-child{&:after{background:", ";}}}.c7n-pro-confirm-error + td{.c7n-pro-confirm-title:first-child,.c7n-pro-confirm-content:first-child{&:after{background:", ";}}}.c7n-pro-confirm-warning + td{.c7n-pro-confirm-title:first-child,.c7n-pro-confirm-content:first-child{&:after{background:", ";}}}}}.c7n-pro-modal-footer{padding:", ";left:0;text-align:right;border-top:0.01rem solid ", ";}}&.c7n-pro-confirm-wrapper.c7n-pro-confirm-wrapper{.c7n-pro-confirm-title + .c7n-pro-confirm-content.c7n-pro-confirm-content{margin-top:", "px;margin-left:-28px;min-height:44px;}.c7n-pro-modal-content{.c7n-pro-modal-body{padding:", ";}}}}.c7n-pro-confirm-wrapper-info .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child,.c7n-pro-confirm-wrapper-confirm .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-confirm-wrapper-success .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-confirm-wrapper-error .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-confirm-wrapper-warning .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-modal{", "}"], headerPadding, titleFontSize, titleColor1, titleLineHeight, titleMarginRight, headerPosition || 'absolute', closeBtnTop, buttonData.height, buttonData.height, buttonData.height - 1, buttonData.fontSize, buttonData.radius, titleColor2, lineColor3, lineColor2, modalContentPadding, bgColor, contentLineHeight, borderRadius, lineColor1, theme8_templates_Modal_style_getBgStyle(showBgIcon, bgColor), contentFontSize, modalBodyTextWeight, bodyPadding, titleLineHeight, warningColor, iconfontFamily, successColor, iconfontFamily, errorColor, iconfontFamily, titleFontSize, titleColor1, titleLineHeight, titleColor1, contentFontSize, contentLineHeight, iconfontFamily, infoColor, 16 + 1, infoColor, 16 + 1, infoColor, successColor, errorColor, warningColor, footerPadding, lineColor2, 16 + 8, confirmBodyPadding, cd.blueColor6, cd.lineColor1, cd.blueColor8, cd.blueColor6, cd.blueColor8, cd.blueColor1, cd.blueColor7, cd.greenColor6, cd.lineColor1, cd.greenColor8, cd.greenColor6, cd.greenColor8, cd.greenColor1, cd.greenColor7, cd.redColor6, cd.lineColor1, cd.redColor8, cd.redColor6, cd.redColor8, cd.redColor1, cd.redColor7, cd.yellowColor6, cd.lineColor1, cd.yellowColor8, cd.yellowColor6, cd.yellowColor8, cd.yellowColor1, cd.yellowColor7, templates_Form_style_formInputPadding({
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-modal.c7n-pro-modal{.c7n-pro-modal-header{padding:", ";border:none;background-color:initial;.c7n-pro-modal-title{font-size:", "px;color:", ";line-height:", "px;margin-right:", ";}.c7n-pro-modal-title:empty + .c7n-pro-modal-header-buttons .c7n-pro-modal-header-button{height:30px;}.c7n-pro-modal-header-buttons{.c7n-pro-modal-header-button{width:48px;height:48px;.icon-close{position:", ";top:", "px;right:6px;z-index:1;width:", "px;height:", "px;line-height:", "px;font-size:", "px;border-radius:", "px;text-align:center;color:", ";background:transparent;&:hover{background:", ";}&:active{background:", ";}}}}}&.c7n-pro-modal-drawer-slide-right .c7n-pro-modal-content{border-top-right-radius:0;border-bottom-right-radius:0;}&.c7n-pro-modal-drawer-slide-left .c7n-pro-modal-content{border-top-left-radius:0;border-bottom-left-radius:0;}&.c7n-pro-modal-drawer-slide-top .c7n-pro-modal-content{border-top-left-radius:0;border-top-right-radius:0;}&.c7n-pro-modal-drawer-slide-bottom .c7n-pro-modal-content{border-bottom-left-radius:0;border-bottom-right-radius:0;}&.c7n-pro-modal-fullscreen .c7n-pro-modal-content{border-radius:0;}.c7n-pro-modal-content{position:relative;padding:", "px;background:", ";line-height:", "px;min-width:auto;border-radius:", "px;border:1px solid ", ";box-shadow:0px 4px 8px 0px rgba(28,36,51,0.15);", ";.c7n-pro-modal-body{font-size:", "px;font-weight:", ";margin:0;box-sizing:border-box;padding:", ";.c7n-pro-confirm{td{padding-top:0;padding-bottom:0;}.c7n-pro-confirm-icon{padding-right:0.08rem;.icon{font-size:0.18rem;line-height:", "px;&.icon-warning{&:before{color:", ";content:'\\e79b';font-family:", ";}}&.icon-check_circle{&:before{color:", ";content:'\\e738';font-family:", ";}}&.icon-cancel{&:before{color:", ";content:'\\e734';font-family:", ";}}}}.c7n-pro-confirm-title{font-size:", "px;color:", ";line-height:", "px;}.c7n-pro-confirm-content{color:", ";font-size:", "px;line-height:", "px;}tr > td:nth-last-child(1):first-child{.c7n-pro-confirm-title{&::before{display:inline-block;font-family:", ";content:'\\e77d';width:28px;font-size:18px;color:", ";vertical-align:-0.5px;}}.c7n-pro-confirm-content{margin-left:0;}.c7n-pro-confirm-title:first-child:not(:last-child){&::after{content:' ';display:block;width:100%;height:1px;position:absolute;left:0;margin-top:8px;background:", ";z-index:1;}+ .c7n-pro-confirm-content{margin-bottom:8px;}}}.c7n-pro-confirm-icon + td{.c7n-pro-confirm-title:first-child:not(:last-child){&:after{content:' ';display:block;width:100%;height:1px;position:absolute;left:0;margin-top:8px;background:", ";z-index:1;}+ .c7n-pro-confirm-content{margin-bottom:8px;}}}.c7n-pro-confirm-success + td{.c7n-pro-confirm-title:first-child:not(:last-child){&:after{background:", ";}}}.c7n-pro-confirm-error + td{.c7n-pro-confirm-title:first-child:not(:last-child){&:after{background:", ";}}}.c7n-pro-confirm-warning + td{.c7n-pro-confirm-title:first-child:not(:last-child){&:after{background:", ";}}}}}.c7n-pro-modal-footer{padding:", ";left:0;text-align:right;border-top:0.01rem solid ", ";}}&.c7n-pro-confirm-wrapper.c7n-pro-confirm-wrapper{.c7n-pro-confirm-title + .c7n-pro-confirm-content.c7n-pro-confirm-content{margin-top:", "px;margin-left:-28px;min-height:44px;}.c7n-pro-modal-content{.c7n-pro-modal-body{padding:", ";}}}}.c7n-pro-confirm-wrapper-info .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child,.c7n-pro-confirm-wrapper-confirm .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-confirm-wrapper-success .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-confirm-wrapper-error .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-confirm-wrapper-warning .c7n-pro-modal-footer > div .c7n-pro-btn.c7n-pro-btn.c7n-pro-btn:last-child{color:", ";background-color:#fff;border:0.01rem solid ", ";&:hover{color:", ";background-color:#fff;border:0.01rem solid ", ";}&:active{color:", ";background-color:", ";border:0.01rem solid ", ";}}.c7n-pro-modal{", "}"], headerPadding, titleFontSize, titleColor1, titleLineHeight, titleMarginRight, headerPosition || 'absolute', closeBtnTop, buttonData.height, buttonData.height, buttonData.height - 1, buttonData.fontSize, buttonData.radius, titleColor2, lineColor3, lineColor2, modalContentPadding, bgColor, contentLineHeight, borderRadius, lineColor1, theme8_templates_Modal_style_getBgStyle(showBgIcon, bgColor), contentFontSize, modalBodyTextWeight, bodyPadding, titleLineHeight, warningColor, iconfontFamily, successColor, iconfontFamily, errorColor, iconfontFamily, titleFontSize, titleColor1, titleLineHeight, titleColor1, contentFontSize, contentLineHeight, iconfontFamily, infoColor, infoColor, infoColor, successColor, errorColor, warningColor, footerPadding, lineColor2, 8 + 8, confirmBodyPadding, cd.blueColor6, cd.lineColor1, cd.blueColor8, cd.blueColor6, cd.blueColor8, cd.blueColor1, cd.blueColor7, cd.greenColor6, cd.lineColor1, cd.greenColor8, cd.greenColor6, cd.greenColor8, cd.greenColor1, cd.greenColor7, cd.redColor6, cd.lineColor1, cd.redColor8, cd.redColor6, cd.redColor8, cd.redColor1, cd.redColor7, cd.yellowColor6, cd.lineColor1, cd.yellowColor8, cd.yellowColor6, cd.yellowColor8, cd.yellowColor1, cd.yellowColor7, templates_Form_style_formInputPadding({
     verticalPadding: 8,
     horizontalPadding: 12,
     verticalVerticalPadding: 6
@@ -528368,7 +528707,7 @@ var theme8_data_modal_modalData = {
     contentLineHeight: 22,
     modalContentPadding: 0,
     bodyPadding: '8px 16px 16px 16px',
-    confirmBodyPadding: '16px',
+    confirmBodyPadding: '16px 16px 8px 16px',
     modalBodyTextWeight: 400,
     footerPadding: '10px 19px',
     headerPosition: 'relative',
@@ -529237,7 +529576,7 @@ function theme8_templates_Switch_style_getSwitchStyle(props) {
       lineColor2 = _getThemeData3.lineColor2,
       lineColor3 = _getThemeData3.lineColor3;
 
-  return Object(styled_components_browser_esm["c" /* css */])(["form .c7n-pro-switch-wrapper input[type='checkbox']{width:unset;height:unset;}.c7n-pro-field-wrapper.c7n-pro-field-wrapper{.c7n-pro-switch-wrapper{height:", "px;margin-top:", "px;margin-bottom:", "px;}.c7n-pro-switch-sm{height:", "px;margin-top:", "px;margin-bottom:", "px;}}.c7n-pro-switch-wrapper.c7n-pro-switch-wrapper{padding:0;height:", "px;margin-top:", "px;margin-bottom:", "px;&.c7n-pro-switch-loading .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;svg{circle{stroke:", ";}}}}&.c7n-pro-switch-loading.c7n-pro-switch-lg .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}&.c7n-pro-switch-loading.c7n-pro-switch-sm .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}.icon-help{color:", ";font-size:0.14rem;&:hover{color:", ";}}}.c7n-pro-switch-wrapper{.c7n-pro-switch-label{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:", "px;min-width:", "px;border-radius:", "px;border:1px solid ", ";background:", ";line-height:", "px;text-align:center;font-size:", "px;color:", ";padding-right:", "px;padding-left:", "px;:before{position:absolute;top:0;bottom:0;left:0;width:", "px;height:", "px;margin-top:auto;margin-bottom:auto;margin-left:", "px;z-index:2;cursor:inherit;transition:all 0.36s cubic-bezier(0.78,0.14,0.15,0.86);content:'\\e8d1';font-family:'iconfont-c7n-font';}:after{width:", "px;height:", "px;margin-left:", "px;box-shadow:none;opacity:1;border:1px solid ", ";background-color:#fff;}.icon{font-size:14px;color:", ";line-height:0;}}.c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-loading{.c7n-pro-switch-label::before{display:none;}.c7n-pro-switch-label::after{background:#fff;}}&.c7n-pro-switch-focused .c7n-pro-switch-label{box-shadow:none;}.c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;.c7n-progress-inner{svg circle{stroke:", ";}}}.c7n-pro-switch:checked:disabled + .c7n-progress-loading{.c7n-progress-inner{svg circle{stroke:", ";}}}&.c7n-pro-switch-lg .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}&.c7n-pro-switch-sm .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{background:", ";padding-left:", "px;padding-right:", "px;color:", ";border:1px solid ", ";:before{left:100%;margin-left:-", "px;transform:translateX(0);content:'\\e837';font-family:'iconfont-c7n-font';}:after{margin-left:-", "px;transform:translateX(0);background-color:#fff;border:1px solid ", ";}.icon{color:", ";}}.c7n-pro-switch:disabled + .c7n-pro-switch-label,.c7n-pro-switch:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";opacity:1;border:1px solid ", ";&::after{border-color:", ";background-color:#fff;}.icon{color:", ";}}.c7n-pro-switch:checked:disabled + .c7n-pro-switch-label,.c7n-pro-switch:checked:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";border:1px solid ", ";&::after{border-color:", ";background-color:#fff;}.icon{color:", ";}}&.c7n-pro-switch-sm{.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-sm .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-sm .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-lg{padding:0;.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-lg .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-lg .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}}"], switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, smSwitchHeight, (inputHeight - smSwitchHeight) / 2, (inputHeight - smSwitchHeight) / 2, switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, loadingInnerDistance, loadingInnerSize, loadingInnerSize, titleColor3, loadingInnerDistance, loadingInnerSize, loadingInnerSize, smLoadingInnerDistance, smLoadingInnerSize, smLoadingInnerSize, titleColor1, primary, switchHeight, switchWidth, switchHeight / 2, titleColor4, lineColor2, switchHeight, fontSize, titleColor2, switchPadding, handleWidth + marginRight + 4, handleWidth, handleHeight, marginRight, handleWidth, handleHeight, marginRight, titleColor2, titleColor2, handleWidth, loadingInnerDistance - 0.5, primary, titleColor3, loadingInnerDistance - 0.5, smLoadingInnerDistance - 0.5, primary2, switchPadding, handleWidth + marginRight + 4, primary, primary4, handleWidth + marginRight, handleWidth + marginRight, primary, primary, titleColor4, lineColor3, lineColor1, titleColor4, titleColor4, titleColor4, primary1, primary2, primary4, titleColor4, smHandleWidth + marginRight, smHandleWidth + marginRight, smHandleWidth + marginRight, smSwitchWidth, smSwitchHeight, smSwitchHeight, smSwitchHeight / 2, smHandleWidth, smHandleHeight, smHandleWidth, smHandleHeight, smHandleWidth, handleWidth + marginRight + 4, handleWidth + marginRight, handleWidth + marginRight, switchWidth, switchHeight, switchHeight, switchHeight / 2, handleWidth, handleHeight, handleWidth, handleHeight, handleWidth);
+  return Object(styled_components_browser_esm["c" /* css */])(["form .c7n-pro-switch-wrapper input[type='checkbox']{width:unset;height:unset;}.c7n-pro-field-wrapper.c7n-pro-field-wrapper{.c7n-pro-switch-wrapper{height:", "px;margin-top:", "px;margin-bottom:", "px;}.c7n-pro-switch-sm{height:", "px;margin-top:", "px;margin-bottom:", "px;}}.c7n-pro-switch-wrapper.c7n-pro-switch-wrapper{padding:0;height:", "px;margin-top:", "px;margin-bottom:", "px;&.c7n-pro-switch-loading .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;svg{circle{stroke:", ";}}}}&.c7n-pro-switch-loading.c7n-pro-switch-lg .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}&.c7n-pro-switch-loading.c7n-pro-switch-sm .c7n-progress-loading{left:", "px;.c7n-progress-inner{width:", "px;height:", "px;}}.icon-help{color:", ";font-size:0.14rem;&:hover{color:", ";}}}.c7n-pro-switch-wrapper{.c7n-pro-switch{z-index:3;}.c7n-pro-switch-label{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:", "px;min-width:", "px;border-radius:", "px;border:1px solid ", ";background:", ";line-height:", "px;text-align:center;font-size:", "px;color:", ";padding-right:", "px;padding-left:", "px;:before{position:absolute;top:0;bottom:0;left:0;width:", "px;height:", "px;margin-top:auto;margin-bottom:auto;margin-left:", "px;z-index:2;cursor:inherit;transition:all 0.36s cubic-bezier(0.78,0.14,0.15,0.86);content:'\\e8d1';font-family:'iconfont-c7n-font';}:after{width:", "px;height:", "px;margin-left:", "px;box-shadow:none;opacity:1;border:1px solid ", ";background-color:#fff;}.icon{font-size:14px;color:", ";line-height:0;}}.c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-loading{.c7n-pro-switch-label::before{display:none;}.c7n-pro-switch-label::after{background:#fff;}}&.c7n-pro-switch-focused .c7n-pro-switch-label{box-shadow:none;}.c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;.c7n-progress-inner{svg circle{stroke:", ";}}}.c7n-pro-switch:checked:disabled + .c7n-progress-loading{.c7n-progress-inner{svg circle{stroke:", ";}}}&.c7n-pro-switch-lg .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}&.c7n-pro-switch-sm .c7n-pro-switch:checked + .c7n-progress-loading{right:", "px;left:auto;}.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{background:", ";padding-left:", "px;padding-right:", "px;color:", ";border:1px solid ", ";:before{left:100%;margin-left:-", "px;transform:translateX(0);content:'\\e837';font-family:'iconfont-c7n-font';}:after{margin-left:-", "px;transform:translateX(0);background-color:#fff;border:1px solid ", ";}.icon{color:", ";}}.c7n-pro-switch:disabled + .c7n-pro-switch-label,.c7n-pro-switch:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";opacity:1;border:1px solid ", ";&::after{border-color:", ";background-color:#fff;}.icon{color:", ";}}.c7n-pro-switch:checked:disabled + .c7n-pro-switch-label,.c7n-pro-switch:checked:disabled + .c7n-progress-loading + .c7n-pro-switch-label{color:", ";background:", ";border:1px solid ", ";&::after{border-color:", ";background-color:#fff;}.icon{color:", ";}}&.c7n-pro-switch-sm{.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-sm .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-sm .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}&.c7n-pro-switch-lg{padding:0;.c7n-pro-switch:checked + .c7n-pro-switch-label,.c7n-pro-switch:checked + .c7n-progress-loading + .c7n-pro-switch-label{padding-right:", "px;&::before{margin-left:-", "px;}&::after{margin-left:-", "px;}}}&.c7n-pro-switch-lg .c7n-pro-switch-label{min-width:", "px;height:", "px;line-height:", "px;border-radius:", "px;&::before{width:", "px;height:", "px;}&::after{width:", "px;height:", "px;}}&.c7n-pro-switch-lg .c7n-pro-switch:active + .c7n-pro-switch-label::after{width:", "px;}}"], switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, smSwitchHeight, (inputHeight - smSwitchHeight) / 2, (inputHeight - smSwitchHeight) / 2, switchHeight, (inputHeight - switchHeight) / 2, (inputHeight - switchHeight) / 2, loadingInnerDistance, loadingInnerSize, loadingInnerSize, titleColor3, loadingInnerDistance, loadingInnerSize, loadingInnerSize, smLoadingInnerDistance, smLoadingInnerSize, smLoadingInnerSize, titleColor1, primary, switchHeight, switchWidth, switchHeight / 2, titleColor4, lineColor2, switchHeight, fontSize, titleColor2, switchPadding, handleWidth + marginRight + 4, handleWidth, handleHeight, marginRight, handleWidth, handleHeight, marginRight, titleColor2, titleColor2, handleWidth, loadingInnerDistance - 0.5, primary, titleColor3, loadingInnerDistance - 0.5, smLoadingInnerDistance - 0.5, primary2, switchPadding, handleWidth + marginRight + 4, primary, primary4, handleWidth + marginRight, handleWidth + marginRight, primary, primary, titleColor4, lineColor3, lineColor1, titleColor4, titleColor4, titleColor4, primary1, primary2, primary4, titleColor4, smHandleWidth + marginRight, smHandleWidth + marginRight, smHandleWidth + marginRight, smSwitchWidth, smSwitchHeight, smSwitchHeight, smSwitchHeight / 2, smHandleWidth, smHandleHeight, smHandleWidth, smHandleHeight, smHandleWidth, handleWidth + marginRight + 4, handleWidth + marginRight, handleWidth + marginRight, switchWidth, switchHeight, switchHeight, switchHeight / 2, handleWidth, handleHeight, handleWidth, handleHeight, handleWidth);
 }
 
 /* harmony default export */ var theme8_templates_Switch_style = (theme8_templates_Switch_style_getSwitchStyle);
@@ -530178,7 +530517,7 @@ var theme8_templates_Tag_style_tagStyle = function tagStyle(props) {
       fontWeight = _getThemeData.fontWeight;
 
   var co = Object(core_lib["l" /* getThemeData */])(props, 'common');
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-tag.c7n-tag{font-size:", "px;font-weight:", ";padding:", ";border-radius:", "px;height:0.2rem;background:", ";color:", ";line-height:0.18rem;vertical-align:middle;border:0.01rem solid ", ";a,a:hover{color:", ";}&:hover{opacity:1;color:", ";background:", ";border-color:", ";}&.c7n-tag-has-color{&,a,a:hover,.icon-close,.icon-close:hover{color:#fff;border-color:transparent;}}.icon-close{font-weight:400;font-size:", "px;transform:scale(calc(10 / 12));margin-top:-0.02rem;margin-left:0.04rem;}&.c7n-tag-checkable{&,a,a:hover{color:", ";background:", ";}&:not(.c7n-tag-checkable-checked):hover{color:", ";background:", ";}&:not(.c7n-tag-checkable-checked):active{color:", ";background:", ";border-color:", ";}&:active,&.c7n-tag-checkable-checked{background:", ";color:#fff;border-color:", ";a{color:#fff;&:hover{color:#fff;}}}}&.c7n-tag-pink{color:rgba(191,29,137,1);background-color:rgba(255,240,247,1);border-color:rgba(255,214,235,1);&:hover{color:rgba(191,29,137,1);background-color:rgba(255,240,247,1);border-color:rgba(230,46,163,1);}}&.c7n-tag-magenta{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-red{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-volcano{color:rgba(212,56,13,1);background-color:rgba(255,242,232,1);border-color:rgba(255,187,150,1);&:hover{color:rgba(212,56,13,1);background-color:rgba(255,242,232,1);border-color:rgba(250,84,28,1);}}&.c7n-tag-orange{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-yellow{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-gold{color:rgba(212,136,6,1);background-color:rgba(255,251,230,1);border-color:rgba(255,229,143,1);&:hover{color:rgba(212,136,6,1);background-color:rgba(255,251,230,1);border-color:rgba(212,136,6,1);}}&.c7n-tag-cyan{color:", ";background:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-lime{color:rgba(124,179,5,1);background-color:rgba(252,255,230,1);border-color:rgba(211,242,97,1);&:hover{color:rgba(124,179,5,1);background-color:rgba(252,255,230,1);border-color:rgba(124,179,5,1);}}&.c7n-tag-green{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-blue{color:", ";background:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-geekblue{color:#2f54eb;background-color:#f0f5ff;&:hover{color:#2f54eb;background-color:#f0f5ff;}}&.c7n-tag-purple{color:", ";background:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-dark{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-gray{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-pink-inverse{color:#fff;background-color:rgba(230,46,163,1);border-color:rgba(230,46,163,1);&:hover{background-color:rgba(191,29,137,1);border-color:rgba(191,29,137,1);}}&.c7n-tag-magenta-inverse{color:#fff;background-color:rgba(219,71,222,1);border-color:rgba(219,71,222,1);&:hover{background-color:rgba(200,33,209,1);border-color:rgba(200,33,209,1);}}&.c7n-tag-red-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-volcano-inverse{color:#fff;background-color:rgba(201,87,30,1);border-color:rgba(201,87,30,1);&:hover{background-color:rgba(173,33,2,1);border-color:rgba(173,33,2,1);}}&.c7n-tag-orange-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-yellow-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-gold-inverse{color:#fff;background-color:rgba(255,197,61,1);border-color:rgba(255,197,61,1);&:hover{background-color:rgba(250,173,20,1);border-color:rgba(250,173,20,1);}}&.c7n-tag-cyan-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-lime-inverse{color:#fff;background-color:rgba(160,217,17,1);border-color:rgba(160,217,17,1);&:hover{background-color:rgba(124,179,5,1);border-color:rgba(124,179,5,1);}}&.c7n-tag-green-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-blue-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-geekblue-inverse{color:#fff;background-color:#2f54eb;border-color:#2f54eb;}&.c7n-tag-purple-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-dark-inverse{color:#fff;background-color:rgba(88,103,132,1);border-color:rgba(88,103,132,1);&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-gray-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:rgba(88,103,132,1);border-color:rgba(88,103,132,1);}}}"], fontSize, fontWeight, padding, borderRadius, co.primary1, co.primary7, co.primary2, co.primary7, co.primary8, co.primary1, co.primary6, fontSize, co.primary7, co.primary1, co.primary8, co.primary2, co.primary8, co.primary2, co.primary2, co.primary6, co.primary6, co.magentaColor7, co.magentaColor1, co.magentaColor2, co.magentaColor7, co.magentaColor1, co.magentaColor6, co.redColor7, co.redColor1, co.redColor2, co.redColor7, co.redColor1, co.redColor6, co.orangeColor7, co.orangeColor1, co.orangeColor2, co.orangeColor7, co.orangeColor1, co.orangeColor6, co.yellowColor7, co.yellowColor1, co.yellowColor2, co.yellowColor7, co.yellowColor1, co.yellowColor6, co.cyanColor7, co.cyanColor1, co.cyanColor2, co.cyanColor7, co.cyanColor1, co.cyanColor6, co.greenColor7, co.greenColor1, co.greenColor2, co.greenColor7, co.greenColor1, co.greenColor6, co.blueColor7, co.blueColor1, co.blueColor2, co.blueColor7, co.blueColor1, co.blueColor6, co.purpleColor7, co.purpleColor1, co.purpleColor2, co.purpleColor7, co.purpleColor1, co.purpleColor6, co.titleColor1, co.lineColor3, co.titleColor4, co.titleColor1, co.lineColor3, co.titleColor1, co.titleColor2, co.lineColor3, co.lineColor1, co.titleColor2, co.lineColor3, co.titleColor3, co.redColor6, co.redColor6, co.redColor7, co.redColor7, co.orangeColor6, co.orangeColor6, co.orangeColor7, co.orangeColor7, co.yellowColor6, co.yellowColor6, co.yellowColor7, co.yellowColor7, co.cyanColor6, co.cyanColor6, co.cyanColor7, co.cyanColor7, co.greenColor6, co.greenColor6, co.greenColor7, co.greenColor7, co.blueColor6, co.blueColor6, co.blueColor7, co.blueColor7, co.purpleColor6, co.purpleColor6, co.purpleColor7, co.purpleColor7, co.titleColor2, co.titleColor2, co.titleColor3, co.titleColor3);
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-tag.c7n-tag{font-size:", "px;font-weight:", ";padding:", ";border-radius:", "px;height:0.2rem;background:", ";color:", ";line-height:0.18rem;vertical-align:middle;border:0.01rem solid ", ";a,a:hover{color:", ";}&:hover{opacity:1;color:", ";background:", ";border-color:", ";}&.c7n-tag-has-color{&,a,a:hover,.icon-close,.icon-close:hover{color:#fff;border-color:transparent;}}.icon-close{font-weight:400;font-size:", "px;transform:scale(1);margin-top:-0.02rem;margin-left:0.04rem;}&.c7n-tag-checkable{&,a,a:hover{color:", ";background:", ";}&:not(.c7n-tag-checkable-checked):hover{color:", ";background:", ";}&:not(.c7n-tag-checkable-checked):active{color:", ";background:", ";border-color:", ";}&:active,&.c7n-tag-checkable-checked{background:", ";color:#fff;border-color:", ";a{color:#fff;&:hover{color:#fff;}}}}&.c7n-tag-pink{color:rgba(191,29,137,1);background-color:rgba(255,240,247,1);border-color:rgba(255,214,235,1);&:hover{color:rgba(191,29,137,1);background-color:rgba(255,240,247,1);border-color:rgba(230,46,163,1);}}&.c7n-tag-magenta{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-red{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-volcano{color:rgba(212,56,13,1);background-color:rgba(255,242,232,1);border-color:rgba(255,187,150,1);&:hover{color:rgba(212,56,13,1);background-color:rgba(255,242,232,1);border-color:rgba(250,84,28,1);}}&.c7n-tag-orange{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-yellow{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-gold{color:rgba(212,136,6,1);background-color:rgba(255,251,230,1);border-color:rgba(255,229,143,1);&:hover{color:rgba(212,136,6,1);background-color:rgba(255,251,230,1);border-color:rgba(212,136,6,1);}}&.c7n-tag-cyan{color:", ";background:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-lime{color:rgba(124,179,5,1);background-color:rgba(252,255,230,1);border-color:rgba(211,242,97,1);&:hover{color:rgba(124,179,5,1);background-color:rgba(252,255,230,1);border-color:rgba(124,179,5,1);}}&.c7n-tag-green{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-blue{color:", ";background:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-geekblue{color:#2f54eb;background-color:#f0f5ff;&:hover{color:#2f54eb;background-color:#f0f5ff;}}&.c7n-tag-purple{color:", ";background:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-dark{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-gray{color:", ";background-color:", ";border-color:", ";&:hover{color:", ";background-color:", ";border-color:", ";}}&.c7n-tag-pink-inverse{color:#fff;background-color:rgba(230,46,163,1);border-color:rgba(230,46,163,1);&:hover{background-color:rgba(191,29,137,1);border-color:rgba(191,29,137,1);}}&.c7n-tag-magenta-inverse{color:#fff;background-color:rgba(219,71,222,1);border-color:rgba(219,71,222,1);&:hover{background-color:rgba(200,33,209,1);border-color:rgba(200,33,209,1);}}&.c7n-tag-red-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-volcano-inverse{color:#fff;background-color:rgba(201,87,30,1);border-color:rgba(201,87,30,1);&:hover{background-color:rgba(173,33,2,1);border-color:rgba(173,33,2,1);}}&.c7n-tag-orange-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-yellow-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-gold-inverse{color:#fff;background-color:rgba(255,197,61,1);border-color:rgba(255,197,61,1);&:hover{background-color:rgba(250,173,20,1);border-color:rgba(250,173,20,1);}}&.c7n-tag-cyan-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-lime-inverse{color:#fff;background-color:rgba(160,217,17,1);border-color:rgba(160,217,17,1);&:hover{background-color:rgba(124,179,5,1);border-color:rgba(124,179,5,1);}}&.c7n-tag-green-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-blue-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-geekblue-inverse{color:#fff;background-color:#2f54eb;border-color:#2f54eb;}&.c7n-tag-purple-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-dark-inverse{color:#fff;background-color:rgba(88,103,132,1);border-color:rgba(88,103,132,1);&:hover{background-color:", ";border-color:", ";}}&.c7n-tag-gray-inverse{color:#fff;background-color:", ";border-color:", ";&:hover{background-color:rgba(88,103,132,1);border-color:rgba(88,103,132,1);}}}"], fontSize, fontWeight, padding, borderRadius, co.primary1, co.primary7, co.primary2, co.primary7, co.primary8, co.primary1, co.primary6, fontSize, co.primary7, co.primary1, co.primary8, co.primary2, co.primary8, co.primary2, co.primary2, co.primary6, co.primary6, co.magentaColor7, co.magentaColor1, co.magentaColor2, co.magentaColor7, co.magentaColor1, co.magentaColor6, co.redColor7, co.redColor1, co.redColor2, co.redColor7, co.redColor1, co.redColor6, co.orangeColor7, co.orangeColor1, co.orangeColor2, co.orangeColor7, co.orangeColor1, co.orangeColor6, co.yellowColor7, co.yellowColor1, co.yellowColor2, co.yellowColor7, co.yellowColor1, co.yellowColor6, co.cyanColor7, co.cyanColor1, co.cyanColor2, co.cyanColor7, co.cyanColor1, co.cyanColor6, co.greenColor7, co.greenColor1, co.greenColor2, co.greenColor7, co.greenColor1, co.greenColor6, co.blueColor7, co.blueColor1, co.blueColor2, co.blueColor7, co.blueColor1, co.blueColor6, co.purpleColor7, co.purpleColor1, co.purpleColor2, co.purpleColor7, co.purpleColor1, co.purpleColor6, co.titleColor1, co.lineColor3, co.titleColor4, co.titleColor1, co.lineColor3, co.titleColor1, co.titleColor2, co.lineColor3, co.lineColor1, co.titleColor2, co.lineColor3, co.titleColor3, co.redColor6, co.redColor6, co.redColor7, co.redColor7, co.orangeColor6, co.orangeColor6, co.orangeColor7, co.orangeColor7, co.yellowColor6, co.yellowColor6, co.yellowColor7, co.yellowColor7, co.cyanColor6, co.cyanColor6, co.cyanColor7, co.cyanColor7, co.greenColor6, co.greenColor6, co.greenColor7, co.greenColor7, co.blueColor6, co.blueColor6, co.blueColor7, co.blueColor7, co.purpleColor6, co.purpleColor6, co.purpleColor7, co.purpleColor7, co.titleColor2, co.titleColor2, co.titleColor3, co.titleColor3);
 };
 
 /* harmony default export */ var theme8_templates_Tag_style = (theme8_templates_Tag_style_tagStyle);
@@ -530204,7 +530543,7 @@ var theme8_templates_hzero_Tag_style_TagStyle = function TagStyle(props) {
 var theme8_data_tag_tagData = {
   name: 'tag',
   data: [{
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 500,
     padding: '0 0.06rem',
     borderRadius: 4
@@ -530347,7 +530686,7 @@ var theme8_data_badge_badgeData = {
 /* harmony default export */ var theme8_data_badge = (theme8_data_badge_badgeData);
 // CONCATENATED MODULE: ../node_modules/@hzero-front-ui/themes/lib/theme8/templates/Collapse.style.js
 
-
+ // header content 以及嵌套collapse沿用凌莺蓝间距, 保证兼容性, 因为H0有覆盖content间距
 
 function theme8_templates_Collapse_style_getCollapseStyle(props) {
   var _getThemeData = Object(core_lib["l" /* getThemeData */])(props, 'collapse'),
@@ -530360,11 +530699,10 @@ function theme8_templates_Collapse_style_getCollapseStyle(props) {
       titleHeaderFontSize = _getThemeData.titleHeaderFontSize,
       titleHeaderLineHeight = _getThemeData.titleHeaderLineHeight,
       headerPadding = _getThemeData.headerPadding,
-      contentPadding = _getThemeData.contentPadding,
       contentBoxPadding = _getThemeData.contentBoxPadding;
 
   var co = Object(core_lib["l" /* getThemeData */])(props, 'common');
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-collapse.c7n-collapse{background-color:", ";border-radius:0;border:none;.c7n-collapse-item{border-radius:0;border:none;> .c7n-collapse-header{font-size:", "px;font-weight:", ";color:", ";border:none;line-height:", "px;padding:", ";overflow:hidden;.c7n-collapse-expand-icon:before{content:'\\e747';font-family:'iconfont-c7n-font' !important;transform:rotate(-45deg);line-height:20px;}.c7n-collapse-extra{height:", "px;display:inline-flex;align-items:center;}.c7n-collapse-expand-icon-wrapper{margin-right:4px;&:first-child{margin-left:-4px;}.c7n-collapse-expand-icon{color:", ";font-size:14px;height:22px;width:21px;line-height:22px;text-align:center;}> .c7n-collapse-expanded{color:", ";}}}.c7n-collapse-content{color:", ";font-size:", "px;border:none;font-weight:400;padding:", ";line-height:", "px;.c7n-collapse-content-box{padding:", ";> .c7n-collapse{}}}&-disabled{> .c7n-collapse-header.c7n-collapse-header{color:", ";.c7n-collapse-expand-icon-wrapper.c7n-collapse-expand-icon-wrapper{.c7n-collapse-expand-icon::before{border-color:", ";}.c7n-collapse-expand-icon,.c7n-collapse-expand-text{color:", ";}}}}}&.c7n-collapse-icon-position-right{> .c7n-collapse-item{> .c7n-collapse-header{.c7n-collapse-expand-icon-wrapper{color:", ";margin-right:0;}.c7n-collapse-expand-text{right:", "px;padding-right:4px;text-align:right;}.c7n-collapse-expand-icon{transform:rotate(0);margin:0;&.c7n-collapse-collapsed{vertical-align:top;}}}.c7n-collapse-content{}&-active > .c7n-collapse-header .c7n-collapse-expand-icon{transform:rotate(-180deg);}}}&.c7n-collapse-borderless{> .c7n-collapse-item{border-bottom:none;> .c7n-collapse-header{font-size:", "px;line-height:", "px;padding:", ";font-weight:", ";.c7n-collapse-expand-icon{height:", "px;&::before{line-height:", "px;}}}}}}"], co.bgColor, headerFontSize, headerFontWeight, co.titleColor1, headerLineHeight, headerPadding, headerLineHeight, co.titleColor1, co.primary, co.titleColor2, contentFontSize, contentPadding, contentLineHeight, contentBoxPadding, co.titleColor3, co.titleColor3, co.titleColor3, co.titleColor1, contentLineHeight, titleHeaderFontSize, titleHeaderLineHeight, headerPadding, lessFontWeight, titleHeaderLineHeight, titleHeaderLineHeight);
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-collapse.c7n-collapse{background-color:", ";border-radius:0;border:none;.c7n-collapse-item{border-radius:0;border:none;> .c7n-collapse-header{font-size:", "px;font-weight:", ";color:", ";border:none;line-height:", "px;padding:", ";overflow:hidden;.c7n-collapse-expand-icon:before{content:'\\e747';font-family:'iconfont-c7n-font' !important;transform:rotate(-45deg);line-height:20px;}.c7n-collapse-extra{height:", "px;display:inline-flex;align-items:center;}.c7n-collapse-expand-icon-wrapper{.c7n-collapse-expand-icon{color:", ";font-size:14px;height:22px;width:20px;line-height:22px;text-align:center;}> .c7n-collapse-expanded{color:", ";}}}.c7n-collapse-content{color:", ";font-size:", "px;border:none;font-weight:400;padding-left:4px;line-height:", "px;.c7n-collapse-content-box{padding:", ";> .c7n-collapse{padding:0 16px;}}}&-disabled{> .c7n-collapse-header.c7n-collapse-header{color:", ";.c7n-collapse-expand-icon-wrapper.c7n-collapse-expand-icon-wrapper{.c7n-collapse-expand-icon::before{border-color:", ";}.c7n-collapse-expand-icon,.c7n-collapse-expand-text{color:", ";}}}}}&.c7n-collapse-icon-position-right{> .c7n-collapse-item{> .c7n-collapse-header{.c7n-collapse-expand-icon-wrapper{color:", ";margin-right:0;}.c7n-collapse-expand-text{right:", "px;padding-right:4px;text-align:right;}.c7n-collapse-expand-icon{transform:rotate(0);margin:0;&.c7n-collapse-collapsed{vertical-align:top;}}}.c7n-collapse-content{padding-left:0;}&-active > .c7n-collapse-header .c7n-collapse-expand-icon{transform:rotate(-180deg);}}}&.c7n-collapse-borderless{> .c7n-collapse-item{border-bottom:none;> .c7n-collapse-header{font-size:", "px;line-height:", "px;padding:", ";font-weight:", ";.c7n-collapse-expand-icon{height:", "px;&::before{line-height:", "px;}}}}}}"], co.bgColor, headerFontSize, headerFontWeight, co.titleColor1, headerLineHeight, headerPadding, headerLineHeight, co.titleColor1, co.primary, co.titleColor2, contentFontSize, contentLineHeight, contentBoxPadding, co.titleColor3, co.titleColor3, co.titleColor3, co.titleColor1, contentLineHeight, titleHeaderFontSize, titleHeaderLineHeight, headerPadding, lessFontWeight, titleHeaderLineHeight, titleHeaderLineHeight);
 }
 
 var theme8_templates_Collapse_style_CollapseStyle = Object(styled_components_browser_esm["c" /* css */])(["", ""], theme8_templates_Collapse_style_getCollapseStyle);
@@ -530374,15 +530712,14 @@ var theme8_templates_Collapse_style_CollapseStyle = Object(styled_components_bro
 var theme8_data_collapse_collapseData = {
   name: 'collapse',
   data: [{
-    headerFontSize: 16,
-    headerFontWeight: 700,
-    headerLineHeight: 24,
+    headerFontSize: 14,
+    headerFontWeight: 500,
+    headerLineHeight: 22,
     contentFontSize: 14,
     contentLineHeight: 22,
     titleHeaderFontSize: 16,
     titleHeaderLineHeight: 24,
-    headerPadding: '12px 16px 4px',
-    contentPadding: '0 16px',
+    headerPadding: '12px 16px 4px 0',
     contentBoxPadding: '8px 0 16px 0',
     lessFontWeight: 700 // addPadding: 0,
 

@@ -29,9 +29,3 @@ title: API
 
 
 组件库使用外部库`bignumber.js`实现大数字，具体使用参见文档[大数字支持](/zh/docs/other/big-number)。
-
-<style>
-.Pane.horizontal.Pane1 .c7n-pro-input-number-wrapper {
-  margin-bottom: .1rem;
-}
-</style>
