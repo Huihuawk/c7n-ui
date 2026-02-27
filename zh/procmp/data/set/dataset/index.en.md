@@ -325,7 +325,7 @@ abstract: true
 | lovDefineBatchAxiosConfig | 返回 lov 配置批量查询配置的钩子，优先级高于全局配置的 lovDefineBatchAxiosConfig ，根据返回配置的url的不同分别做批量查询，详见[AxiosRequestConfig](/components/configure/#AxiosRequestConfig)。 | (codes: string[]) => AxiosRequestConfig | - | 1.6.3 |
 | lovQueryAxiosConfig | lov 查询的请求配置或返回配置的钩子，详见[AxiosRequestConfig](/en/procmp/configure/configure#axiosrequestconfig)。 配置中默认 url 为 lovQueryUrl， method 为 post。 | AxiosRequestConfig\| (code, config, { dataSet, params, data, lovQueryDetail }) => AxiosRequestConfig |  | |
 | lookupBatchAxiosConfig | 返回 lookup 批量查询配置的钩子，优先级高于全局配置的lookupBatchAxiosConfig，根据返回配置的url的不同分别做批量查询，详见[AxiosRequestConfig](/en/procmp/configure/configure#axiosrequestconfig)。 | (codes: string[]) => AxiosRequestConfig | - | 1.0.0 |
-| bind | 内部字段别名绑定 | string |  | |
+| bind | 内部字段别名绑定。 绑定字段的 type 需要设置, 用于数据格式化、校验等 | string |  | |
 | [dynamicProps](/en/datasetapi/other/dynamic-props) | [动态属性对象](/en/tutorials/dataSet-more#dynamicprops)。对象为字段属性和返回该字段值的钩子的键值对。| { fieldProp: ({ dataSet, record, name }) => value } |  |  |
 | [computedProps](/en/datasetapi/other/dynamic-props) | 计算属性对象。功能和用法同 dynamicProps，具有 mobx computed 的缓存功能，一般用于计算量大的场景，避免重复计算，提高性能。请确保计算依赖的值是可观察的。  | { fieldProp: ({ dataSet, record, name }) => value } |  | 1.4.0 |
 | cascadeMap | 快码和 LOV 查询时的级联参数映射，详见[级联](/en/tutorials/select#级联)。 | object |  |   |

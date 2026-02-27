@@ -9208,19 +9208,25 @@ function processOneData(dataSet) {
   return self;
 }
 
-function processTreeData(dataSet, allData, status, parentField, idField) {
+function processTreeData(dataSet, allData, status, parentField, idField, dataIndex) {
   var allMap = new Map();
   allData.forEach(function (data, index) {
     var record = processOneData(dataSet, data, status);
     var id = !(0, _isNil["default"])(data[idField]) ? data[idField] : "__empty_".concat(index);
     allMap.set(String(id), record);
   });
+  var index = -1;
   allMap.forEach(function (record) {
+    index++;
     var parent = allMap.get(String(record.get(parentField)));
 
     if (parent) {
       if (parent.children) {
-        parent.children.push(record);
+        if ((0, _isNumber["default"])(dataIndex)) {
+          parent.children.splice(dataIndex + index, 0, record);
+        } else {
+          parent.children.push(record);
+        }
       } else {
         parent.children = [record];
       }
@@ -12912,12 +12918,13 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     value: function appendData() {
       var allData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       var parent = arguments.length > 1 ? arguments[1] : undefined;
+      var dataIndex = arguments.length > 2 ? arguments[2] : undefined;
       var sortedData = (0, _utils2.sortData)(allData, this);
       this.fireEvent(_enum.DataSetEvents.beforeAppend, {
         dataSet: this,
         data: sortedData
       });
-      (0, _utils2.appendRecords)(this, this.processData(sortedData, undefined, parent), parent);
+      (0, _utils2.appendRecords)(this, this.processData(sortedData, undefined, parent, dataIndex), parent, dataIndex);
       this.fireEvent(_enum.DataSetEvents.append, {
         dataSet: this
       });
@@ -13028,13 +13035,14 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     value: function processData(allData) {
       var status = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _enum.RecordStatus.sync;
       var parent = arguments.length > 2 ? arguments[2] : undefined;
+      var dataIndex = arguments.length > 3 ? arguments[3] : undefined;
       var _this$props9 = this.props,
           childrenField = _this$props9.childrenField,
           parentField = _this$props9.parentField,
           idField = _this$props9.idField;
 
       if (parentField && idField && !childrenField) {
-        return processTreeData(this, allData, status, parentField, idField);
+        return processTreeData(this, allData, status, parentField, idField, dataIndex);
       }
 
       if (childrenField) {
@@ -13473,7 +13481,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 _context15.prev = 31;
                 _context15.t0 = _context15["catch"](7);
 
-                if (!(_context15.t0.code === 'ERR_CANCELED')) {
+                if (!(_context15.t0.code === 'ERR_CANCELED' || _context15.t0.message && _context15.t0.message.startsWith('New request started, cancelling the previous one.'))) {
                   _context15.next = 38;
                   break;
                 }
@@ -272381,6 +272389,14 @@ var TableStore = /*#__PURE__*/function () {
 
       _this.selectedDragRows = [];
     });
+    var _node$props = node.props,
+        mode = _node$props.mode,
+        treeAsync = _node$props.treeAsync,
+        dataSet = _node$props.dataSet;
+
+    if (mode === _enum2.TableMode.tree && treeAsync && dataSet) {
+      dataSet.setState(_DataSet.QUERY_CANCELABLE, false);
+    }
   }
 
   (0, _createClass2["default"])(TableStore, [{
@@ -273513,7 +273529,9 @@ var TableStore = /*#__PURE__*/function () {
     key: "customizedColumn",
     get: function get() {
       if (this.customizable && !this.customizedBtn && (!this.rowDraggable || this.dragColumnAlign !== _enum2.DragColumnAlign.right)) {
-        return {
+        var _this$props$customize = this.props.customizedColumnProps,
+            customizedColumnProps = _this$props$customize === void 0 ? {} : _this$props$customize;
+        var defaultProps = {
           key: CUSTOMIZED_KEY,
           resizable: false,
           titleEditable: false,
@@ -273523,6 +273541,7 @@ var TableStore = /*#__PURE__*/function () {
           header: this.customizedColumnHeader,
           headerClassName: "".concat(this.prefixCls, "-customized-column")
         };
+        return (0, _isFunction["default"])(customizedColumnProps) ? (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, defaultProps), customizedColumnProps(defaultProps)) : (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, defaultProps), customizedColumnProps);
       }
 
       return undefined;
@@ -273608,8 +273627,8 @@ var TableStore = /*#__PURE__*/function () {
         }, rest);
 
         if (dataSet && dataSet.selection === _enum.DataSetSelection.multiple) {
-          selectionColumn.header = this.multipleSelectionRenderer;
-          selectionColumn.footer = this.multipleSelectionRenderer;
+          selectionColumn.header = 'header' in rest ? rest.header : this.multipleSelectionRenderer;
+          selectionColumn.footer = 'footer' in rest ? rest.footer : this.multipleSelectionRenderer;
         }
 
         return selectionColumn;
@@ -274285,8 +274304,11 @@ var TableStore = /*#__PURE__*/function () {
     key: "showNextEditor",
     value: function showNextEditor(name, reserve) {
       var dataSet = this.dataSet;
-      var currentIndex = dataSet.currentIndex;
-      var record = dataSet.get(reserve ? currentIndex - 1 : currentIndex + 1);
+      var currentIndex = dataSet.currentIndex,
+          pageSize = dataSet.pageSize,
+          currentPage = dataSet.currentPage;
+      var indexOfCurrentPage = currentIndex - (currentPage - 1) * pageSize;
+      var record = dataSet.get(reserve ? indexOfCurrentPage - 1 : indexOfCurrentPage + 1);
 
       if (record && !(0, _utils2.isDisabledRow)(record)) {
         dataSet.current = record;
@@ -274726,10 +274748,12 @@ var TableStore = /*#__PURE__*/function () {
     key: "renderRowNumber",
     value: function renderRowNumber(_ref35) {
       var record = _ref35.record,
-          dataSet = _ref35.dataSet;
+          dataSet = _ref35.dataSet,
+          rowIndex = _ref35.rowIndex;
       var isTree = this.isTree,
-          rowNumber = this.props.rowNumber;
-      var numbers = getRowNumbers(record, dataSet, isTree);
+          rowNumber = this.props.rowNumber,
+          groups = this.groups;
+      var numbers = groups.length > 0 && rowIndex !== undefined ? [rowIndex + 1] : getRowNumbers(record, dataSet, isTree);
       var number = numbers.join('-');
 
       if (typeof rowNumber === 'function') {
@@ -275264,7 +275288,7 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "loadCustomized",
     value: function () {
-      var _loadCustomized = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(customizedProps) {
+      var _loadCustomized = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(customizedProps, forceLoad) {
         var _this7 = this;
 
         var _this$props21, customizedCode, boardCustomized, _this$props21$onCusto, onCustomizedLoad, dataSet, queryBarProps, showSimpleMode, tableCustomizedLoad, customized, res, dataJson;
@@ -275277,7 +275301,7 @@ var TableStore = /*#__PURE__*/function () {
                 queryBarProps = this.props.queryBarProps;
                 showSimpleMode = queryBarProps && queryBarProps.simpleMode;
 
-                if (!(this.customizable && customizedCode || this.queryBar === _enum2.TableQueryBarType.comboBar && !showSimpleMode)) {
+                if (!((forceLoad || this.customizable) && customizedCode || this.queryBar === _enum2.TableQueryBarType.comboBar && !showSimpleMode)) {
                   _context4.next = 22;
                   break;
                 }
@@ -275396,7 +275420,7 @@ var TableStore = /*#__PURE__*/function () {
         }, _callee4, this, [[6,, 18, 22]]);
       }));
 
-      function loadCustomized(_x7) {
+      function loadCustomized(_x7, _x8) {
         return _loadCustomized.apply(this, arguments);
       }
 

@@ -107,7 +107,7 @@ title: API
 | clipboard | 配置 Table 是否可复制粘贴，仅支持普通列表下使用，数据分组、虚拟滚动等特殊场景暂不支持。参考[配置项](#clipboard)  | Clipboard | { copy: false, paste: false } | 1.6.4 |
 | customDragDropContenxt | 是否开启自定义 DragDropContenxt, 一般用于自定义 react-beautiful-dnd 的 DragDropContenxt 实现多表拖拽 | boolean | false | 1.6.4 |
 | selectionColumnProps | 行选择列属性扩展  | ColumnProps  |  | 1.6.4 |
-| rowNumberColumnProps | 行号列属性 |	ColumnProps \| ((defaultProps: ColumnProps) => ColumnProps) |	 | 1.6.5 |
+| rowNumberColumn | 行号列属性 |	ColumnProps \| ((defaultProps: ColumnProps) => ColumnProps) |	 | 1.6.5 |
 | tableFilterBarButtonIcon | Table 动态筛选条按钮是否展示icon。true 展示默认icon，false不展示，对象类型可以分别设置具体icon | boolean \| { saveIconType?: string \| boolean; saveAsIconType?: string \| boolean; resetIconType?: string \| boolean; } |  | 1.6.6 |
 | combineColumnFilter | 是否开启前端组合过滤  | boolean  | true | 1.6.6 |
 | combineSortConfig | 组合排序配置, 默认开启前端、后端排序, 显示排序选项; 内置了前端组合排序函数, 如有复杂字段排序请自行实现排序函数。currentDataSort: 当前页排序(前端排序); allDataSort: 所有页排序(后端排序); | { currentDataSort?: { show?: boolean; enable?: boolean; customFn?: ((props: { dataSet: DataSet, sortInfo: Map<string, SortOrder> }) => void); allDataSort?: { show?: boolean; enable?: boolean} }  |  | 1.6.7 |
