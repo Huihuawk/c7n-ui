@@ -82,6 +82,7 @@ title: API
 | colSpan | 表单下控件跨越的列数 | number | 1 |
 | newLine | 另起新行 | boolean |  |
 | labelWordBreak | 设置标签是否换行显示 (仅支持 labelWidth 为固定宽度)  | boolean |  | 1.6.5 |
+| groupItemStyle | group item 自定义样式 | React.CSSProperties[] |  | 1.6.8 |
 
 ### Form.FormVirtualGroup
 

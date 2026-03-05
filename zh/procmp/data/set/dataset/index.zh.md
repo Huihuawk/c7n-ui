@@ -169,7 +169,7 @@ abstract: true
 | [setQueryParameter(para, value)](/zh/datasetapi/dataset-methods/set-query-parameter) | 设置查询参数 | para - 参数名 value - 参数值 |  | |
 | [getQueryParameter(para)](/zh/datasetapi/dataset-methods/set-query-parameter) | 获取查询参数 | para - 参数名 |  | 1.4.0 |
 | [loadData(data, total, cache)](/zh/datasetapi/dataset-methods/load-data) | 加载数据 | `data` - 数据数组 `total` - 总数，可选，用于分页 `cache`(1.5.0-beat.0) - 是否保留缓存的变更记录 | | |
-| [appendData(data, parentRecord)](/zh/datasetapi/dataset-methods/load-data) | 附加数据 | `data` - 数据数组 `parentRecord` - 父节点，可选， 用于 childrenField 模式的树形数据 | |
+| [appendData(data, parentRecord, index)](/zh/datasetapi/dataset-methods/load-data) | 附加数据。当设置 idField 和 parentField 时, index 为父级中的定位; 当设置 childrenField 且传入 parentRecord 时, index 为父级中的定位 | `data` - 数据数组 `parentRecord` - 父节点，可选， 用于 childrenField 模式的树形数据 `index` - 数据插入位置，可选(1.6.8) | | |
 | [setState(key, value)](/zh/datasetapi/other/state) | 设置自定义状态值。 | key - 键名或者键值对对象；value - 值 |  | 1.3.1 |
 | [getState(key)](/zh/datasetapi/other/state) | 获取自定义状态值。 | key - 键名 |  |  1.3.1  |
 | modifiedCheck(message) | 变更检查 | message - 同 modifiedCheckMessage， 优先级高于 modifiedCheckMessage | | 1.3.1 |

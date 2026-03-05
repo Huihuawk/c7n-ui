@@ -5705,6 +5705,9 @@ function getFileType(filename) {
     case 'xlsx':
       return 'xls';
 
+    case 'md':
+      return 'markdown';
+
     default:
       return 'other';
   }
@@ -29628,6 +29631,11 @@ var NumberField_NumberField = /*#__PURE__*/function (_TextField) {
       }
     }
   }, {
+    key: "getInputLengthExceedWarning",
+    value: function getInputLengthExceedWarning(_) {
+      return false;
+    }
+  }, {
     key: "getSuffixWidth",
     value: function getSuffixWidth() {
       var suffixWidth = get_default()(getPrototypeOf_default()(NumberField.prototype), "getSuffixWidth", this).call(this);
@@ -30139,6 +30147,8 @@ Object(tslib_es6["__decorate"])([mobx_module["computed"]], NumberField_NumberFie
 Object(tslib_es6["__decorate"])([mobx_module["computed"]], NumberField_NumberField.prototype, "max", null);
 
 Object(tslib_es6["__decorate"])([mobx_module["computed"]], NumberField_NumberField.prototype, "value", null);
+
+Object(tslib_es6["__decorate"])([autobind["a" /* default */]], NumberField_NumberField.prototype, "getInputLengthExceedWarning", null);
 
 Object(tslib_es6["__decorate"])([autobind["a" /* default */]], NumberField_NumberField.prototype, "savePlusRef", null);
 
@@ -55135,7 +55145,8 @@ var locale = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, _
     output_modal_title: 'multi-language information.'
   },
   TextField: {
-    pasted_exceeding_max_length: 'The pasted content has exceeded the maximum number of characters ({maxLength}) and has been automatically truncated. Please check the content.'
+    pasted_exceeding_max_length: 'The pasted content has exceeded the maximum number of characters ({maxLength}) and has been automatically truncated. Please check the content.',
+    input_exceeding_max_length: 'The maximum character limit has been exceeded and further input is not possible.'
   },
   NumberField: {
     value_missing_no_label: 'Please input a number.',
@@ -70113,7 +70124,7 @@ webpackEmptyContext.id = "9Mtl";
 /***/ "9NL3":
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"name\":\"choerodon-ui\",\"version\":\"1.6.8-alpha.21\",\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"title\":\"Choerodon UI\",\"description\":\"An enterprise-class UI design language and React-based implementation\",\"homepage\":\"https://open-hand.github.io/choerodon-ui/\",\"keywords\":[\"choerodon\",\"design\",\"react\",\"react-component\",\"component\",\"components\",\"ui\",\"framework\",\"frontend\"],\"contributors\":[\"choerodon\"],\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/open-hand/choerodon-ui\"},\"bugs\":{\"url\":\"https://github.com/open-hand/choerodon-ui/issues\"},\"main\":\"lib/index.js\",\"module\":\"es/index.js\",\"unpkg\":\"dist/choerodon-ui.min.js\",\"main-pro\":\"pro/lib/index.js\",\"module-pro\":\"pro/es/index.js\",\"unpkg-pro\":\"dist/choerodon-ui-pro.min.js\",\"files\":[\"dist\",\"lib\",\"es\",\"pro\",\"dataset\",\"shared\",\"outer-scripts\"],\"typings\":\"lib/index.d.ts\",\"license\":\"MIT\",\"peerDependencies\":{\"@babel/runtime\":\"^7.17.2\",\"axios\":\"~1.0.0\",\"lodash\":\">=4.17.0\",\"mobx\":\">4.5.0 <4.8.0 >=4.15.7\",\"mobx-react\":\">=5.1.0 <6.2.0\",\"react\":\">=16.8.6\",\"react-dom\":\">=16.8.6\"},\"dependencies\":{\"@babel/runtime\":\"^7.17.2\",\"@better-scroll/core\":\"^2.4.1\",\"@ctrl/tinycolor\":\"^3.2.0\",\"add-dom-event-listener\":\"1.x\",\"array-tree-filter\":\"^2.0.0\",\"async-validator\":\"1.x\",\"bignumber.js\":\"^9.0.2\",\"choerodon-ui-font\":\"~0.2.13\",\"classnames\":\"~2.3.1\",\"codemirror\":\"5.58.2\",\"component-classes\":\"1.x\",\"copy-to-clipboard\":\"^3.3.1\",\"core-js\":\"^2.5.1\",\"create-react-class\":\"^15.6.0\",\"css-animation\":\"^1.5.0\",\"css-unit-converter\":\"^1.1.2\",\"dom-closest\":\"^0.2.0\",\"dom-lib\":\"^1.3.1\",\"dom-scroll-into-view\":\"1.x\",\"element-resize-event\":\"^3.0.2\",\"enquire.js\":\"^2.1.6\",\"htmlhint\":\"1.1.2\",\"insert-css\":\"^2.0.0\",\"is-promise\":\"^4.0.0\",\"js-yaml\":\"^3.12.2\",\"jsbarcode\":\"^3.11.5\",\"jshint\":\"^2.13.4\",\"jsonlint\":\"^1.6.3\",\"jsonlint-mod\":\"^1.7.5\",\"mini-store\":\"^2.0.0\",\"moment\":\"^2.24.0\",\"mutationobserver-shim\":\"^0.3.3\",\"prettier\":\"~1.18.2\",\"qrcode.react\":\"^1.0.1\",\"querystringify\":\"^2.1.0\",\"quill-delta-to-html\":\"^0.9.7\",\"raf\":\"^3.4.1\",\"rc-motion\":\"^2.4.1\",\"rc-virtual-list\":\"^3.2.6\",\"react-beautiful-dnd\":\"13.0.0\",\"react-codemirror2\":\"5.1.0\",\"react-easy-crop\":\"^3.1.0\",\"react-image-lightbox\":\"^4.6.0\",\"react-intersection-observer\":\"^8.31.1\",\"react-is\":\"^16.12.0\",\"react-lazy-load\":\"^3.0.13\",\"react-quill\":\"^1.3.5\",\"react-redux\":\"7.2.0\",\"react-slick\":\"~0.25.2\",\"react-virtualized\":\"~9.18.5\",\"resize-observer-polyfill\":\"^1.5.1\",\"rmc-feedback\":\"^1.0.0\",\"scroll-into-view-if-needed\":\"^2.2.25\",\"shallowequal\":\"^1.1.0\",\"smooth-scroll-into-view-if-needed\":\"^1.1.28\",\"tslib\":\"^1.9.3\",\"underscore\":\"1.12.1\",\"warning\":\"~4.0.3\",\"uuid\":\"^3.4.0\"},\"devDependencies\":{\"@babel/core\":\"^7.17.5\",\"@babel/plugin-proposal-class-properties\":\"^7.16.7\",\"@babel/plugin-proposal-decorators\":\"^7.17.2\",\"@babel/plugin-proposal-export-default-from\":\"^7.16.7\",\"@babel/plugin-proposal-export-namespace-from\":\"^7.16.7\",\"@babel/plugin-proposal-object-rest-spread\":\"^7.17.3\",\"@babel/plugin-transform-member-expression-literals\":\"^7.16.7\",\"@babel/plugin-transform-object-assign\":\"^7.16.7\",\"@babel/plugin-transform-property-literals\":\"^7.16.7\",\"@babel/plugin-transform-proto-to-assign\":\"^7.16.7\",\"@babel/plugin-transform-runtime\":\"^7.17.0\",\"@babel/plugin-transform-spread\":\"^7.16.7\",\"@babel/plugin-transform-template-literals\":\"^7.16.7\",\"@babel/preset-env\":\"^7.16.11\",\"@babel/preset-react\":\"^7.16.7\",\"@dnd-kit/core\":\"^6.1.0\",\"@dnd-kit/sortable\":\"^8.0.0\",\"@dnd-kit/utilities\":\"^3.2.2\",\"@stackblitz/sdk\":\"^1.3.0\",\"@types/classnames\":\"~2.2.8\",\"@types/codemirror\":\"0.0.72\",\"@types/element-resize-event\":\"^3.0.0\",\"@types/enzyme\":\"^3.10.5\",\"@types/faker\":\"^5.5.8\",\"@types/insert-css\":\"^2.0.1\",\"@types/jest\":\"^25.0.0\",\"@types/jsbarcode\":\"^3.11.1\",\"@types/lodash\":\"4.14.182\",\"@types/prettier\":\"1.16.1\",\"@types/qrcode.react\":\"^1.0.2\",\"@types/raf\":\"^3.4.0\",\"@types/react\":\"^16.14.25\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^16.9.15\",\"@types/react-is\":\"^16.7.1\",\"@types/react-slick\":\"~0.23.3\",\"@types/warning\":\"~3.0.0\",\"@typescript-eslint/eslint-plugin\":\"^4.33.0\",\"@typescript-eslint/parser\":\"^4.33.0\",\"ansi-styles\":\"^4.0.0\",\"autoprefixer\":\"^9.6.0\",\"axios\":\"~1.0.0\",\"babel-core\":\"^7.0.0-0\",\"babel-eslint\":\"10.0.3\",\"babel-jest\":\"^25.1.0\",\"babel-loader\":\"^8.0.6\",\"babel-plugin-import\":\"^1.12.0\",\"babel-plugin-inline-import-data-uri\":\"^1.0.1\",\"bisheng\":\"^1.3.0\",\"bisheng-plugin-choerodon-ui\":\"~0.2.0\",\"bisheng-plugin-description\":\"^0.1.4\",\"bisheng-plugin-react\":\"^1.1.0\",\"bisheng-plugin-toc\":\"^0.4.4\",\"case-sensitive-paths-webpack-plugin\":\"^2.1.1\",\"chalk\":\"^2.4.2\",\"colorful\":\"^2.1.0\",\"commander\":\"^2.11.0\",\"cross-env\":\"^5.2.1\",\"css-loader\":\"^3.2.0\",\"css-split-webpack-plugin\":\"^0.2.6\",\"csstype\":\"3.1.0\",\"dekko\":\"^0.2.1\",\"enquire-js\":\"^0.2.1\",\"enzyme\":\"^3.10.0\",\"enzyme-adapter-react-16\":\"^1.14.0\",\"enzyme-to-json\":\"^3.3.5\",\"eslint\":\"^7.32.0\",\"eslint-config-airbnb\":\"^18.0.1\",\"eslint-config-prettier\":\"^6.2.0\",\"eslint-plugin-babel\":\"^5.3.0\",\"eslint-plugin-import\":\"^2.18.2\",\"eslint-plugin-jest\":\"^25.0.1\",\"eslint-plugin-jsx-a11y\":\"^6.4.1\",\"eslint-plugin-markdown\":\"^1.0.0\",\"eslint-plugin-react\":\"^7.14.3\",\"eslint-tinker\":\"^0.5.0\",\"extract-text-webpack-plugin\":\"^3.0.0\",\"faker\":\"^4.1.0\",\"fetch-jsonp\":\"^1.1.3\",\"file-loader\":\"^4.2.0\",\"friendly-errors-webpack-plugin\":\"^1.7.0\",\"gh-pages\":\"^5.0.0\",\"glob\":\"^7.1.4\",\"gulp\":\"^4.0.2\",\"gulp-babel\":\"^8.0.0\",\"gulp-sourcemaps\":\"^2.6.5\",\"gulp-strip-code\":\"^0.1.4\",\"gulp-typescript\":\"^5.0.1\",\"husky\":\"^3.0.2\",\"identity-obj-proxy\":\"^3.0.0\",\"immutability-helper\":\"^3.0.0\",\"intersection-observer\":\"^0.7.0\",\"jest\":\"^25.1.0\",\"jsdom\":\"^16.2.1\",\"jsonml.js\":\"^0.1.0\",\"less\":\"^3.10.3\",\"less-plugin-npm-import\":\"^2.1.0\",\"lint-staged\":\"^7.0.0\",\"lodash\":\"^4.17.15\",\"lz-string\":\"^1.4.4\",\"majo\":\"^0.8.0\",\"mark-twain\":\"^2.0.2\",\"merge2\":\"^1.2.4\",\"mini-css-extract-plugin\":\"^0.8.0\",\"minimist\":\"^1.2.5\",\"mkdirp\":\"^1.0.3\",\"mobx\":\"~4.15.7\",\"mobx-react\":\"~6.1.1\",\"mockdate\":\"^2.0.1\",\"mockjs\":\"^1.0.1-beta3\",\"moment-timezone\":\"^0.5.23\",\"object-assign\":\"~4.1.1\",\"optimize-css-assets-webpack-plugin\":\"^5.0.3\",\"postcss\":\"^8.2.10\",\"postcss-loader\":\"^3.0.0\",\"pretty-quick\":\"^1.11.0\",\"rc-drawer\":\"^1.5.3\",\"rc-queue-anim\":\"^1.6.7\",\"rc-scroll-anim\":\"^2.2.1\",\"rc-tween-one\":\"^1.7.2\",\"react\":\"~16.12.0\",\"react-color\":\"^2.11.7\",\"react-copy-to-clipboard\":\"^5.0.0\",\"react-dnd\":\"^11.1.1\",\"react-dnd-html5-backend\":\"^11.1.1\",\"react-document-title\":\"^2.0.1\",\"react-dom\":\">=16.8.6\",\"react-github-button\":\"^0.1.1\",\"react-infinite-scroller\":\"^1.0.15\",\"react-intl\":\"^2.7.2\",\"react-sublime-video\":\"^0.2.0\",\"remark-frontmatter\":\"^1.3.2\",\"remark-parse\":\"^7.0.1\",\"remark-stringify\":\"^7.0.3\",\"remark-yaml-config\":\"^4.1.0\",\"remove-files-webpack-plugin\":\"1.5.0\",\"reqwest\":\"^2.0.5\",\"rimraf\":\"^3.0.0\",\"rucksack-css\":\"^1.0.2\",\"scrollama\":\"^2.1.0\",\"stylelint\":\"^10.0.1\",\"stylelint-config-prettier\":\"^5.2.0\",\"stylelint-config-rational-order\":\"^0.1.2\",\"stylelint-config-standard\":\"^18.3.0\",\"stylelint-declaration-block-no-ignored-properties\":\"^2.1.0\",\"stylelint-order\":\"^3.0.0\",\"terser-webpack-plugin\":\"^4.1.0\",\"through2\":\"^3.0.1\",\"ts-loader\":\"^6.0.4\",\"typescript\":\"~3.7.2\",\"unified\":\"^8.3.2\",\"url-loader\":\"^2.1.0\",\"values.js\":\"^1.0.3\",\"vfile-message\":\"1.0.x\",\"webpack\":\"^4.39.3\",\"webpack-filter-warnings-plugin\":\"^1.2.1\",\"webpack-merge\":\"^4.2.2\",\"webpackbar\":\"^4.0.0\",\"xhr-mock\":\"^2.5.1\",\"xhr2\":\"^0.2.0\",\"xlsx\":\"^0.17.0\"},\"resolutions\":{\"underscore\":\"1.12.1\"},\"scripts\":{\"test\":\"jest --config .jest.js --cache=false\",\"test:update\":\"jest --config .jest.js --cache=false -u\",\"test-all\":\"sh -e ./scripts/test-all.sh\",\"test-node\":\"jest --config .jest.node.js --cache=false\",\"test-all-skip\":\"sh ./scripts/test-all.sh --skip\",\"lint\":\"npm run lint:script && npm run lint:demo && npm run lint:style\",\"lint:tsc\":\"npm run tsc\",\"lint:script\":\"eslint **/*.{js,jsx,ts,tsx} --ext '.js,.jsx,.ts,.tsx'\",\"lint:md\":\"remark components/\",\"lint:demo\":\"cross-env RUN_ENV=DEMO eslint components/*/demo/*.md --ext '.md'\",\"lint:style\":\"stylelint {site,components,components-pro}/**/*.less --syntax less\",\"lint-fix\":\"npm run lint-fix:script && npm run lint-fix:demo && npm run lint-fix:style\",\"lint-fix:script\":\"npm run lint:script -- --fix\",\"lint-fix:demo\":\"npm run lint:demo -- --fix\",\"lint-fix:style\":\"npm run lint:style -- --fix\",\"sort-api\":\"node ./scripts/sort-api-table.js\",\"dist\":\"gulp dist\",\"compile\":\"gulp compile\",\"tsc\":\"tsc\",\"start\":\"rimraf _site && node ./scripts/generateColorLess.js && cross-env NODE_ENV=development BROWSER=chrome bisheng start -c ./site/bisheng.config.js\",\"site\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js\",\"site-with-test\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js && jest choerodon-ui --notify --config=.jest.js --no-cache --coverage\",\"site-dev\":\"rimraf _site && cross-env NODE_ENV=development bisheng build --ssr -c ./site/bisheng.config.js && node ./scripts/generateColorLess.js\",\"predeploy\":\"npm run site\",\"deploy\":\"bisheng gh-pages --push-only\",\"pub\":\"npm run test-all-skip && npm publish --with-tools\",\"prepublish\":\"gulp guard\",\"authors\":\"git log --format='%aN <%aE>' | sort -u | grep -v 'hand-china.com' > AUTHORS\",\"prettier\":\"prettier -c --write '**/*'\",\"pretty-quick\":\"pretty-quick\"},\"husky\":{\"hooks\":{\"pre-commit\":\"lint-staged\"}},\"lint-staged\":{\"**/*.{js,jsx,ts,tsx}\":[\"npm run lint:script\"],\"{site,components,components-pro}/**/*.less\":[\"npm run lint:style\"],\"components/*/demo/*.md\":[\"npm run lint:demo\",\"git add\"]},\"sideEffects\":[\"dist/*\",\"es/**/style/*\",\"lib/**/style/*\",\"pro/es/**/style/*\",\"pro/lib/**/style/*\",\"*.less\"],\"browserslist\":[\"last 2 version\",\"Firefox ESR\",\"> 1%\",\"ie >= 9\"]}");
+module.exports = JSON.parse("{\"name\":\"choerodon-ui\",\"version\":\"1.6.8-alpha.22\",\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"title\":\"Choerodon UI\",\"description\":\"An enterprise-class UI design language and React-based implementation\",\"homepage\":\"https://open-hand.github.io/choerodon-ui/\",\"keywords\":[\"choerodon\",\"design\",\"react\",\"react-component\",\"component\",\"components\",\"ui\",\"framework\",\"frontend\"],\"contributors\":[\"choerodon\"],\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/open-hand/choerodon-ui\"},\"bugs\":{\"url\":\"https://github.com/open-hand/choerodon-ui/issues\"},\"main\":\"lib/index.js\",\"module\":\"es/index.js\",\"unpkg\":\"dist/choerodon-ui.min.js\",\"main-pro\":\"pro/lib/index.js\",\"module-pro\":\"pro/es/index.js\",\"unpkg-pro\":\"dist/choerodon-ui-pro.min.js\",\"files\":[\"dist\",\"lib\",\"es\",\"pro\",\"dataset\",\"shared\",\"outer-scripts\"],\"typings\":\"lib/index.d.ts\",\"license\":\"MIT\",\"peerDependencies\":{\"@babel/runtime\":\"^7.17.2\",\"axios\":\"~1.0.0\",\"lodash\":\">=4.17.0\",\"mobx\":\">4.5.0 <4.8.0 >=4.15.7\",\"mobx-react\":\">=5.1.0 <6.2.0\",\"react\":\">=16.8.6\",\"react-dom\":\">=16.8.6\"},\"dependencies\":{\"@babel/runtime\":\"^7.17.2\",\"@better-scroll/core\":\"^2.4.1\",\"@ctrl/tinycolor\":\"^3.2.0\",\"add-dom-event-listener\":\"1.x\",\"array-tree-filter\":\"^2.0.0\",\"async-validator\":\"1.x\",\"bignumber.js\":\"^9.0.2\",\"choerodon-ui-font\":\"~0.2.13\",\"classnames\":\"~2.3.1\",\"codemirror\":\"5.58.2\",\"component-classes\":\"1.x\",\"copy-to-clipboard\":\"^3.3.1\",\"core-js\":\"^2.5.1\",\"create-react-class\":\"^15.6.0\",\"css-animation\":\"^1.5.0\",\"css-unit-converter\":\"^1.1.2\",\"dom-closest\":\"^0.2.0\",\"dom-lib\":\"^1.3.1\",\"dom-scroll-into-view\":\"1.x\",\"element-resize-event\":\"^3.0.2\",\"enquire.js\":\"^2.1.6\",\"htmlhint\":\"1.1.2\",\"insert-css\":\"^2.0.0\",\"is-promise\":\"^4.0.0\",\"js-yaml\":\"^3.12.2\",\"jsbarcode\":\"^3.11.5\",\"jshint\":\"^2.13.4\",\"jsonlint\":\"^1.6.3\",\"jsonlint-mod\":\"^1.7.5\",\"mini-store\":\"^2.0.0\",\"moment\":\"^2.24.0\",\"mutationobserver-shim\":\"^0.3.3\",\"prettier\":\"~1.18.2\",\"qrcode.react\":\"^1.0.1\",\"querystringify\":\"^2.1.0\",\"quill-delta-to-html\":\"^0.9.7\",\"raf\":\"^3.4.1\",\"rc-motion\":\"^2.4.1\",\"rc-virtual-list\":\"^3.2.6\",\"react-beautiful-dnd\":\"13.0.0\",\"react-codemirror2\":\"5.1.0\",\"react-easy-crop\":\"^3.1.0\",\"react-image-lightbox\":\"^4.6.0\",\"react-intersection-observer\":\"^8.31.1\",\"react-is\":\"^16.12.0\",\"react-lazy-load\":\"^3.0.13\",\"react-quill\":\"^1.3.5\",\"react-redux\":\"7.2.0\",\"react-slick\":\"~0.25.2\",\"react-virtualized\":\"~9.18.5\",\"resize-observer-polyfill\":\"^1.5.1\",\"rmc-feedback\":\"^1.0.0\",\"scroll-into-view-if-needed\":\"^2.2.25\",\"shallowequal\":\"^1.1.0\",\"smooth-scroll-into-view-if-needed\":\"^1.1.28\",\"tslib\":\"^1.9.3\",\"underscore\":\"1.12.1\",\"warning\":\"~4.0.3\",\"uuid\":\"^3.4.0\"},\"devDependencies\":{\"@babel/core\":\"^7.17.5\",\"@babel/plugin-proposal-class-properties\":\"^7.16.7\",\"@babel/plugin-proposal-decorators\":\"^7.17.2\",\"@babel/plugin-proposal-export-default-from\":\"^7.16.7\",\"@babel/plugin-proposal-export-namespace-from\":\"^7.16.7\",\"@babel/plugin-proposal-object-rest-spread\":\"^7.17.3\",\"@babel/plugin-transform-member-expression-literals\":\"^7.16.7\",\"@babel/plugin-transform-object-assign\":\"^7.16.7\",\"@babel/plugin-transform-property-literals\":\"^7.16.7\",\"@babel/plugin-transform-proto-to-assign\":\"^7.16.7\",\"@babel/plugin-transform-runtime\":\"^7.17.0\",\"@babel/plugin-transform-spread\":\"^7.16.7\",\"@babel/plugin-transform-template-literals\":\"^7.16.7\",\"@babel/preset-env\":\"^7.16.11\",\"@babel/preset-react\":\"^7.16.7\",\"@dnd-kit/core\":\"^6.1.0\",\"@dnd-kit/sortable\":\"^8.0.0\",\"@dnd-kit/utilities\":\"^3.2.2\",\"@stackblitz/sdk\":\"^1.3.0\",\"@types/classnames\":\"~2.2.8\",\"@types/codemirror\":\"0.0.72\",\"@types/element-resize-event\":\"^3.0.0\",\"@types/enzyme\":\"^3.10.5\",\"@types/faker\":\"^5.5.8\",\"@types/insert-css\":\"^2.0.1\",\"@types/jest\":\"^25.0.0\",\"@types/jsbarcode\":\"^3.11.1\",\"@types/lodash\":\"4.14.182\",\"@types/prettier\":\"1.16.1\",\"@types/qrcode.react\":\"^1.0.2\",\"@types/raf\":\"^3.4.0\",\"@types/react\":\"^16.14.25\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^16.9.15\",\"@types/react-is\":\"^16.7.1\",\"@types/react-slick\":\"~0.23.3\",\"@types/warning\":\"~3.0.0\",\"@typescript-eslint/eslint-plugin\":\"^4.33.0\",\"@typescript-eslint/parser\":\"^4.33.0\",\"ansi-styles\":\"^4.0.0\",\"autoprefixer\":\"^9.6.0\",\"axios\":\"~1.0.0\",\"babel-core\":\"^7.0.0-0\",\"babel-eslint\":\"10.0.3\",\"babel-jest\":\"^25.1.0\",\"babel-loader\":\"^8.0.6\",\"babel-plugin-import\":\"^1.12.0\",\"babel-plugin-inline-import-data-uri\":\"^1.0.1\",\"bisheng\":\"^1.3.0\",\"bisheng-plugin-choerodon-ui\":\"~0.2.0\",\"bisheng-plugin-description\":\"^0.1.4\",\"bisheng-plugin-react\":\"^1.1.0\",\"bisheng-plugin-toc\":\"^0.4.4\",\"case-sensitive-paths-webpack-plugin\":\"^2.1.1\",\"chalk\":\"^2.4.2\",\"colorful\":\"^2.1.0\",\"commander\":\"^2.11.0\",\"cross-env\":\"^5.2.1\",\"css-loader\":\"^3.2.0\",\"css-split-webpack-plugin\":\"^0.2.6\",\"csstype\":\"3.1.0\",\"dekko\":\"^0.2.1\",\"enquire-js\":\"^0.2.1\",\"enzyme\":\"^3.10.0\",\"enzyme-adapter-react-16\":\"^1.14.0\",\"enzyme-to-json\":\"^3.3.5\",\"eslint\":\"^7.32.0\",\"eslint-config-airbnb\":\"^18.0.1\",\"eslint-config-prettier\":\"^6.2.0\",\"eslint-plugin-babel\":\"^5.3.0\",\"eslint-plugin-import\":\"^2.18.2\",\"eslint-plugin-jest\":\"^25.0.1\",\"eslint-plugin-jsx-a11y\":\"^6.4.1\",\"eslint-plugin-markdown\":\"^1.0.0\",\"eslint-plugin-react\":\"^7.14.3\",\"eslint-tinker\":\"^0.5.0\",\"extract-text-webpack-plugin\":\"^3.0.0\",\"faker\":\"^4.1.0\",\"fetch-jsonp\":\"^1.1.3\",\"file-loader\":\"^4.2.0\",\"friendly-errors-webpack-plugin\":\"^1.7.0\",\"gh-pages\":\"^5.0.0\",\"glob\":\"^7.1.4\",\"gulp\":\"^4.0.2\",\"gulp-babel\":\"^8.0.0\",\"gulp-sourcemaps\":\"^2.6.5\",\"gulp-strip-code\":\"^0.1.4\",\"gulp-typescript\":\"^5.0.1\",\"husky\":\"^3.0.2\",\"identity-obj-proxy\":\"^3.0.0\",\"immutability-helper\":\"^3.0.0\",\"intersection-observer\":\"^0.7.0\",\"jest\":\"^25.1.0\",\"jsdom\":\"^16.2.1\",\"jsonml.js\":\"^0.1.0\",\"less\":\"^3.10.3\",\"less-plugin-npm-import\":\"^2.1.0\",\"lint-staged\":\"^7.0.0\",\"lodash\":\"^4.17.15\",\"lz-string\":\"^1.4.4\",\"majo\":\"^0.8.0\",\"mark-twain\":\"^2.0.2\",\"merge2\":\"^1.2.4\",\"mini-css-extract-plugin\":\"^0.8.0\",\"minimist\":\"^1.2.5\",\"mkdirp\":\"^1.0.3\",\"mobx\":\"~4.15.7\",\"mobx-react\":\"~6.1.1\",\"mockdate\":\"^2.0.1\",\"mockjs\":\"^1.0.1-beta3\",\"moment-timezone\":\"^0.5.23\",\"object-assign\":\"~4.1.1\",\"optimize-css-assets-webpack-plugin\":\"^5.0.3\",\"postcss\":\"^8.2.10\",\"postcss-loader\":\"^3.0.0\",\"pretty-quick\":\"^1.11.0\",\"rc-drawer\":\"^1.5.3\",\"rc-queue-anim\":\"^1.6.7\",\"rc-scroll-anim\":\"^2.2.1\",\"rc-tween-one\":\"^1.7.2\",\"react\":\"~16.12.0\",\"react-color\":\"^2.11.7\",\"react-copy-to-clipboard\":\"^5.0.0\",\"react-dnd\":\"^11.1.1\",\"react-dnd-html5-backend\":\"^11.1.1\",\"react-document-title\":\"^2.0.1\",\"react-dom\":\">=16.8.6\",\"react-github-button\":\"^0.1.1\",\"react-infinite-scroller\":\"^1.0.15\",\"react-intl\":\"^2.7.2\",\"react-sublime-video\":\"^0.2.0\",\"remark-frontmatter\":\"^1.3.2\",\"remark-parse\":\"^7.0.1\",\"remark-stringify\":\"^7.0.3\",\"remark-yaml-config\":\"^4.1.0\",\"remove-files-webpack-plugin\":\"1.5.0\",\"reqwest\":\"^2.0.5\",\"rimraf\":\"^3.0.0\",\"rucksack-css\":\"^1.0.2\",\"scrollama\":\"^2.1.0\",\"stylelint\":\"^10.0.1\",\"stylelint-config-prettier\":\"^5.2.0\",\"stylelint-config-rational-order\":\"^0.1.2\",\"stylelint-config-standard\":\"^18.3.0\",\"stylelint-declaration-block-no-ignored-properties\":\"^2.1.0\",\"stylelint-order\":\"^3.0.0\",\"terser-webpack-plugin\":\"^4.1.0\",\"through2\":\"^3.0.1\",\"ts-loader\":\"^6.0.4\",\"typescript\":\"~3.7.2\",\"unified\":\"^8.3.2\",\"url-loader\":\"^2.1.0\",\"values.js\":\"^1.0.3\",\"vfile-message\":\"1.0.x\",\"webpack\":\"^4.39.3\",\"webpack-filter-warnings-plugin\":\"^1.2.1\",\"webpack-merge\":\"^4.2.2\",\"webpackbar\":\"^4.0.0\",\"xhr-mock\":\"^2.5.1\",\"xhr2\":\"^0.2.0\",\"xlsx\":\"^0.17.0\"},\"resolutions\":{\"underscore\":\"1.12.1\"},\"scripts\":{\"test\":\"jest --config .jest.js --cache=false\",\"test:update\":\"jest --config .jest.js --cache=false -u\",\"test-all\":\"sh -e ./scripts/test-all.sh\",\"test-node\":\"jest --config .jest.node.js --cache=false\",\"test-all-skip\":\"sh ./scripts/test-all.sh --skip\",\"lint\":\"npm run lint:script && npm run lint:demo && npm run lint:style\",\"lint:tsc\":\"npm run tsc\",\"lint:script\":\"eslint **/*.{js,jsx,ts,tsx} --ext '.js,.jsx,.ts,.tsx'\",\"lint:md\":\"remark components/\",\"lint:demo\":\"cross-env RUN_ENV=DEMO eslint components/*/demo/*.md --ext '.md'\",\"lint:style\":\"stylelint {site,components,components-pro}/**/*.less --syntax less\",\"lint-fix\":\"npm run lint-fix:script && npm run lint-fix:demo && npm run lint-fix:style\",\"lint-fix:script\":\"npm run lint:script -- --fix\",\"lint-fix:demo\":\"npm run lint:demo -- --fix\",\"lint-fix:style\":\"npm run lint:style -- --fix\",\"sort-api\":\"node ./scripts/sort-api-table.js\",\"dist\":\"gulp dist\",\"compile\":\"gulp compile\",\"tsc\":\"tsc\",\"start\":\"rimraf _site && node ./scripts/generateColorLess.js && cross-env NODE_ENV=development BROWSER=chrome bisheng start -c ./site/bisheng.config.js\",\"site\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js\",\"site-with-test\":\"rimraf _site && cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js && jest choerodon-ui --notify --config=.jest.js --no-cache --coverage\",\"site-dev\":\"rimraf _site && cross-env NODE_ENV=development bisheng build --ssr -c ./site/bisheng.config.js && node ./scripts/generateColorLess.js\",\"predeploy\":\"npm run site\",\"deploy\":\"bisheng gh-pages --push-only\",\"pub\":\"npm run test-all-skip && npm publish --with-tools\",\"prepublish\":\"gulp guard\",\"authors\":\"git log --format='%aN <%aE>' | sort -u | grep -v 'hand-china.com' > AUTHORS\",\"prettier\":\"prettier -c --write '**/*'\",\"pretty-quick\":\"pretty-quick\"},\"husky\":{\"hooks\":{\"pre-commit\":\"lint-staged\"}},\"lint-staged\":{\"**/*.{js,jsx,ts,tsx}\":[\"npm run lint:script\"],\"{site,components,components-pro}/**/*.less\":[\"npm run lint:style\"],\"components/*/demo/*.md\":[\"npm run lint:demo\",\"git add\"]},\"sideEffects\":[\"dist/*\",\"es/**/style/*\",\"lib/**/style/*\",\"pro/es/**/style/*\",\"pro/lib/**/style/*\",\"*.less\"],\"browserslist\":[\"last 2 version\",\"Firefox ESR\",\"> 1%\",\"ie >= 9\"]}");
 
 /***/ }),
 
@@ -70532,7 +70543,8 @@ var locale = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, _
     output_modal_title: '多语言信息'
   },
   TextField: {
-    pasted_exceeding_max_length: '粘贴内容已超过最大字符数（{maxLength}），已自动截断，请检查内容。'
+    pasted_exceeding_max_length: '粘贴内容已超过最大字符数（{maxLength}），已自动截断，请检查内容。',
+    input_exceeding_max_length: '已超出最大字符数，无法继续输入。'
   },
   NumberField: {
     value_missing_no_label: '请输入数字。',
@@ -104592,6 +104604,9 @@ function getFileType(filename) {
     case 'xlsx':
       return 'xls';
 
+    case 'md':
+      return 'markdown';
+
     default:
       return 'other';
   }
@@ -104991,7 +105006,54 @@ var xlsIcon_XlsIcon = function XlsIcon(_ref) {
 };
 
 /* harmony default export */ var xlsIcon = (xlsIcon_XlsIcon);
+// CONCATENATED MODULE: ../node_modules/choerodon-ui/es/upload/icon-svg/mdIcon.js
+
+
+var mdIcon_MdIcon = function MdIcon(_ref) {
+  var className = _ref.className,
+      style = _ref.style;
+  return /*#__PURE__*/react["createElement"]("svg", {
+    style: style,
+    className: className,
+    viewBox: "0 0 1024 1024",
+    version: "1.1",
+    xmlns: "http://www.w3.org/2000/svg",
+    xmlnsXlink: "http://www.w3.org/1999/xlink"
+  }, /*#__PURE__*/react["createElement"]("title", null, "icon/md"), /*#__PURE__*/react["createElement"]("g", {
+    id: "icon/md",
+    stroke: "none",
+    strokeWidth: "1",
+    fill: "none",
+    fillRule: "evenodd"
+  }, /*#__PURE__*/react["createElement"]("path", {
+    d: "M883.5,920 C883.5,942.09139 865.59139,960 843.5,960 L220,960 C197.90861,960 180,942.09139 180,920 L180,104 C180,81.90861 197.90861,64 220,64 L659.5,64 L883.5,288 L883.5,920 Z",
+    id: "\u8DEF\u5F84",
+    fill: "#FEEEA3"
+  }), /*#__PURE__*/react["createElement"]("path", {
+    d: "M172,512 L754,512 C776.09139,512 794,529.90861 794,552 L794,812 C794,834.09139 776.09139,852 754,852 L172,852 C149.90861,852 132,834.09139 132,812 L132,552 C132,529.90861 149.90861,512 172,512 Z",
+    id: "\u77E9\u5F62",
+    fill: "#FBAD00"
+  }), /*#__PURE__*/react["createElement"]("path", {
+    d: "M883.446223,288 L699.5,288 C677.40861,288 659.5,270.09139 659.5,248 L659.5,64 L883.446223,288 Z",
+    id: "\u77E9\u5F62\u5907\u4EFD-11",
+    fill: "#FFC229"
+  }), /*#__PURE__*/react["createElement"]("g", {
+    id: "MD",
+    transform: "translate(249.000000, 582.000000)",
+    fill: "#FFFFFF",
+    fillRule: "nonzero"
+  }, /*#__PURE__*/react["createElement"]("polygon", {
+    id: "\u8DEF\u5F84",
+    points: "0 0 0 199.92 32.76 199.92 32.76 62.16 33.88 62.16 92.68 199.92 120.96 199.92 179.76 62.16 180.88 62.16 180.88 199.92 213.64 199.92 213.64 0 175.28 0 107.52 156.8 106.4 156.8 38.36 0"
+  }), /*#__PURE__*/react["createElement"]("path", {
+    d: "M256.84,0 L256.84,199.92 L329.92,199.92 C362.4,199.92 386.76,190.96 403.56,173.04 C419.52,155.96 427.64,131.6 427.64,99.96 C427.64,68.04 419.52,43.68 403.56,26.88 C386.76,8.96 362.4,0 329.92,0 L256.84,0 Z M289.6,28 L323.76,28 C348.68,28 366.88,33.6 378.36,45.08 C389.56,56.28 395.16,74.76 395.16,99.96 C395.16,124.6 389.56,142.8 378.36,154.56 C366.88,166.04 348.68,171.92 323.76,171.92 L289.6,171.92 L289.6,28 Z",
+    id: "\u5F62\u72B6"
+  }))));
+};
+
+/* harmony default export */ var mdIcon = (mdIcon_MdIcon);
 // CONCATENATED MODULE: ../node_modules/choerodon-ui/es/upload/UploadList.js
+
 
 
 
@@ -105072,6 +105134,11 @@ function defaultRenderIcon(file, listType, prefixCls) {
 
     case 'xls':
       return /*#__PURE__*/react_default.a.createElement(xlsIcon, {
+        className: "".concat(prefixCls, "-icon-file")
+      });
+
+    case 'markdown':
+      return /*#__PURE__*/react_default.a.createElement(mdIcon, {
         className: "".concat(prefixCls, "-icon-file")
       });
 
@@ -123544,6 +123611,10 @@ var attachment_Item_Item = function Item(props) {
   var getDownloadUrl = getDownloadUrlProp || getDownloadUrlConfig;
 
   var _useState = Object(react["useState"])(function () {
+    if (status === 'deferred') {
+      return url;
+    }
+
     if (!getPreviewUrl) {
       return url;
     }
@@ -123553,6 +123624,13 @@ var attachment_Item_Item = function Item(props) {
       setPreviewUrl = _useState2[1];
 
   Object(react["useEffect"])(function () {
+    if (status === 'deferred') {
+      setPreviewUrl(function () {
+        return url;
+      });
+      return;
+    }
+
     var isMounted = true;
 
     if (getPreviewUrl) {
@@ -123587,7 +123665,7 @@ var attachment_Item_Item = function Item(props) {
     return function () {
       isMounted = false;
     };
-  }, [getPreviewUrl, attachment, bucketName, bucketDirectory, storageCode, attachmentUUID, isPublic, url, setPreviewUrl]);
+  }, [getPreviewUrl, attachment, bucketName, bucketDirectory, storageCode, attachmentUUID, isPublic, url, setPreviewUrl, status]);
   var downloadUrl = getDownloadUrl && getDownloadUrl({
     attachment: attachment,
     bucketName: bucketName,
@@ -123600,7 +123678,7 @@ var attachment_Item_Item = function Item(props) {
   var dragProps = objectSpread2_default()({}, provided.dragHandleProps);
 
   var isPicture = type.startsWith('image') || ['png', 'gif', 'jpg', 'webp', 'jpeg', 'bmp', 'tif', 'pic', 'svg'].includes(ext);
-  var preview = !!previewUrl && (status === 'success' || status === 'done');
+  var preview = !!previewUrl && (!status || status === 'success' || status === 'done' || status === 'deferred');
   var handleOpenPreview = Object(react["useCallback"])(debounce_default()( /*#__PURE__*/asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee() {
     var result;
     return regenerator_default.a.wrap(function _callee$(_context) {
@@ -124052,7 +124130,7 @@ var attachment_Item_Item = function Item(props) {
 
   var listProps = objectSpread2_default()(objectSpread2_default()({
     ref: provided.innerRef,
-    className: classnames_default()(prefixCls, (_classnames2 = {}, defineProperty_default()(_classnames2, "".concat(prefixCls, "-error"), status === 'error'), defineProperty_default()(_classnames2, "".concat(prefixCls, "-success"), status === 'success'), _classnames2))
+    className: classnames_default()(prefixCls, (_classnames2 = {}, defineProperty_default()(_classnames2, "".concat(prefixCls, "-error"), status === 'error'), defineProperty_default()(_classnames2, "".concat(prefixCls, "-success"), status === 'success'), defineProperty_default()(_classnames2, "".concat(prefixCls, "-pending"), !status || status === 'deferred'), _classnames2))
   }, provided.draggableProps), {}, {
     style: objectSpread2_default()({}, provided.draggableProps.style)
   });
@@ -124869,7 +124947,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       if (attachments) {
         return attachments.filter(function (_ref) {
           var status = _ref.status;
-          return !status || ['success', 'done'].includes(status);
+          return !status || ['success', 'done', 'deferred'].includes(status);
         });
       }
     }
@@ -124943,7 +125021,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "getOmitPropsKeys",
     value: function getOmitPropsKeys() {
-      return helpers_get_default()(getPrototypeOf_default()(Attachment.prototype), "getOmitPropsKeys", this).call(this).concat(['value', 'accept', 'action', 'data', 'headers', 'buttons', 'withCredentials', 'sortable', 'listType', 'viewMode', 'fileKey', 'fileSize', 'useChunk', 'chunkSize', 'chunkThreads', 'bucketName', 'bucketDirectory', 'storageCode', 'count', 'max', 'listLimit', 'dragBoxRender', 'dragUpload', 'showHistory', 'showSize', 'isPublic', 'downloadAll', 'attachments', 'onAttachmentsChange', 'beforeUpload', 'onUploadProgress', 'onUploadSuccess', 'onUploadError', 'onRemove', 'getPreviewUrl', 'removeImmediately', 'onTempRemovedAttachmentsChange', 'filesLengthLimitNotice', 'countTextRenderer', 'Modal', 'templateDownloadButtonRenderer', 'enableDeleteAll', 'pictureCardShowName', 'directory']);
+      return helpers_get_default()(getPrototypeOf_default()(Attachment.prototype), "getOmitPropsKeys", this).call(this).concat(['value', 'accept', 'action', 'data', 'headers', 'buttons', 'withCredentials', 'sortable', 'listType', 'viewMode', 'fileKey', 'fileSize', 'useChunk', 'chunkSize', 'chunkThreads', 'bucketName', 'bucketDirectory', 'storageCode', 'count', 'max', 'listLimit', 'dragBoxRender', 'dragUpload', 'showHistory', 'showSize', 'isPublic', 'downloadAll', 'attachments', 'onAttachmentsChange', 'beforeUpload', 'onUploadProgress', 'onUploadSuccess', 'onUploadError', 'onRemove', 'getPreviewUrl', 'removeImmediately', 'onTempRemovedAttachmentsChange', 'filesLengthLimitNotice', 'countTextRenderer', 'Modal', 'templateDownloadButtonRenderer', 'enableDeleteAll', 'pictureCardShowName', 'directory', 'uploadImmediately']);
     }
   }, {
     key: "isAcceptFile",
@@ -125036,13 +125114,14 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       var _uploadAttachments = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee2(attachments) {
         var _this7 = this;
 
-        var max, filesLengthLimitNotice, defaultInfo, secretLevelFlag, secretLevelOptions, modalInProps, secretLevelHeadersInfo, formProps, modalProps, oldAttachments;
+        var max, _this$props2, filesLengthLimitNotice, uploadImmediately, defaultInfo, secretLevelFlag, secretLevelOptions, modalInProps, secretLevelHeadersInfo, formProps, modalProps, oldAttachments;
+
         return regenerator_default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 max = this.getProp('max');
-                filesLengthLimitNotice = this.props.filesLengthLimitNotice;
+                _this$props2 = this.props, filesLengthLimitNotice = _this$props2.filesLengthLimitNotice, uploadImmediately = _this$props2.uploadImmediately;
 
                 if (!(max > 0 && (this.count || 0) + attachments.length > max)) {
                   _context2.next = 6;
@@ -125067,7 +125146,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
                 modalInProps = this.props.Modal;
                 secretLevelHeadersInfo = {};
 
-                if (!(secretLevelFlag && secretLevelOptions && this.secretLevelDataSet && modalInProps)) {
+                if (!(uploadImmediately && secretLevelFlag && secretLevelOptions && this.secretLevelDataSet && modalInProps)) {
                   _context2.next = 17;
                   break;
                 }
@@ -125103,26 +125182,40 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
                   this.attachments = toConsumableArray_default()(attachments);
                 }
 
-                _context2.prev = 19;
-                _context2.next = 22;
+                if (!uploadImmediately) {
+                  _context2.next = 29;
+                  break;
+                }
+
+                _context2.prev = 20;
+                _context2.next = 23;
                 return Promise.all(attachments.map(function (attachment) {
                   return _this7.upload(attachment, secretLevelHeadersInfo);
                 }));
 
-              case 22:
-                _context2.prev = 22;
+              case 23:
+                _context2.prev = 23;
                 Object(mobx_module["runInAction"])(function () {
                   return _this7.uploadWithoutUuid = false;
                 });
                 this.changeOrder();
-                return _context2.finish(22);
+                return _context2.finish(23);
 
-              case 26:
+              case 27:
+                _context2.next = 30;
+                break;
+
+              case 29:
+                Object(mobx_module["runInAction"])(function () {
+                  return _this7.uploadWithoutUuid = false;
+                });
+
+              case 30:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[19,, 22, 26]]);
+        }, _callee2, this, [[20,, 23, 27]]);
       }));
 
       function uploadAttachments(_x) {
@@ -125174,15 +125267,15 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       var chunkSize = this.getProp('chunkSize');
       var chunkThreads = this.getProp('chunkThreads');
       var useChunk = this.getProp('useChunk');
-      var _this$props2 = this.props,
-          action = _this$props2.action,
-          data = _this$props2.data,
-          headers = _this$props2.headers,
-          withCredentials = _this$props2.withCredentials,
-          beforeUpload = _this$props2.beforeUpload,
-          onUploadProgress = _this$props2.onUploadProgress,
-          onUploadSuccess = _this$props2.onUploadSuccess,
-          onUploadError = _this$props2.onUploadError;
+      var _this$props3 = this.props,
+          action = _this$props3.action,
+          data = _this$props3.data,
+          headers = _this$props3.headers,
+          withCredentials = _this$props3.withCredentials,
+          beforeUpload = _this$props3.beforeUpload,
+          onUploadProgress = _this$props3.onUploadProgress,
+          onUploadSuccess = _this$props3.onUploadSuccess,
+          onUploadError = _this$props3.onUploadError;
       return {
         accept: accept,
         action: action,
@@ -125205,20 +125298,116 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       };
     }
   }, {
-    key: "upload",
+    key: "uploadAll",
     value: function () {
-      var _upload = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee4(attachment, extraHeaders) {
+      var _uploadAll = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee4() {
         var _this8 = this;
 
-        var uploader, uploaderProps, result;
+        var attachments, uploadAttachments, secretLevelFlag, secretLevelOptions, modalInProps, secretLevelHeadersInfo, formProps, modalProps;
         return regenerator_default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.prev = 0;
+                attachments = this.attachments;
+
+                if (attachments) {
+                  _context4.next = 3;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 3:
+                uploadAttachments = attachments.filter(function (attachment) {
+                  return !attachment.status || attachment.status === 'error' || attachment.status === 'deferred';
+                });
+
+                if (!(uploadAttachments.length > 0)) {
+                  _context4.next = 23;
+                  break;
+                }
+
+                secretLevelFlag = Object(utils["a" /* getConfig */])('uploadSecretLevelFlag');
+                secretLevelOptions = Object(utils["a" /* getConfig */])('uploadSecretLevelOptions');
+                modalInProps = this.props.Modal;
+                secretLevelHeadersInfo = {};
+
+                if (!(secretLevelFlag && secretLevelOptions && this.secretLevelDataSet && modalInProps)) {
+                  _context4.next = 16;
+                  break;
+                }
+
+                formProps = secretLevelOptions.formProps, modalProps = secretLevelOptions.modalProps;
+                _context4.next = 13;
+                return getSecretLevelModal({
+                  dataSet: this.secretLevelDataSet,
+                  Modal: modalInProps,
+                  formProps: formProps,
+                  modalProps: modalProps
+                });
+
+              case 13:
+                secretLevelHeadersInfo = _context4.sent;
+
+                if (!(secretLevelHeadersInfo === false)) {
+                  _context4.next = 16;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 16:
+                _context4.prev = 16;
+                _context4.next = 19;
+                return Promise.all(uploadAttachments.map(function (attachment) {
+                  return _this8.upload(attachment, secretLevelHeadersInfo);
+                }));
+
+              case 19:
+                _context4.prev = 19;
+                Object(mobx_module["runInAction"])(function () {
+                  return _this8.uploadWithoutUuid = false;
+                });
+                this.changeOrder();
+                return _context4.finish(19);
+
+              case 23:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[16,, 19, 23]]);
+      }));
+
+      function uploadAll() {
+        return _uploadAll.apply(this, arguments);
+      }
+
+      return uploadAll;
+    }()
+  }, {
+    key: "upload",
+    value: function () {
+      var _upload = asyncToGenerator_default()( /*#__PURE__*/regenerator_default.a.mark(function _callee5(attachment, extraHeaders) {
+        var _this9 = this;
+
+        var uploader, uploaderProps, result;
+        return regenerator_default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                if (attachment) {
+                  _context5.next = 2;
+                  break;
+                }
+
+                return _context5.abrupt("return", this.uploadAll());
+
+              case 2:
+                _context5.prev = 2;
                 uploader = Object(data_set_utils["getIf"])(this, 'uploader', function () {
                   return new dataset["Uploader"]({}, {
-                    getConfig: _this8.getContextConfig
+                    getConfig: _this9.getContextConfig
                   });
                 });
                 uploaderProps = this.getUploaderProps();
@@ -125234,57 +125423,57 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
                 uploader.setProps(uploaderProps); // 将uploader实例保存到组件中，以便后续中断
 
                 this.uploader = uploader;
-                _context4.next = 8;
+                _context5.next = 10;
                 return uploader.upload(attachment, this.attachments || [attachment], this.tempAttachmentUUID);
 
-              case 8:
-                result = _context4.sent;
+              case 10:
+                result = _context5.sent;
 
                 if (result === false) {
                   this.removeAttachment(attachment);
                 } else {
                   Object(mobx_module["runInAction"])(function () {
-                    var tempAttachmentUUID = _this8.tempAttachmentUUID;
+                    var tempAttachmentUUID = _this9.tempAttachmentUUID;
 
                     if (attachment.status === 'success') {
-                      _this8.updateCacheCount();
+                      _this9.updateCacheCount();
 
                       if (tempAttachmentUUID) {
-                        _this8.tempAttachmentUUID = undefined;
+                        _this9.tempAttachmentUUID = undefined;
 
-                        _this8.setValue(tempAttachmentUUID);
+                        _this9.setValue(tempAttachmentUUID);
                       }
 
-                      var results = _this8.getValidationResults();
+                      var results = _this9.getValidationResults();
 
                       if (results && results.length) {
-                        _this8.checkValidity();
+                        _this9.checkValidity();
                       }
                     } else if (attachment.status === 'aborted') {
-                      _this8.removeAttachment(attachment);
+                      _this9.removeAttachment(attachment);
 
-                      _this8.checkValidity();
+                      _this9.checkValidity();
                     } else {
-                      _this8.checkValidity();
+                      _this9.checkValidity();
                     }
                   });
                 }
 
-                _context4.next = 16;
+                _context5.next = 18;
                 break;
 
-              case 12:
-                _context4.prev = 12;
-                _context4.t0 = _context4["catch"](0);
+              case 14:
+                _context5.prev = 14;
+                _context5.t0 = _context5["catch"](2);
                 this.removeAttachment(attachment);
-                throw _context4.t0;
+                throw _context5.t0;
 
-              case 16:
+              case 18:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this, [[0, 12]]);
+        }, _callee5, this, [[2, 14]]);
       }));
 
       function upload(_x3, _x4) {
@@ -125304,11 +125493,12 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "processFiles",
     value: function processFiles(files, attachmentUUID) {
-      var _this9 = this;
+      var _this10 = this;
 
+      var uploadImmediately = this.props.uploadImmediately;
       return files.map(function (file, index) {
         return new dataset["AttachmentFile"]({
-          uid: _this9.getUid(index),
+          uid: _this10.getUid(index),
           url: URL.createObjectURL(file),
           name: file.name,
           size: file.size,
@@ -125316,14 +125506,15 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
           lastModified: file.lastModified,
           originFileObj: file,
           creationDate: new Date(),
-          attachmentUUID: attachmentUUID
+          attachmentUUID: attachmentUUID,
+          status: uploadImmediately ? undefined : 'deferred'
         });
       });
     }
   }, {
     key: "handleChange",
     value: function handleChange(e) {
-      var _this10 = this;
+      var _this11 = this;
 
       var _this$accept = this.accept,
           accept = _this$accept === void 0 ? [] : _this$accept,
@@ -125339,19 +125530,19 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
           return file && file.webkitRelativePath;
         })) {
           files = files.filter(function (file) {
-            return _this10.isAcceptFile(file, accept);
+            return _this11.isAcceptFile(file, accept);
           });
         }
 
         this.getAttachmentUUID().then(function (uuid) {
-          _this10.uploadAttachments(_this10.processFiles(files, uuid));
+          _this11.uploadAttachments(_this11.processFiles(files, uuid));
         });
       }
     }
   }, {
     key: "doRemove",
     value: function doRemove(attachment) {
-      var _this11 = this;
+      var _this12 = this;
 
       var attachments = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
       var bucketName = this.bucketName,
@@ -125365,15 +125556,20 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       if (attachment) {
         return Promise.resolve(onAttachmentRemove(attachment)).then(Object(mobx_module["action"])(function (ret) {
           if (ret !== false) {
-            var _this11$getContextCon = _this11.getContextConfig('attachment'),
-                onRemove = _this11$getContextCon.onRemove;
+            var _this12$getContextCon = _this12.getContextConfig('attachment'),
+                onRemove = _this12$getContextCon.onRemove;
 
             if (onRemove) {
               if (attachment.status === 'error' || attachment.invalid) {
-                return _this11.removeAttachment(attachment);
+                return _this12.removeAttachment(attachment);
+              } // 未上传的文件直接删除，不调用接口
+
+
+              if (!attachment.status || attachment.status === 'deferred') {
+                return _this12.removeAttachment(attachment);
               }
 
-              var attachmentUUID = _this11.getValue();
+              var attachmentUUID = _this12.getValue();
 
               if (attachmentUUID) {
                 attachment.status = 'deleting';
@@ -125386,7 +125582,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
                   isPublic: isPublic
                 }, multiple).then(Object(mobx_module["action"])(function (result) {
                   if (result !== false) {
-                    _this11.removeAttachment(attachment);
+                    _this12.removeAttachment(attachment);
                   }
 
                   attachment.status = 'done';
@@ -125411,11 +125607,11 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       if (validAttachments.length > 0) {
         return Promise.resolve(onAttachmentRemove(attachment)).then(Object(mobx_module["action"])(function (ret) {
           if (ret !== false) {
-            var _this11$getContextCon2 = _this11.getContextConfig('attachment'),
-                onRemove = _this11$getContextCon2.onRemove;
+            var _this12$getContextCon2 = _this12.getContextConfig('attachment'),
+                onRemove = _this12$getContextCon2.onRemove;
 
             if (onRemove) {
-              var attachmentUUID = _this11.getValue();
+              var attachmentUUID = _this12.getValue();
 
               if (attachmentUUID) {
                 validAttachments = validAttachments.map(function (attachment) {
@@ -125431,7 +125627,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
                   isPublic: isPublic
                 }, multiple).then(Object(mobx_module["action"])(function (result) {
                   if (result !== false) {
-                    _this11.removeCheckedAttachments(validAttachments);
+                    _this12.removeCheckedAttachments(validAttachments);
                   }
 
                   validAttachments.forEach(function (attachment) {
@@ -125439,7 +125635,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
                   });
 
                   if (result === false) {
-                    _this11.handleFetchAttachment({
+                    _this12.handleFetchAttachment({
                       bucketName: bucketName,
                       bucketDirectory: bucketDirectory,
                       storageCode: storageCode,
@@ -125452,7 +125648,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
                     return attachment.status = 'done';
                   });
 
-                  _this11.handleFetchAttachment({
+                  _this12.handleFetchAttachment({
                     bucketName: bucketName,
                     bucketDirectory: bucketDirectory,
                     storageCode: storageCode,
@@ -125544,9 +125740,9 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
     value: function handleRemove(attachment) {
       var _this$tempRemovedAtta = this.tempRemovedAttachments,
           tempRemovedAttachments = _this$tempRemovedAtta === void 0 ? [] : _this$tempRemovedAtta,
-          _this$props3 = this.props,
-          removeImmediately = _this$props3.removeImmediately,
-          onTempRemovedAttachmentsChange = _this$props3.onTempRemovedAttachmentsChange;
+          _this$props4 = this.props,
+          removeImmediately = _this$props4.removeImmediately,
+          onTempRemovedAttachmentsChange = _this$props4.onTempRemovedAttachmentsChange;
 
       if (removeImmediately) {
         return this.doRemove(attachment);
@@ -125605,7 +125801,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "handleFetchAttachment",
     value: function handleFetchAttachment(fetchProps) {
-      var _this12 = this;
+      var _this13 = this;
 
       var field = this.field,
           attachments = this.props.attachments;
@@ -125623,7 +125819,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
 
         if (fetchList) {
           fetchList(fetchProps).then(function (results) {
-            _this12.attachments = results.map(function (file) {
+            _this13.attachments = results.map(function (file) {
               return new dataset["AttachmentFile"](file);
             });
           });
@@ -125725,7 +125921,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "abortAllUploads",
     value: function abortAllUploads() {
-      var _this13 = this;
+      var _this14 = this;
 
       var attachments = this.attachments,
           onUploadAbort = this.props.onUploadAbort;
@@ -125734,13 +125930,13 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       if (attachments && this.uploader) {
         attachments.forEach(function (attachment) {
           if (attachment.status === 'uploading') {
-            var _this13$uploader;
+            var _this14$uploader;
 
             if (!hasUploadingAttachment) {
               hasUploadingAttachment = true;
             }
 
-            (_this13$uploader = _this13.uploader) === null || _this13$uploader === void 0 ? void 0 : _this13$uploader.abortUpload(attachment);
+            (_this14$uploader = _this14.uploader) === null || _this14$uploader === void 0 ? void 0 : _this14$uploader.abortUpload(attachment);
           }
         }); // 确保所有中断的附件状态同步
 
@@ -125859,13 +126055,13 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
               attachmentUUID = template.attachmentUUID;
 
           if (attachmentUUID) {
-            var _this$props4 = this.props,
-                _this$props4$previewT = _this$props4.previewTarget,
-                previewTarget = _this$props4$previewT === void 0 ? ATTACHMENT_TARGET : _this$props4$previewT,
-                viewMode = _this$props4.viewMode,
-                color = _this$props4.color,
-                _this$props4$funcType = _this$props4.funcType,
-                funcType = _this$props4$funcType === void 0 ? viewMode === 'popup' ? button_enum["c" /* FuncType */].flat : button_enum["c" /* FuncType */].link : _this$props4$funcType;
+            var _this$props5 = this.props,
+                _this$props5$previewT = _this$props5.previewTarget,
+                previewTarget = _this$props5$previewT === void 0 ? ATTACHMENT_TARGET : _this$props5$previewT,
+                viewMode = _this$props5.viewMode,
+                color = _this$props5.color,
+                _this$props5$funcType = _this$props5.funcType,
+                funcType = _this$props5$funcType === void 0 ? viewMode === 'popup' ? button_enum["c" /* FuncType */].flat : button_enum["c" /* FuncType */].link : _this$props5$funcType;
             return /*#__PURE__*/react_default.a.createElement(attachment_TemplateDownloadButton, {
               attachmentUUID: attachmentUUID,
               bucketName: bucketName,
@@ -125883,18 +126079,18 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderUploadBtn",
     value: function renderUploadBtn(isCardButton, label) {
-      var _this14 = this;
+      var _this15 = this;
 
       var _this$count2 = this.count,
           count = _this$count2 === void 0 ? 0 : _this$count2,
           multiple = this.multiple,
           prefixCls = this.prefixCls,
           accept = this.accept,
-          _this$props5 = this.props,
-          children = _this$props5.children,
-          viewMode = _this$props5.viewMode,
-          countTextRenderer = _this$props5.countTextRenderer,
-          directory = _this$props5.directory;
+          _this$props6 = this.props,
+          children = _this$props6.children,
+          viewMode = _this$props6.viewMode,
+          countTextRenderer = _this$props6.countTextRenderer,
+          directory = _this$props6.directory;
       var buttonProps = this.getOtherProps();
 
       var ref = buttonProps.ref,
@@ -125960,12 +126156,12 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
         var menu = /*#__PURE__*/react_default.a.createElement(es_menu, null, /*#__PURE__*/react_default.a.createElement(es_menu.Item, {
           key: "file",
           onClick: function onClick() {
-            return _this14.handleUploadClick(false, true);
+            return _this15.handleUploadClick(false, true);
           }
         }, Object(locale_context["a" /* $l */])('Attachment', 'file')), /*#__PURE__*/react_default.a.createElement(es_menu.Item, {
           key: "directory",
           onClick: function onClick() {
-            return _this14.handleUploadClick(true, true);
+            return _this15.handleUploadClick(true, true);
           }
         }, Object(locale_context["a" /* $l */])('Attachment', 'directory')));
         buttonDirProp = {
@@ -126021,11 +126217,11 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderViewButton",
     value: function renderViewButton(label) {
-      var _this$props6 = this.props,
-          children = _this$props6.children,
-          multiple = _this$props6.multiple,
-          viewMode = _this$props6.viewMode,
-          countTextRenderer = _this$props6.countTextRenderer;
+      var _this$props7 = this.props,
+          children = _this$props7.children,
+          multiple = _this$props7.multiple,
+          viewMode = _this$props7.viewMode,
+          countTextRenderer = _this$props7.countTextRenderer;
       var max = this.getProp('max');
       var rest = this.getOtherProps();
       var countText = multiple ? this.count || 0 : undefined;
@@ -126100,11 +126296,11 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderSorter",
     value: function renderSorter() {
-      var _this15 = this;
+      var _this16 = this;
 
-      var _this$props7 = this.props,
-          sortable = _this$props7.sortable,
-          viewMode = _this$props7.viewMode;
+      var _this$props8 = this.props,
+          sortable = _this$props8.sortable,
+          viewMode = _this$props8.viewMode;
 
       if (sortable) {
         var prefixCls = this.prefixCls,
@@ -126118,7 +126314,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
           return /*#__PURE__*/react_default.a.createElement(react_default.a.Fragment, null, /*#__PURE__*/react_default.a.createElement(es_select_Select["d" /* default */], {
             value: type,
             onChange: function onChange(newType) {
-              return _this15.handleSort({
+              return _this16.handleSort({
                 type: newType,
                 order: order,
                 custom: newType === 'custom'
@@ -126140,7 +126336,7 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
             funcType: button_enum["c" /* FuncType */].link,
             className: classnames_default()("".concat(prefixCls, "-order-icon"), order),
             onClick: function onClick() {
-              return _this15.handleSort({
+              return _this16.handleSort({
                 type: type,
                 order: order === 'asc' ? 'desc' : 'asc',
                 custom: type === 'custom'
@@ -126153,19 +126349,19 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderUploadList",
     value: function renderUploadList(uploadButton) {
-      var _this$props8 = this.props,
-          listType = _this$props8.listType,
-          sortable = _this$props8.sortable,
-          listLimit = _this$props8.listLimit,
-          showHistory = _this$props8.showHistory,
-          showSize = _this$props8.showSize,
-          previewTarget = _this$props8.previewTarget,
-          buttons = _this$props8.buttons,
-          getPreviewUrl = _this$props8.getPreviewUrl,
-          disabled = _this$props8.disabled,
-          getDownloadUrl = _this$props8.getDownloadUrl,
-          enableDeleteAll = _this$props8.enableDeleteAll,
-          pictureCardShowName = _this$props8.pictureCardShowName;
+      var _this$props9 = this.props,
+          listType = _this$props9.listType,
+          sortable = _this$props9.sortable,
+          listLimit = _this$props9.listLimit,
+          showHistory = _this$props9.showHistory,
+          showSize = _this$props9.showSize,
+          previewTarget = _this$props9.previewTarget,
+          buttons = _this$props9.buttons,
+          getPreviewUrl = _this$props9.getPreviewUrl,
+          disabled = _this$props9.disabled,
+          getDownloadUrl = _this$props9.getDownloadUrl,
+          enableDeleteAll = _this$props9.enableDeleteAll,
+          pictureCardShowName = _this$props9.pictureCardShowName;
       var mergeButtons = [AttachmentButtonType.download, AttachmentButtonType.remove];
 
       if (buttons) {
@@ -126232,12 +126428,12 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
     value: function renderHeader(uploadBtn) {
       var prefixCls = this.prefixCls,
           count = this.count,
-          _this$props9 = this.props,
-          downloadAll = _this$props9.downloadAll,
-          viewMode = _this$props9.viewMode,
-          __inGroup = _this$props9.__inGroup,
-          downloadAllModeProp = _this$props9.downloadAllMode,
-          getDownloadAllUrlProp = _this$props9.getDownloadAllUrl;
+          _this$props10 = this.props,
+          downloadAll = _this$props10.downloadAll,
+          viewMode = _this$props10.viewMode,
+          __inGroup = _this$props10.__inGroup,
+          downloadAllModeProp = _this$props10.downloadAllMode,
+          getDownloadAllUrlProp = _this$props10.getDownloadAllUrl;
       var label = (!__inGroup || count) && this.renderHeaderLabel();
       var buttons = [];
 
@@ -126360,19 +126556,19 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
       var _classNames2;
 
       var prefixCls = this.prefixCls,
-          _this$props10 = this.props,
-          className = _this$props10.className,
-          size = _this$props10.size;
+          _this$props11 = this.props,
+          className = _this$props11.className,
+          size = _this$props11.size;
       return classnames_default()("".concat(prefixCls, "-wrapper"), className, (_classNames2 = {}, defineProperty_default()(_classNames2, "".concat(prefixCls, "-sm"), size === _util_enum["a" /* Size */].small), defineProperty_default()(_classNames2, "".concat(prefixCls, "-lg"), size === _util_enum["a" /* Size */].large), _classNames2));
     }
   }, {
     key: "renderWrapperList",
     value: function renderWrapperList(uploadBtn) {
       var prefixCls = this.prefixCls,
-          _this$props11 = this.props,
-          viewMode = _this$props11.viewMode,
-          listType = _this$props11.listType,
-          __inGroup = _this$props11.__inGroup;
+          _this$props12 = this.props,
+          viewMode = _this$props12.viewMode,
+          listType = _this$props12.listType,
+          __inGroup = _this$props12.__inGroup;
       var isCard = listType === 'picture-card';
       var classes = ["".concat(prefixCls, "-list-wrapper")];
 
@@ -126391,9 +126587,9 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "getPictureWidth",
     value: function getPictureWidth() {
-      var _this$props12 = this.props,
-          pictureWidth = _this$props12.pictureWidth,
-          listType = _this$props12.listType;
+      var _this$props13 = this.props,
+          pictureWidth = _this$props13.pictureWidth,
+          listType = _this$props13.listType;
       return pictureWidth || (listType === 'picture-card' ? 100 : 48);
     }
   }, {
@@ -126428,9 +126624,9 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
           attachments = this.attachments,
           checkedAttachments = this.checkedAttachments,
           readOnly = this.readOnly,
-          _this$props13 = this.props,
-          disabled = _this$props13.disabled,
-          enableDeleteAll = _this$props13.enableDeleteAll;
+          _this$props14 = this.props,
+          disabled = _this$props14.disabled,
+          enableDeleteAll = _this$props14.enableDeleteAll;
 
       if (enableDeleteAll && !readOnly && !disabled) {
         return /*#__PURE__*/react_default.a.createElement("div", {
@@ -126492,10 +126688,10 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "showValidation",
     get: function get() {
-      var _this$props14 = this.props,
-          viewMode = _this$props14.viewMode,
-          _this$props14$showVal = _this$props14.showValidation,
-          showValidation = _this$props14$showVal === void 0 ? viewMode === 'popup' ? form_enum["e" /* ShowValidation */].tooltip : form_enum["e" /* ShowValidation */].newLine : _this$props14$showVal;
+      var _this$props15 = this.props,
+          viewMode = _this$props15.viewMode,
+          _this$props15$showVal = _this$props15.showValidation,
+          showValidation = _this$props15$showVal === void 0 ? viewMode === 'popup' ? form_enum["e" /* ShowValidation */].tooltip : form_enum["e" /* ShowValidation */].newLine : _this$props15$showVal;
       var _this$context$showVal = this.context.showValidation,
           ctxShowValidation = _this$context$showVal === void 0 ? showValidation : _this$context$showVal;
       return ctxShowValidation;
@@ -126540,10 +126736,10 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderDragUploadArea",
     value: function renderDragUploadArea() {
-      var _this$props15 = this.props,
-          dragUpload = _this$props15.dragUpload,
-          dragBoxRender = _this$props15.dragBoxRender,
-          readOnly = _this$props15.readOnly;
+      var _this$props16 = this.props,
+          dragUpload = _this$props16.dragUpload,
+          dragBoxRender = _this$props16.dragBoxRender,
+          readOnly = _this$props16.readOnly;
       var prefixCls = this.prefixCls,
           accept = this.accept;
 
@@ -126575,10 +126771,10 @@ var Attachment_Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props16 = this.props,
-          viewMode = _this$props16.viewMode,
-          listType = _this$props16.listType,
-          hidden = _this$props16.hidden;
+      var _this$props17 = this.props,
+          viewMode = _this$props17.viewMode,
+          listType = _this$props17.listType,
+          hidden = _this$props17.hidden;
       var readOnly = this.readOnly,
           prefixCls = this.prefixCls;
 
@@ -126612,7 +126808,8 @@ Attachment_Attachment.defaultProps = objectSpread2_default()(objectSpread2_defau
   listType: 'text',
   viewMode: 'list',
   dragUpload: false,
-  removeImmediately: true
+  removeImmediately: true,
+  uploadImmediately: true
 }); // eslint-disable-next-line camelcase
 
 Attachment_Attachment.__IS_IN_CELL_EDITOR = true; // eslint-disable-next-line camelcase
@@ -126643,6 +126840,8 @@ Object(tslib_es6["__decorate"])([autobind["a" /* default */]], Attachment_Attach
 Object(tslib_es6["__decorate"])([mobx_module["action"]], Attachment_Attachment.prototype, "uploadAttachments", null);
 
 Object(tslib_es6["__decorate"])([autobind["a" /* default */]], Attachment_Attachment.prototype, "uploadAttachment", null);
+
+Object(tslib_es6["__decorate"])([autobind["a" /* default */]], Attachment_Attachment.prototype, "uploadAll", null);
 
 Object(tslib_es6["__decorate"])([autobind["a" /* default */], mobx_module["action"]], Attachment_Attachment.prototype, "handleChange", null);
 
@@ -151320,10 +151519,16 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
 
   var _super = createSuper_default()(Lov);
 
-  function Lov() {
+  function Lov(props, context) {
+    var _this;
+
     classCallCheck_default()(this, Lov);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props, context);
+    Object(mobx_module["runInAction"])(function () {
+      _this.searching = false;
+    });
+    return _this;
   }
 
   createClass_default()(Lov, [{
@@ -151597,7 +151802,7 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "getPopupLovView",
     value: function getPopupLovView() {
-      var _this = this;
+      var _this2 = this;
 
       var config = this.getConfig();
       this.autoCreate();
@@ -151615,11 +151820,11 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
 
         if (this.popup && !this.fetched) {
           Object(mobx_module["runInAction"])(function () {
-            lovViewProps = _this.beforeOpen(options);
+            lovViewProps = _this2.beforeOpen(options);
 
-            _this.afterOpen(options);
+            _this2.afterOpen(options);
 
-            _this.fetched = true;
+            _this2.fetched = true;
           });
         }
 
@@ -152036,7 +152241,7 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
     key: "setText",
     value: function setText(text) {
       if (text === undefined || text === '') {
-        delete this.searching;
+        this.searching = false;
       } else {
         this.searching = true;
       }
@@ -152051,7 +152256,7 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "searchRemote",
     value: function searchRemote(text) {
-      var _this2 = this;
+      var _this3 = this;
 
       var options = this.options,
           searchMatcher = this.searchMatcher,
@@ -152066,8 +152271,10 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
         });
 
         if (this.isSearchFieldInPopup() || this.props.searchAction === SearchAction.input) {
-          options.query(1, undefined, true).then(function () {
-            return delete _this2.searching;
+          options.query(1, undefined, true)["finally"](function () {
+            return Object(mobx_module["runInAction"])(function () {
+              _this3.searching = false;
+            });
           });
         }
       }
@@ -152117,7 +152324,7 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "handleLovViewSelect",
     value: function handleLovViewSelect(records) {
-      var _this3 = this;
+      var _this4 = this;
 
       var viewMode = this.viewMode,
           _this$textField = this.textField,
@@ -152131,11 +152338,11 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
 
         if (isSameSelectedTimestamp) {
           this.setValue(records.map(function (record) {
-            return _this3.processRecordToObject(record);
+            return _this4.processRecordToObject(record);
           }));
         } else {
           this.setValue(getRecords(records, textField).map(function (record) {
-            return _this3.processRecordToObject(record);
+            return _this4.processRecordToObject(record);
           }));
         }
       } else {
@@ -152264,7 +152471,7 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "syncValueOnBlur",
     value: function syncValueOnBlur(value, event) {
-      var _this4 = this;
+      var _this5 = this;
 
       var textField = this.textField;
       var _this$props6 = this.props,
@@ -152287,11 +152494,11 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
             if (length > 1 && !fetchSingle || length === 1) {
               var record = options.get(0);
 
-              if (!_this4.optionIsSelected(record, _this4.getValues())) {
-                _this4.choose(record);
+              if (!_this5.optionIsSelected(record, _this5.getValues())) {
+                _this5.choose(record);
               }
             } else if (length && fetchSingle) {
-              _this4.openModal(fetchSingle);
+              _this5.openModal(fetchSingle);
             }
           });
         } else if (!this.multiple || this.multiple && this.observableProps.combo && !this.popupShowComboValue) {
@@ -152450,8 +152657,18 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "loading",
     get: function get() {
-      var options = this.options;
-      return options.status === data_set_enum["DataSetStatus"].loading;
+      var options = this.options,
+          searching = this.searching;
+      return searching || options.status === data_set_enum["DataSetStatus"].loading;
+    }
+  }, {
+    key: "searchData",
+    value: function searchData(data) {
+      if (this.searching) {
+        return [];
+      }
+
+      return helpers_get_default()(getPrototypeOf_default()(Lov.prototype), "searchData", this).call(this, data);
     }
   }, {
     key: "saveSuffixRef",
@@ -152490,16 +152707,16 @@ var Lov_Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this5 = this;
+      var _this6 = this;
 
       helpers_get_default()(getPrototypeOf_default()(Lov.prototype), "componentDidMount", this).call(this);
 
       if (this.viewMode === trigger_field_enum["a" /* TriggerViewMode */].popup) {
         this.fetchedReaction = Object(mobx_module["reaction"])(function () {
-          return _this5.record;
+          return _this6.record;
         }, function () {
-          if (_this5.fetched) {
-            delete _this5.fetched;
+          if (_this6.fetched) {
+            delete _this6.fetched;
           }
         });
       }
@@ -152621,6 +152838,8 @@ Lov_Lov.defaultProps = objectSpread2_default()(objectSpread2_default()({}, es_se
 });
 
 Object(tslib_es6["__decorate"])([mobx_module["observable"]], Lov_Lov.prototype, "modal", void 0);
+
+Object(tslib_es6["__decorate"])([mobx_module["observable"]], Lov_Lov.prototype, "searching", void 0);
 
 Object(tslib_es6["__decorate"])([mobx_module["computed"]], Lov_Lov.prototype, "searchMatcher", null);
 
@@ -209776,7 +209995,8 @@ var en_US_locale = objectSpread2_default()(objectSpread2_default()({}, en_US_def
     output_modal_title: 'multi-language information.'
   },
   TextField: {
-    pasted_exceeding_max_length: 'The pasted content has exceeded the maximum number of characters ({maxLength}) and has been automatically truncated. Please check the content.'
+    pasted_exceeding_max_length: 'The pasted content has exceeded the maximum number of characters ({maxLength}) and has been automatically truncated. Please check the content.',
+    input_exceeding_max_length: 'The maximum character limit has been exceeded and further input is not possible.'
   },
   NumberField: {
     value_missing_no_label: 'Please input a number.',
@@ -219751,7 +219971,9 @@ var defaults = {
 
     return false;
   },
-  tableProfBarHasValueDefaultExpanded: true
+  tableProfBarHasValueDefaultExpanded: true,
+  showLengthInfo: 'auto',
+  inputLengthExceedWarning: true
 };
 /* harmony default export */ var configure_default = (defaults);
 // CONCATENATED MODULE: ../node_modules/choerodon-ui/es/configure/index.js
@@ -257019,6 +257241,11 @@ var NumberField = /*#__PURE__*/function (_TextField) {
       }
     }
   }, {
+    key: "getInputLengthExceedWarning",
+    value: function getInputLengthExceedWarning(_) {
+      return false;
+    }
+  }, {
     key: "getSuffixWidth",
     value: function getSuffixWidth() {
       var suffixWidth = (0, _get3["default"])((0, _getPrototypeOf2["default"])(NumberField.prototype), "getSuffixWidth", this).call(this);
@@ -257523,6 +257750,7 @@ NumberField.bigNumberFormat = _formatNumber["default"];
 (0, _tslib.__decorate)([_mobx.computed], NumberField.prototype, "min", null);
 (0, _tslib.__decorate)([_mobx.computed], NumberField.prototype, "max", null);
 (0, _tslib.__decorate)([_mobx.computed], NumberField.prototype, "value", null);
+(0, _tslib.__decorate)([_autobind["default"]], NumberField.prototype, "getInputLengthExceedWarning", null);
 (0, _tslib.__decorate)([_autobind["default"]], NumberField.prototype, "savePlusRef", null);
 (0, _tslib.__decorate)([_autobind["default"]], NumberField.prototype, "saveMinusRef", null);
 (0, _tslib.__decorate)([_mobx.action], NumberField.prototype, "getInnerSpanButton", null);
@@ -265424,7 +265652,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       if (attachments) {
         return attachments.filter(function (_ref) {
           var status = _ref.status;
-          return !status || ['success', 'done'].includes(status);
+          return !status || ['success', 'done', 'deferred'].includes(status);
         });
       }
     }
@@ -265499,7 +265727,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "getOmitPropsKeys",
     value: function getOmitPropsKeys() {
-      return (0, _get2["default"])((0, _getPrototypeOf2["default"])(Attachment.prototype), "getOmitPropsKeys", this).call(this).concat(['value', 'accept', 'action', 'data', 'headers', 'buttons', 'withCredentials', 'sortable', 'listType', 'viewMode', 'fileKey', 'fileSize', 'useChunk', 'chunkSize', 'chunkThreads', 'bucketName', 'bucketDirectory', 'storageCode', 'count', 'max', 'listLimit', 'dragBoxRender', 'dragUpload', 'showHistory', 'showSize', 'isPublic', 'downloadAll', 'attachments', 'onAttachmentsChange', 'beforeUpload', 'onUploadProgress', 'onUploadSuccess', 'onUploadError', 'onRemove', 'getPreviewUrl', 'removeImmediately', 'onTempRemovedAttachmentsChange', 'filesLengthLimitNotice', 'countTextRenderer', 'Modal', 'templateDownloadButtonRenderer', 'enableDeleteAll', 'pictureCardShowName', 'directory']);
+      return (0, _get2["default"])((0, _getPrototypeOf2["default"])(Attachment.prototype), "getOmitPropsKeys", this).call(this).concat(['value', 'accept', 'action', 'data', 'headers', 'buttons', 'withCredentials', 'sortable', 'listType', 'viewMode', 'fileKey', 'fileSize', 'useChunk', 'chunkSize', 'chunkThreads', 'bucketName', 'bucketDirectory', 'storageCode', 'count', 'max', 'listLimit', 'dragBoxRender', 'dragUpload', 'showHistory', 'showSize', 'isPublic', 'downloadAll', 'attachments', 'onAttachmentsChange', 'beforeUpload', 'onUploadProgress', 'onUploadSuccess', 'onUploadError', 'onRemove', 'getPreviewUrl', 'removeImmediately', 'onTempRemovedAttachmentsChange', 'filesLengthLimitNotice', 'countTextRenderer', 'Modal', 'templateDownloadButtonRenderer', 'enableDeleteAll', 'pictureCardShowName', 'directory', 'uploadImmediately']);
     }
   }, {
     key: "isAcceptFile",
@@ -265592,13 +265820,14 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       var _uploadAttachments = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(attachments) {
         var _this7 = this;
 
-        var max, filesLengthLimitNotice, defaultInfo, secretLevelFlag, secretLevelOptions, modalInProps, secretLevelHeadersInfo, formProps, modalProps, oldAttachments;
+        var max, _this$props2, filesLengthLimitNotice, uploadImmediately, defaultInfo, secretLevelFlag, secretLevelOptions, modalInProps, secretLevelHeadersInfo, formProps, modalProps, oldAttachments;
+
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 max = this.getProp('max');
-                filesLengthLimitNotice = this.props.filesLengthLimitNotice;
+                _this$props2 = this.props, filesLengthLimitNotice = _this$props2.filesLengthLimitNotice, uploadImmediately = _this$props2.uploadImmediately;
 
                 if (!(max > 0 && (this.count || 0) + attachments.length > max)) {
                   _context2.next = 6;
@@ -265623,7 +265852,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
                 modalInProps = this.props.Modal;
                 secretLevelHeadersInfo = {};
 
-                if (!(secretLevelFlag && secretLevelOptions && this.secretLevelDataSet && modalInProps)) {
+                if (!(uploadImmediately && secretLevelFlag && secretLevelOptions && this.secretLevelDataSet && modalInProps)) {
                   _context2.next = 17;
                   break;
                 }
@@ -265659,26 +265888,40 @@ var Attachment = /*#__PURE__*/function (_FormField) {
                   this.attachments = (0, _toConsumableArray2["default"])(attachments);
                 }
 
-                _context2.prev = 19;
-                _context2.next = 22;
+                if (!uploadImmediately) {
+                  _context2.next = 29;
+                  break;
+                }
+
+                _context2.prev = 20;
+                _context2.next = 23;
                 return Promise.all(attachments.map(function (attachment) {
                   return _this7.upload(attachment, secretLevelHeadersInfo);
                 }));
 
-              case 22:
-                _context2.prev = 22;
+              case 23:
+                _context2.prev = 23;
                 (0, _mobx.runInAction)(function () {
                   return _this7.uploadWithoutUuid = false;
                 });
                 this.changeOrder();
-                return _context2.finish(22);
+                return _context2.finish(23);
 
-              case 26:
+              case 27:
+                _context2.next = 30;
+                break;
+
+              case 29:
+                (0, _mobx.runInAction)(function () {
+                  return _this7.uploadWithoutUuid = false;
+                });
+
+              case 30:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[19,, 22, 26]]);
+        }, _callee2, this, [[20,, 23, 27]]);
       }));
 
       function uploadAttachments(_x) {
@@ -265730,15 +265973,15 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       var chunkSize = this.getProp('chunkSize');
       var chunkThreads = this.getProp('chunkThreads');
       var useChunk = this.getProp('useChunk');
-      var _this$props2 = this.props,
-          action = _this$props2.action,
-          data = _this$props2.data,
-          headers = _this$props2.headers,
-          withCredentials = _this$props2.withCredentials,
-          beforeUpload = _this$props2.beforeUpload,
-          onUploadProgress = _this$props2.onUploadProgress,
-          onUploadSuccess = _this$props2.onUploadSuccess,
-          onUploadError = _this$props2.onUploadError;
+      var _this$props3 = this.props,
+          action = _this$props3.action,
+          data = _this$props3.data,
+          headers = _this$props3.headers,
+          withCredentials = _this$props3.withCredentials,
+          beforeUpload = _this$props3.beforeUpload,
+          onUploadProgress = _this$props3.onUploadProgress,
+          onUploadSuccess = _this$props3.onUploadSuccess,
+          onUploadError = _this$props3.onUploadError;
       return {
         accept: accept,
         action: action,
@@ -265761,20 +266004,116 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       };
     }
   }, {
-    key: "upload",
+    key: "uploadAll",
     value: function () {
-      var _upload = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(attachment, extraHeaders) {
+      var _uploadAll = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
         var _this8 = this;
 
-        var uploader, uploaderProps, result;
+        var attachments, uploadAttachments, secretLevelFlag, secretLevelOptions, modalInProps, secretLevelHeadersInfo, formProps, modalProps;
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.prev = 0;
+                attachments = this.attachments;
+
+                if (attachments) {
+                  _context4.next = 3;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 3:
+                uploadAttachments = attachments.filter(function (attachment) {
+                  return !attachment.status || attachment.status === 'error' || attachment.status === 'deferred';
+                });
+
+                if (!(uploadAttachments.length > 0)) {
+                  _context4.next = 23;
+                  break;
+                }
+
+                secretLevelFlag = (0, _utils.getConfig)('uploadSecretLevelFlag');
+                secretLevelOptions = (0, _utils.getConfig)('uploadSecretLevelOptions');
+                modalInProps = this.props.Modal;
+                secretLevelHeadersInfo = {};
+
+                if (!(secretLevelFlag && secretLevelOptions && this.secretLevelDataSet && modalInProps)) {
+                  _context4.next = 16;
+                  break;
+                }
+
+                formProps = secretLevelOptions.formProps, modalProps = secretLevelOptions.modalProps;
+                _context4.next = 13;
+                return (0, _utils2.getSecretLevelModal)({
+                  dataSet: this.secretLevelDataSet,
+                  Modal: modalInProps,
+                  formProps: formProps,
+                  modalProps: modalProps
+                });
+
+              case 13:
+                secretLevelHeadersInfo = _context4.sent;
+
+                if (!(secretLevelHeadersInfo === false)) {
+                  _context4.next = 16;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 16:
+                _context4.prev = 16;
+                _context4.next = 19;
+                return Promise.all(uploadAttachments.map(function (attachment) {
+                  return _this8.upload(attachment, secretLevelHeadersInfo);
+                }));
+
+              case 19:
+                _context4.prev = 19;
+                (0, _mobx.runInAction)(function () {
+                  return _this8.uploadWithoutUuid = false;
+                });
+                this.changeOrder();
+                return _context4.finish(19);
+
+              case 23:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[16,, 19, 23]]);
+      }));
+
+      function uploadAll() {
+        return _uploadAll.apply(this, arguments);
+      }
+
+      return uploadAll;
+    }()
+  }, {
+    key: "upload",
+    value: function () {
+      var _upload = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(attachment, extraHeaders) {
+        var _this9 = this;
+
+        var uploader, uploaderProps, result;
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                if (attachment) {
+                  _context5.next = 2;
+                  break;
+                }
+
+                return _context5.abrupt("return", this.uploadAll());
+
+              case 2:
+                _context5.prev = 2;
                 uploader = (0, _utils5.getIf)(this, 'uploader', function () {
                   return new _dataset.Uploader({}, {
-                    getConfig: _this8.getContextConfig
+                    getConfig: _this9.getContextConfig
                   });
                 });
                 uploaderProps = this.getUploaderProps();
@@ -265790,57 +266129,57 @@ var Attachment = /*#__PURE__*/function (_FormField) {
                 uploader.setProps(uploaderProps); // 将uploader实例保存到组件中，以便后续中断
 
                 this.uploader = uploader;
-                _context4.next = 8;
+                _context5.next = 10;
                 return uploader.upload(attachment, this.attachments || [attachment], this.tempAttachmentUUID);
 
-              case 8:
-                result = _context4.sent;
+              case 10:
+                result = _context5.sent;
 
                 if (result === false) {
                   this.removeAttachment(attachment);
                 } else {
                   (0, _mobx.runInAction)(function () {
-                    var tempAttachmentUUID = _this8.tempAttachmentUUID;
+                    var tempAttachmentUUID = _this9.tempAttachmentUUID;
 
                     if (attachment.status === 'success') {
-                      _this8.updateCacheCount();
+                      _this9.updateCacheCount();
 
                       if (tempAttachmentUUID) {
-                        _this8.tempAttachmentUUID = undefined;
+                        _this9.tempAttachmentUUID = undefined;
 
-                        _this8.setValue(tempAttachmentUUID);
+                        _this9.setValue(tempAttachmentUUID);
                       }
 
-                      var results = _this8.getValidationResults();
+                      var results = _this9.getValidationResults();
 
                       if (results && results.length) {
-                        _this8.checkValidity();
+                        _this9.checkValidity();
                       }
                     } else if (attachment.status === 'aborted') {
-                      _this8.removeAttachment(attachment);
+                      _this9.removeAttachment(attachment);
 
-                      _this8.checkValidity();
+                      _this9.checkValidity();
                     } else {
-                      _this8.checkValidity();
+                      _this9.checkValidity();
                     }
                   });
                 }
 
-                _context4.next = 16;
+                _context5.next = 18;
                 break;
 
-              case 12:
-                _context4.prev = 12;
-                _context4.t0 = _context4["catch"](0);
+              case 14:
+                _context5.prev = 14;
+                _context5.t0 = _context5["catch"](2);
                 this.removeAttachment(attachment);
-                throw _context4.t0;
+                throw _context5.t0;
 
-              case 16:
+              case 18:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this, [[0, 12]]);
+        }, _callee5, this, [[2, 14]]);
       }));
 
       function upload(_x3, _x4) {
@@ -265859,11 +266198,12 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "processFiles",
     value: function processFiles(files, attachmentUUID) {
-      var _this9 = this;
+      var _this10 = this;
 
+      var uploadImmediately = this.props.uploadImmediately;
       return files.map(function (file, index) {
         return new _AttachmentFile["default"]({
-          uid: _this9.getUid(index),
+          uid: _this10.getUid(index),
           url: URL.createObjectURL(file),
           name: file.name,
           size: file.size,
@@ -265871,14 +266211,15 @@ var Attachment = /*#__PURE__*/function (_FormField) {
           lastModified: file.lastModified,
           originFileObj: file,
           creationDate: new Date(),
-          attachmentUUID: attachmentUUID
+          attachmentUUID: attachmentUUID,
+          status: uploadImmediately ? undefined : 'deferred'
         });
       });
     }
   }, {
     key: "handleChange",
     value: function handleChange(e) {
-      var _this10 = this;
+      var _this11 = this;
 
       var _this$accept = this.accept,
           accept = _this$accept === void 0 ? [] : _this$accept,
@@ -265893,19 +266234,19 @@ var Attachment = /*#__PURE__*/function (_FormField) {
           return file && file.webkitRelativePath;
         })) {
           files = files.filter(function (file) {
-            return _this10.isAcceptFile(file, accept);
+            return _this11.isAcceptFile(file, accept);
           });
         }
 
         this.getAttachmentUUID().then(function (uuid) {
-          _this10.uploadAttachments(_this10.processFiles(files, uuid));
+          _this11.uploadAttachments(_this11.processFiles(files, uuid));
         });
       }
     }
   }, {
     key: "doRemove",
     value: function doRemove(attachment) {
-      var _this11 = this;
+      var _this12 = this;
 
       var attachments = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
       var bucketName = this.bucketName,
@@ -265919,15 +266260,20 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       if (attachment) {
         return Promise.resolve(onAttachmentRemove(attachment)).then((0, _mobx.action)(function (ret) {
           if (ret !== false) {
-            var _this11$getContextCon = _this11.getContextConfig('attachment'),
-                onRemove = _this11$getContextCon.onRemove;
+            var _this12$getContextCon = _this12.getContextConfig('attachment'),
+                onRemove = _this12$getContextCon.onRemove;
 
             if (onRemove) {
               if (attachment.status === 'error' || attachment.invalid) {
-                return _this11.removeAttachment(attachment);
+                return _this12.removeAttachment(attachment);
+              } // 未上传的文件直接删除，不调用接口
+
+
+              if (!attachment.status || attachment.status === 'deferred') {
+                return _this12.removeAttachment(attachment);
               }
 
-              var attachmentUUID = _this11.getValue();
+              var attachmentUUID = _this12.getValue();
 
               if (attachmentUUID) {
                 attachment.status = 'deleting';
@@ -265940,7 +266286,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
                   isPublic: isPublic
                 }, multiple).then((0, _mobx.action)(function (result) {
                   if (result !== false) {
-                    _this11.removeAttachment(attachment);
+                    _this12.removeAttachment(attachment);
                   }
 
                   attachment.status = 'done';
@@ -265965,11 +266311,11 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       if (validAttachments.length > 0) {
         return Promise.resolve(onAttachmentRemove(attachment)).then((0, _mobx.action)(function (ret) {
           if (ret !== false) {
-            var _this11$getContextCon2 = _this11.getContextConfig('attachment'),
-                onRemove = _this11$getContextCon2.onRemove;
+            var _this12$getContextCon2 = _this12.getContextConfig('attachment'),
+                onRemove = _this12$getContextCon2.onRemove;
 
             if (onRemove) {
-              var attachmentUUID = _this11.getValue();
+              var attachmentUUID = _this12.getValue();
 
               if (attachmentUUID) {
                 validAttachments = validAttachments.map(function (attachment) {
@@ -265985,7 +266331,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
                   isPublic: isPublic
                 }, multiple).then((0, _mobx.action)(function (result) {
                   if (result !== false) {
-                    _this11.removeCheckedAttachments(validAttachments);
+                    _this12.removeCheckedAttachments(validAttachments);
                   }
 
                   validAttachments.forEach(function (attachment) {
@@ -265993,7 +266339,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
                   });
 
                   if (result === false) {
-                    _this11.handleFetchAttachment({
+                    _this12.handleFetchAttachment({
                       bucketName: bucketName,
                       bucketDirectory: bucketDirectory,
                       storageCode: storageCode,
@@ -266006,7 +266352,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
                     return attachment.status = 'done';
                   });
 
-                  _this11.handleFetchAttachment({
+                  _this12.handleFetchAttachment({
                     bucketName: bucketName,
                     bucketDirectory: bucketDirectory,
                     storageCode: storageCode,
@@ -266098,9 +266444,9 @@ var Attachment = /*#__PURE__*/function (_FormField) {
     value: function handleRemove(attachment) {
       var _this$tempRemovedAtta = this.tempRemovedAttachments,
           tempRemovedAttachments = _this$tempRemovedAtta === void 0 ? [] : _this$tempRemovedAtta,
-          _this$props3 = this.props,
-          removeImmediately = _this$props3.removeImmediately,
-          onTempRemovedAttachmentsChange = _this$props3.onTempRemovedAttachmentsChange;
+          _this$props4 = this.props,
+          removeImmediately = _this$props4.removeImmediately,
+          onTempRemovedAttachmentsChange = _this$props4.onTempRemovedAttachmentsChange;
 
       if (removeImmediately) {
         return this.doRemove(attachment);
@@ -266159,7 +266505,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "handleFetchAttachment",
     value: function handleFetchAttachment(fetchProps) {
-      var _this12 = this;
+      var _this13 = this;
 
       var field = this.field,
           attachments = this.props.attachments;
@@ -266177,7 +266523,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
 
         if (fetchList) {
           fetchList(fetchProps).then(function (results) {
-            _this12.attachments = results.map(function (file) {
+            _this13.attachments = results.map(function (file) {
               return new _AttachmentFile["default"](file);
             });
           });
@@ -266279,7 +266625,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "abortAllUploads",
     value: function abortAllUploads() {
-      var _this13 = this;
+      var _this14 = this;
 
       var attachments = this.attachments,
           onUploadAbort = this.props.onUploadAbort;
@@ -266288,13 +266634,13 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       if (attachments && this.uploader) {
         attachments.forEach(function (attachment) {
           if (attachment.status === 'uploading') {
-            var _this13$uploader;
+            var _this14$uploader;
 
             if (!hasUploadingAttachment) {
               hasUploadingAttachment = true;
             }
 
-            (_this13$uploader = _this13.uploader) === null || _this13$uploader === void 0 ? void 0 : _this13$uploader.abortUpload(attachment);
+            (_this14$uploader = _this14.uploader) === null || _this14$uploader === void 0 ? void 0 : _this14$uploader.abortUpload(attachment);
           }
         }); // 确保所有中断的附件状态同步
 
@@ -266413,13 +266759,13 @@ var Attachment = /*#__PURE__*/function (_FormField) {
               attachmentUUID = template.attachmentUUID;
 
           if (attachmentUUID) {
-            var _this$props4 = this.props,
-                _this$props4$previewT = _this$props4.previewTarget,
-                previewTarget = _this$props4$previewT === void 0 ? _Item.ATTACHMENT_TARGET : _this$props4$previewT,
-                viewMode = _this$props4.viewMode,
-                color = _this$props4.color,
-                _this$props4$funcType = _this$props4.funcType,
-                funcType = _this$props4$funcType === void 0 ? viewMode === 'popup' ? _enum4.FuncType.flat : _enum4.FuncType.link : _this$props4$funcType;
+            var _this$props5 = this.props,
+                _this$props5$previewT = _this$props5.previewTarget,
+                previewTarget = _this$props5$previewT === void 0 ? _Item.ATTACHMENT_TARGET : _this$props5$previewT,
+                viewMode = _this$props5.viewMode,
+                color = _this$props5.color,
+                _this$props5$funcType = _this$props5.funcType,
+                funcType = _this$props5$funcType === void 0 ? viewMode === 'popup' ? _enum4.FuncType.flat : _enum4.FuncType.link : _this$props5$funcType;
             return /*#__PURE__*/_react["default"].createElement(_TemplateDownloadButton["default"], {
               attachmentUUID: attachmentUUID,
               bucketName: bucketName,
@@ -266437,18 +266783,18 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderUploadBtn",
     value: function renderUploadBtn(isCardButton, label) {
-      var _this14 = this;
+      var _this15 = this;
 
       var _this$count2 = this.count,
           count = _this$count2 === void 0 ? 0 : _this$count2,
           multiple = this.multiple,
           prefixCls = this.prefixCls,
           accept = this.accept,
-          _this$props5 = this.props,
-          children = _this$props5.children,
-          viewMode = _this$props5.viewMode,
-          countTextRenderer = _this$props5.countTextRenderer,
-          directory = _this$props5.directory;
+          _this$props6 = this.props,
+          children = _this$props6.children,
+          viewMode = _this$props6.viewMode,
+          countTextRenderer = _this$props6.countTextRenderer,
+          directory = _this$props6.directory;
       var buttonProps = this.getOtherProps();
       var ref = buttonProps.ref,
           style = buttonProps.style,
@@ -266512,12 +266858,12 @@ var Attachment = /*#__PURE__*/function (_FormField) {
         var menu = /*#__PURE__*/_react["default"].createElement(_menu["default"], null, /*#__PURE__*/_react["default"].createElement(_menu["default"].Item, {
           key: "file",
           onClick: function onClick() {
-            return _this14.handleUploadClick(false, true);
+            return _this15.handleUploadClick(false, true);
           }
         }, (0, _localeContext.$l)('Attachment', 'file')), /*#__PURE__*/_react["default"].createElement(_menu["default"].Item, {
           key: "directory",
           onClick: function onClick() {
-            return _this14.handleUploadClick(true, true);
+            return _this15.handleUploadClick(true, true);
           }
         }, (0, _localeContext.$l)('Attachment', 'directory')));
 
@@ -266574,11 +266920,11 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderViewButton",
     value: function renderViewButton(label) {
-      var _this$props6 = this.props,
-          children = _this$props6.children,
-          multiple = _this$props6.multiple,
-          viewMode = _this$props6.viewMode,
-          countTextRenderer = _this$props6.countTextRenderer;
+      var _this$props7 = this.props,
+          children = _this$props7.children,
+          multiple = _this$props7.multiple,
+          viewMode = _this$props7.viewMode,
+          countTextRenderer = _this$props7.countTextRenderer;
       var max = this.getProp('max');
       var rest = this.getOtherProps();
       var countText = multiple ? this.count || 0 : undefined;
@@ -266653,11 +266999,11 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderSorter",
     value: function renderSorter() {
-      var _this15 = this;
+      var _this16 = this;
 
-      var _this$props7 = this.props,
-          sortable = _this$props7.sortable,
-          viewMode = _this$props7.viewMode;
+      var _this$props8 = this.props,
+          sortable = _this$props8.sortable,
+          viewMode = _this$props8.viewMode;
 
       if (sortable) {
         var prefixCls = this.prefixCls,
@@ -266671,7 +267017,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
           return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement(_Select["default"], {
             value: type,
             onChange: function onChange(newType) {
-              return _this15.handleSort({
+              return _this16.handleSort({
                 type: newType,
                 order: order,
                 custom: newType === 'custom'
@@ -266693,7 +267039,7 @@ var Attachment = /*#__PURE__*/function (_FormField) {
             funcType: _enum4.FuncType.link,
             className: (0, _classnames["default"])("".concat(prefixCls, "-order-icon"), order),
             onClick: function onClick() {
-              return _this15.handleSort({
+              return _this16.handleSort({
                 type: type,
                 order: order === 'asc' ? 'desc' : 'asc',
                 custom: type === 'custom'
@@ -266706,19 +267052,19 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderUploadList",
     value: function renderUploadList(uploadButton) {
-      var _this$props8 = this.props,
-          listType = _this$props8.listType,
-          sortable = _this$props8.sortable,
-          listLimit = _this$props8.listLimit,
-          showHistory = _this$props8.showHistory,
-          showSize = _this$props8.showSize,
-          previewTarget = _this$props8.previewTarget,
-          buttons = _this$props8.buttons,
-          getPreviewUrl = _this$props8.getPreviewUrl,
-          disabled = _this$props8.disabled,
-          getDownloadUrl = _this$props8.getDownloadUrl,
-          enableDeleteAll = _this$props8.enableDeleteAll,
-          pictureCardShowName = _this$props8.pictureCardShowName;
+      var _this$props9 = this.props,
+          listType = _this$props9.listType,
+          sortable = _this$props9.sortable,
+          listLimit = _this$props9.listLimit,
+          showHistory = _this$props9.showHistory,
+          showSize = _this$props9.showSize,
+          previewTarget = _this$props9.previewTarget,
+          buttons = _this$props9.buttons,
+          getPreviewUrl = _this$props9.getPreviewUrl,
+          disabled = _this$props9.disabled,
+          getDownloadUrl = _this$props9.getDownloadUrl,
+          enableDeleteAll = _this$props9.enableDeleteAll,
+          pictureCardShowName = _this$props9.pictureCardShowName;
       var mergeButtons = [AttachmentButtonType.download, AttachmentButtonType.remove];
 
       if (buttons) {
@@ -266785,12 +267131,12 @@ var Attachment = /*#__PURE__*/function (_FormField) {
     value: function renderHeader(uploadBtn) {
       var prefixCls = this.prefixCls,
           count = this.count,
-          _this$props9 = this.props,
-          downloadAll = _this$props9.downloadAll,
-          viewMode = _this$props9.viewMode,
-          __inGroup = _this$props9.__inGroup,
-          downloadAllModeProp = _this$props9.downloadAllMode,
-          getDownloadAllUrlProp = _this$props9.getDownloadAllUrl;
+          _this$props10 = this.props,
+          downloadAll = _this$props10.downloadAll,
+          viewMode = _this$props10.viewMode,
+          __inGroup = _this$props10.__inGroup,
+          downloadAllModeProp = _this$props10.downloadAllMode,
+          getDownloadAllUrlProp = _this$props10.getDownloadAllUrl;
       var label = (!__inGroup || count) && this.renderHeaderLabel();
       var buttons = [];
 
@@ -266913,19 +267259,19 @@ var Attachment = /*#__PURE__*/function (_FormField) {
       var _classNames2;
 
       var prefixCls = this.prefixCls,
-          _this$props10 = this.props,
-          className = _this$props10.className,
-          size = _this$props10.size;
+          _this$props11 = this.props,
+          className = _this$props11.className,
+          size = _this$props11.size;
       return (0, _classnames["default"])("".concat(prefixCls, "-wrapper"), className, (_classNames2 = {}, (0, _defineProperty2["default"])(_classNames2, "".concat(prefixCls, "-sm"), size === _enum2.Size.small), (0, _defineProperty2["default"])(_classNames2, "".concat(prefixCls, "-lg"), size === _enum2.Size.large), _classNames2));
     }
   }, {
     key: "renderWrapperList",
     value: function renderWrapperList(uploadBtn) {
       var prefixCls = this.prefixCls,
-          _this$props11 = this.props,
-          viewMode = _this$props11.viewMode,
-          listType = _this$props11.listType,
-          __inGroup = _this$props11.__inGroup;
+          _this$props12 = this.props,
+          viewMode = _this$props12.viewMode,
+          listType = _this$props12.listType,
+          __inGroup = _this$props12.__inGroup;
       var isCard = listType === 'picture-card';
       var classes = ["".concat(prefixCls, "-list-wrapper")];
 
@@ -266944,9 +267290,9 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "getPictureWidth",
     value: function getPictureWidth() {
-      var _this$props12 = this.props,
-          pictureWidth = _this$props12.pictureWidth,
-          listType = _this$props12.listType;
+      var _this$props13 = this.props,
+          pictureWidth = _this$props13.pictureWidth,
+          listType = _this$props13.listType;
       return pictureWidth || (listType === 'picture-card' ? 100 : 48);
     }
   }, {
@@ -266981,9 +267327,9 @@ var Attachment = /*#__PURE__*/function (_FormField) {
           attachments = this.attachments,
           checkedAttachments = this.checkedAttachments,
           readOnly = this.readOnly,
-          _this$props13 = this.props,
-          disabled = _this$props13.disabled,
-          enableDeleteAll = _this$props13.enableDeleteAll;
+          _this$props14 = this.props,
+          disabled = _this$props14.disabled,
+          enableDeleteAll = _this$props14.enableDeleteAll;
 
       if (enableDeleteAll && !readOnly && !disabled) {
         return /*#__PURE__*/_react["default"].createElement("div", {
@@ -267045,10 +267391,10 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "showValidation",
     get: function get() {
-      var _this$props14 = this.props,
-          viewMode = _this$props14.viewMode,
-          _this$props14$showVal = _this$props14.showValidation,
-          showValidation = _this$props14$showVal === void 0 ? viewMode === 'popup' ? _enum7.ShowValidation.tooltip : _enum7.ShowValidation.newLine : _this$props14$showVal;
+      var _this$props15 = this.props,
+          viewMode = _this$props15.viewMode,
+          _this$props15$showVal = _this$props15.showValidation,
+          showValidation = _this$props15$showVal === void 0 ? viewMode === 'popup' ? _enum7.ShowValidation.tooltip : _enum7.ShowValidation.newLine : _this$props15$showVal;
       var _this$context$showVal = this.context.showValidation,
           ctxShowValidation = _this$context$showVal === void 0 ? showValidation : _this$context$showVal;
       return ctxShowValidation;
@@ -267093,10 +267439,10 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderDragUploadArea",
     value: function renderDragUploadArea() {
-      var _this$props15 = this.props,
-          dragUpload = _this$props15.dragUpload,
-          dragBoxRender = _this$props15.dragBoxRender,
-          readOnly = _this$props15.readOnly;
+      var _this$props16 = this.props,
+          dragUpload = _this$props16.dragUpload,
+          dragBoxRender = _this$props16.dragBoxRender,
+          readOnly = _this$props16.readOnly;
       var prefixCls = this.prefixCls,
           accept = this.accept;
 
@@ -267126,10 +267472,10 @@ var Attachment = /*#__PURE__*/function (_FormField) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props16 = this.props,
-          viewMode = _this$props16.viewMode,
-          listType = _this$props16.listType,
-          hidden = _this$props16.hidden;
+      var _this$props17 = this.props,
+          viewMode = _this$props17.viewMode,
+          listType = _this$props17.listType,
+          hidden = _this$props17.hidden;
       var readOnly = this.readOnly,
           prefixCls = this.prefixCls;
 
@@ -267162,7 +267508,8 @@ Attachment.defaultProps = (0, _objectSpread2["default"])((0, _objectSpread2["def
   listType: 'text',
   viewMode: 'list',
   dragUpload: false,
-  removeImmediately: true
+  removeImmediately: true,
+  uploadImmediately: true
 }); // eslint-disable-next-line camelcase
 
 Attachment.__IS_IN_CELL_EDITOR = true; // eslint-disable-next-line camelcase
@@ -267181,6 +267528,7 @@ Attachment.Group = _AttachmentGroup["default"];
 (0, _tslib.__decorate)([_autobind["default"]], Attachment.prototype, "handleDataSetLoad", null);
 (0, _tslib.__decorate)([_mobx.action], Attachment.prototype, "uploadAttachments", null);
 (0, _tslib.__decorate)([_autobind["default"]], Attachment.prototype, "uploadAttachment", null);
+(0, _tslib.__decorate)([_autobind["default"]], Attachment.prototype, "uploadAll", null);
 (0, _tslib.__decorate)([_autobind["default"], _mobx.action], Attachment.prototype, "handleChange", null);
 (0, _tslib.__decorate)([_autobind["default"]], Attachment.prototype, "handleHistory", null);
 (0, _tslib.__decorate)([_autobind["default"], _mobx.action], Attachment.prototype, "handleCheckAttachment", null);
@@ -268251,9 +268599,9 @@ var TextField = /*#__PURE__*/function (_FormField) {
             }
           }
         } else {
-          var textFieldPasteMaxLengthWarning = _this.getContextConfig('textFieldPasteMaxLengthWarning');
+          var inputLengthExceedWarning = _this.getInputLengthExceedWarning('paste');
 
-          if (textFieldPasteMaxLengthWarning) {
+          if (inputLengthExceedWarning) {
             var maxLength = _this.getProp('maxLength');
 
             if (maxLength > 0 && pastedText) {
@@ -268264,7 +268612,7 @@ var TextField = /*#__PURE__*/function (_FormField) {
               var currentLength = value.length - (selectionEnd - selectionStart);
 
               if (currentLength + pastedText.length > maxLength) {
-                _this.handlePasteMaxLengthWarning(textFieldPasteMaxLengthWarning, maxLength);
+                _this.showLengthExceedWarningDeb('paste');
               }
             }
           }
@@ -268273,7 +268621,7 @@ var TextField = /*#__PURE__*/function (_FormField) {
     };
 
     _this.handleChangeWait = _this.getHandleChange(props);
-    _this.handlePasteMaxLengthWarning = (0, _debounce["default"])(_this.showPasteMaxLengthWarning, 1000, {
+    _this.showLengthExceedWarningDeb = (0, _debounce["default"])(_this.showLengthExceedWarning, 1000, {
       leading: true,
       trailing: false
     });
@@ -268381,10 +268729,25 @@ var TextField = /*#__PURE__*/function (_FormField) {
       return true;
     }
   }, {
-    key: "showPasteMaxLengthWarning",
-    value: function showPasteMaxLengthWarning(textFieldPasteMaxLengthWarning, maxLength) {
-      if ((0, _lodash.isFunction)(textFieldPasteMaxLengthWarning)) {
-        textFieldPasteMaxLengthWarning({
+    key: "getInputLengthExceedWarning",
+    value: function getInputLengthExceedWarning(type) {
+      var inputLengthExceedWarning = this.getContextConfig('inputLengthExceedWarning');
+
+      if (type === 'paste') {
+        var textFieldPasteMaxLengthWarning = this.getContextConfig('textFieldPasteMaxLengthWarning');
+        return !(0, _isNil["default"])(textFieldPasteMaxLengthWarning) ? textFieldPasteMaxLengthWarning : inputLengthExceedWarning;
+      }
+
+      return inputLengthExceedWarning;
+    }
+  }, {
+    key: "showLengthExceedWarning",
+    value: function showLengthExceedWarning(type) {
+      var inputLengthExceedWarning = this.getInputLengthExceedWarning(type);
+      var maxLength = this.getProp('maxLength');
+
+      if ((0, _lodash.isFunction)(inputLengthExceedWarning)) {
+        inputLengthExceedWarning({
           dataSet: this.dataSet,
           field: this.field,
           name: this.name,
@@ -268392,10 +268755,14 @@ var TextField = /*#__PURE__*/function (_FormField) {
           maxLength: maxLength
         });
       } else {
+        var message = type === 'paste' ? (0, _localeContext.$l)('TextField', 'pasted_exceeding_max_length', {
+          maxLength: maxLength
+        }) : (0, _localeContext.$l)('TextField', 'input_exceeding_max_length', {
+          maxLength: maxLength
+        });
+
         _notification["default"].warning({
-          message: (0, _localeContext.$l)('TextField', 'pasted_exceeding_max_length', {
-            maxLength: maxLength
-          }),
+          message: message,
           description: null
         });
       }
@@ -268484,13 +268851,17 @@ var TextField = /*#__PURE__*/function (_FormField) {
       if (wait !== nextProps.wait || waitType !== nextProps.waitType) {
         this.handleChangeWait = this.getHandleChange(nextProps);
       }
+
+      if (this.valueChangeAction === _enum3.ValueChangeAction.input && this.isFocus && !this.multiple && !this.range && !this.record && this.text !== nextProps.value) {
+        this.setText(undefined);
+      }
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "componentWillUnmount", this).call(this);
       this.handleChangeWait.cancel();
-      this.handlePasteMaxLengthWarning.cancel();
+      this.showLengthExceedWarningDeb.cancel();
     }
   }, {
     key: "saveTagContainer",
@@ -269037,11 +269408,20 @@ var TextField = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderLengthInfo",
     value: function renderLengthInfo(maxLength, inputLength) {
-      var prefixCls = this.prefixCls;
-      return maxLength && maxLength > 0 ? /*#__PURE__*/_react["default"].createElement("div", {
+      var prefixCls = this.prefixCls,
+          showLengthInfo = this.showLengthInfo;
+      var children;
+
+      if (showLengthInfo === true) {
+        children = (0, _isNil["default"])(maxLength) ? "".concat(inputLength) : maxLength > 0 ? "".concat(inputLength, "/").concat(maxLength) : undefined;
+      } else if (showLengthInfo === 'auto' && !(0, _isNil["default"])(maxLength) && maxLength > 0 && inputLength && inputLength / maxLength >= 0.8) {
+        children = "".concat(inputLength, "/").concat(maxLength);
+      }
+
+      return children ? /*#__PURE__*/_react["default"].createElement("div", {
         key: "length-info",
         className: "".concat(prefixCls, "-length-info")
-      }, "".concat(inputLength, "/").concat(maxLength)) : null;
+      }, children) : null;
     } // 处理 form 中的 labelLayout 为 placeholder 情况避免以前 placeholder 和 label 无法区分彼此。
 
   }, {
@@ -269487,7 +269867,7 @@ var TextField = /*#__PURE__*/function (_FormField) {
         this.lengthElement = this.renderLengthInfo(maxLength, inputLength);
 
         if (this.lengthElement) {
-          this.lengthInfoWidth = this.measureTextWidth("".concat(inputLength, " / ").concat(maxLength));
+          this.lengthInfoWidth = this.measureTextWidth(!(0, _isNil["default"])(maxLength) ? "".concat(inputLength, " / ").concat(maxLength) : " ".concat(inputLength));
         } else {
           this.lengthInfoWidth = undefined;
         }
@@ -269866,11 +270246,66 @@ var TextField = /*#__PURE__*/function (_FormField) {
       this.setRangeTarget(1);
     }
   }, {
+    key: "handleCompositionStart",
+    value: function handleCompositionStart(e) {
+      this.preCompositionValue = e.target && e.target.value;
+      (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "handleCompositionStart", this).call(this, e);
+    }
+  }, {
+    key: "handleCompositionEnd",
+    value: function handleCompositionEnd(e) {
+      var inputLengthExceedWarning = this.getInputLengthExceedWarning('input');
+
+      if (!this.multiple && !this.range && inputLengthExceedWarning) {
+        var insertedText = e.data;
+
+        var _ref5 = this.selectionInfo || {},
+            selectionStart = _ref5.selectionStart,
+            selectionEnd = _ref5.selectionEnd;
+
+        var selectionLength = (selectionEnd || 0) - (selectionStart || 0);
+        var expectedTotalLength = (this.preCompositionValue || '').length + (insertedText || '').length - selectionLength;
+
+        if (expectedTotalLength > this.getProp('maxLength')) {
+          this.showLengthExceedWarningDeb('input');
+        }
+      }
+
+      delete this.selectionInfo;
+      delete this.preCompositionValue;
+      (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "handleCompositionEnd", this).call(this, e);
+    }
+  }, {
     key: "handleKeyDown",
     value: function handleKeyDown(e) {
       var _this9 = this;
 
       if (!this.disabled && !this.readOnly) {
+        // keydown 事件早于 composition 事件
+        if (!this.selectionInfo && !this.lock) {
+          this.selectionInfo = e.target ? {
+            selectionStart: e.target.selectionStart,
+            selectionEnd: e.target.selectionEnd
+          } : undefined;
+        }
+
+        var inputLengthExceedWarning = this.getInputLengthExceedWarning('input');
+
+        if (!this.multiple && !this.range && inputLengthExceedWarning && !this.lock && !(e.ctrlKey || e.altKey || e.metaKey)) {
+          var _ref6 = e.target || {},
+              value = _ref6.value;
+
+          var _ref7 = this.selectionInfo || {},
+              selectionStart = _ref7.selectionStart,
+              selectionEnd = _ref7.selectionEnd;
+
+          var selectionLength = (selectionEnd || 0) - (selectionStart || 0);
+
+          if (selectionLength === 0 && e.key && (e.key === 'Spacebar' || e.key.length === 1) && (value || '').length === this.getProp('maxLength')) {
+            this.showLengthExceedWarningDeb('input');
+          }
+        }
+
         if ((e.ctrlKey || e.metaKey) && e.keyCode === _KeyCode["default"].C && [_enum5.FieldFormat.uppercase, _enum5.FieldFormat.lowercase, _enum5.FieldFormat.capitalize].includes(this.format)) {
           e.preventDefault(); // 执行复制操作
 
@@ -269967,7 +270402,12 @@ var TextField = /*#__PURE__*/function (_FormField) {
         }
       }
 
-      (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "handleKeyDown", this).call(this, e);
+      (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "handleKeyDown", this).call(this, e); // 处理 IME (输入法) 状态
+      // 当用户正在使用输入法时，IE11 可能返回 "Process" 或 "Unidentified"; 现代浏览器可能返回 "Process"
+
+      if (!this.lock && e.key !== 'Process' && e.key !== 'Unidentified') {
+        delete this.selectionInfo;
+      }
     }
   }, {
     key: "handleMouseDown",
@@ -270030,6 +270470,7 @@ var TextField = /*#__PURE__*/function (_FormField) {
         }
       }
 
+      delete this.selectionInfo;
       (0, _get4["default"])((0, _getPrototypeOf2["default"])(TextField.prototype), "handleBlur", this).call(this, e);
     }
   }, {
@@ -270178,7 +270619,8 @@ TextField.defaultProps = (0, _objectSpread2["default"])((0, _objectSpread2["defa
 (0, _tslib.__decorate)([_mobx.computed], TextField.prototype, "valueChangeAction", null);
 (0, _tslib.__decorate)([_mobx.computed], TextField.prototype, "showLengthInfo", null);
 (0, _tslib.__decorate)([_mobx.computed], TextField.prototype, "showHelp", null);
-(0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "showPasteMaxLengthWarning", null);
+(0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "getInputLengthExceedWarning", null);
+(0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "showLengthExceedWarning", null);
 (0, _tslib.__decorate)([_autobind["default"], _mobx.action], TextField.prototype, "handleRenderedValueChange", null);
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "saveTagContainer", null);
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "saveAddonAfterRef", null);
@@ -270195,6 +270637,8 @@ TextField.defaultProps = (0, _objectSpread2["default"])((0, _objectSpread2["defa
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleTagAnimateEnter", null);
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleRangeStart", null);
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleRangeEnd", null);
+(0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleCompositionStart", null);
+(0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleCompositionEnd", null);
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleKeyDown", null);
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleMouseDown", null);
 (0, _tslib.__decorate)([_autobind["default"]], TextField.prototype, "handleClick", null);
@@ -300484,6 +300928,10 @@ var Item = function Item(props) {
   var getDownloadUrl = getDownloadUrlProp || getDownloadUrlConfig;
 
   var _useState = (0, _react.useState)(function () {
+    if (status === 'deferred') {
+      return url;
+    }
+
     if (!getPreviewUrl) {
       return url;
     }
@@ -300493,6 +300941,13 @@ var Item = function Item(props) {
       setPreviewUrl = _useState2[1];
 
   (0, _react.useEffect)(function () {
+    if (status === 'deferred') {
+      setPreviewUrl(function () {
+        return url;
+      });
+      return;
+    }
+
     var isMounted = true;
 
     if (getPreviewUrl) {
@@ -300527,7 +300982,7 @@ var Item = function Item(props) {
     return function () {
       isMounted = false;
     };
-  }, [getPreviewUrl, attachment, bucketName, bucketDirectory, storageCode, attachmentUUID, isPublic, url, setPreviewUrl]);
+  }, [getPreviewUrl, attachment, bucketName, bucketDirectory, storageCode, attachmentUUID, isPublic, url, setPreviewUrl, status]);
   var downloadUrl = getDownloadUrl && getDownloadUrl({
     attachment: attachment,
     bucketName: bucketName,
@@ -300538,7 +300993,7 @@ var Item = function Item(props) {
   });
   var dragProps = (0, _objectSpread2["default"])({}, provided.dragHandleProps);
   var isPicture = type.startsWith('image') || ['png', 'gif', 'jpg', 'webp', 'jpeg', 'bmp', 'tif', 'pic', 'svg'].includes(ext);
-  var preview = !!previewUrl && (status === 'success' || status === 'done');
+  var preview = !!previewUrl && (!status || status === 'success' || status === 'done' || status === 'deferred');
   var handleOpenPreview = (0, _react.useCallback)((0, _debounce["default"])( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
     var result;
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -300990,7 +301445,7 @@ var Item = function Item(props) {
   }, []);
   var listProps = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({
     ref: provided.innerRef,
-    className: (0, _classnames3["default"])(prefixCls, (_classnames2 = {}, (0, _defineProperty2["default"])(_classnames2, "".concat(prefixCls, "-error"), status === 'error'), (0, _defineProperty2["default"])(_classnames2, "".concat(prefixCls, "-success"), status === 'success'), _classnames2))
+    className: (0, _classnames3["default"])(prefixCls, (_classnames2 = {}, (0, _defineProperty2["default"])(_classnames2, "".concat(prefixCls, "-error"), status === 'error'), (0, _defineProperty2["default"])(_classnames2, "".concat(prefixCls, "-success"), status === 'success'), (0, _defineProperty2["default"])(_classnames2, "".concat(prefixCls, "-pending"), !status || status === 'deferred'), _classnames2))
   }, provided.draggableProps), {}, {
     style: (0, _objectSpread2["default"])({}, provided.draggableProps.style)
   });
@@ -303697,9 +304152,15 @@ var Lov = /*#__PURE__*/function (_Select) {
 
   var _super = (0, _createSuper2["default"])(Lov);
 
-  function Lov() {
+  function Lov(props, context) {
+    var _this;
+
     (0, _classCallCheck2["default"])(this, Lov);
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props, context);
+    (0, _mobx.runInAction)(function () {
+      _this.searching = false;
+    });
+    return _this;
   }
 
   (0, _createClass2["default"])(Lov, [{
@@ -303972,7 +304433,7 @@ var Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "getPopupLovView",
     value: function getPopupLovView() {
-      var _this = this;
+      var _this2 = this;
 
       var config = this.getConfig();
       this.autoCreate();
@@ -303990,11 +304451,11 @@ var Lov = /*#__PURE__*/function (_Select) {
 
         if (this.popup && !this.fetched) {
           (0, _mobx.runInAction)(function () {
-            lovViewProps = _this.beforeOpen(options);
+            lovViewProps = _this2.beforeOpen(options);
 
-            _this.afterOpen(options);
+            _this2.afterOpen(options);
 
-            _this.fetched = true;
+            _this2.fetched = true;
           });
         }
 
@@ -304406,7 +304867,7 @@ var Lov = /*#__PURE__*/function (_Select) {
     key: "setText",
     value: function setText(text) {
       if (text === undefined || text === '') {
-        delete this.searching;
+        this.searching = false;
       } else {
         this.searching = true;
       }
@@ -304421,7 +304882,7 @@ var Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "searchRemote",
     value: function searchRemote(text) {
-      var _this2 = this;
+      var _this3 = this;
 
       var options = this.options,
           searchMatcher = this.searchMatcher,
@@ -304436,8 +304897,10 @@ var Lov = /*#__PURE__*/function (_Select) {
         });
 
         if (this.isSearchFieldInPopup() || this.props.searchAction === _enum4.SearchAction.input) {
-          options.query(1, undefined, true).then(function () {
-            return delete _this2.searching;
+          options.query(1, undefined, true)["finally"](function () {
+            return (0, _mobx.runInAction)(function () {
+              _this3.searching = false;
+            });
           });
         }
       }
@@ -304486,7 +304949,7 @@ var Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "handleLovViewSelect",
     value: function handleLovViewSelect(records) {
-      var _this3 = this;
+      var _this4 = this;
 
       var viewMode = this.viewMode,
           _this$textField = this.textField,
@@ -304500,11 +304963,11 @@ var Lov = /*#__PURE__*/function (_Select) {
 
         if (isSameSelectedTimestamp) {
           this.setValue(records.map(function (record) {
-            return _this3.processRecordToObject(record);
+            return _this4.processRecordToObject(record);
           }));
         } else {
           this.setValue((0, _SelectionList.getRecords)(records, textField).map(function (record) {
-            return _this3.processRecordToObject(record);
+            return _this4.processRecordToObject(record);
           }));
         }
       } else {
@@ -304633,7 +305096,7 @@ var Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "syncValueOnBlur",
     value: function syncValueOnBlur(value, event) {
-      var _this4 = this;
+      var _this5 = this;
 
       var textField = this.textField;
       var _this$props6 = this.props,
@@ -304656,11 +305119,11 @@ var Lov = /*#__PURE__*/function (_Select) {
             if (length > 1 && !fetchSingle || length === 1) {
               var record = options.get(0);
 
-              if (!_this4.optionIsSelected(record, _this4.getValues())) {
-                _this4.choose(record);
+              if (!_this5.optionIsSelected(record, _this5.getValues())) {
+                _this5.choose(record);
               }
             } else if (length && fetchSingle) {
-              _this4.openModal(fetchSingle);
+              _this5.openModal(fetchSingle);
             }
           });
         } else if (!this.multiple || this.multiple && this.observableProps.combo && !this.popupShowComboValue) {
@@ -304817,8 +305280,18 @@ var Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "loading",
     get: function get() {
-      var options = this.options;
-      return options.status === _enum3.DataSetStatus.loading;
+      var options = this.options,
+          searching = this.searching;
+      return searching || options.status === _enum3.DataSetStatus.loading;
+    }
+  }, {
+    key: "searchData",
+    value: function searchData(data) {
+      if (this.searching) {
+        return [];
+      }
+
+      return (0, _get2["default"])((0, _getPrototypeOf2["default"])(Lov.prototype), "searchData", this).call(this, data);
     }
   }, {
     key: "saveSuffixRef",
@@ -304857,16 +305330,16 @@ var Lov = /*#__PURE__*/function (_Select) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this5 = this;
+      var _this6 = this;
 
       (0, _get2["default"])((0, _getPrototypeOf2["default"])(Lov.prototype), "componentDidMount", this).call(this);
 
       if (this.viewMode === _TriggerField.TriggerViewMode.popup) {
         this.fetchedReaction = (0, _mobx.reaction)(function () {
-          return _this5.record;
+          return _this6.record;
         }, function () {
-          if (_this5.fetched) {
-            delete _this5.fetched;
+          if (_this6.fetched) {
+            delete _this6.fetched;
           }
         });
       }
@@ -304986,6 +305459,7 @@ Lov.defaultProps = (0, _objectSpread2["default"])((0, _objectSpread2["default"])
   popupSearchMode: _enum4.PopupSearchMode.multiple
 });
 (0, _tslib.__decorate)([_mobx.observable], Lov.prototype, "modal", void 0);
+(0, _tslib.__decorate)([_mobx.observable], Lov.prototype, "searching", void 0);
 (0, _tslib.__decorate)([_mobx.computed], Lov.prototype, "searchMatcher", null);
 (0, _tslib.__decorate)([_mobx.computed], Lov.prototype, "searchable", null);
 (0, _tslib.__decorate)([_mobx.computed], Lov.prototype, "lovCode", null);
@@ -306179,7 +306653,7 @@ module.exports = baseIsMatch;
 /***/ "VZ7k":
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/themes\",\"version\":\"4.1.8-alpha.12\",\"main\":\"lib/index.js\",\"license\":\"MIT\",\"description\":\"主题包\",\"scripts\":{\"prepublish\":\"yarn transpile\",\"tsc\":\"tsc --emitDeclarationOnly true\",\"transpile\":\"cross-env NODE_ENV=production BABEL_ENV=production npx babel src --delete-dir-on-start --out-dir lib --extensions '.ts,.tsx,.js,.jsx' --copy-files --config-file ./.babelrc.js && tsc\"},\"dependencies\":{\"@hzero-front-ui/font\":\"4.1.7\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\"},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"lib\"],\"gitHead\":\"93f905bb3cc799beb4257bcc31401ff230c6d91f\"}");
+module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/themes\",\"version\":\"4.1.8-alpha.14\",\"main\":\"lib/index.js\",\"license\":\"MIT\",\"description\":\"主题包\",\"scripts\":{\"prepublish\":\"yarn transpile\",\"tsc\":\"tsc --emitDeclarationOnly true\",\"transpile\":\"cross-env NODE_ENV=production BABEL_ENV=production npx babel src --delete-dir-on-start --out-dir lib --extensions '.ts,.tsx,.js,.jsx' --copy-files --config-file ./.babelrc.js && tsc\"},\"dependencies\":{\"@hzero-front-ui/font\":\"4.1.7\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\"},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"lib\"],\"gitHead\":\"7fc84cbfde57f6813f5e367c29726f8a5c66d238\"}");
 
 /***/ }),
 
@@ -319643,7 +320117,7 @@ exports["default"] = _default;
 /***/ "YLt+":
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"fromPath\":\"/c7n-ui/en/docs/other\",\"toPath\":\"/c7n-ui/en/docs/other/introduce\"},{\"fromPath\":\"/c7n-ui/zh/docs/other\",\"toPath\":\"/c7n-ui/zh/docs/other/introduce\"}]");
+module.exports = JSON.parse("[{\"fromPath\":\"/c7n-ui/zh/docs/other\",\"toPath\":\"/c7n-ui/zh/docs/other/introduce\"},{\"fromPath\":\"/c7n-ui/en/docs/other\",\"toPath\":\"/c7n-ui/en/docs/other/introduce\"}]");
 
 /***/ }),
 
@@ -323986,7 +324460,9 @@ var defaults = {
 
     return false;
   },
-  tableProfBarHasValueDefaultExpanded: true
+  tableProfBarHasValueDefaultExpanded: true,
+  showLengthInfo: 'auto',
+  inputLengthExceedWarning: true
 };
 var _default = defaults;
 exports["default"] = _default;
@@ -329079,9 +329555,6 @@ var QuickJumperPosition;
   QuickJumperPosition["left"] = "left";
   QuickJumperPosition["right"] = "right";
 })(QuickJumperPosition || (QuickJumperPosition = {}));
-// EXTERNAL MODULE: ../node_modules/choerodon-ui/pro/es/text-field/enum.js
-var text_field_enum = __webpack_require__("Op55");
-
 // EXTERNAL MODULE: ../node_modules/@babel/runtime/helpers/slicedToArray.js
 var slicedToArray = __webpack_require__("nxTg");
 var slicedToArray_default = /*#__PURE__*/__webpack_require__.n(slicedToArray);
@@ -329145,7 +329618,6 @@ var es_tooltip = __webpack_require__("HfQ7");
 var core_enum = __webpack_require__("zjun");
 
 // CONCATENATED MODULE: ../node_modules/choerodon-ui/pro/es/pagination/Pagination.js
-
 
 
 
@@ -329512,6 +329984,8 @@ var Pagination_Pagination = /*#__PURE__*/function (_DataSetComponent) {
   }, {
     key: "handleJumpChange",
     value: function handleJumpChange(value) {
+      var _this3 = this;
+
       var page = this.page,
           totalPage = this.totalPage,
           _this$props3 = this.props,
@@ -329519,17 +329993,24 @@ var Pagination_Pagination = /*#__PURE__*/function (_DataSetComponent) {
           simple = _this$props3.simple,
           showPager = _this$props3.showPager;
       value = Number(value);
+      var forceUpdate = false;
 
       if (isNaN(value) || value < 1) {
         value = page;
+        forceUpdate = true;
       }
 
       if (value > totalPage) {
         value = totalPage;
+        forceUpdate = true;
       }
 
       if (simple || showPager === 'input' || showPager === 'selectAndInput') {
-        this.jumpPage(value);
+        this.jumpPage(value).then(function () {
+          if (forceUpdate) {
+            _this3.forceUpdate();
+          }
+        });
       } else if (showQuickJumper) {
         if (isObject_default()(showQuickJumper) && showQuickJumper.goButton) {
           this.pageInput = value;
@@ -329582,12 +330063,11 @@ var Pagination_Pagination = /*#__PURE__*/function (_DataSetComponent) {
 
       return /*#__PURE__*/react_default.a.createElement(NumberField["b" /* default */], extends_default()({
         value: page,
+        disabled: disabled,
         min: 1,
         onChange: this.handleJumpChange,
-        valueChangeAction: text_field_enum["b" /* ValueChangeAction */].input,
-        wait: 200,
-        disabled: disabled,
-        showValidation: form_enum["e" /* ShowValidation */].tooltip
+        showValidation: form_enum["e" /* ShowValidation */].tooltip,
+        restrict: new RegExp('[.]|^0*', 'g')
       }, otherProps));
     }
   }, {
@@ -338799,6 +339279,8 @@ module.exports = _default;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return useScroll; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("mXGw");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_i18next__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("egL6");
+
 
 var useChinaMirrorHost = function useChinaMirrorHost() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
@@ -338816,6 +339298,9 @@ var usePrevAndNext = function usePrevAndNext(pathPrefix) {
   var _useState2 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       prevAndNext = _useState2[0],
       setPrevAndNext = _useState2[1];
+
+  var _useTranslation = Object(react_i18next__WEBPACK_IMPORTED_MODULE_1__[/* useTranslation */ "a"])(),
+      i18n = _useTranslation.i18n;
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var _prevNode$getAttribut, _prevNode$getAttribut2, _nextNode$getAttribut, _nextNode$getAttribut2;
@@ -338836,7 +339321,7 @@ var usePrevAndNext = function usePrevAndNext(pathPrefix) {
       title: nextNode.textContent || undefined
     } : undefined;
     setPrevAndNext([prev, next]);
-  }, []);
+  }, [i18n.language]);
   return prevAndNext;
 };
 var useLogoLink = function useLogoLink(_ref) {
@@ -340658,9 +341143,9 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
             }
           }
         } else {
-          var textFieldPasteMaxLengthWarning = _this.getContextConfig('textFieldPasteMaxLengthWarning');
+          var inputLengthExceedWarning = _this.getInputLengthExceedWarning('paste');
 
-          if (textFieldPasteMaxLengthWarning) {
+          if (inputLengthExceedWarning) {
             var maxLength = _this.getProp('maxLength');
 
             if (maxLength > 0 && pastedText) {
@@ -340671,7 +341156,7 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
               var currentLength = value.length - (selectionEnd - selectionStart);
 
               if (currentLength + pastedText.length > maxLength) {
-                _this.handlePasteMaxLengthWarning(textFieldPasteMaxLengthWarning, maxLength);
+                _this.showLengthExceedWarningDeb('paste');
               }
             }
           }
@@ -340680,7 +341165,7 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
     };
 
     _this.handleChangeWait = _this.getHandleChange(props);
-    _this.handlePasteMaxLengthWarning = debounce_default()(_this.showPasteMaxLengthWarning, 1000, {
+    _this.showLengthExceedWarningDeb = debounce_default()(_this.showLengthExceedWarning, 1000, {
       leading: true,
       trailing: false
     });
@@ -340788,10 +341273,25 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
       return true;
     }
   }, {
-    key: "showPasteMaxLengthWarning",
-    value: function showPasteMaxLengthWarning(textFieldPasteMaxLengthWarning, maxLength) {
-      if (Object(lodash["isFunction"])(textFieldPasteMaxLengthWarning)) {
-        textFieldPasteMaxLengthWarning({
+    key: "getInputLengthExceedWarning",
+    value: function getInputLengthExceedWarning(type) {
+      var inputLengthExceedWarning = this.getContextConfig('inputLengthExceedWarning');
+
+      if (type === 'paste') {
+        var textFieldPasteMaxLengthWarning = this.getContextConfig('textFieldPasteMaxLengthWarning');
+        return !isNil_default()(textFieldPasteMaxLengthWarning) ? textFieldPasteMaxLengthWarning : inputLengthExceedWarning;
+      }
+
+      return inputLengthExceedWarning;
+    }
+  }, {
+    key: "showLengthExceedWarning",
+    value: function showLengthExceedWarning(type) {
+      var inputLengthExceedWarning = this.getInputLengthExceedWarning(type);
+      var maxLength = this.getProp('maxLength');
+
+      if (Object(lodash["isFunction"])(inputLengthExceedWarning)) {
+        inputLengthExceedWarning({
           dataSet: this.dataSet,
           field: this.field,
           name: this.name,
@@ -340799,10 +341299,13 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
           maxLength: maxLength
         });
       } else {
+        var message = type === 'paste' ? Object(locale_context["a" /* $l */])('TextField', 'pasted_exceeding_max_length', {
+          maxLength: maxLength
+        }) : Object(locale_context["a" /* $l */])('TextField', 'input_exceeding_max_length', {
+          maxLength: maxLength
+        });
         notification["a" /* default */].warning({
-          message: Object(locale_context["a" /* $l */])('TextField', 'pasted_exceeding_max_length', {
-            maxLength: maxLength
-          }),
+          message: message,
           description: null
         });
       }
@@ -340892,6 +341395,10 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
       if (wait !== nextProps.wait || waitType !== nextProps.waitType) {
         this.handleChangeWait = this.getHandleChange(nextProps);
       }
+
+      if (this.valueChangeAction === text_field_enum["b" /* ValueChangeAction */].input && this.isFocus && !this.multiple && !this.range && !this.record && this.text !== nextProps.value) {
+        this.setText(undefined);
+      }
     }
   }, {
     key: "componentWillUnmount",
@@ -340899,7 +341406,7 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
       get_default()(getPrototypeOf_default()(TextField.prototype), "componentWillUnmount", this).call(this);
 
       this.handleChangeWait.cancel();
-      this.handlePasteMaxLengthWarning.cancel();
+      this.showLengthExceedWarningDeb.cancel();
     }
   }, {
     key: "saveTagContainer",
@@ -341446,11 +341953,20 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
   }, {
     key: "renderLengthInfo",
     value: function renderLengthInfo(maxLength, inputLength) {
-      var prefixCls = this.prefixCls;
-      return maxLength && maxLength > 0 ? /*#__PURE__*/react_default.a.createElement("div", {
+      var prefixCls = this.prefixCls,
+          showLengthInfo = this.showLengthInfo;
+      var children;
+
+      if (showLengthInfo === true) {
+        children = isNil_default()(maxLength) ? "".concat(inputLength) : maxLength > 0 ? "".concat(inputLength, "/").concat(maxLength) : undefined;
+      } else if (showLengthInfo === 'auto' && !isNil_default()(maxLength) && maxLength > 0 && inputLength && inputLength / maxLength >= 0.8) {
+        children = "".concat(inputLength, "/").concat(maxLength);
+      }
+
+      return children ? /*#__PURE__*/react_default.a.createElement("div", {
         key: "length-info",
         className: "".concat(prefixCls, "-length-info")
-      }, "".concat(inputLength, "/").concat(maxLength)) : null;
+      }, children) : null;
     } // 处理 form 中的 labelLayout 为 placeholder 情况避免以前 placeholder 和 label 无法区分彼此。
 
   }, {
@@ -341895,7 +342411,7 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
         this.lengthElement = this.renderLengthInfo(maxLength, inputLength);
 
         if (this.lengthElement) {
-          this.lengthInfoWidth = this.measureTextWidth("".concat(inputLength, " / ").concat(maxLength));
+          this.lengthInfoWidth = this.measureTextWidth(!isNil_default()(maxLength) ? "".concat(inputLength, " / ").concat(maxLength) : " ".concat(inputLength));
         } else {
           this.lengthInfoWidth = undefined;
         }
@@ -342277,11 +342793,68 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
       this.setRangeTarget(1);
     }
   }, {
+    key: "handleCompositionStart",
+    value: function handleCompositionStart(e) {
+      this.preCompositionValue = e.target && e.target.value;
+
+      get_default()(getPrototypeOf_default()(TextField.prototype), "handleCompositionStart", this).call(this, e);
+    }
+  }, {
+    key: "handleCompositionEnd",
+    value: function handleCompositionEnd(e) {
+      var inputLengthExceedWarning = this.getInputLengthExceedWarning('input');
+
+      if (!this.multiple && !this.range && inputLengthExceedWarning) {
+        var insertedText = e.data;
+
+        var _ref5 = this.selectionInfo || {},
+            selectionStart = _ref5.selectionStart,
+            selectionEnd = _ref5.selectionEnd;
+
+        var selectionLength = (selectionEnd || 0) - (selectionStart || 0);
+        var expectedTotalLength = (this.preCompositionValue || '').length + (insertedText || '').length - selectionLength;
+
+        if (expectedTotalLength > this.getProp('maxLength')) {
+          this.showLengthExceedWarningDeb('input');
+        }
+      }
+
+      delete this.selectionInfo;
+      delete this.preCompositionValue;
+
+      get_default()(getPrototypeOf_default()(TextField.prototype), "handleCompositionEnd", this).call(this, e);
+    }
+  }, {
     key: "handleKeyDown",
     value: function handleKeyDown(e) {
       var _this9 = this;
 
       if (!this.disabled && !this.readOnly) {
+        // keydown 事件早于 composition 事件
+        if (!this.selectionInfo && !this.lock) {
+          this.selectionInfo = e.target ? {
+            selectionStart: e.target.selectionStart,
+            selectionEnd: e.target.selectionEnd
+          } : undefined;
+        }
+
+        var inputLengthExceedWarning = this.getInputLengthExceedWarning('input');
+
+        if (!this.multiple && !this.range && inputLengthExceedWarning && !this.lock && !(e.ctrlKey || e.altKey || e.metaKey)) {
+          var _ref6 = e.target || {},
+              value = _ref6.value;
+
+          var _ref7 = this.selectionInfo || {},
+              selectionStart = _ref7.selectionStart,
+              selectionEnd = _ref7.selectionEnd;
+
+          var selectionLength = (selectionEnd || 0) - (selectionStart || 0);
+
+          if (selectionLength === 0 && e.key && (e.key === 'Spacebar' || e.key.length === 1) && (value || '').length === this.getProp('maxLength')) {
+            this.showLengthExceedWarningDeb('input');
+          }
+        }
+
         if ((e.ctrlKey || e.metaKey) && e.keyCode === KeyCode["a" /* default */].C && [data_set_enum["FieldFormat"].uppercase, data_set_enum["FieldFormat"].lowercase, data_set_enum["FieldFormat"].capitalize].includes(this.format)) {
           e.preventDefault(); // 执行复制操作
 
@@ -342378,7 +342951,13 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
         }
       }
 
-      get_default()(getPrototypeOf_default()(TextField.prototype), "handleKeyDown", this).call(this, e);
+      get_default()(getPrototypeOf_default()(TextField.prototype), "handleKeyDown", this).call(this, e); // 处理 IME (输入法) 状态
+      // 当用户正在使用输入法时，IE11 可能返回 "Process" 或 "Unidentified"; 现代浏览器可能返回 "Process"
+
+
+      if (!this.lock && e.key !== 'Process' && e.key !== 'Unidentified') {
+        delete this.selectionInfo;
+      }
     }
   }, {
     key: "handleMouseDown",
@@ -342441,6 +343020,8 @@ var TextField_TextField = /*#__PURE__*/function (_FormField) {
           this.setValue(null);
         }
       }
+
+      delete this.selectionInfo;
 
       get_default()(getPrototypeOf_default()(TextField.prototype), "handleBlur", this).call(this, e);
     }
@@ -342598,7 +343179,9 @@ Object(tslib_es6["__decorate"])([mobx_module["computed"]], TextField_TextField.p
 
 Object(tslib_es6["__decorate"])([mobx_module["computed"]], TextField_TextField.prototype, "showHelp", null);
 
-Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "showPasteMaxLengthWarning", null);
+Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "getInputLengthExceedWarning", null);
+
+Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "showLengthExceedWarning", null);
 
 Object(tslib_es6["__decorate"])([autobind["a" /* default */], mobx_module["action"]], TextField_TextField.prototype, "handleRenderedValueChange", null);
 
@@ -342631,6 +343214,10 @@ Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextFie
 Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "handleRangeStart", null);
 
 Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "handleRangeEnd", null);
+
+Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "handleCompositionStart", null);
+
+Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "handleCompositionEnd", null);
 
 Object(tslib_es6["__decorate"])([autobind["a" /* default */]], TextField_TextField.prototype, "handleKeyDown", null);
 
@@ -345748,6 +346335,8 @@ var _pdfIcon = _interopRequireDefault(__webpack_require__("xo6Q"));
 
 var _xlsIcon = _interopRequireDefault(__webpack_require__("GxuG"));
 
+var _mdIcon = _interopRequireDefault(__webpack_require__("elUj"));
+
 var _FormField2 = __webpack_require__("7Y/i");
 
 var _icon = _interopRequireDefault(__webpack_require__("vKVp"));
@@ -345819,6 +346408,15 @@ var UploadList = /*#__PURE__*/function (_FormField) {
 
           case 'xls':
             previewImg = /*#__PURE__*/_react["default"].createElement(_xlsIcon["default"], {
+              style: {
+                width: fileIconSize
+              },
+              className: "".concat(prefixCls, "-icon-file")
+            });
+            break;
+
+          case 'markdown':
+            previewImg = /*#__PURE__*/_react["default"].createElement(_mdIcon["default"], {
               style: {
                 width: fileIconSize
               },
@@ -370876,6 +371474,68 @@ module.exports = function (it) {
 
 /***/ }),
 
+/***/ "elUj":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireWildcard = __webpack_require__("vdEC")["default"];
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var React = _interopRequireWildcard(__webpack_require__("mXGw"));
+
+var MdIcon = function MdIcon(_ref) {
+  var className = _ref.className,
+      style = _ref.style;
+  return /*#__PURE__*/React.createElement("svg", {
+    style: style,
+    className: className,
+    viewBox: "0 0 1024 1024",
+    version: "1.1",
+    xmlns: "http://www.w3.org/2000/svg",
+    xmlnsXlink: "http://www.w3.org/1999/xlink"
+  }, /*#__PURE__*/React.createElement("title", null, "icon/md"), /*#__PURE__*/React.createElement("g", {
+    id: "icon/md",
+    stroke: "none",
+    strokeWidth: "1",
+    fill: "none",
+    fillRule: "evenodd"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M883.5,920 C883.5,942.09139 865.59139,960 843.5,960 L220,960 C197.90861,960 180,942.09139 180,920 L180,104 C180,81.90861 197.90861,64 220,64 L659.5,64 L883.5,288 L883.5,920 Z",
+    id: "\u8DEF\u5F84",
+    fill: "#FEEEA3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M172,512 L754,512 C776.09139,512 794,529.90861 794,552 L794,812 C794,834.09139 776.09139,852 754,852 L172,852 C149.90861,852 132,834.09139 132,812 L132,552 C132,529.90861 149.90861,512 172,512 Z",
+    id: "\u77E9\u5F62",
+    fill: "#FBAD00"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M883.446223,288 L699.5,288 C677.40861,288 659.5,270.09139 659.5,248 L659.5,64 L883.446223,288 Z",
+    id: "\u77E9\u5F62\u5907\u4EFD-11",
+    fill: "#FFC229"
+  }), /*#__PURE__*/React.createElement("g", {
+    id: "MD",
+    transform: "translate(249.000000, 582.000000)",
+    fill: "#FFFFFF",
+    fillRule: "nonzero"
+  }, /*#__PURE__*/React.createElement("polygon", {
+    id: "\u8DEF\u5F84",
+    points: "0 0 0 199.92 32.76 199.92 32.76 62.16 33.88 62.16 92.68 199.92 120.96 199.92 179.76 62.16 180.88 62.16 180.88 199.92 213.64 199.92 213.64 0 175.28 0 107.52 156.8 106.4 156.8 38.36 0"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M256.84,0 L256.84,199.92 L329.92,199.92 C362.4,199.92 386.76,190.96 403.56,173.04 C419.52,155.96 427.64,131.6 427.64,99.96 C427.64,68.04 419.52,43.68 403.56,26.88 C386.76,8.96 362.4,0 329.92,0 L256.84,0 Z M289.6,28 L323.76,28 C348.68,28 366.88,33.6 378.36,45.08 C389.56,56.28 395.16,74.76 395.16,99.96 C395.16,124.6 389.56,142.8 378.36,154.56 C366.88,166.04 348.68,171.92 323.76,171.92 L289.6,171.92 L289.6,28 Z",
+    id: "\u5F62\u72B6"
+  }))));
+};
+
+var _default = MdIcon;
+exports["default"] = _default;
+
+/***/ }),
+
 /***/ "emEt":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -376718,15 +377378,13 @@ var _icon = _interopRequireDefault(__webpack_require__("vKVp"));
 
 var _enum2 = __webpack_require__("A3ON");
 
-var _enum3 = __webpack_require__("kArW");
-
 var _QuickJumper = _interopRequireDefault(__webpack_require__("/Wju"));
 
 var _tooltip = _interopRequireDefault(__webpack_require__("I3PN"));
 
-var _enum4 = __webpack_require__("PdsU");
+var _enum3 = __webpack_require__("PdsU");
 
-var _enum5 = __webpack_require__("aYLu");
+var _enum4 = __webpack_require__("aYLu");
 
 function defaultItemRender(page, type) {
   switch (type) {
@@ -377057,6 +377715,8 @@ var Pagination = /*#__PURE__*/function (_DataSetComponent) {
   }, {
     key: "handleJumpChange",
     value: function handleJumpChange(value) {
+      var _this3 = this;
+
       var page = this.page,
           totalPage = this.totalPage,
           _this$props3 = this.props,
@@ -377064,17 +377724,24 @@ var Pagination = /*#__PURE__*/function (_DataSetComponent) {
           simple = _this$props3.simple,
           showPager = _this$props3.showPager;
       value = Number(value);
+      var forceUpdate = false;
 
       if (isNaN(value) || value < 1) {
         value = page;
+        forceUpdate = true;
       }
 
       if (value > totalPage) {
         value = totalPage;
+        forceUpdate = true;
       }
 
       if (simple || showPager === 'input' || showPager === 'selectAndInput') {
-        this.jumpPage(value);
+        this.jumpPage(value).then(function () {
+          if (forceUpdate) {
+            _this3.forceUpdate();
+          }
+        });
       } else if (showQuickJumper) {
         if ((0, _isObject["default"])(showQuickJumper) && showQuickJumper.goButton) {
           this.pageInput = value;
@@ -377119,7 +377786,7 @@ var Pagination = /*#__PURE__*/function (_DataSetComponent) {
       var otherProps = {};
 
       if (tooltip) {
-        otherProps.tooltip = [_enum5.Tooltip.always, {
+        otherProps.tooltip = [_enum4.Tooltip.always, {
           title: (0, _localeContext.$l)('Pagination', 'jump_to'),
           placement: 'bottomLeft'
         }];
@@ -377127,12 +377794,11 @@ var Pagination = /*#__PURE__*/function (_DataSetComponent) {
 
       return /*#__PURE__*/_react["default"].createElement(_NumberField["default"], (0, _extends2["default"])({
         value: page,
+        disabled: disabled,
         min: 1,
         onChange: this.handleJumpChange,
-        valueChangeAction: _enum3.ValueChangeAction.input,
-        wait: 200,
-        disabled: disabled,
-        showValidation: _enum4.ShowValidation.tooltip
+        showValidation: _enum3.ShowValidation.tooltip,
+        restrict: new RegExp('[.]|^0*', 'g')
       }, otherProps));
     }
   }, {
@@ -393776,7 +394442,7 @@ module.exports = isUndefined;
 /***/ "hzMB":
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/cfg\",\"version\":\"4.1.8-alpha.12\",\"private\":false,\"main\":\"lib/index.js\",\"dependencies\":{\"@hzero-front-ui/c7n-ui\":\"4.1.8-alpha.8\",\"@hzero-front-ui/core\":\"4.1.7\",\"@hzero-front-ui/hzero-ui\":\"4.1.7\",\"@hzero-front-ui/themes\":\"4.1.8-alpha.12\",\"memoize-one\":\"^5.1.1\"},\"devDependencies\":{\"@babel/core\":\"7.12.3\",\"@babel/plugin-proposal-decorators\":\"^7.14.5\",\"@babel/plugin-transform-modules-umd\":\"^7.2.0\",\"@babel/standalone\":\"7.12.3\",\"@pmmmwh/react-refresh-webpack-plugin\":\"0.4.3\",\"@svgr/webpack\":\"5.5.0\",\"@testing-library/jest-dom\":\"^5.11.4\",\"@testing-library/react\":\"^11.1.0\",\"@testing-library/user-event\":\"^12.1.10\",\"@types/classnames\":\"^2.3.1\",\"@types/express\":\"^4.17.12\",\"@types/file-saver\":\"^2.0.3\",\"@types/fs-extra\":\"^9.0.12\",\"@types/jest\":\"^26.0.15\",\"@types/node\":\"^12.0.0\",\"@types/query-string\":\"^6.3.0\",\"@types/react\":\"~16.14.11\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^17.0.0\",\"@types/sockjs\":\"^0.3.32\",\"@types/uuid\":\"^8.3.0\",\"@typescript-eslint/eslint-plugin\":\"^4.5.0\",\"@typescript-eslint/parser\":\"^4.5.0\",\"add-asset-html-webpack-plugin\":\"^3.2.0\",\"axios\":\"^0.21.1\",\"babel-eslint\":\"^10.1.0\",\"babel-jest\":\"^26.6.0\",\"babel-loader\":\"8.1.0\",\"babel-plugin-named-asset-import\":\"^0.3.7\",\"babel-preset-react-app\":\"9.1.0\",\"bfj\":\"^7.0.2\",\"body-parser\":\"^1.19.0\",\"camelcase\":\"^6.1.0\",\"case-sensitive-paths-webpack-plugin\":\"2.3.0\",\"choerodon-ui\":\"1.6.8-alpha.2\",\"clean-webpack-plugin\":\"^4.0.0-alpha.0\",\"concurrently\":\"^6.2.0\",\"css-loader\":\"4.3.0\",\"dotenv\":\"8.2.0\",\"dotenv-expand\":\"5.1.0\",\"eslint-config-react-app\":\"^6.0.0\",\"eslint-plugin-flowtype\":\"^5.2.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jest\":\"^24.1.0\",\"eslint-plugin-jsx-a11y\":\"^6.3.1\",\"eslint-plugin-react\":\"^7.21.5\",\"eslint-plugin-react-hooks\":\"^4.2.0\",\"eslint-plugin-testing-library\":\"^3.9.2\",\"eslint-webpack-plugin\":\"^2.5.2\",\"express\":\"^4.17.1\",\"file-loader\":\"6.1.1\",\"html-webpack-plugin\":\"4.5.0\",\"identity-obj-proxy\":\"3.0.0\",\"jest\":\"26.6.0\",\"jest-circus\":\"26.6.0\",\"jest-resolve\":\"26.6.0\",\"jest-watch-typeahead\":\"0.6.1\",\"less\":\"^3.1.1\",\"less-loader\":\"^7.0.0\",\"lodash\":\"^4.17.21\",\"mini-css-extract-plugin\":\"0.11.3\",\"mobx\":\">=4.7.0 <4.8.0\",\"mobx-react\":\">6.1.1 < 6.1.5\",\"optimize-css-assets-webpack-plugin\":\"5.0.4\",\"pnp-webpack-plugin\":\"1.6.4\",\"postcss-flexbugs-fixes\":\"4.2.1\",\"postcss-loader\":\"3.0.0\",\"postcss-normalize\":\"8.0.1\",\"postcss-preset-env\":\"6.7.0\",\"postcss-safe-parser\":\"5.0.2\",\"prompts\":\"2.4.0\",\"query-string\":\"^7.0.1\",\"react\":\"~16.14.0\",\"react-app-polyfill\":\"^2.0.0\",\"react-beautiful-dnd\":\"^13.1.0\",\"react-dev-utils\":\"^11.0.3\",\"react-dnd\":\"^14.0.2\",\"react-dnd-html5-backend\":\"^14.0.0\",\"react-dom\":\"~16.14.0\",\"react-refresh\":\"^0.8.3\",\"react-router-dom\":\"^4.1.2\",\"resolve\":\"1.18.1\",\"resolve-url-loader\":\"^3.1.2\",\"sass-loader\":\"^10.0.5\",\"semver\":\"7.3.2\",\"sockjs\":\"^0.3.21\",\"sockjs-client\":\"^1.5.1\",\"style-loader\":\"1.3.0\",\"terser-webpack-plugin\":\"4.2.3\",\"ts-node-dev\":\"^1.1.6\",\"ts-pnp\":\"1.2.0\",\"typescript\":\"^4.1.2\",\"url-loader\":\"4.1.1\",\"uuid\":\"^8.3.0\",\"web-vitals\":\"^1.0.1\",\"webpack\":\"4.44.2\",\"webpack-cli\":\"~3\",\"webpack-dev-server\":\"3.11.1\",\"webpack-manifest-plugin\":\"2.2.0\",\"webpackbar\":\"^5.0.0-3\",\"workbox-webpack-plugin\":\"5.1.4\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\",\"styled-components\":\"*\"},\"scripts\":{\"postinstall\":\"node scripts/postinstall.js\",\"prepublish\":\"yarn transpile\",\"start\":\"cross-env TARGET=static node scripts/start.js\",\"build\":\"cross-env TARGET=static node scripts/build.js\",\"test\":\"node scripts/test.js\",\"tsc\":\"tsc --noEmit false --emitDeclarationOnly true\",\"transpile\":\"cross-env UED_BUILD_TARGET=cfg NODE_ENV=production BABEL_ENV=production npx babel -x .js,.ts,.jsx,.tsx src --delete-dir-on-start --out-dir lib --copy-files --ignore 'src/**/*.spec.js','src/**/*.test.js' && npm run tsc\"},\"browserslist\":{\"production\":[\">0.2%\",\"not dead\",\"not op_mini all\"],\"development\":[\"last 1 chrome version\",\"last 1 firefox version\",\"last 1 safari version\"]},\"jest\":{\"roots\":[\"<rootDir>/src\"],\"collectCoverageFrom\":[\"src/**/*.{js,jsx,ts,tsx}\",\"!src/**/*.d.ts\"],\"setupFiles\":[\"react-app-polyfill/jsdom\"],\"setupFilesAfterEnv\":[\"<rootDir>/src/setupTests.ts\"],\"testMatch\":[\"<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}\",\"<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}\"],\"testEnvironment\":\"jest-environment-jsdom-fourteen\",\"transform\":{\"^.+\\\\.(js|jsx|ts|tsx)$\":\"<rootDir>/node_modules/babel-jest\",\"^.+\\\\.css$\":\"<rootDir>/config/jest/cssTransform.js\",\"^(?!.*\\\\.(js|jsx|ts|tsx|css|json)$)\":\"<rootDir>/config/jest/fileTransform.js\"},\"transformIgnorePatterns\":[\"[/\\\\\\\\]node_modules[/\\\\\\\\].+\\\\.(js|jsx|ts|tsx)$\",\"^.+\\\\.module\\\\.(css|sass|scss)$\"],\"modulePaths\":[],\"moduleNameMapper\":{\"^react-native$\":\"react-native-web\",\"^.+\\\\.module\\\\.(css|sass|scss)$\":\"identity-obj-proxy\"},\"moduleFileExtensions\":[\"web.js\",\"js\",\"web.ts\",\"ts\",\"web.tsx\",\"tsx\",\"json\",\"web.jsx\",\"jsx\",\"node\"],\"watchPlugins\":[\"jest-watch-typeahead/filename\",\"jest-watch-typeahead/testname\"]},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"scripts/postinstall.js\",\"lib/assets\",\"lib/components\",\"lib/pages\",\"lib/theme-animations\",\"lib/theme-assets\",\"lib/theme-data\",\"lib/utils\",\"lib/index.js\",\"lib/index.d.ts\",\"index.js\"],\"gitHead\":\"93f905bb3cc799beb4257bcc31401ff230c6d91f\"}");
+module.exports = JSON.parse("{\"name\":\"@hzero-front-ui/cfg\",\"version\":\"4.1.8-alpha.14\",\"private\":false,\"main\":\"lib/index.js\",\"dependencies\":{\"@hzero-front-ui/c7n-ui\":\"4.1.8-alpha.8\",\"@hzero-front-ui/core\":\"4.1.7\",\"@hzero-front-ui/hzero-ui\":\"4.1.7\",\"@hzero-front-ui/themes\":\"4.1.8-alpha.14\",\"memoize-one\":\"^5.1.1\"},\"devDependencies\":{\"@babel/core\":\"7.12.3\",\"@babel/plugin-proposal-decorators\":\"^7.14.5\",\"@babel/plugin-transform-modules-umd\":\"^7.2.0\",\"@babel/standalone\":\"7.12.3\",\"@pmmmwh/react-refresh-webpack-plugin\":\"0.4.3\",\"@svgr/webpack\":\"5.5.0\",\"@testing-library/jest-dom\":\"^5.11.4\",\"@testing-library/react\":\"^11.1.0\",\"@testing-library/user-event\":\"^12.1.10\",\"@types/classnames\":\"^2.3.1\",\"@types/express\":\"^4.17.12\",\"@types/file-saver\":\"^2.0.3\",\"@types/fs-extra\":\"^9.0.12\",\"@types/jest\":\"^26.0.15\",\"@types/node\":\"^12.0.0\",\"@types/query-string\":\"^6.3.0\",\"@types/react\":\"~16.14.11\",\"@types/react-beautiful-dnd\":\"^13.0.0\",\"@types/react-dom\":\"^17.0.0\",\"@types/sockjs\":\"^0.3.32\",\"@types/uuid\":\"^8.3.0\",\"@typescript-eslint/eslint-plugin\":\"^4.5.0\",\"@typescript-eslint/parser\":\"^4.5.0\",\"add-asset-html-webpack-plugin\":\"^3.2.0\",\"axios\":\"^0.21.1\",\"babel-eslint\":\"^10.1.0\",\"babel-jest\":\"^26.6.0\",\"babel-loader\":\"8.1.0\",\"babel-plugin-named-asset-import\":\"^0.3.7\",\"babel-preset-react-app\":\"9.1.0\",\"bfj\":\"^7.0.2\",\"body-parser\":\"^1.19.0\",\"camelcase\":\"^6.1.0\",\"case-sensitive-paths-webpack-plugin\":\"2.3.0\",\"choerodon-ui\":\"1.6.8-alpha.2\",\"clean-webpack-plugin\":\"^4.0.0-alpha.0\",\"concurrently\":\"^6.2.0\",\"css-loader\":\"4.3.0\",\"dotenv\":\"8.2.0\",\"dotenv-expand\":\"5.1.0\",\"eslint-config-react-app\":\"^6.0.0\",\"eslint-plugin-flowtype\":\"^5.2.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jest\":\"^24.1.0\",\"eslint-plugin-jsx-a11y\":\"^6.3.1\",\"eslint-plugin-react\":\"^7.21.5\",\"eslint-plugin-react-hooks\":\"^4.2.0\",\"eslint-plugin-testing-library\":\"^3.9.2\",\"eslint-webpack-plugin\":\"^2.5.2\",\"express\":\"^4.17.1\",\"file-loader\":\"6.1.1\",\"html-webpack-plugin\":\"4.5.0\",\"identity-obj-proxy\":\"3.0.0\",\"jest\":\"26.6.0\",\"jest-circus\":\"26.6.0\",\"jest-resolve\":\"26.6.0\",\"jest-watch-typeahead\":\"0.6.1\",\"less\":\"^3.1.1\",\"less-loader\":\"^7.0.0\",\"lodash\":\"^4.17.21\",\"mini-css-extract-plugin\":\"0.11.3\",\"mobx\":\">=4.7.0 <4.8.0\",\"mobx-react\":\">6.1.1 < 6.1.5\",\"optimize-css-assets-webpack-plugin\":\"5.0.4\",\"pnp-webpack-plugin\":\"1.6.4\",\"postcss-flexbugs-fixes\":\"4.2.1\",\"postcss-loader\":\"3.0.0\",\"postcss-normalize\":\"8.0.1\",\"postcss-preset-env\":\"6.7.0\",\"postcss-safe-parser\":\"5.0.2\",\"prompts\":\"2.4.0\",\"query-string\":\"^7.0.1\",\"react\":\"~16.14.0\",\"react-app-polyfill\":\"^2.0.0\",\"react-beautiful-dnd\":\"^13.1.0\",\"react-dev-utils\":\"^11.0.3\",\"react-dnd\":\"^14.0.2\",\"react-dnd-html5-backend\":\"^14.0.0\",\"react-dom\":\"~16.14.0\",\"react-refresh\":\"^0.8.3\",\"react-router-dom\":\"^4.1.2\",\"resolve\":\"1.18.1\",\"resolve-url-loader\":\"^3.1.2\",\"sass-loader\":\"^10.0.5\",\"semver\":\"7.3.2\",\"sockjs\":\"^0.3.21\",\"sockjs-client\":\"^1.5.1\",\"style-loader\":\"1.3.0\",\"terser-webpack-plugin\":\"4.2.3\",\"ts-node-dev\":\"^1.1.6\",\"ts-pnp\":\"1.2.0\",\"typescript\":\"^4.1.2\",\"url-loader\":\"4.1.1\",\"uuid\":\"^8.3.0\",\"web-vitals\":\"^1.0.1\",\"webpack\":\"4.44.2\",\"webpack-cli\":\"~3\",\"webpack-dev-server\":\"3.11.1\",\"webpack-manifest-plugin\":\"2.2.0\",\"webpackbar\":\"^5.0.0-3\",\"workbox-webpack-plugin\":\"5.1.4\"},\"peerDependencies\":{\"@hzero-front-ui/core\":\"*\",\"styled-components\":\"*\"},\"scripts\":{\"postinstall\":\"node scripts/postinstall.js\",\"prepublish\":\"yarn transpile\",\"start\":\"cross-env TARGET=static node scripts/start.js\",\"build\":\"cross-env TARGET=static node scripts/build.js\",\"test\":\"node scripts/test.js\",\"tsc\":\"tsc --noEmit false --emitDeclarationOnly true\",\"transpile\":\"cross-env UED_BUILD_TARGET=cfg NODE_ENV=production BABEL_ENV=production npx babel -x .js,.ts,.jsx,.tsx src --delete-dir-on-start --out-dir lib --copy-files --ignore 'src/**/*.spec.js','src/**/*.test.js' && npm run tsc\"},\"browserslist\":{\"production\":[\">0.2%\",\"not dead\",\"not op_mini all\"],\"development\":[\"last 1 chrome version\",\"last 1 firefox version\",\"last 1 safari version\"]},\"jest\":{\"roots\":[\"<rootDir>/src\"],\"collectCoverageFrom\":[\"src/**/*.{js,jsx,ts,tsx}\",\"!src/**/*.d.ts\"],\"setupFiles\":[\"react-app-polyfill/jsdom\"],\"setupFilesAfterEnv\":[\"<rootDir>/src/setupTests.ts\"],\"testMatch\":[\"<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}\",\"<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}\"],\"testEnvironment\":\"jest-environment-jsdom-fourteen\",\"transform\":{\"^.+\\\\.(js|jsx|ts|tsx)$\":\"<rootDir>/node_modules/babel-jest\",\"^.+\\\\.css$\":\"<rootDir>/config/jest/cssTransform.js\",\"^(?!.*\\\\.(js|jsx|ts|tsx|css|json)$)\":\"<rootDir>/config/jest/fileTransform.js\"},\"transformIgnorePatterns\":[\"[/\\\\\\\\]node_modules[/\\\\\\\\].+\\\\.(js|jsx|ts|tsx)$\",\"^.+\\\\.module\\\\.(css|sass|scss)$\"],\"modulePaths\":[],\"moduleNameMapper\":{\"^react-native$\":\"react-native-web\",\"^.+\\\\.module\\\\.(css|sass|scss)$\":\"identity-obj-proxy\"},\"moduleFileExtensions\":[\"web.js\",\"js\",\"web.ts\",\"ts\",\"web.tsx\",\"tsx\",\"json\",\"web.jsx\",\"jsx\",\"node\"],\"watchPlugins\":[\"jest-watch-typeahead/filename\",\"jest-watch-typeahead/testname\"]},\"repository\":{\"type\":\"git\",\"url\":\"https://code.choerodon.com.cn/hzero-hzero/hzero-front-ui\"},\"publishConfig\":{\"registry\":\"http://nexus.saas.hand-china.com/content/repositories/hzero-ui/\"},\"files\":[\"scripts/postinstall.js\",\"lib/assets\",\"lib/components\",\"lib/pages\",\"lib/theme-animations\",\"lib/theme-assets\",\"lib/theme-data\",\"lib/utils\",\"lib/index.js\",\"lib/index.d.ts\",\"index.js\"],\"gitHead\":\"7fc84cbfde57f6813f5e367c29726f8a5c66d238\"}");
 
 /***/ }),
 
@@ -513998,7 +514664,7 @@ var Modal_style_ModalStyle = function ModalStyle(props) {
       successColor = _getThemeData2.successColor,
       errorColor = _getThemeData2.errorColor;
 
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-modal.c7n-pro-modal{border-radius:", "px;.c7n-pro-modal-header{padding:", ";border:", ";background-color:initial;.c7n-pro-modal-title{font-size:", "px;color:", ";line-height:", "px;margin-right:", ";}.c7n-pro-modal-title:empty + .c7n-pro-modal-header-buttons .c7n-pro-modal-header-button{height:32px;}.c7n-pro-modal-header-buttons{.c7n-pro-modal-header-button{.icon-close{font-size:14px;position:", ";top:", "px;right:0;z-index:1;font-weight:400;color:", ";}}}}.c7n-pro-modal-content{padding:", "px;background:", ";line-height:", "px;min-width:auto;", ";.c7n-pro-modal-body{font-weight:", ";padding:", "px;margin:0;box-sizing:border-box;.c7n-pro-table-professional-query-bar-button:not(.c7n-pro-table-professional-query-bar-button-vertical){padding-top:0.06rem;}.c7n-pro-confirm{.c7n-pro-confirm-icon{padding-right:0.08rem;.icon{line-height:0;font-size:0.18rem;margin-top:2px;&.icon-warning{&:before{color:", ";content:'\\e79b';font-family:", ";}}&.icon-check_circle{&:before{color:", ";content:'\\e738';font-family:", ";}}&.icon-cancel{&:before{color:", ";content:'\\e734';font-family:", ";}}}}.c7n-pro-confirm-title{font-size:", "px;color:", ";line-height:", "px;}.c7n-pro-confirm-content{color:", ";font-size:", ";line-height:", "px;}tr > td:nth-last-child(1):first-child{.c7n-pro-confirm-title{&::before{display:inline-block;font-family:", ";content:'\\e77d';width:26px;font-size:18px;color:", ";}}.c7n-pro-confirm-content{padding-left:26px;}}}}.c7n-pro-modal-footer{padding:", "px;left:0;text-align:right;border-top:none;}}.c7n-pro-form:not(.c7n-pro-form-vertical):not(.c7n-pro-form-float-label),.c7n-pro-form-horizontal{.c7n-pro-field-label.c7n-pro-field-label:not(.c7n-pro-field-label-vertical){& > label,+ td .c7n-pro-field-wrapper{padding:6px 4px;}}}}"], wrapBorderRadius, headerPadding, hearderBorder, titleFontSize, titleColor1, titleLineHeight, titleMarginRight, headerPosition || 'absolute', closeBtnTop, titleColor2, modalContentPadding, bgColor, contentLineHeight, Modal_style_getBgStyle(showBgIcon, bgColor), modalBodyTextWeight, bodyPadding, warningColor, iconfontFamily, successColor, iconfontFamily, errorColor, iconfontFamily, titleFontSize, titleColor1, titleLineHeight, titleColor3, contentFontColor, contentLineHeight, iconfontFamily, infoColor, footerPadding);
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-modal.c7n-pro-modal{border-radius:", "px;.c7n-pro-modal-header{padding:", ";border:", ";background-color:initial;.c7n-pro-modal-title{font-size:", "px;color:", ";line-height:", "px;margin-right:", ";}.c7n-pro-modal-title:empty + .c7n-pro-modal-header-buttons .c7n-pro-modal-header-button{height:32px;}.c7n-pro-modal-header-buttons{.c7n-pro-modal-header-button{.icon-close{font-size:14px;position:", ";top:", "px;right:0;z-index:1;font-weight:400;color:", ";}}}}.c7n-pro-modal-content{padding:", "px;background:", ";line-height:", "px;min-width:auto;", ";.c7n-pro-modal-body{font-weight:", ";padding:", "px;margin:0;box-sizing:border-box;.c7n-pro-table-professional-query-bar-button:not(.c7n-pro-table-professional-query-bar-button-vertical){padding-top:0.06rem;}.c7n-pro-confirm{td{padding-top:0px;padding-bottom:0px;}.c7n-pro-confirm-icon{padding-right:0.08rem;.icon{line-height:0;font-size:0.18rem;margin-top:1px;&.icon-warning{&:before{color:", ";content:'\\e79b';font-family:", ";}}&.icon-check_circle{&:before{color:", ";content:'\\e738';font-family:", ";}}&.icon-cancel{&:before{color:", ";content:'\\e734';font-family:", ";}}}}.c7n-pro-confirm-title{font-size:", "px;color:", ";line-height:", "px;}.c7n-pro-confirm-content{color:", ";font-size:", ";line-height:", "px;}tr > td:nth-last-child(1):first-child{.c7n-pro-confirm-title{&::before{display:inline-block;font-family:", ";content:'\\e77d';width:26px;font-size:18px;color:", ";vertical-align:-1px;}}.c7n-pro-confirm-content{padding-left:26px;}}}}.c7n-pro-modal-footer{padding:", "px;left:0;text-align:right;border-top:none;}}.c7n-pro-form:not(.c7n-pro-form-vertical):not(.c7n-pro-form-float-label),.c7n-pro-form-horizontal{.c7n-pro-field-label.c7n-pro-field-label:not(.c7n-pro-field-label-vertical){& > label,+ td .c7n-pro-field-wrapper{padding:6px 4px;}}}}"], wrapBorderRadius, headerPadding, hearderBorder, titleFontSize, titleColor1, titleLineHeight, titleMarginRight, headerPosition || 'absolute', closeBtnTop, titleColor2, modalContentPadding, bgColor, contentLineHeight, Modal_style_getBgStyle(showBgIcon, bgColor), modalBodyTextWeight, bodyPadding, warningColor, iconfontFamily, successColor, iconfontFamily, errorColor, iconfontFamily, titleFontSize, titleColor1, titleLineHeight, titleColor3, contentFontColor, contentLineHeight, iconfontFamily, infoColor, footerPadding);
 };
 
 /* harmony default export */ var Modal_style = (Modal_style_ModalStyle);
@@ -527889,7 +528555,7 @@ var theme7_templates_Modal_style_ModalStyle = function ModalStyle(props) {
       successColor = _getThemeData2.successColor,
       errorColor = _getThemeData2.errorColor;
 
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-modal.c7n-pro-modal{.c7n-pro-modal-header{padding:", ";border-color:", ";background-color:initial;.c7n-pro-modal-title{font-size:", "px;color:", ";line-height:", "px;margin-right:", ";}.c7n-pro-modal-title:empty + .c7n-pro-modal-header-buttons .c7n-pro-modal-header-button{height:40px;}.c7n-pro-modal-header-buttons{.c7n-pro-modal-header-button{.icon-close{font-size:16px;position:", ";top:", "px;right:0;z-index:1;font-weight:400;color:", ";}}}}.c7n-pro-modal-content{padding:", "px;background:", ";line-height:", "px;min-width:auto;", ";.c7n-pro-modal-body{font-weight:", ";margin:0;box-sizing:border-box;padding:", ";.c7n-pro-confirm{.c7n-pro-confirm-icon{padding-right:0.08rem;.icon{line-height:0;font-size:0.18rem;&.icon-warning{&:before{color:", ";content:'\\e79b';font-family:", ";}}&.icon-check_circle{&:before{color:", ";content:'\\e738';font-family:", ";}}&.icon-cancel{&:before{color:", ";content:'\\e734';font-family:", ";}}}}.c7n-pro-confirm-title{font-size:", "px;color:", ";line-height:", "px;}.c7n-pro-confirm-content{color:", ";font-size:", "px;line-height:", "px;}tr > td:nth-last-child(1):first-child{.c7n-pro-confirm-title{&::before{display:inline-block;font-family:", ";content:'\\e77d';width:28px;font-size:18px;color:", ";}}.c7n-pro-confirm-content{margin-left:0;}}}}.c7n-pro-modal-footer{padding:", ";left:0;text-align:right;}}&.c7n-pro-confirm-wrapper.c7n-pro-confirm-wrapper{.c7n-pro-confirm-title + .c7n-pro-confirm-content.c7n-pro-confirm-content{margin-top:24px;margin-left:-28px;}.c7n-pro-modal-content{.c7n-pro-modal-body{padding:", ";}}}}.c7n-pro-modal{", "}"], headerPadding, lineColor1, titleFontSize, titleColor1, titleLineHeight, titleMarginRight, headerPosition || 'absolute', closeBtnTop, titleColor2, modalContentPadding, bgColor, contentLineHeight, theme7_templates_Modal_style_getBgStyle(showBgIcon, bgColor), modalBodyTextWeight, bodyPadding, warningColor, iconfontFamily, successColor, iconfontFamily, errorColor, iconfontFamily, titleFontSize, titleColor1, titleLineHeight, titleColor2, contentFontColor, contentLineHeight, iconfontFamily, infoColor, footerPadding, confirmBodyPadding, Form_style_formInputPadding({
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-modal.c7n-pro-modal{.c7n-pro-modal-header{padding:", ";border-color:", ";background-color:initial;.c7n-pro-modal-title{font-size:", "px;color:", ";line-height:", "px;margin-right:", ";}.c7n-pro-modal-title:empty + .c7n-pro-modal-header-buttons .c7n-pro-modal-header-button{height:40px;}.c7n-pro-modal-header-buttons{.c7n-pro-modal-header-button{.icon-close{font-size:16px;position:", ";top:", "px;right:0;z-index:1;font-weight:400;color:", ";}}}}.c7n-pro-modal-content{padding:", "px;background:", ";line-height:", "px;min-width:auto;", ";.c7n-pro-modal-body{font-weight:", ";margin:0;box-sizing:border-box;padding:", ";.c7n-pro-confirm{td{padding-top:0px;padding-bottom:0px;}.c7n-pro-confirm-icon{padding-right:0.08rem;.icon{line-height:24px;font-size:0.18rem;&.icon-warning{&:before{color:", ";content:'\\e79b';font-family:", ";}}&.icon-check_circle{&:before{color:", ";content:'\\e738';font-family:", ";}}&.icon-cancel{&:before{color:", ";content:'\\e734';font-family:", ";}}}}.c7n-pro-confirm-title{font-size:", "px;color:", ";line-height:", "px;}.c7n-pro-confirm-content{color:", ";font-size:", "px;line-height:", "px;}tr > td:nth-last-child(1):first-child{.c7n-pro-confirm-title{&::before{display:inline-block;font-family:", ";content:'\\e77d';width:28px;font-size:18px;color:", ";vertical-align:-1px;}}.c7n-pro-confirm-content{margin-left:0;}}}}.c7n-pro-modal-footer{padding:", ";left:0;text-align:right;}}&.c7n-pro-confirm-wrapper.c7n-pro-confirm-wrapper{.c7n-pro-confirm-title + .c7n-pro-confirm-content.c7n-pro-confirm-content{margin-top:24px;margin-left:-28px;}.c7n-pro-modal-content{.c7n-pro-modal-body{padding:", ";}}}}.c7n-pro-modal{", "}"], headerPadding, lineColor1, titleFontSize, titleColor1, titleLineHeight, titleMarginRight, headerPosition || 'absolute', closeBtnTop, titleColor2, modalContentPadding, bgColor, contentLineHeight, theme7_templates_Modal_style_getBgStyle(showBgIcon, bgColor), modalBodyTextWeight, bodyPadding, warningColor, iconfontFamily, successColor, iconfontFamily, errorColor, iconfontFamily, titleFontSize, titleColor1, titleLineHeight, titleColor2, contentFontColor, contentLineHeight, iconfontFamily, infoColor, footerPadding, confirmBodyPadding, Form_style_formInputPadding({
     verticalPadding: 6,
     horizontalPadding: 8
   }));
@@ -535500,7 +536166,7 @@ var theme8_templates_Attachment_style_AttachmentStyle = function AttachmentStyle
   var _getThemeData4 = Object(core_lib["l" /* getThemeData */])(props, 'button'),
       height = _getThemeData4.height;
 
-  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-attachment-list-item-progress.c7n-pro-attachment-list-item-progress{position:absolute;}.c7n-pro-attachment-list.c7n-pro-attachment-list{padding:0 8px;}.c7n-pro-attachment-list-wrapper{.c7n-pro-attachment-header.c7n-pro-attachment-header{.c7n-pro-attachment-header-label{color:", ";margin:0 8px 0 0;}.c7n-pro-select{border-color:", ";height:", "px;&:hover{border-color:", ";}}}.c7n-pro-attachment-header-divider{background-color:transparent;margin:0;}}.c7n-pro-attachment-list-no-card.c7n-pro-attachment-list-no-card{.c7n-pro-attachment-list-item-content,&.c7n-pro-attachment-list-no-card{.c7n-pro-picture{margin-top:8px;margin-bottom:8px;}}.c7n-pro-attachment-list-item-content{min-height:", "px;> .c7n-pro-btn.c7n-pro-attachment-list-item-icon{width:14px;height:14px;&,&:hover{color:rgba(0,0,0,0.8);}.icon{margin-right:auto;}}.c7n-pro-attachment-list-item-icon.c7n-pro-attachment-list-item-icon{padding-top:0;padding-bottom:0;margin:0;}.c7n-pro-picture-icon .icon{font-size:0.48rem;}}}.c7n-pro-attachment-list-card.c7n-pro-attachment-list-card{margin-top:8px;.c7n-pro-attachment-list-item{margin-top:0;margin-right:0.08rem;margin-bottom:0.08rem;padding:0;background-color:#fff;border:1px solid ", ";.c7n-pro-attachment-list-item-container{border-radius:6px 6px 0 0;}.c7n-pro-attachment-list-item-title{margin-top:4px;margin-bottom:4px;}&.c7n-pro-attachment-list-item-error{&,&:hover{background-color:#fff;border-color:", ";}}&.c7n-pro-attachment-list-item-error{.c7n-pro-attachment-list-item-name,.c7n-pro-attachment-list-item-ext,.c7n-pro-attachment-list-item-size{color:", ";}}}.c7n-pro-picture-icon.c7n-pro-picture-icon{.icon{width:50px;height:50px;}}.c7n-pro-attachment-list-item-error-content{padding:0 4px;}.c7n-pro-attachment-list-item-content{.c7n-pro-picture-preview{padding-top:0;padding-bottom:0;}.c7n-pro-attachment-list-item-placeholder{height:auto;}}.c7n-pro-attachment-card-button.c7n-pro-attachment-card-button{flex-direction:column;.icon{color:inherit;}&:hover{color:", ";}i.icon-add{font-size:20px;}}.c7n-pro-attachment-list-item-buttons{.c7n-pro-btn.c7n-pro-btn.c7n-pro-btn.c7n-pro-btn{&,&:hover{color:", ";}}}}.c7n-pro-attachment-list-item.c7n-pro-attachment-list-item{margin:8px 0;padding:0 8px;border-radius:", "px;background-color:", ";.c7n-pro-attachment-list-item-drag-icon{height:", "px;line-height:", "px;}.c7n-pro-attachment-list-item-title{a{color:", ";line-height:", "px;}}.c7n-pro-attachment-list-item-size{color:", ";line-height:", "px;}&:hover,&:active{background-color:", ";}.c7n-pro-attachment-list-item-title,.c7n-pro-attachment-list-item-error-message{padding:0 0.08rem;}.c7n-pro-attachment-list-item-container{padding-top:0;padding-bottom:0;}&.c7n-pro-attachment-list-item-error{background-color:", ";&:hover,&:active{background-color:", ";}.c7n-pro-attachment-list-item-name,.c7n-pro-attachment-list-item-ext,.c7n-pro-attachment-list-item-size{color:", ";}}.c7n-pro-attachment-list-item-progress .c7n-progress-bg{background-image:linear-gradient(90deg,#f3f3f3 2%,", " 100%);}.c7n-pro-picture-icon{.icon{width:48px;height:48px;background-size:cover;background-repeat:no-repeat;&:before{display:none;}}}.c7n-pro-picture-error{.icon{background-image:url(", ");}}.c7n-pro-picture-empty{.icon{background-image:url(", ");}}}.c7n-pro-attachment-list-item-error-content.c7n-pro-attachment-list-item-error-content{color:", ";font-size:12px;line-height:20px;margin-top:-4px;padding-bottom:8px;}.c7n-pro-attachment-header-buttons.c7n-pro-attachment-header-buttons .c7n-pro-btn{height:", "px;}.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon{width:", "px;padding:calc(", "px - 8px) !important;}.c7n-pro-attachment-header-buttons .c7n-pro-btn.c7n-pro-btn-link.c7n-pro-btn-link.c7n-pro-btn-link,.c7n-pro-attachment.c7n-pro-attachment.c7n-pro-attachment.c7n-pro-attachment.c7n-pro-attachment:not(.c7n-pro-attachment-btn),.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon{border:1px solid ", ";color:", ";padding:0px 12px;background-color:#fff;&:not(.c7n-pro-btn-disabled):not(.c7n-pro-btn-loading):hover{color:", ";background-color:#fff;border-color:", ";}&:not(.c7n-pro-btn-loading):focus-visible:not(:active){color:", ";background-color:#fff;border-color:", ";box-shadow:0px 0px 0px 1px #fff inset !important;&:hover{color:", ";background-color:#fff;border-color:", ";}}&:not(.c7n-pro-btn-disabled):not(.c7n-pro-btn-loading):active{color:", ";background-color:", ";border-color:", ";}&.c7n-pro-btn-loading{color:", ";background-color:#fff;border-color:", ";}&.c7n-pro-btn-disabled,&:disabled{color:", ";background-color:", ";border-color:", ";}}.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon{max-width:32px;margin-left:8px;&:before{background-image:none;content:'\\e751';font-family:'iconfont-c7n-font';}&.desc:before{background-image:none;content:'\\e74e';font-family:'iconfont-c7n-font';}}.c7n-pro-attachment-list-item-buttons.c7n-pro-attachment-list-item-buttons{.icon-library_books::before{content:'\\e765' !important;font-family:'hzero-c7n-font' !important;}.icon-arrow_downward:before{content:'\\e75d' !important;font-family:'iconfont-c7n-font' !important;}.icon-delete_forever-o:before,.icon-close::before{content:'\\e741' !important;font-family:'hzero-c7n-font' !important;}}.c7n-pro-attachment-drag{border:1px dashed ", " !important;border-radius:", "px;p.c7n-upload-text{color:", ";}p.c7n-upload-hint{color:", ";font-size:12px;}.c7n-upload-drag-icon{margin-bottom:0.08rem;.icon{color:", ";font-size:16px;&.icon-inbox{width:40px;height:40px;background-repeat:no-repeat;background-size:cover;background-image:url(", ");:before{display:none;}}}}&.c7n-pro-attachment-drag-hover:not(.c7n-pro-attachment-drag-disabled){background:", " !important;border:0.01rem dashed ", " !important;.c7n-upload-drag-icon{.icon.icon-inbox{background-image:url(", ");}}}&:not(.c7n-pro-attachment-disabled):not(.c7n-pro-attachment-drag-disabled):hover{border-color:", " !important;background:", " !important;}}"], titleColor3, lineColor1, height - 2, primary6, height, lineColor1, redColor6, errorColor, titleColor1, fontColor, defaultRadius, lineColor3, lineHeight, lineHeight, titleColor1, lineHeight, titleColor3, lineHeight, primary1, redColor1, redColor2, titleColor1, primary6, errorImg, uploadingImg, errorColor, height, height, height / 2, lineColor1, titleColor1, primary6, primary6, titleColor1, primary6, primary6, primary6, primary7, primary1, primary7, titleColor1, lineColor1, titleColor3, lineColor3, lineColor1, titleColor4, defaultRadius, titleColor1, titleColor3, primary6, defaultExportImg, primary1, primary4, exportImg, titleColor4, lineColor4);
+  return Object(styled_components_browser_esm["c" /* css */])([".c7n-pro-attachment-list-item-progress.c7n-pro-attachment-list-item-progress{position:absolute;}.c7n-pro-attachment-popup{.c7n-pro-attachment-list.c7n-pro-attachment-list{padding:0 8px;}}.c7n-pro-attachment-list-wrapper{.c7n-pro-attachment-header.c7n-pro-attachment-header{.c7n-pro-attachment-header-label{color:", ";margin:0 8px 0 0;}.c7n-pro-select{border-color:", ";height:", "px;&:hover{border-color:", ";}}}.c7n-pro-attachment-header-divider{background-color:transparent;margin:0;}}.c7n-pro-attachment-list-no-card.c7n-pro-attachment-list-no-card{.c7n-pro-attachment-list-item-content,&.c7n-pro-attachment-list-no-card{.c7n-pro-picture{margin-top:8px;margin-bottom:8px;}}.c7n-pro-attachment-list-item-content{min-height:", "px;> .c7n-pro-btn.c7n-pro-attachment-list-item-icon{width:14px;height:14px;&,&:hover{color:rgba(0,0,0,0.8);}.icon{margin-right:auto;}}.c7n-pro-attachment-list-item-icon.c7n-pro-attachment-list-item-icon{padding-top:0;padding-bottom:0;margin:0;}.c7n-pro-picture-icon .icon{font-size:0.48rem;}}}.c7n-pro-attachment-list-card.c7n-pro-attachment-list-card{margin-top:8px;.c7n-pro-attachment-list-item{margin-top:0;margin-right:0.08rem;margin-bottom:0.08rem;padding:0;background-color:#fff;border:1px solid ", ";.c7n-pro-attachment-list-item-container{border-radius:6px 6px 0 0;}.c7n-pro-attachment-list-item-title{margin-top:4px;margin-bottom:4px;}&.c7n-pro-attachment-list-item-error{&,&:hover{background-color:#fff;border-color:", ";}}&.c7n-pro-attachment-list-item-error{.c7n-pro-attachment-list-item-name,.c7n-pro-attachment-list-item-ext,.c7n-pro-attachment-list-item-size{color:", ";}}}.c7n-pro-picture-icon.c7n-pro-picture-icon{.icon{width:50px;height:50px;}}.c7n-pro-attachment-list-item-error-content{padding:0 4px;}.c7n-pro-attachment-list-item-content{.c7n-pro-picture-preview{padding-top:0;padding-bottom:0;}.c7n-pro-attachment-list-item-placeholder{height:auto;}}.c7n-pro-attachment-card-button.c7n-pro-attachment-card-button{flex-direction:column;.icon{color:inherit;}&:hover{color:", ";}i.icon-add{font-size:20px;}}.c7n-pro-attachment-list-item-buttons{.c7n-pro-btn.c7n-pro-btn.c7n-pro-btn.c7n-pro-btn{&,&:hover{color:", ";}}}}.c7n-pro-attachment-list-item.c7n-pro-attachment-list-item{margin:8px 0;padding:0 8px;border-radius:", "px;background-color:", ";.c7n-pro-attachment-list-item-drag-icon{height:", "px;line-height:", "px;}.c7n-pro-attachment-list-item-title{a{color:", ";line-height:", "px;}}.c7n-pro-attachment-list-item-size{color:", ";line-height:", "px;}&:hover,&:active{background-color:", ";}.c7n-pro-attachment-list-item-title,.c7n-pro-attachment-list-item-error-message{padding:0 0.08rem;}.c7n-pro-attachment-list-item-container{padding-top:0;padding-bottom:0;}&.c7n-pro-attachment-list-item-error{background-color:", ";&:hover,&:active{background-color:", ";}.c7n-pro-attachment-list-item-name,.c7n-pro-attachment-list-item-ext,.c7n-pro-attachment-list-item-size{color:", ";}}.c7n-pro-attachment-list-item-progress .c7n-progress-bg{background-image:linear-gradient(90deg,#f3f3f3 2%,", " 100%);}.c7n-pro-picture-icon{.icon{width:48px;height:48px;background-size:cover;background-repeat:no-repeat;&:before{display:none;}}}.c7n-pro-picture-error{.icon{background-image:url(", ");}}.c7n-pro-picture-empty{.icon{background-image:url(", ");}}}.c7n-pro-attachment-list-item-error-content.c7n-pro-attachment-list-item-error-content{color:", ";font-size:12px;line-height:20px;margin-top:-4px;padding-bottom:8px;}.c7n-pro-attachment-header-buttons.c7n-pro-attachment-header-buttons .c7n-pro-btn{height:", "px;}.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon{width:", "px;padding:calc(", "px - 8px) !important;}.c7n-pro-attachment-header-buttons .c7n-pro-btn.c7n-pro-btn-link.c7n-pro-btn-link.c7n-pro-btn-link,.c7n-pro-attachment.c7n-pro-attachment.c7n-pro-attachment.c7n-pro-attachment.c7n-pro-attachment:not(.c7n-pro-attachment-btn),.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon{border:1px solid ", ";color:", ";padding:0px 12px;background-color:#fff;&:not(.c7n-pro-btn-disabled):not(.c7n-pro-btn-loading):hover{color:", ";background-color:#fff;border-color:", ";}&:not(.c7n-pro-btn-loading):focus-visible:not(:active){color:", ";background-color:#fff;border-color:", ";box-shadow:0px 0px 0px 1px #fff inset !important;&:hover{color:", ";background-color:#fff;border-color:", ";}}&:not(.c7n-pro-btn-disabled):not(.c7n-pro-btn-loading):active{color:", ";background-color:", ";border-color:", ";}&.c7n-pro-btn-loading{color:", ";background-color:#fff;border-color:", ";}&.c7n-pro-btn-disabled,&:disabled{color:", ";background-color:", ";border-color:", ";}}.c7n-pro-attachment-order-icon.c7n-pro-attachment-order-icon{max-width:32px;margin-left:8px;&:before{background-image:none;content:'\\e751';font-family:'iconfont-c7n-font';}&.desc:before{background-image:none;content:'\\e74e';font-family:'iconfont-c7n-font';}}.c7n-pro-attachment-list-item-buttons.c7n-pro-attachment-list-item-buttons{.icon-library_books::before{content:'\\e765' !important;font-family:'hzero-c7n-font' !important;}.icon-arrow_downward:before{content:'\\e75d' !important;font-family:'iconfont-c7n-font' !important;}.icon-delete_forever-o:before,.icon-close::before{content:'\\e741' !important;font-family:'hzero-c7n-font' !important;}}.c7n-pro-attachment-drag{border:1px dashed ", " !important;border-radius:", "px;p.c7n-upload-text{color:", ";}p.c7n-upload-hint{color:", ";font-size:12px;}.c7n-upload-drag-icon{margin-bottom:0.08rem;.icon{color:", ";font-size:16px;&.icon-inbox{width:40px;height:40px;background-repeat:no-repeat;background-size:cover;background-image:url(", ");:before{display:none;}}}}&.c7n-pro-attachment-drag-hover:not(.c7n-pro-attachment-drag-disabled){background:", " !important;border:0.01rem dashed ", " !important;.c7n-upload-drag-icon{.icon.icon-inbox{background-image:url(", ");}}}&:not(.c7n-pro-attachment-disabled):not(.c7n-pro-attachment-drag-disabled):hover{border-color:", " !important;background:", " !important;}}"], titleColor3, lineColor1, height - 2, primary6, height, lineColor1, redColor6, errorColor, titleColor1, fontColor, defaultRadius, lineColor3, lineHeight, lineHeight, titleColor1, lineHeight, titleColor3, lineHeight, primary1, redColor1, redColor2, titleColor1, primary6, errorImg, uploadingImg, errorColor, height, height, height / 2, lineColor1, titleColor1, primary6, primary6, titleColor1, primary6, primary6, primary6, primary7, primary1, primary7, titleColor1, lineColor1, titleColor3, lineColor3, lineColor1, titleColor4, defaultRadius, titleColor1, titleColor3, primary6, defaultExportImg, primary1, primary4, exportImg, titleColor4, lineColor4);
 };
 
 /* harmony default export */ var theme8_templates_Attachment_style = (theme8_templates_Attachment_style_AttachmentStyle);
@@ -539178,6 +539844,62 @@ var site_utils = __webpack_require__("oV81");
 // EXTERNAL MODULE: ../@antv/gatsby-theme-antv/site/hooks.ts
 var hooks = __webpack_require__("b0rI");
 
+// CONCATENATED MODULE: ../@antv/gatsby-theme-antv/site/components/HeaderIntlNotice.tsx
+
+
+/** 中文公告内容 */
+var HeaderIntlNotice_ZHNotice = function ZHNotice(_ref) {
+  var _ref$Link = _ref.Link,
+      Link = _ref$Link === void 0 ? 'a' : _ref$Link,
+      _ref$lang = _ref.lang,
+      lang = _ref$lang === void 0 ? 'zh' : _ref$lang;
+  return /*#__PURE__*/react_default.a.createElement("article", {
+    className: "page sans"
+  }, /*#__PURE__*/react_default.a.createElement("div", {
+    className: "page-body"
+  }, /*#__PURE__*/react_default.a.createElement("h2", null, "\u4E3B\u8981\u7279\u6027"), /*#__PURE__*/react_default.a.createElement("h3", null, "\u65B0\u589E"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "configure"), ": \u65B0\u589E selectShowInputPrompt, inputDecimalSeparatorFollowLang, inputLengthExceedWarning \u7B49\u591A\u4E2A\u5168\u5C40\u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "configure"), ": TooltipTarget \u65B0\u589E text-field-placeholder \u7C7B\u578B\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "configure"), ": showLengthInfo \u5C5E\u6027\u65B0\u589E auto \u7C7B\u578B\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Cascader"), ": \u65B0\u589E checkable \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": \u65B0\u589E enableDeleteAll, onPreview, pictureCardShowName, directory \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DataSet"), ": appendData \u65B9\u6CD5\u65B0\u589E index \u53C2\u6570\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Tooltip"), ": \u65B0\u589E autoPlacement \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": \u65B0\u589E uploadImmediately \u5C5E\u6027\u548C upload \u5B9E\u4F8B\u65B9\u6CD5\u7528\u4E8E\u624B\u52A8\u4E0A\u4F20\u3002"), /*#__PURE__*/react_default.a.createElement("h3", null, "\u4F18\u5316"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>TextField"), ": \u4F18\u5316\u591A\u503C\u8F93\u5165\u6846\u5149\u6807\u6837\u5F0F\uFF0C\u4EC5\u5728\u805A\u7126\u72B6\u6001\u4E0B\u5360\u636E\u5BBD\u5EA6\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "Tooltip"), ": \u4F18\u5316\u652F\u6301 Tooltip\\Popover\\Popconfirm \u7684\u5F39\u6846\u5728\u9875\u9762\u6EDA\u52A8\u65F6\u8DDF\u968F\u663E\u793A\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": \u70B9\u51FB\u56FE\u7247\u7F29\u7565\u56FE\u65F6\u6267\u884C getPreviewUrl \u65B9\u6CD5\u8FD4\u56DE\u7684\u51FD\u6570, \u5E76\u4F18\u5316\u56FE\u7247\u7C7B\u578B\u9884\u89C8\u65B9\u5F0F\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DataSet"), ": \u4F18\u5316\u53D6\u6D88\u91CD\u590D\u8BF7\u6C42\u7684\u5224\u65AD\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "Popover"), ": \u4F18\u5316\u5728\u5F39\u7A97\u5927\u5C0F\u53D8\u5316\u540E, \u8FDB\u884C\u91CD\u65B0\u5B9A\u4F4D\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Modal"), ": \u652F\u6301\u901A\u8FC7\u89E6\u6478\u4E8B\u4EF6\u62D6\u52A8\u4F4D\u7F6E\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DatePicker"), ": \u6269\u5C55 renderExtraFooter \u65B9\u6CD5\u53C2\u6570\u63D0\u4F9B\u9009\u503C\u51FD\u6570 choose\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "WaterMark"), ": \u6C34\u5370\u5185\u5BB9\u652F\u6301\u914D\u7F6E\u6362\u884C\u7B26\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Cascader"), ": \u4F18\u5316\u5173\u8054 options \u4E14 searchMatcher \u5C5E\u6027\u8BBE\u7F6E\u5B57\u7B26\u4E32\u65F6, \u5F02\u6B65\u67E5\u8BE2\u7684\u903B\u8F91\u3002"), /*#__PURE__*/react_default.a.createElement("h3", null, "\u4FEE\u590D"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "Tabs"), ": \u4FEE\u590D\u52A8\u6001\u65B0\u589E Tab, \u5DE6\u53F3\u7BAD\u5934\u5076\u5C14\u663E\u793A\u4E0D\u6B63\u786E\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D\u6811\u5F62\u8868\u683C\u591A\u4E2A\u8282\u70B9\u5F02\u6B65\u67E5\u8BE2\u65F6\u4F1A\u88AB\u963B\u6B62\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D\u591A\u503C\u5355\u5143\u683C\u81EA\u5B9A\u4E49\u6E32\u67D3\u5185\u5BB9\u540E tooltip \u663E\u793A\u5F02\u5E38\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Lov"), ": \u4FEE\u590D searchAction \u5C5E\u6027\u4E3A blur \u4E14\u5FEB\u901F\u5931\u7126\u65F6, \u67E5\u8BE2\u53C2\u6570\u4E0D\u6B63\u786E\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "Popover"), ": \u4FEE\u590D Popover \u7EC4\u4EF6\u5305\u88F9\u7684\u5B50\u7EA7\u6709 SelectBox \u4E14\u89E6\u53D1\u65B9\u5F0F\u8BBE\u7F6E\u4E3A click \u65F6, SelectBox \u52FE\u9009\u72B6\u6001\u663E\u793A\u4E0D\u6B63\u786E\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D\u8BBE\u7F6E\u81EA\u52A8\u9AD8\u5EA6, \u7B5B\u9009\u57DF\u9AD8\u5EA6\u53D8\u5316\u540E\u672A\u540C\u6B65\u4FEE\u6539\u8868\u683C\u9AD8\u5EA6\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D\u6570\u636E\u5206\u7EC4\u6A21\u5F0F\u4E0B\u884C\u53F7\u9519\u4E71\uFF0C\u5220\u9664\u6570\u636E\u540E\u5355\u5143\u683C\u9519\u4F4D\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Lov"), ": \u4FEE\u590D\u5355\u9009\u6A21\u5F0F\u4E0B\u6CA1\u6709\u540C\u6B65\u521D\u59CB\u503C\u52FE\u9009\u72B6\u6001\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\u66F4\u591A\u66F4\u65B0\u7279\u6027(100+)\u8BF7\u67E5\u770B", /*#__PURE__*/react_default.a.createElement(Link, {
+    to: "/" + lang + "/docs/other/CHANGELOG"
+  }, "\u5B98\u7F51\u66F4\u65B0\u65E5\u5FD7"), "\uFF0C \u68C0\u67E5\u4F18\u5316\u548C\u4FEE\u590D\u65E5\u5FD7\u4E2D\u662F\u5426\u5305\u542B\u4F60\u6B63\u9047\u5230\u7684\u95EE\u9898\uFF0C\u611F\u8C22\u652F\u6301\u4E0E\u4F7F\u7528\u3002\u66F4\u591A\u53EF\u67E5\u770B", ' ', /*#__PURE__*/react_default.a.createElement("a", {
+    href: "https://github.com/open-hand/choerodon-ui"
+  }, "github \u5730\u5740"), "\uFF0C\u6B22\u8FCE ", /*#__PURE__*/react_default.a.createElement(Link, {
+    to: "/" + lang + "/docs/other/CONTRIBUTINGPR"
+  }, " PR "), ",", /*#__PURE__*/react_default.a.createElement("a", {
+    href: "https://github.com/open-hand/choerodon-ui"
+  }, "Star"), "\u3002"), /*#__PURE__*/react_default.a.createElement("h4", null, "\u4F7F\u7528\u90E8\u5206\u529F\u80FD\u51FA\u73B0\u6837\u5F0F\u95EE\u9898\uFF08\u4E0E\u5B98\u7F51\u4E0D\u4E00\u81F4\uFF09\u9700\u8981\u66F4\u65B0 UED \u4F9D\u8D56\u5305\u5230\u6700\u65B0\u7248\u672C \u5177\u4F53\u5347\u7EA7\u7248\u672C\u53CA\u6CE8\u610F\u4E8B\u9879\u5173\u6CE8\uFF1A", /*#__PURE__*/react_default.a.createElement("a", {
+    href: "https://open.hand-china.com/document-center/doc/component/3913/17890?doc_id=340134&doc_code=197882"
+  }, "UED\u5347\u7EA7\u6307\u5357"))));
+};
+/** 英文公告内容 */
+
+
+var HeaderIntlNotice_ENNotice = function ENNotice(_ref2) {
+  var _ref2$Link = _ref2.Link,
+      Link = _ref2$Link === void 0 ? 'a' : _ref2$Link,
+      _ref2$lang = _ref2.lang,
+      lang = _ref2$lang === void 0 ? 'zh' : _ref2$lang;
+  return /*#__PURE__*/react_default.a.createElement("article", {
+    className: "page sans"
+  }, /*#__PURE__*/react_default.a.createElement("div", {
+    className: "page-body"
+  }, /*#__PURE__*/react_default.a.createElement("h2", null, "Main features"), /*#__PURE__*/react_default.a.createElement("h3", null, "ADD"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "configure"), ": Added selectShowInputPrompt, inputDecimalSeparatorFollowLang, inputLengthExceedWarning and other global properties."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "configure"), ": TooltipTarget adds text-field-placeholder type."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "configure"), ": The showLengthInfo attribute has a new auto type."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Cascader"), ": Added checkable attribute."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": Added enableDeleteAll, onPreview, pictureCardShowName, directory attributes."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DataSet"), ": The appendData method adds an index parameter."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Tooltip"), ": Added autoPlacement attribute."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": Added uploadImmediately attribute and upload instance method for manual upload."), /*#__PURE__*/react_default.a.createElement("h3", null, "IMP"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>TextField"), ": Optimize the multi-value input box cursor style to only occupy the width in the focused state."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "Tooltip"), ": Optimized to support the pop-up box of Tooltip\\Popover\\Popconfirm to be displayed when the page is scrolled."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": When the image thumbnail is clicked, the function returned by the getPreviewUrl method is executed, and the image type preview method is optimized."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DataSet"), ": Optimize the judgment of canceling repeated requests."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "Popover"), ": Optimize repositioning after the pop-up window size changes."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Modal"), ": Supports dragging positions via touch events."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DatePicker"), ": Extend the renderExtraFooter method parameter to provide the value selection function choose."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "WaterMark"), ": Watermark content supports configuring line breaks."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Cascader"), ": Optimize the logic of asynchronous query when options are associated and the searchMatcher attribute is set to a string."), /*#__PURE__*/react_default.a.createElement("h3", null, "FIX"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "Tabs"), ": Fixed the problem of dynamically adding tabs and the left and right arrows occasionally displaying incorrectly."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": Fixed an issue where asynchronous querying of multiple nodes in a tree table would be blocked."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": Fixed an issue where tooltip displays abnormally after custom rendering content of multi-value cells."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Lov"), ": Fixed the problem of incorrect query parameters when the searchAction attribute is blur and quickly loses focus."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "Popover"), ": Fixed the problem when the child wrapped by the Popover component has a SelectBox and the trigger mode is set to click. SelectBox check status display is incorrect."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": Fixed the problem of setting automatic height and table height not being modified synchronously after the filter field height changes."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": Fixed the problem of confusing row numbers in data grouping mode and misaligned cells after deleting data."), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Lov"), ": Fixed the problem of not synchronizing the initial value check status in radio selection mode."), /*#__PURE__*/react_default.a.createElement("p", null, "For more updated features (100+) please check", /*#__PURE__*/react_default.a.createElement(Link, {
+    to: "/" + lang + "/docs/other/CHANGELOG"
+  }, "Official website Change Log"), ", Check whether the optimization and repair logs contain the problem you are encountering. Thank you for your support and use. More to view", ' ', /*#__PURE__*/react_default.a.createElement("a", {
+    href: "https://github.com/open-hand/choerodon-ui"
+  }, "github address"), ",welcome ", /*#__PURE__*/react_default.a.createElement(Link, {
+    to: "/" + lang + "/docs/other/CONTRIBUTINGPR"
+  }, " PR "), ",", /*#__PURE__*/react_default.a.createElement("a", {
+    href: "https://github.com/open-hand/choerodon-ui"
+  }, "Star"), "\u3002"), /*#__PURE__*/react_default.a.createElement("h4", null, "When using some functions, there are style problems (inconsistent with the official website). You need to update the UED dependency package to the latest version. Please pay attention to the specific upgrade version and precautions:", /*#__PURE__*/react_default.a.createElement("a", {
+    href: "https://open.hand-china.com/document-center/doc/component/3913/17890?doc_id=340134&doc_code=197882"
+  }, "UED Upgrade Guide"))));
+};
+
+var HeaderIntlNotice_HeaderIntlNotice = function HeaderIntlNotice(props) {
+  var lang = props.lang;
+  return lang === 'en' ? /*#__PURE__*/react_default.a.createElement(HeaderIntlNotice_ENNotice, props) : /*#__PURE__*/react_default.a.createElement(HeaderIntlNotice_ZHNotice, props);
+};
+
+/* harmony default export */ var components_HeaderIntlNotice = (HeaderIntlNotice_HeaderIntlNotice);
 // EXTERNAL MODULE: ../@antv/gatsby-theme-antv/site/images/choerodonui-logo3.svg
 var choerodonui_logo3 = __webpack_require__("6eam");
 var choerodonui_logo3_default = /*#__PURE__*/__webpack_require__.n(choerodonui_logo3);
@@ -539207,6 +539929,7 @@ var choerodonui_logo3_default = /*#__PURE__*/__webpack_require__.n(choerodonui_l
 
 
 // import Products from './Products';
+
 
 
 
@@ -539338,15 +540061,15 @@ var Header_Header = function Header(_ref) {
       }, /*#__PURE__*/react_default.a.createElement(es_menu["a" /* default */].Item, {
         key: constants["b" /* THEME_EMPTY */],
         className: classnames_default()(schema === constants["b" /* THEME_EMPTY */] ? 'activeMenuItem themeEmpty' : schema)
-      }, "\u9CB8\u6D77\u84DD"), /*#__PURE__*/react_default.a.createElement(es_menu["a" /* default */].Item, {
+      }, t('鲸海蓝')), /*#__PURE__*/react_default.a.createElement(es_menu["a" /* default */].Item, {
         key: "theme4",
         className: classnames_default()(schema === 'theme4' ? 'activeMenuItem theme4' : ' ')
-      }, "\u98CE\u94C3\u7D2B"), /*#__PURE__*/react_default.a.createElement(es_menu["a" /* default */].Item, {
+      }, t('风铃紫')), /*#__PURE__*/react_default.a.createElement(es_menu["a" /* default */].Item, {
         key: "theme5",
         className: classnames_default()(schema === 'theme5' ? 'activeMenuItem theme5' : ' ')
-      }, "\u51CC\u83BA\u84DD"))
+      }, t('凌莺蓝')))
     );
-  }, [schema]);
+  }, [schema, constants["b" /* THEME_EMPTY */], lang, handleChange]);
   var languagesMenus = Object(react["useMemo"])(function () {
     return /*#__PURE__*/react_default.a.createElement(es_menu["a" /* default */], {
       defaultSelectedKeys: [lang],
@@ -539377,7 +540100,7 @@ var Header_Header = function Header(_ref) {
       key: "zh",
       className: classnames_default()(lang === 'en' ? 'activeMenuItem' : ' ', schema === constants["b" /* THEME_EMPTY */] ? 'themeEmpty' : schema)
     }, "\u7B80\u4F53\u4E2D\u6587"));
-  }, [lang]);
+  }, [lang, onLanguageChange, path, gatsby_browser_entry["navigate"], pathPrefix, schema, constants["b" /* THEME_EMPTY */]]);
   Object(react["useEffect"])(function () {
     if (popupMenuVisible) {
       setPopupMenuVisible(false);
@@ -539427,10 +540150,10 @@ var Header_Header = function Header(_ref) {
     placement: "bottomCenter"
   }, /*#__PURE__*/react_default.a.createElement("div", {
     className: Header_module_default.a.themesDropdown + " " + (schema === constants["b" /* THEME_EMPTY */] ? Header_module_default.a.themeEmpty : Header_module_default.a[schema])
-  }, /*#__PURE__*/react_default.a.createElement("span", null), /*#__PURE__*/react_default.a.createElement("span", null, schema === constants["b" /* THEME_EMPTY */] ? '鲸海蓝' : schema === 'theme4' ? '风铃紫' : '凌莺蓝'), /*#__PURE__*/react_default.a.createElement("span", null, /*#__PURE__*/react_default.a.createElement(es_icon["a" /* default */], {
+  }, /*#__PURE__*/react_default.a.createElement("span", null), /*#__PURE__*/react_default.a.createElement("span", null, schema === constants["b" /* THEME_EMPTY */] ? t('鲸海蓝') : schema === 'theme4' ? t('风铃紫') : t('凌莺蓝')), /*#__PURE__*/react_default.a.createElement("span", null, /*#__PURE__*/react_default.a.createElement(es_icon["a" /* default */], {
     type: "keyboard_arrow_down"
   })))), /*#__PURE__*/react_default.a.createElement(es_tooltip["a" /* default */], {
-    title: "\u4E3B\u9898\u5207\u6362\u8BF4\u660E"
+    title: t('主题切换说明')
   }, /*#__PURE__*/react_default.a.createElement("div", {
     style: {
       display: 'inline-flex',
@@ -539478,21 +540201,10 @@ var Header_Header = function Header(_ref) {
         maxHeight: 768,
         overflow: 'auto'
       },
-      description: /*#__PURE__*/react_default.a.createElement("article", {
-        className: "page sans"
-      }, /*#__PURE__*/react_default.a.createElement("div", {
-        className: "page-body"
-      }, /*#__PURE__*/react_default.a.createElement("h2", null, "\u4E3B\u8981\u7279\u6027"), /*#__PURE__*/react_default.a.createElement("h3", null, "\u65B0\u589E"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "configure"), ": \u65B0\u589E treeShowLine, showSelectLoading, selectScrollLoad, \u7B49\u591A\u4E2A\u5168\u5C40\u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Select"), ": \u65B0\u589E virtual \u5C5E\u6027\uFF0C\u652F\u6301\u865A\u62DF\u6EDA\u52A8\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DatePicker"), ": \u65B0\u589E yearFirst, disabledTimeLoopRoll \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DataSet"), ": \u65B0\u589E customIntlFun, sortedTreeData \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>TreeSelect"), ": \u65B0\u589E showLine \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": \u65B0\u589E downloadAllMode, getDownloadAllUrl, getDownloadUrl \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83C\uDF1F ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DataSet.Field"), ": \u65B0\u589E numberRoundMode \u5C5E\u6027\u3002"), /*#__PURE__*/react_default.a.createElement("h3", null, "\u4F18\u5316"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 \u56FA\u5B9A uuid \u7248\u672C\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4E2A\u6027\u5316\u652F\u6301\u7EDF\u4E00\u63A7\u5236\u5217\u663E\u9690\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Tree"), ": \u4F18\u5316 showLine \u5C5E\u6027\u4E3A true \u65F6\u7684 showLeafIcon \u9ED8\u8BA4\u503C\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>TextField"), ": \u4F18\u5316\u5355\u4E2A tag \u7684\u6587\u672C\u8D85\u8FC7 maxTagTextLength \u65F6, \u663E\u793A tooltip\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC84 ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Modal"), ": \u4F18\u5316\u81EA\u5B9A\u4E49 getContainer \u5C5E\u6027\u65F6\u5F39\u7A97\u7684\u5C42\u7EA7\u3002"), /*#__PURE__*/react_default.a.createElement("h3", null, "\u4FEE\u590D"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": \u4FEE\u590D\u5206\u7247\u4E0A\u4F20\u6210\u529F\u6CA1\u6709\u56DE\u663E\u6587\u4EF6\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Attachment"), ": \u4FEE\u590D\u9644\u4EF6\u5217\u8868\u4E2D\u56FE\u7247\u4F1A\u51FA\u73B0\u610F\u6599\u4E4B\u5916\u7684\u5237\u65B0\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D\u52A8\u6001\u7B5B\u9009\u6761\u591A\u503C Lov \u5B57\u6BB5\u503C\u53D8\u66F4\u540E\u4E0D\u4F1A\u663E\u793A\u91CD\u7F6E\u6309\u94AE\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Upload"), ": \u4FEE\u590D\u4F7F\u7528 ModalProvider.injectModal \u88C5\u9970\u5668\u5BFC\u81F4 reflect-metadata \u62A5\u9519\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DataSet.Field"), ": \u4FEE\u590D\u52A8\u6001\u5C5E\u6027\u914D\u7F6E\u7684 lookupAxiosConfig \u4E2D\u5B58\u5728 FormData \u53C2\u6570\u4F1A\u5BFC\u81F4\u6B7B\u5FAA\u73AF\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D\u52A8\u6001\u7B5B\u9009\u6761\u5207\u6362\u6761\u4EF6\u4EC5\u6A21\u7CCA\u641C\u7D22\u503C\u53D8\u66F4\u65F6\u65E0\u6CD5\u89E6\u53D1\u67E5\u8BE2\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>CheckBox"), ": \u4FEE\u590D\u4F7F\u7528\u52A8\u6001\u5C5E\u6027\u8BBE\u7F6E trueValue \u548C falseValue \u4F1A\u5BFC\u81F4\u65E0\u6CD5\u52FE\u9009\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Tree"), ": \u4FEE\u590D dataSet \u8BBE\u7F6E treeCheckStrictly \u5C5E\u6027\u65F6, \u52FE\u9009\u7684\u8282\u70B9\u5C55\u5F00\u4F1A\u88AB\u53D6\u6D88\u52FE\u9009\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D Lov \u5B57\u6BB5\u914D\u7F6E editor \u5C5E\u6027\u4E14\u8BBE\u7F6E popup \u6A21\u5F0F, \u4E0D\u540C\u884C\u95F4\u6253\u5F00\u7F16\u8F91\u5B57\u6BB5\u65F6, \u5076\u5C14\u4E0B\u62C9\u6570\u636E\u4E3A\u7A7A\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>DateSet"), ": \u4FEE\u590D\u53D6\u6D88\u4E0A\u6B21\u8BF7\u6C42\u540C\u65F6\u53D1\u8D77\u65B0\u8BF7\u6C42\u65F6, \u5BFC\u81F4 status \u72B6\u6001\u4E0D\u6B63\u786E\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "<pro>Table"), ": \u4FEE\u590D\u6811\u5F62\u6570\u636E\u5F02\u6B65\u5C55\u5F00\u6536\u8D77, \u6570\u636E\u5173\u8054\u52FE\u9009\u9519\u8BEF\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\uD83D\uDC1E ", /*#__PURE__*/react_default.a.createElement("code", null, "Popover"), ": \u4FEE\u590D Popover \u7EC4\u4EF6\u5305\u88F9 CheckBox \u4E14\u89E6\u53D1\u65B9\u5F0F\u8BBE\u7F6E\u4E3A click \u65F6, CheckBox \u52FE\u9009\u72B6\u6001\u663E\u793A\u4E0D\u6B63\u786E\u7684\u95EE\u9898\u3002"), /*#__PURE__*/react_default.a.createElement("p", null, "\u66F4\u591A\u66F4\u65B0\u7279\u6027(120+)\u8BF7\u67E5\u770B", /*#__PURE__*/react_default.a.createElement(Link, {
-        to: "/" + lang + "/docs/other/CHANGELOG#166"
-      }, "\u5B98\u7F51\u66F4\u65B0\u65E5\u5FD7"), "\uFF0C \u68C0\u67E5\u4F18\u5316\u548C\u4FEE\u590D\u65E5\u5FD7\u4E2D\u662F\u5426\u5305\u542B\u4F60\u6B63\u9047\u5230\u7684\u95EE\u9898\uFF0C\u611F\u8C22\u652F\u6301\u4E0E\u4F7F\u7528\u3002\u66F4\u591A\u53EF\u67E5\u770B", ' ', /*#__PURE__*/react_default.a.createElement("a", {
-        href: "https://github.com/open-hand/choerodon-ui"
-      }, "github \u5730\u5740"), "\uFF0C\u6B22\u8FCE ", /*#__PURE__*/react_default.a.createElement(Link, {
-        to: "/" + lang + "/docs/other/CONTRIBUTINGPR"
-      }, " PR "), ",", /*#__PURE__*/react_default.a.createElement("a", {
-        href: "https://github.com/open-hand/choerodon-ui"
-      }, "Star"), "\u3002"), /*#__PURE__*/react_default.a.createElement("h4", null, "\u4F7F\u7528\u90E8\u5206\u529F\u80FD\u51FA\u73B0\u6837\u5F0F\u95EE\u9898\uFF08\u4E0E\u5B98\u7F51\u4E0D\u4E00\u81F4\uFF09\u9700\u8981\u66F4\u65B0 UED \u4F9D\u8D56\u5305\u5230\u6700\u65B0\u7248\u672C \u5177\u4F53\u5347\u7EA7\u7248\u672C\u53CA\u6CE8\u610F\u4E8B\u9879\u5173\u6CE8\uFF1A", /*#__PURE__*/react_default.a.createElement("a", {
-        href: "https://open.hand-china.com/document-center/doc/component/3913/17890?doc_id=340134&doc_code=197882"
-      }, "UED\u5347\u7EA7\u6307\u5357"))))
+      description: /*#__PURE__*/react_default.a.createElement(components_HeaderIntlNotice, {
+        Link: Link,
+        lang: lang
+      })
     });
   };
 
@@ -539500,6 +540212,7 @@ var Header_Header = function Header(_ref) {
     color: '#fbb54a',
     marginRight: 5
   };
+  var publishTextIntl = lang === 'en' ? "Choerodon UI release " + Object.keys(versions)[0] + " version, click to view " : "Choerodon UI \u53D1\u5E03 " + Object.keys(versions)[0] + " \u7248\u672C\uFF0C \u70B9\u51FB\u67E5\u770B ";
   var messageContent = /*#__PURE__*/react_default.a.createElement("div", {
     className: Header_module_default.a.messageContent
   }, /*#__PURE__*/react_default.a.createElement("ul", null, /*#__PURE__*/react_default.a.createElement("li", {
@@ -539511,19 +540224,19 @@ var Header_Header = function Header(_ref) {
       fontSize: 14,
       fontWeight: 500
     }
-  }, "Choerodon UI \u53D1\u5E03 ", Object.keys(versions)[0], " \u7248\u672C\uFF0C \u70B9\u51FB\u67E5\u770B", /*#__PURE__*/react_default.a.createElement("a", {
+  }, publishTextIntl, /*#__PURE__*/react_default.a.createElement("a", {
     onClick: openNotification
-  }, "\u4E3B\u8981\u7279\u6027\u3002")))), /*#__PURE__*/react_default.a.createElement("div", {
+  }, t('主要特性'))))), /*#__PURE__*/react_default.a.createElement("div", {
     className: Header_module_default.a.messageClose
   }, /*#__PURE__*/react_default.a.createElement(Link, {
     to: "/" + lang + "/docs/other/CHANGELOG"
   }, /*#__PURE__*/react_default.a.createElement(es_button["a" /* default */], {
     funcType: "flat",
     color: "primary"
-  }, "\u5B8C\u6574\u65E5\u5FD7")), /*#__PURE__*/react_default.a.createElement(es_button["a" /* default */], {
+  }, t('完整日志'))), /*#__PURE__*/react_default.a.createElement(es_button["a" /* default */], {
     funcType: "flat",
     onClick: onDisplayNone
-  }, "\u4E0D\u518D\u663E\u793A")));
+  }, t('不再显示'))));
   Object(react["useEffect"])(function () {
     messageVisibleChange(messageVisible);
   }, [messageVisible]);

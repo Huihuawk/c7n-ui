@@ -34066,7 +34066,7 @@ var parseTableOfContents = function parseTableOfContents(tableOfContents) {
   return tableOfContents.replace(/\/#/g, '#');
 };
 
-var renderMenuItems = function renderMenuItems(edges) {
+var renderMenuItems = function renderMenuItems(edges, language) {
   return edges.filter(function (edge) {
     var slug = edge.node.fields.slug;
 
@@ -34097,9 +34097,9 @@ var renderMenuItems = function renderMenuItems(edges) {
     }, icon && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(MenuIcon, {
       className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.menuIcon,
       type: "icon-" + icon
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, title), language !== 'en' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", {
       className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.subtitle
-    }, subtitle)));
+    }, subtitle) : null));
   });
 };
 
@@ -34237,7 +34237,7 @@ function Template(_ref2) {
       var slugPieces = slugString.split('/');
 
       if (slugPieces.length <= 3) {
-        return renderMenuItems(combineGroupedEdges[slugString]);
+        return renderMenuItems(combineGroupedEdges[slugString], i18n.language);
       }
 
       var menuItemLocaleKey = getMenuItemLocaleKey(slugString);
@@ -34253,7 +34253,7 @@ function Template(_ref2) {
           className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.menuIcon,
           type: "icon-" + doc.icon
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, doc && doc.title ? Object(_utils__WEBPACK_IMPORTED_MODULE_23__[/* capitalize */ "a"])(doc.title[i18n.language]) : menuItemLocaleKey))
-      }, renderMenuItems(combineGroupedEdges[slugString]));
+      }, renderMenuItems(combineGroupedEdges[slugString], i18n.language));
     });
   };
 
@@ -52312,7 +52312,7 @@ var Search = function Search(_ref3) {
         });
       });
     }
-  }, []);
+  }, [i18n.language]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: _Search_module_less__WEBPACK_IMPORTED_MODULE_3___default.a.search
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -52322,7 +52322,7 @@ var Search = function Search(_ref3) {
     },
     className: _Search_module_less__WEBPACK_IMPORTED_MODULE_3___default.a.input + " " + (isFocused ? _Search_module_less__WEBPACK_IMPORTED_MODULE_3___default.a.searchFocused : ''),
     id: "search",
-    placeholder: isFocused ? '搜索' : undefined,
+    placeholder: isFocused ? t('搜索') : undefined,
     onFocus: function onFocus() {
       setIsFocused(true);
     },
@@ -121032,7 +121032,7 @@ var parseTableOfContents = function parseTableOfContents(tableOfContents) {
   return contents.replace(/\/#/g, '#');
 };
 
-var renderMenuItems = function renderMenuItems(edges) {
+var renderMenuItems = function renderMenuItems(edges, language) {
   return edges.filter(function (edge) {
     var slug = edge.node.fields.slug;
 
@@ -121063,9 +121063,9 @@ var renderMenuItems = function renderMenuItems(edges) {
     }, icon && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(MenuIcon, {
       className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.menuIcon,
       type: "icon-" + icon
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, title), language !== 'en' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", {
       className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.subtitle
-    }, subtitle)));
+    }, subtitle) : null));
   });
 };
 
@@ -121117,6 +121117,11 @@ function Template(_ref2) {
   var data = _ref2.data,
       location = _ref2.location,
       pageContext = _ref2.pageContext;
+
+  var _useTranslation = Object(react_i18next__WEBPACK_IMPORTED_MODULE_14__[/* useTranslation */ "a"])(),
+      t = _useTranslation.t,
+      i18n = _useTranslation.i18n;
+
   var _pageContext$exampleS = pageContext.exampleSections,
       exampleSections = _pageContext$exampleS === void 0 ? {} : _pageContext$exampleS,
       _pageContext$descript = pageContext.description,
@@ -121132,7 +121137,7 @@ function Template(_ref2) {
     return edges.filter(function (item) {
       return item.node.fields.slug.includes('cmp/');
     });
-  }, [edges]);
+  }, [edges, i18n.language]);
   var pathWithoutTrailingSlashes = Object(react__WEBPACK_IMPORTED_MODULE_7__["useMemo"])(function () {
     return location.pathname.replace(/\/$/, '');
   }, [location]);
@@ -121169,13 +121174,9 @@ function Template(_ref2) {
       procmp = _site$siteMetadata$pr === void 0 ? [] : _site$siteMetadata$pr,
       playground = _site$siteMetadata.playground,
       pathPrefix = site.pathPrefix;
-  var examples = procmp;
-
-  var _useTranslation = Object(react_i18next__WEBPACK_IMPORTED_MODULE_14__[/* useTranslation */ "a"])(),
-      i18n = _useTranslation.i18n; // const renderAst = new RehypeReact({
+  var examples = procmp; // const renderAst = new RehypeReact({
   //   createElement: React.createElement,
   // }).Compiler;
-
 
   var groupedEdges = Object(react__WEBPACK_IMPORTED_MODULE_7__["useMemo"])(function () {
     return Object(lodash_es_groupBy__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"])(edgesInExamples, function (_ref3) {
@@ -121247,7 +121248,7 @@ function Template(_ref2) {
       titleArr = [];
       titleDom = [];
     };
-  }, [exampleSections.examples.length, schemaStr]);
+  }, [exampleSections.examples.length, schemaStr, i18n.language]);
   var renderSubMenu = Object(react__WEBPACK_IMPORTED_MODULE_7__["useMemo"])(function () {
     var combineGroupedEdges = {};
     var groupedEdgesKeys = Object.keys(groupedEdges).filter(function (key) {
@@ -121281,7 +121282,7 @@ function Template(_ref2) {
       var slugPieces = slugString.split('/');
 
       if (slugPieces.length <= 3) {
-        return renderMenuItems(combineGroupedEdges[slugString]);
+        return renderMenuItems(combineGroupedEdges[slugString], i18n.language);
       }
 
       var menuItemLocaleKey = getMenuItemLocaleKey(slugString);
@@ -121297,9 +121298,9 @@ function Template(_ref2) {
           className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.menuIcon,
           type: "icon-" + doc.icon
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, doc && doc.title ? Object(_utils__WEBPACK_IMPORTED_MODULE_22__[/* capitalize */ "a"])(doc.title[i18n.language]) : menuItemLocaleKey))
-      }, renderMenuItems(combineGroupedEdges[slugString]));
+      }, renderMenuItems(combineGroupedEdges[slugString], i18n.language));
     });
-  }, []);
+  }, [i18n.language]);
   var menu = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(antd_es_menu__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
     inlineIndent: 0,
     mode: "inline",
@@ -121333,14 +121334,14 @@ function Template(_ref2) {
       },
       width: 280
     }, menu);
-  }, [drawOpen]);
+  }, [drawOpen, i18n.language]);
   var examplePageContent = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_7___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("h1", {
     style: {
       display: 'flex',
       alignItems: 'center',
       flexWrap: 'wrap'
     }
-  }, frontmatter.title, " ", frontmatter.subtitle, ' ', frontmatter.subtitle !== '数据源示例' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_components_ComponentsChangeLog__WEBPACK_IMPORTED_MODULE_25__[/* default */ "a"], {
+  }, frontmatter.title, " ", i18n.language !== 'en' ? frontmatter.subtitle : '', ' ', frontmatter.title !== 'DataSet Example' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_components_ComponentsChangeLog__WEBPACK_IMPORTED_MODULE_25__[/* default */ "a"], {
     cmpName: frontmatter.title
   }) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("div", {
     className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.md
@@ -121348,7 +121349,7 @@ function Template(_ref2) {
     props: description
   })), proExmaples.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("h2", {
     className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.codeArea
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, "\u4EE3\u7801\u6F14\u793A")) : null, proExmaples.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("span", null, t('代码演示'))) : null, proExmaples.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("div", {
     className: _markdown_module_less__WEBPACK_IMPORTED_MODULE_24___default.a.container + " example-container"
   }, proExmaples.map(function (example, index) {
     var title = typeof example.title === 'object' ? example.title[i18n.language] : example.title;
@@ -121413,7 +121414,7 @@ function Template(_ref2) {
     }
 
     return contents;
-  }, []);
+  }, [i18n.language]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_7___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(choerodon_ui_pro__WEBPACK_IMPORTED_MODULE_9__["ModalProvider"], {
     location: location
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_components_Seo__WEBPACK_IMPORTED_MODULE_19__[/* default */ "a"], {
@@ -122100,7 +122101,7 @@ var getProCmpJumpSlug = function getProCmpJumpSlug(basicTitle, basicSlug) {
   return res.split('/cmp').join('/procmp');
 };
 
-var basic_renderMenuItems = function renderMenuItems(edges) {
+var basic_renderMenuItems = function renderMenuItems(edges, language) {
   return edges.filter(function (edge) {
     var slug = edge.node.fields.slug;
 
@@ -122138,9 +122139,9 @@ var basic_renderMenuItems = function renderMenuItems(edges) {
       }
     }, /*#__PURE__*/react_default.a.createElement(gatsby_browser_entry["Link"], {
       to: slug
-    }, /*#__PURE__*/react_default.a.createElement("span", null, title), /*#__PURE__*/react_default.a.createElement("span", {
+    }, /*#__PURE__*/react_default.a.createElement("span", null, title), language !== 'en' ? /*#__PURE__*/react_default.a.createElement("span", {
       className: markdown_module_default.a.subtitle
-    }, subtitle))), deprecated ? /*#__PURE__*/react_default.a.createElement("div", {
+    }, subtitle) : null)), deprecated ? /*#__PURE__*/react_default.a.createElement("div", {
       style: {
         flex: 1,
         flexGrow: 4
@@ -122235,6 +122236,7 @@ function Template(_ref2) {
   var examples = cmp;
 
   var _useTranslation = Object(useTranslation["a" /* useTranslation */])(),
+      t = _useTranslation.t,
       i18n = _useTranslation.i18n;
 
   var groupedEdges = Object(groupBy["a" /* default */])(edgesInExamples, function (_ref4) {
@@ -122300,7 +122302,7 @@ function Template(_ref2) {
       titleArr = [];
       titleDom = [];
     };
-  }, [exampleSections.examples]);
+  }, [exampleSections.examples, schemaStr, i18n.language]);
   var menu = /*#__PURE__*/react_default.a.createElement(es_menu["a" /* default */], {
     inlineIndent: 0,
     mode: "inline",
@@ -122328,7 +122330,7 @@ function Template(_ref2) {
     var slugPieces = slugString.split('/');
 
     if (slugPieces.length <= 3) {
-      return basic_renderMenuItems(groupedEdges[slugString]);
+      return basic_renderMenuItems(groupedEdges[slugString], i18n.language);
     }
 
     var menuItemLocaleKey = getMenuItemLocaleKey(slugString);
@@ -122344,7 +122346,7 @@ function Template(_ref2) {
         className: markdown_module_default.a.menuIcon,
         type: "icon-" + doc.icon
       }), /*#__PURE__*/react_default.a.createElement("span", null, doc && doc.title ? Object(utils["a" /* capitalize */])(doc.title[i18n.language]) : menuItemLocaleKey))
-    }, basic_renderMenuItems(groupedEdges[slugString]));
+    }, basic_renderMenuItems(groupedEdges[slugString], i18n.language));
   }));
   var isWide = Object(useMedia["a" /* default */])('(min-width: 768.1px)', true);
 
@@ -122371,7 +122373,7 @@ function Template(_ref2) {
   var basicExmaples = exampleSections.examples && exampleSections.examples.filter(function (example) {
     return example.category !== 'pro' && !(example.ignores && example.ignores.includes(schemaStr));
   });
-  var exmaplePageContent = /*#__PURE__*/react_default.a.createElement(react_default.a.Fragment, null, /*#__PURE__*/react_default.a.createElement("h1", null, frontmatter.title, " ", frontmatter.subtitle), frontmatter.deprecated ? /*#__PURE__*/react_default.a.createElement(es_alert["a" /* default */], {
+  var exmaplePageContent = /*#__PURE__*/react_default.a.createElement(react_default.a.Fragment, null, /*#__PURE__*/react_default.a.createElement("h1", null, frontmatter.title, " ", i18n.language !== 'en' ? frontmatter.subtitle : ''), frontmatter.deprecated ? /*#__PURE__*/react_default.a.createElement(es_alert["a" /* default */], {
     message: "\u5F53\u524D\u7EC4\u4EF6\u4E0D\u518D\u7EF4\u62A4\uFF0C\u5EFA\u8BAE\u4F7F\u7528Pro\u7EC4\u4EF6",
     type: "info",
     showIcon: true
@@ -122384,7 +122386,7 @@ function Template(_ref2) {
     }
   }), basicExmaples && basicExmaples.length ? /*#__PURE__*/react_default.a.createElement("h2", {
     className: markdown_module_default.a.codeArea
-  }, /*#__PURE__*/react_default.a.createElement("span", null, "\u4EE3\u7801\u6F14\u793A")) : null, basicExmaples && basicExmaples.length ? /*#__PURE__*/react_default.a.createElement("div", {
+  }, /*#__PURE__*/react_default.a.createElement("span", null, t('代码演示'))) : null, basicExmaples && basicExmaples.length ? /*#__PURE__*/react_default.a.createElement("div", {
     className: markdown_module_default.a.container
   }, basicExmaples.map(function (example, index) {
     var title = typeof example.title === 'object' ? example.title[i18n.language] : example.title;
@@ -122509,7 +122511,7 @@ var icon_parseTableOfContents = function parseTableOfContents(tableOfContents) {
   return contents.replace(/\/#/g, '#');
 };
 
-var icon_renderMenuItems = function renderMenuItems(edges) {
+var icon_renderMenuItems = function renderMenuItems(edges, language) {
   return edges.filter(function (edge) {
     var slug = edge.node.fields.slug;
 
@@ -122543,9 +122545,9 @@ var icon_renderMenuItems = function renderMenuItems(edges) {
       }
     }, /*#__PURE__*/react_default.a.createElement("div", null, /*#__PURE__*/react_default.a.createElement(gatsby_browser_entry["Link"], {
       to: slug
-    }, /*#__PURE__*/react_default.a.createElement("span", null, title), /*#__PURE__*/react_default.a.createElement("span", {
+    }, /*#__PURE__*/react_default.a.createElement("span", null, title), language !== 'en' ? /*#__PURE__*/react_default.a.createElement("span", {
       className: markdown_module_default.a.subtitle
-    }, subtitle)))), deprecated ? /*#__PURE__*/react_default.a.createElement("div", {
+    }, subtitle) : null))), deprecated ? /*#__PURE__*/react_default.a.createElement("div", {
       style: {
         flex: 1,
         flexGrow: 4
@@ -122727,7 +122729,7 @@ function icon_Template(_ref2) {
       icon_titleArr = [];
       icon_titleDom = [];
     };
-  }, []);
+  }, [exampleSections.examples, frontmatter, i18n.language]);
 
   var renderSubMenu = function renderSubMenu() {
     var combineGroupedEdges = {};
@@ -122762,7 +122764,7 @@ function icon_Template(_ref2) {
       var slugPieces = slugString.split('/');
 
       if (slugPieces.length <= 3) {
-        return icon_renderMenuItems(combineGroupedEdges[slugString]);
+        return icon_renderMenuItems(combineGroupedEdges[slugString], i18n.language);
       }
 
       var menuItemLocaleKey = icon_getMenuItemLocaleKey(slugString);
@@ -122778,7 +122780,7 @@ function icon_Template(_ref2) {
           className: markdown_module_default.a.menuIcon,
           type: "icon-" + doc.icon
         }), /*#__PURE__*/react_default.a.createElement("span", null, doc && doc.title ? Object(utils["a" /* capitalize */])(doc.title[i18n.language]) : menuItemLocaleKey))
-      }, icon_renderMenuItems(combineGroupedEdges[slugString]));
+      }, icon_renderMenuItems(combineGroupedEdges[slugString], i18n.language));
     });
   };
 
@@ -122861,7 +122863,7 @@ function icon_Template(_ref2) {
       display: 'flex',
       alignItems: 'center'
     }
-  }, frontmatter.title, " ", frontmatter.subtitle, /*#__PURE__*/react_default.a.createElement(ComponentsChangeLog["a" /* default */], {
+  }, frontmatter.title, " ", i18n.language !== 'en' ? frontmatter.subtitle : '', /*#__PURE__*/react_default.a.createElement(ComponentsChangeLog["a" /* default */], {
     cmpName: frontmatter.title
   })), /*#__PURE__*/react_default.a.createElement("div", {
     className: markdown_module_default.a.md
@@ -123408,12 +123410,14 @@ module.exports = autocomplete;
 /* harmony import */ var choerodon_ui_lib_util_enum__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(choerodon_ui_lib_util_enum__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var choerodon_ui_pro_lib_Button_enum__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("uXsc");
 /* harmony import */ var choerodon_ui_pro_lib_Button_enum__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(choerodon_ui_pro_lib_Button_enum__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _ComponentsChangeLog_less__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("gum5");
-/* harmony import */ var _ComponentsChangeLog_less__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_ComponentsChangeLog_less__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var react_i18next__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("egL6");
+/* harmony import */ var _ComponentsChangeLog_less__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("gum5");
+/* harmony import */ var _ComponentsChangeLog_less__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_ComponentsChangeLog_less__WEBPACK_IMPORTED_MODULE_10__);
 
 
 
 /* eslint-disable no-param-reassign */
+
 
 
 
@@ -123523,7 +123527,41 @@ var initSingleCmpChangelogVersionsArr = function initSingleCmpChangelogVersionsA
   });
 };
 
+var intlObj = {
+  zh: {
+    add: '新增',
+    imp: '优化',
+    fix: '修复',
+    specifiedVersion: '指定版本',
+    versionRange: '版本范围',
+    emptyText: '没有该版本及条件下对应的版本更新信息。',
+    startVersionPla: '开始版本',
+    to: '至',
+    endVersionPla: '结束版本',
+    singleVersionPla: '默认展示全部记录',
+    filterTypesPla: '未设置类别时，默认展示全部 Changelogs'
+  },
+  en: {
+    add: 'ADD',
+    imp: 'IMP',
+    fix: 'FIX',
+    specifiedVersion: 'Specified version',
+    versionRange: 'Version range',
+    emptyText: 'There is no Changelogs for this version and under these conditions.',
+    startVersionPla: 'Start version',
+    to: 'to',
+    endVersionPla: 'End version',
+    singleVersionPla: 'Default to show all',
+    filterTypesPla: 'Default to show all'
+  }
+};
+
 var ChangelogButton = function ChangelogButton(props) {
+  var _useTranslation = Object(react_i18next__WEBPACK_IMPORTED_MODULE_9__[/* useTranslation */ "a"])(),
+      t = _useTranslation.t,
+      i18n = _useTranslation.i18n;
+
+  var lang = i18n.language;
   var Modal = Object(choerodon_ui_pro__WEBPACK_IMPORTED_MODULE_4__["useModal"])();
   var allVersions = props.allVersions,
       allVersionsInfos = props.allVersionsInfos,
@@ -123540,11 +123578,11 @@ var ChangelogButton = function ChangelogButton(props) {
     var settedRules = {
       startVersion: undefined,
       endVersion: allVersions[0],
-      filterTypes: ['🌟新增', '💄优化', '🐞修复'],
-      versionQuantity: '版本范围'
+      filterTypes: ["\uD83C\uDF1F" + intlObj[lang].add, "\uD83D\uDC84" + intlObj[lang].imp, "\uD83D\uDC1E" + intlObj[lang].fix],
+      versionQuantity: intlObj[lang].versionRange
     };
-    var types = ['🌟新增', '💄优化', '🐞修复'];
-    var versionQuantityChoice = ['指定版本', '版本范围']; // 为展示的整个changlogsStr 添加相关类名 用于实现样式效果
+    var types = ["\uD83C\uDF1F" + intlObj[lang].add, "\uD83D\uDC84" + intlObj[lang].imp, "\uD83D\uDC1E" + intlObj[lang].fix];
+    var versionQuantityChoice = [intlObj[lang].specifiedVersion, intlObj[lang].versionRange]; // 为展示的整个changlogsStr 添加相关类名 用于实现样式效果
 
     var getTagClsNamedStr = function getTagClsNamedStr(changelogsArr) {
       return changelogsArr.join('\n').replaceAll('language-text', 'language-text c7n-tag').replaceAll("<code class=\"language-text c7n-tag\">20", "<code class=\"language-text c7n-tag c7n-tag-green\">20");
@@ -123566,7 +123604,7 @@ var ChangelogButton = function ChangelogButton(props) {
         } else if (type === 'versionQuantity') {
           settedRules.versionQuantity = value;
 
-          if (value === '指定版本') {
+          if (value === intlObj[lang].specifiedVersion) {
             // 多版本切换到指定版本
             if (!settedRules.startVersion && !settedRules.endVersion) {
               // 若两个版本都未设置，默认展示该组件的全部changelogs
@@ -123605,11 +123643,11 @@ var ChangelogButton = function ChangelogButton(props) {
             var typeSymbol;
             var filtType = filtedTypes[0];
 
-            if (filtType === '🌟新增') {
+            if (filtType === "\uD83C\uDF1F" + intlObj[lang].add) {
               typeSymbol = '🌟';
-            } else if (filtType === '💄优化') {
+            } else if (filtType === "\uD83D\uDC84" + intlObj[lang].imp) {
               typeSymbol = '💄';
-            } else if (filtType === '🐞修复') {
+            } else if (filtType === "\uD83D\uDC1E" + intlObj[lang].fix) {
               typeSymbol = '🐞';
             }
 
@@ -123627,11 +123665,11 @@ var ChangelogButton = function ChangelogButton(props) {
           var toFiltChangelogsByRulesOfTwoType = function toFiltChangelogsByRulesOfTwoType(filtedTypes, changelogs) {
             var typeSymbol;
 
-            if (filtedTypes.indexOf('🌟新增') > -1 && filtedTypes.indexOf('💄优化') > -1) {
+            if (filtedTypes.indexOf("\uD83C\uDF1F" + intlObj[lang].add) > -1 && filtedTypes.indexOf("\uD83D\uDC84" + intlObj[lang].imp) > -1) {
               typeSymbol = '🐞';
-            } else if (filtedTypes.indexOf('🐞修复') > -1 && filtedTypes.indexOf('💄优化') > -1) {
+            } else if (filtedTypes.indexOf("\uD83D\uDC1E" + intlObj[lang].fix) > -1 && filtedTypes.indexOf("\uD83D\uDC84" + intlObj[lang].imp) > -1) {
               typeSymbol = '🌟';
-            } else if (filtedTypes.indexOf('🌟新增') > -1 && filtedTypes.indexOf('🐞修复') > -1) {
+            } else if (filtedTypes.indexOf("\uD83C\uDF1F" + intlObj[lang].add) > -1 && filtedTypes.indexOf("\uD83D\uDC1E" + intlObj[lang].fix) > -1) {
               typeSymbol = '💄';
             }
 
@@ -123794,7 +123832,7 @@ var ChangelogButton = function ChangelogButton(props) {
             icon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(choerodon_ui__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"], {
               type: "wb_incandescent-o"
             }),
-            title: "\u6CA1\u6709\u8BE5\u7248\u672C\u53CA\u6761\u4EF6\u4E0B\u5BF9\u5E94\u7684\u7248\u672C\u66F4\u65B0\u4FE1\u606F\u3002"
+            title: intlObj[lang].emptyText
           }))
         });
       };
@@ -123818,13 +123856,13 @@ var ChangelogButton = function ChangelogButton(props) {
           value: each,
           key: each
         }, each);
-      })), settedRules.versionQuantity === '版本范围' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(choerodon_ui_pro__WEBPACK_IMPORTED_MODULE_4__["Select"], {
+      })), settedRules.versionQuantity === intlObj[lang].versionRange ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(choerodon_ui_pro__WEBPACK_IMPORTED_MODULE_4__["Select"], {
         style: {
           flex: 1,
           minWidth: 65
         },
         searchable: true,
-        placeholder: "\u5F00\u59CB\u7248\u672C",
+        placeholder: intlObj[lang].startVersionPla,
         onChange: function onChange(value) {
           handleRulesChange('startVersion', value);
         },
@@ -123840,13 +123878,13 @@ var ChangelogButton = function ChangelogButton(props) {
           lineHeight: '28px',
           margin: '0 8px'
         }
-      }, "\u81F3"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(choerodon_ui_pro__WEBPACK_IMPORTED_MODULE_4__["Select"], {
+      }, intlObj[lang].to), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(choerodon_ui_pro__WEBPACK_IMPORTED_MODULE_4__["Select"], {
         style: {
           flex: 1,
           minWidth: 65
         },
         searchable: true,
-        placeholder: "\u7ED3\u675F\u7248\u672C",
+        placeholder: intlObj[lang].endVersionPla,
         onChange: function onChange(value) {
           handleRulesChange('endVersion', value);
         },
@@ -123866,7 +123904,7 @@ var ChangelogButton = function ChangelogButton(props) {
           handleRulesChange('singleVersion', value);
         },
         value: settedRules.endVersion,
-        placeholder: "\u9ED8\u8BA4\u5C55\u793A\u5168\u90E8\u8BB0\u5F55"
+        placeholder: intlObj[lang].singleVersionPla
       }, allVersions.map(function (each) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Option, {
           value: each,
@@ -123883,7 +123921,7 @@ var ChangelogButton = function ChangelogButton(props) {
           handleRulesChange('filterTypes', value);
         },
         value: settedRules.filterTypes,
-        placeholder: "\u672A\u8BBE\u7F6E\u7C7B\u522B\u65F6\uFF0C\u9ED8\u8BA4\u5C55\u793A\u5168\u90E8 Changelogs"
+        placeholder: intlObj[lang].filterTypesPla
       }, types.map(function (each) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Option, {
           value: each,
@@ -123909,13 +123947,14 @@ var ChangelogButton = function ChangelogButton(props) {
       },
       className: 'changelogs-modal-wrapper',
       closable: true,
-      title: '更新记录',
+      title: t('更新日志'),
       drawer: true,
       resizable: true,
       maskClosable: true,
       customizable: true,
       customizedCode: 'ChangelogModal',
-      children: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(ModalContent, null)
+      children: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(ModalContent, null),
+      footer: null
     });
   }, [Modal]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(choerodon_ui_pro__WEBPACK_IMPORTED_MODULE_4__["Button"], {
@@ -123926,10 +123965,13 @@ var ChangelogButton = function ChangelogButton(props) {
       marginLeft: 20
     },
     color: choerodon_ui_pro_lib_Button_enum__WEBPACK_IMPORTED_MODULE_8__["ButtonColor"].primary
-  }, "\u66F4\u65B0\u8BB0\u5F55");
+  }, t('更新日志'));
 };
 
 var ComponentsChangeLog = function ComponentsChangeLog(props) {
+  var _useTranslation2 = Object(react_i18next__WEBPACK_IMPORTED_MODULE_9__[/* useTranslation */ "a"])(),
+      i18n = _useTranslation2.i18n;
+
   var allMarkDownData = Object(gatsby__WEBPACK_IMPORTED_MODULE_3__["useStaticQuery"])("3238733320");
   var edges = allMarkDownData.allMarkdownRemark.edges;
   var cmpName = props.cmpName; // 获取 changelog 应用的node内容
@@ -123938,7 +123980,7 @@ var ComponentsChangeLog = function ComponentsChangeLog(props) {
   edges.forEach(function (item) {
     var node = item.node;
 
-    if (node.frontmatter.title === '更新日志') {
+    if (node.frontmatter.title === (i18n.language === 'en' ? 'Change Log' : '更新日志')) {
       changelogNode = node;
     }
   }); // @ts-ignore
@@ -195634,6 +195676,7 @@ var DataSetSidebar_module_default = /*#__PURE__*/__webpack_require__.n(DataSetSi
 
 
 
+
 // @ts-ignore
 
 
@@ -195697,6 +195740,9 @@ var DataSetSidebar_DataSetSidebar = function DataSetSidebar(_ref) {
   var lang = _ref.lang,
       handleClose = _ref.handleClose;
   var DataSetSidebarQueryData = Object(gatsby_browser_entry["useStaticQuery"])("1331108010");
+
+  var _useTranslation = Object(useTranslation["a" /* useTranslation */])(),
+      t = _useTranslation.t;
 
   var _useState = Object(react["useState"])(''),
       filterValue = _useState[0],
@@ -195808,7 +195854,7 @@ var DataSetSidebar_DataSetSidebar = function DataSetSidebar(_ref) {
     onChange: handleFilterValueChange,
     className: DataSetSidebar_module_default.a.searchInput,
     type: "text",
-    placeholder: "\u641C\u7D22 DataSet"
+    placeholder: t('搜索 DataSet')
   }))), /*#__PURE__*/react_default.a.createElement("div", {
     className: DataSetSidebar_module_default.a.header
   }, /*#__PURE__*/react_default.a.createElement("div", {
@@ -265365,7 +265411,7 @@ var Banner_Banner = function Banner(_ref) {
       key: title
     }, /*#__PURE__*/react_default.a.createElement("aside", {
       className: Banner_module_default.a.staticIcon
-    }, staticIcon), /*#__PURE__*/react_default.a.createElement("aside", null, /*#__PURE__*/react_default.a.createElement("p", null, cardTitle), /*#__PURE__*/react_default.a.createElement("p", null, desc)));
+    }, staticIcon), /*#__PURE__*/react_default.a.createElement("aside", null, /*#__PURE__*/react_default.a.createElement("p", null, t(cardTitle)), /*#__PURE__*/react_default.a.createElement("p", null, t(desc))));
   }))));
 };
 
