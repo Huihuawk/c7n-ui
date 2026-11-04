@@ -24,7 +24,7 @@ The following APIs are shared by Tooltip, Popconfirm, Popover.
 | popupInnerStyle | Style of the tooltip card content | object | | 1.6.0 |
 | placement | The position of the tooltip relative to the target, which can be one of top \| left \| right \| bottom \| topLeft \| topRight \| bottomLeft \| bottomRight \| leftTop \| leftBottom \| rightTop \| rightBottom | string | top | |
 | autoPlacement | Automatically select the best tooltip position | boolean | [tooltipAutoPlacement](/en/procmp/configure/configure) | 1.6.8 |
-| trigger | Tooltip trigger mode | hover \| focus \| click \| contextMenu | hover | |
+| trigger | Tooltip trigger mode | (hover \| focus \| click \| contextMenu)\[\] | \['hover'\] | |
 | hidden | Whether the floating tooltip card is visible or not | boolean | true | |
 | onHiddenBeforeChange | Callback executed before visibility of the tooltip card is changed. If return value is false, this change will be stopped. | (hidden) => boolean | | |
 | onHiddenChange | Callback executed when visibility of the tooltip card is changed | (hidden) => void | - | |

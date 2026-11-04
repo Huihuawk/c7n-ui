@@ -42,7 +42,7 @@ title: API
 | onUploadProgress | Upload progress change callback | (percent: number, attachment: AttachmentFile) => void | | |
 | onUploadSuccess | Upload success callback | (response: any, attachment: AttachmentFile) => void |  | |
 | onUploadError | Upload error callback | (error: Error, attachment: AttachmentFile) => void |  | | |
-| onRemove | Delete file callback, used to send delete request, return false or throw exception will abort deletion | ({ attachment: AttachmentFile, bucketName?: string, bucketDirectory?: string, storageCode?:string, attachmentUUID: string, isPublic?: boolean }, multiple: boolean) => boolean | | |
+| onRemove | Delete file callback, used to send delete request, return false or throw exception will abort deletion | (attachment: AttachmentFile) => boolean \| void | | |
 | onUploadAbort | Callback for upload cancellation. If the input parameter exists, it will cancel the upload of a single file. If it does not exist, it will cancel the upload of all files. | (attachment?: AttachmentFile) => void |  | 1.6.8 |
 | getPreviewUrl | Get preview address, default use AttachmentFile.url, return empty then cannot preview. When the return value of the function is (() => string \| Promise< string>), it only supports the case where listType is text | ({ attachment: AttachmentFile, bucketName?: string, bucketDirectory?: string, storageCode?:string, attachmentUUID: string, isPublic?: boolean }) => (string \| (() => string \| Promise< string>) \| undefined) \| Promise<(string \| (() => string \| Promise< string>) \| undefined)>(1.6.8) | | 1.6.3 |
 | uploadImmediately | Whether to upload immediately. After closing, you need to manually call the component instance method `upload` to upload | boolean | true | 1.6.8 |

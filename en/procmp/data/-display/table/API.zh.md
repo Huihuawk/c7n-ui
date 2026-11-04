@@ -87,7 +87,7 @@ title: API
 | treeQueryExpanded | 树形结构下queryBar触发查询,自动展开树形结构  | boolean | | 1.3.1   |
 | aggregation | 是否是聚合视图， 若有个性化则以个性化配置为主  | boolean | | 1.4.0   |
 | onAggregationChange | 聚合视图变更钩子， 在个性化配置变更时触发  | (aggregation) => void | | 1.4.0   |
-| cellHighlightRenderer | 单元格高亮渲染器  | ({ title, content, dataSet, record, name, className, style }, element) => ReactNode | | 1.4.0  |
+| cellHighlightRenderer | 单元格高亮渲染器, 需要配置 highlight 属性。表格中为非行内编辑的 可编辑单元格 渲染  | ({ title, content, dataSet, record, name, className, style }, element) => ReactNode | | 1.4.0  |
 | showHeader |	是否显示表头 |	boolean | true | 1.4.2 |
 | showRemovedRow |	是否显示临时移除的行，默认置灰显示 |	boolean | true | 1.4.4 |
 | onColumnResize | 列宽改变的回调事件  | ({ column, width, index }) => void | | 1.4.4 |
@@ -130,7 +130,7 @@ title: API
 | header | 列头 | ReactNode \| ({ dataSet, name, title, aggregation, group: [Group](/zh/procmp/dataset/dataset#group-values), aggregationTree: ReactElement[] }) => ReactNode |  |  |
 | footer          | 列脚                                                                                                                                                                                              | ReactNode \| ({ dataSet, name, aggregationTree: ReactElement[] }) => ReactNode                                                                                          |           |  |
 | renderer        | 单元格渲染回调                                                                                                                                                                                    | ({ value, text, name, record, dataSet, rowGroup: [Group](/zh/procmp/dataset/dataset#group-values), headerGroup: [Group](/zh/procmp/dataset/dataset#group-values),  aggregationTree: ReactElement[] }) => ReactNode                                                                             |           |  |
-| tagRenderer        | 多值 Tag 渲染器 | ({ value, text, key, readOnly, invalid, disabled, onClose, className, inputBoxIsFocus, record, field }: TagRendererProps) => ReactNode |  | 1.6.2 |
+| tagRenderer        | 多值 Tag 渲染器 | ({ value, text, key, readOnly, invalid, disabled, onClose, className, inputBoxIsFocus, record(1.6.8), field(1.6.8) }: TagRendererProps) => ReactNode |  | 1.6.2 |
 | editor          | 编辑器, 设为 true 时会根据 field 的 type 自动匹配编辑器。不可编辑请使用 false 值，而不是在控件上加 disabled。如果有对输入框组件二次封装的需求，需要使用 React.forwardRef 转发 ref。                                                                                   | FormField \| ((record, name) => FormField \| boolean) \| boolean                                                                   |           |  |
 | lock            | 是否锁定列（固定列）， 可选值 false \| true \| 'left' \| 'right'                                                                                                                                                   | boolean\| string                                                                                                                   | false     | |
 | align           | 文字对齐方式，可选值： left \| center \| right                                                                                                                                                    | string                                                                                                                             |  [globalConfig.tableColumnAlign](/zh/procmp/configure/configure)  |  |
@@ -159,7 +159,7 @@ title: API
 | aggregationDefaultExpandAll | 默认展开所有聚合列下的树节点  | boolean |  |  |
 | aggregationTreeIndex | 聚合单元格中的列索引  | number | 0 | 1.5.2 |
 | hiddenInAggregation | 在聚合列下是否隐藏  | boolean \| (record) => boolean |  | |
-| highlightRenderer | 单元格高亮渲染器 | ({ title, content, dataSet, record, name, className, style }, element) => ReactNode | |  |
+| highlightRenderer | 单元格高亮渲染器, 需要配置 highlight 属性。表格中为非行内编辑的 可编辑单元格 渲染 | ({ title, content, dataSet, record, name, className, style }, element) => ReactNode | |  |
 | aggregationLimitDefaultExpanded | 聚合超过限制的条目默认是否展开显示  | boolean \| (record) => boolean |  | 1.5.1 |
 | sortableCallback | 排序结束的回调函数  | (props: { dataSet: DataSet, field: Field, order?: string }) => void  |  | 1.6.6 |
 | showDetail | editor 为 false 时, 是否可查看多语言详情。 true 为 hover 时显示icon; always 为一直显示icon | boolean \| `always` |  | 1.6.7 |

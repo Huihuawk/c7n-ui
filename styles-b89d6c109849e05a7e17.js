@@ -9033,7 +9033,13 @@ var _interopRequireDefault = __webpack_require__("63Ad")["default"];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.QUERY_CANCELABLE = exports.CHILDREN_PAGE_INFO = void 0;
+exports.QUERY_PREPARE_PROMISE = exports.QUERY_CANCELABLE = exports.CHILDREN_PAGE_INFO = void 0;
+Object.defineProperty(exports, "TABLE_SHOW_REMOVED_ROW", {
+  enumerable: true,
+  get: function get() {
+    return _constant.TABLE_SHOW_REMOVED_ROW;
+  }
+});
 exports.addDataSetField = addDataSetField;
 exports["default"] = void 0;
 exports.initDataSetField = initDataSetField;
@@ -9043,8 +9049,6 @@ var _regenerator = _interopRequireDefault(__webpack_require__("NthX"));
 var _extends2 = _interopRequireDefault(__webpack_require__("8VmE"));
 
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__("fFdx"));
-
-var _defineProperty2 = _interopRequireDefault(__webpack_require__("OvAC"));
 
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__("nxTg"));
 
@@ -9061,6 +9065,8 @@ var _assertThisInitialized2 = _interopRequireDefault(__webpack_require__("T1e2")
 var _inherits2 = _interopRequireDefault(__webpack_require__("eef+"));
 
 var _createSuper2 = _interopRequireDefault(__webpack_require__("Pe5x"));
+
+var _defineProperty2 = _interopRequireDefault(__webpack_require__("OvAC"));
 
 var _tslib = __webpack_require__("Qno7");
 
@@ -9130,6 +9136,8 @@ var _Validator = _interopRequireDefault(__webpack_require__("4ijq"));
 
 var _treeHelper = __webpack_require__("sHTB");
 
+var _constant = __webpack_require__("JE6j");
+
 var ALL_PAGE_SELECTION = '__ALL_PAGE_SELECTION__'; // TODO:Symbol
 
 var QUERY_PARAMETER = '__QUERY_PARAMETER__'; // TODO:Symbol
@@ -9140,6 +9148,8 @@ var CHILDREN_PAGE_INFO = '__CHILDREN_PAGE_INFO__';
 exports.CHILDREN_PAGE_INFO = CHILDREN_PAGE_INFO;
 var QUERY_CANCELABLE = '__QUERY_CANCELABLE__';
 exports.QUERY_CANCELABLE = QUERY_CANCELABLE;
+var QUERY_PREPARE_PROMISE = '__DYNAMIC_FILTER_QUERY_PREPARE_PROMISE__';
+exports.QUERY_PREPARE_PROMISE = QUERY_PREPARE_PROMISE;
 
 function addDataSetField(dataSet, name) {
   var field = new _Field["default"]({
@@ -9271,22 +9281,21 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
     (0, _classCallCheck2["default"])(this, DataSet);
     _this = _super.call(this);
-    _this.children = {};
-    _this.pending = new _promiseQueue["default"]();
-    _this.performance = {
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "children", {});
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "pending", new _promiseQueue["default"]());
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "performance", {
       timing: {
         fetchStart: 0,
         fetchEnd: 0,
         loadStart: 0,
         loadEnd: 0
       }
-    };
-    _this.originalData = [];
-    _this.cacheAllData = [];
-    _this.resetInBatch = false;
-    _this.validating = false;
-
-    _this.flattenTreeData = function (records) {
+    });
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "originalData", []);
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "cacheAllData", []);
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "resetInBatch", false);
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "validating", false);
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "flattenTreeData", function (records) {
       var result = [];
 
       function traverse(nodes) {
@@ -9301,17 +9310,16 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
       traverse(records);
       return result;
-    };
-
-    _this.inBatchSelection = false;
-    _this.syncChildrenRemote = (0, _debounce["default"])(function (remoteKeys, current) {
+    });
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "inBatchSelection", false);
+    (0, _defineProperty2["default"])((0, _assertThisInitialized2["default"])(_this), "syncChildrenRemote", (0, _debounce["default"])(function (remoteKeys, current) {
       var _assertThisInitialize = (0, _assertThisInitialized2["default"])(_this),
           children = _assertThisInitialize.children;
 
       remoteKeys.forEach(function (childName) {
         return _this.syncChild(children[childName], current, childName);
       });
-    }, 300);
+    }, 300));
 
     if (context && !(0, _isFunction["default"])(context.getConfig)) {
       throw new Error('The type of the second parameter of the DataSet constructor is wrong. Please not pass the parameter or pass a DataSetContext type parameter instead.');
@@ -9405,7 +9413,11 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     }
   }, {
     key: "totalCount",
-    get: function get() {
+    get:
+    /**
+     * 多列排序保存排序字段顺序(内部使用)
+     */
+    function get() {
       var total = this.getState(TOTAL_KEY);
 
       if (total !== undefined && isFinite(total)) {
@@ -9777,9 +9789,10 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "selected",
     get: function get() {
-      return this.currentSelected.concat(this.cachedSelected.filter(function (record) {
+      var selected = this.currentSelected.concat(this.cachedSelected.filter(function (record) {
         return record.isSelected;
       }));
+      return Array.from(new Set(selected));
     }
     /**
      * 获取未选中的记录集， 在 isAllPageSelection 为 true 时有效
@@ -9789,9 +9802,10 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "unSelected",
     get: function get() {
-      return this.currentUnSelected.concat(this.cachedSelected.filter(function (record) {
+      var unSelected = this.currentUnSelected.concat(this.cachedSelected.filter(function (record) {
         return !record.isSelected;
       }));
+      return Array.from(new Set(unSelected));
     }
   }, {
     key: "currentSelected",
@@ -10056,16 +10070,17 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         return this.cacheKeys;
       }
     }
+  }, {
+    key: "all",
+    get:
     /**
      * 获取所有记录包括缓存的选择记录
      * @param index 索引
      * @returns {Record}
      */
-
-  }, {
-    key: "all",
-    get: function get() {
-      return this.records.concat(this.cachedRecords);
+    function get() {
+      var all = this.records.concat(this.cachedRecords);
+      return Array.from(new Set(all));
     }
   }, {
     key: "dirty",
@@ -11110,24 +11125,9 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
       if (this.paging === 'noCount') return Promise.resolve(undefined);
       return this.page(this.totalPage);
     }
-    /**
-     * 创建一条记录
-     * @param data 数据对象
-     * @param dataIndex 记录所在的索引
-     * @return 新建的记录
-     */
-
   }, {
-    key: "create",
-    value: function create() {
-      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var dataIndex = arguments.length > 1 ? arguments[1] : undefined;
-
-      if (data === null) {
-        data = {};
-      }
-
-      var record = new _Record["default"](data, this);
+    key: "initRecordDefaultValues",
+    value: function initRecordDefaultValues(record) {
       var objectFieldsList = [];
       var normalFields = [];
       this.fields.forEach(function (field, name) {
@@ -11157,11 +11157,39 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
           });
         }
       });
+    }
+    /**
+     * 创建一条记录
+     * @param data 数据对象
+     * @param dataIndex 记录所在的索引
+     * @return 新建的记录
+     */
+
+  }, {
+    key: "create",
+    value: function create() {
+      var _this15 = this;
+
+      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var dataIndex = arguments.length > 1 ? arguments[1] : undefined;
+
+      if (data === null) {
+        data = {};
+      }
+
       var _this$props5 = this.props,
           parentField = _this$props5.parentField,
           idField = _this$props5.idField,
           childrenField = _this$props5.childrenField,
           validationRules = _this$props5.validationRules;
+      var records = childrenField ? this.processData([data], _enum.RecordStatus.add) : [new _Record["default"](data, this)];
+
+      var _records = (0, _slicedToArray2["default"])(records, 1),
+          record = _records[0];
+
+      records.forEach(function (item) {
+        return _this15.initRecordDefaultValues(item);
+      });
 
       if (!childrenField && parentField && idField) {
         var parentId = record.get(parentField);
@@ -11192,9 +11220,9 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
       }
 
       if ((0, _isNumber["default"])(dataIndex)) {
-        this.splice(dataIndex, 0, record);
+        this.splice.apply(this, [dataIndex, 0].concat((0, _toConsumableArray2["default"])(records)));
       } else {
-        this.push(record);
+        this.push.apply(this, (0, _toConsumableArray2["default"])(records));
       }
 
       if (this.props.autoLocateAfterCreate) {
@@ -11346,7 +11374,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "remove",
     value: function remove(records, forceRemove, locate) {
-      var _this15 = this;
+      var _this16 = this;
 
       if (records) {
         var data = (0, _mobx.isArrayLike)(records) ? records.slice() : [records];
@@ -11357,7 +11385,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }) !== false) {
           var current = this.current;
           data.forEach(function (record) {
-            return _this15.deleteRecord(record, forceRemove);
+            return _this16.deleteRecord(record, forceRemove);
           });
 
           if (this.props.validationRules && this.validationSelfErrors) {
@@ -11404,14 +11432,14 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "removeAll",
     value: function removeAll(forceRemove) {
-      var _this16 = this;
+      var _this17 = this;
 
       var current = this.current,
           data = this.data;
 
       if (data.length) {
         data.forEach(function (record) {
-          return _this16.deleteRecord(record, forceRemove);
+          return _this17.deleteRecord(record, forceRemove);
         });
         this.fireEvent(_enum.DataSetEvents.remove, {
           dataSet: this,
@@ -11556,11 +11584,11 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "splice",
     value: function splice(from, deleteCount) {
-      var _this17 = this;
+      var _this18 = this;
 
       var fromRecord = this.get(from);
       var deleted = this.slice(from, from + deleteCount).map(function (record) {
-        return _this17.deleteRecord(record);
+        return _this18.deleteRecord(record);
       });
 
       for (var _len3 = arguments.length, items = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
@@ -11743,7 +11771,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     key: "sort",
     value: function () {
       var _sort = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(sortInfo) {
-        var _this18 = this;
+        var _this19 = this;
 
         var combineSort, nowCombineSort, field, order, orderFields;
         return _regenerator["default"].wrap(function _callee11$(_context11) {
@@ -11803,7 +11831,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 this.combineSort = true;
                 this.combineSortFieldNames = _mobx.observable.map(sortInfo);
                 sortInfo.forEach(function (sortOrder, fieldName) {
-                  var field = _this18.getField(fieldName);
+                  var field = _this19.getField(fieldName);
 
                   if (field) {
                     field.order = sortOrder;
@@ -11955,7 +11983,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "selectAll",
     value: function selectAll(filter) {
-      var _this19 = this;
+      var _this20 = this;
 
       var selection = this.selection;
 
@@ -11969,15 +11997,15 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
             if (!this.currentSelected.length) {
               var record = filter ? this.filter(filter)[0] : this.get(0);
 
-              if (record) {
+              if (record && record.selectable && !record.isSelected) {
                 this.select(record);
                 records.push(record);
               }
             }
           } else {
             this.records.forEach(function (record) {
-              if (!filter || filter(record) !== false) {
-                _this19.select(record);
+              if ((!filter || filter(record) !== false) && record.selectable && !record.isSelected) {
+                _this20.select(record);
 
                 records.push(record);
               }
@@ -12004,7 +12032,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "unSelectAll",
     value: function unSelectAll(filter) {
-      var _this20 = this;
+      var _this21 = this;
 
       if (this.selection) {
         this.inBatchSelection = true;
@@ -12012,8 +12040,8 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         try {
           var records = [];
           this.currentSelected.forEach(function (record) {
-            if (!filter || filter(record) !== false) {
-              _this20.unSelect(record);
+            if ((!filter || filter(record) !== false) && record.selectable && record.isSelected) {
+              _this21.unSelect(record);
 
               records.push(record);
             }
@@ -12038,7 +12066,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "batchSelect",
     value: function batchSelect(recordOrId) {
-      var _this21 = this;
+      var _this22 = this;
 
       var selection = this.selection;
 
@@ -12047,7 +12075,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
           var record = r;
 
           if ((0, _isNumber["default"])(r)) {
-            record = _this21.findRecordById(r);
+            record = _this22.findRecordById(r);
           }
 
           if (record && record.selectable && !record.isSelected) {
@@ -12068,7 +12096,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
             } else {
               records.forEach(function (record) {
                 if (record.selectable) {
-                  _this21.select(record);
+                  _this22.select(record);
                 }
               });
             }
@@ -12090,7 +12118,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "batchUnSelect",
     value: function batchUnSelect(recordOrId) {
-      var _this22 = this;
+      var _this23 = this;
 
       var selection = this.selection;
 
@@ -12102,11 +12130,11 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
             var record = r;
 
             if ((0, _isNumber["default"])(r)) {
-              record = _this22.findRecordById(r);
+              record = _this23.findRecordById(r);
             }
 
             if (record && record.selectable && record.isSelected) {
-              _this22.unSelect(record);
+              _this23.unSelect(record);
 
               list.push(record);
             }
@@ -12190,7 +12218,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "setCachedSelected",
     value: function setCachedSelected(cachedSelected) {
-      var _this23 = this;
+      var _this24 = this;
 
       if (this.cacheModifiedKeys) {
         var cachedRecords = this.cachedRecords;
@@ -12210,11 +12238,11 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
       if (selectionStrategy === _enum.CheckedStrategy.SHOW_PARENT) {
         cachedSelected.forEach(function (record) {
-          return (0, _utils2.treeSelect)(_this23, record, []);
+          return (0, _utils2.treeSelect)(_this24, record, []);
         });
       } else if (selectionStrategy === _enum.CheckedStrategy.SHOW_CHILD) {
         cachedSelected.forEach(function (record) {
-          return (0, _utils2.treeSelectParent)(_this23, record, []);
+          return (0, _utils2.treeSelectParent)(_this24, record, []);
         });
       }
     }
@@ -12319,7 +12347,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     key: "validate",
     value: function () {
       var _validate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(isSelected, noCascade) {
-        var _this24 = this;
+        var _this25 = this;
 
         var dataToJSON, cascade, validateResult, valid;
         return _regenerator["default"].wrap(function _callee12$(_context12) {
@@ -12340,7 +12368,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 dataToJSON = (0, _utils2.adapterDataToJSON)(isSelected, noCascade) || this.dataToJSON;
                 cascade = noCascade === undefined && dataToJSON ? (0, _utils2.useCascade)(dataToJSON) : !noCascade;
                 validateResult = Promise.all(((0, _utils2.useSelected)(dataToJSON) ? this.selected : this.all).map(function (record) {
-                  return record.isRemoved || record.validate(_this24.props.forceValidate || (0, _utils2.useAll)(dataToJSON), !cascade);
+                  return record.isRemoved || record.validate(_this25.props.forceValidate || (0, _utils2.useAll)(dataToJSON), !cascade);
                 })).then(function (results) {
                   return results.every(function (result) {
                     return result;
@@ -12377,7 +12405,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     key: "validateRecords",
     value: function () {
       var _validateRecords = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(records) {
-        var _this25 = this;
+        var _this26 = this;
 
         var dataToJSON, validateResult, valid;
         return _regenerator["default"].wrap(function _callee13$(_context13) {
@@ -12406,7 +12434,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
               case 7:
                 dataToJSON = this.dataToJSON;
                 validateResult = Promise.all(records.map(function (record) {
-                  return record.isRemoved || record.validate(_this25.props.forceValidate || (0, _utils2.useAll)(dataToJSON), !(0, _utils2.useCascade)(dataToJSON));
+                  return record.isRemoved || record.validate(_this26.props.forceValidate || (0, _utils2.useAll)(dataToJSON), !(0, _utils2.useCascade)(dataToJSON));
                 })).then(function (results) {
                   return results.every(function (result) {
                     return result;
@@ -12488,7 +12516,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "reportValidity",
     value: function reportValidity(result, fromField) {
-      var _this26 = this;
+      var _this27 = this;
 
       var prepareForReport = (0, _utils2.getIf)(this, 'prepareForReport', {
         result: [],
@@ -12505,9 +12533,9 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
       }
 
       prepareForReport.timeout = window.setTimeout(function () {
-        _this26.reportValidityImmediately(prepareForReport.valid, prepareForReport.result, fromField);
+        _this27.reportValidityImmediately(prepareForReport.valid, prepareForReport.result, fromField);
 
-        delete _this26.prepareForReport;
+        delete _this27.prepareForReport;
       }, 200);
     }
   }, {
@@ -12534,7 +12562,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "getValidationSelfErrors",
     value: function getValidationSelfErrors() {
-      var _this27 = this;
+      var _this28 = this;
 
       var validationRules = this.props.validationRules;
       var result = [];
@@ -12547,12 +12575,12 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
               disabled = item.disabled;
 
           if (!disabled || typeof disabled === 'function' && disabled({
-            dataSet: _this27
+            dataSet: _this28
           }) !== true) {
             switch (name) {
               case _enum.ValidationSelfType.minLength:
-                if (_this27.length < value) {
-                  result.push(_this27.getValidationSelfError((0, _objectSpread3["default"])((0, _objectSpread3["default"])({}, item), {}, {
+                if (_this28.length < value) {
+                  result.push(_this28.getValidationSelfError((0, _objectSpread3["default"])((0, _objectSpread3["default"])({}, item), {}, {
                     message: message || (0, _formatter.formatTemplate)((0, _localeContext.$l)('DataSet', 'data_length_too_short'), {
                       length: value
                     })
@@ -12562,8 +12590,8 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 break;
 
               case _enum.ValidationSelfType.maxLength:
-                if (_this27.length > value) {
-                  result.push(_this27.getValidationSelfError((0, _objectSpread3["default"])((0, _objectSpread3["default"])({}, item), {}, {
+                if (_this28.length > value) {
+                  result.push(_this28.getValidationSelfError((0, _objectSpread3["default"])((0, _objectSpread3["default"])({}, item), {}, {
                     message: message || (0, _formatter.formatTemplate)((0, _localeContext.$l)('DataSet', 'data_length_too_long'), {
                       length: value
                     })
@@ -12623,7 +12651,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "initFields",
     value: function initFields(fieldProps) {
-      var _this28 = this;
+      var _this29 = this;
 
       var normalFields = [];
       var objectBindFields = [];
@@ -12636,7 +12664,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         var name = props.name;
 
         if (name) {
-          var _initDataSetField = initDataSetField(_this28, name, props),
+          var _initDataSetField = initDataSetField(_this29, name, props),
               _initDataSetField2 = (0, _slicedToArray2["default"])(_initDataSetField, 2),
               field = _initDataSetField2[0],
               intlFields = _initDataSetField2[1];
@@ -12737,7 +12765,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "commitData",
     value: function commitData(allData, total, onlyDelete, submitRecords) {
-      var _this29 = this;
+      var _this30 = this;
 
       var strictPageSizeArg = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
       var _this$props6 = this.props,
@@ -12767,7 +12795,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
       if (this.dataToJSON === _enum.DataToJSON.normal) {
         (0, _flatMap["default"])(this.dirtyRecords).forEach(function (record) {
-          return record.commit((0, _omit["default"])(record.toData(), ['__dirty']), _this29);
+          return record.commit((0, _omit["default"])(record.toData(), ['__dirty']), _this30);
         }); // 若有响应数据，进行数据回写
       } else if (allData.length) {
         var statusKey = this.getConfig('statusKey');
@@ -12777,12 +12805,12 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         allData.forEach(function (data) {
           var dataStatus = data[statusKey]; // 若有数据中含有__id，根据__id回写记录，否则根据主键回写非新增的记录
 
-          var record = data.__id ? _this29.findRecordById(data.__id) : primaryKey && dataStatus !== status[_enum.RecordStatus.add] && _this29.records.find(function (r) {
+          var record = data.__id ? _this30.findRecordById(data.__id) : primaryKey && dataStatus !== status[_enum.RecordStatus.add] && _this30.records.find(function (r) {
             return r.get(primaryKey) === data[primaryKey];
           });
 
           if (record) {
-            record.commit(data, _this29);
+            record.commit(data, _this30);
           } else if (dataStatus === status[_enum.RecordStatus.add]) {
             restCreatedData.push(data);
           } else if (dataStatus === status[_enum.RecordStatus.update]) {
@@ -12808,7 +12836,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
         if (restCreatedData.length === created.length) {
           created.forEach(function (r, index) {
-            return r.commit(restCreatedData[index], _this29);
+            return r.commit(restCreatedData[index], _this30);
           });
         } else if (autoQueryAfterSubmit) {
           // 若有新增数据没有回写成功， 必须重新查询来获取主键
@@ -12819,7 +12847,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
         if (restUpdatedData.length === updated.length) {
           updated.forEach(function (r, index) {
-            return r.commit(restUpdatedData[index], _this29);
+            return r.commit(restUpdatedData[index], _this30);
           });
         } else if (onlyDelete) {// onlyDelete状态不做其他处理 可以与else的处理合并
           // updated.forEach(r => r.commit(r.toData(), this));
@@ -12830,12 +12858,12 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
               return data.__id ? r.id === data.__id : primaryKey && dataStatus !== status[_enum.RecordStatus.add] && r.get(primaryKey) === data[primaryKey];
             });
           }).forEach(function (r) {
-            return r.commit((0, _omit["default"])(r.toData(), ['__dirty']), _this29);
+            return r.commit((0, _omit["default"])(r.toData(), ['__dirty']), _this30);
           });
         }
 
         destroyed.forEach(function (r) {
-          return r.commit(undefined, _this29);
+          return r.commit(undefined, _this30);
         });
 
         if ((0, _isNumber["default"])(total)) {
@@ -13137,14 +13165,14 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "transferRecords",
     value: function transferRecords(data) {
-      var _this30 = this;
+      var _this31 = this;
 
       return data.map(function (record) {
         var _record = record,
             dataSet = _record.dataSet;
 
-        if (dataSet === _this30) {
-          var records = _this30.records;
+        if (dataSet === _this31) {
+          var records = _this31.records;
           var index = records.indexOf(record);
 
           if (index !== -1) {
@@ -13155,7 +13183,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         }
 
         dataSet.remove(record);
-        record = new _Record["default"](record.toData(), _this30);
+        record = new _Record["default"](record.toData(), _this31);
         record.status = _enum.RecordStatus.add;
         return record;
       });
@@ -13163,7 +13191,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "initChildren",
     value: function initChildren(children) {
-      var _this31 = this;
+      var _this32 = this;
 
       if ((0, _isArray["default"])(children)) {
         children.forEach(function (childDs) {
@@ -13171,7 +13199,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
             var name = childDs.name;
 
             if (name) {
-              childDs.bind(_this31, name);
+              childDs.bind(_this32, name);
             } else {
               (0, _utils.warning)(false, 'cascade DataSet need a name');
             }
@@ -13182,7 +13210,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
           var child = children[childName];
 
           if (child instanceof DataSet) {
-            child.bind(_this31, childName);
+            child.bind(_this32, childName);
           } else {
             (0, _utils.warning)(false, "cascade child<".concat(childName, "> must be instance of DataSet."));
           }
@@ -13206,16 +13234,21 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "initEvents",
     value: function initEvents(events) {
-      var _this32 = this;
+      var _this33 = this;
 
       Object.keys(events).forEach(function (event) {
-        return _this32.addEventListener(event, events[event]);
+        return _this33.addEventListener(event, events[event]);
       });
     }
   }, {
     key: "loadDataFromResponse",
     value: function loadDataFromResponse(resp, cache) {
       if (resp) {
+        if (resp.request && resp.status === 204 && resp.statusText === 'No Content' && !resp.data) {
+          this.loadData([], 0, cache);
+          return this;
+        }
+
         var dataKey = this.dataKey,
             totalKey = this.totalKey;
         var data = (0, _utils2.generateResponseData)(resp, dataKey);
@@ -13262,7 +13295,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     key: "write",
     value: function () {
       var _write = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14(records, onlyDelete) {
-        var _this33 = this;
+        var _this34 = this;
 
         var strictPageSize,
             _prepareSubmitData,
@@ -13315,7 +13348,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
                 _context14.next = 15;
                 return _axios["default"].all(axiosConfigs.map(function (config) {
-                  return _this33.axios(config);
+                  return _this34.axios(config);
                 }));
 
               case 15:
@@ -13355,7 +13388,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
     key: "read",
     value: function () {
       var _read = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15() {
-        var _this34 = this;
+        var _this35 = this;
 
         var page,
             params,
@@ -13363,14 +13396,14 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
             paging,
             queryChildren,
             canChangeStatus,
+            queryPreparePromise,
             data,
             newConfig,
             noPagingParams,
             queryEventResult,
-            _this$lastRequestSour,
+            cancelToken,
             result,
             _args15 = arguments;
-
         return _regenerator["default"].wrap(function _callee15$(_context15) {
           while (1) {
             switch (_context15.prev = _context15.next) {
@@ -13382,21 +13415,31 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 queryChildren = _args15.length > 4 ? _args15[4] : undefined;
 
                 if (!this.checkReadable(this.parent)) {
-                  _context15.next = 43;
+                  _context15.next = 46;
                   break;
                 }
 
                 canChangeStatus = true;
                 _context15.prev = 7;
+                queryPreparePromise = this.getState(QUERY_PREPARE_PROMISE);
 
+                if (!(queryPreparePromise && (0, _isFunction["default"])(queryPreparePromise.then))) {
+                  _context15.next = 12;
+                  break;
+                }
+
+                _context15.next = 12;
+                return queryPreparePromise;
+
+              case 12:
                 if (!more) {
                   this.changeStatus(_enum.DataSetStatus.loading);
                 }
 
-                _context15.next = 11;
+                _context15.next = 15;
                 return this.generateQueryParameter(params);
 
-              case 11:
+              case 15:
                 data = _context15.sent;
                 newConfig = (0, _utils2.axiosConfigAdapter)('read', this, data, this.generateQueryString(page, undefined, undefined, paging), this.getState('__LOV_QUERY_STATE__'));
 
@@ -13410,106 +13453,109 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
                 }
 
                 if (!newConfig.url) {
-                  _context15.next = 29;
+                  _context15.next = 32;
                   break;
                 }
 
-                _context15.next = 17;
+                _context15.next = 21;
                 return this.fireEvent(_enum.DataSetEvents.query, {
                   dataSet: this,
                   params: newConfig.params,
                   data: newConfig.data
                 });
 
-              case 17:
+              case 21:
                 queryEventResult = _context15.sent;
 
                 if (!queryEventResult) {
-                  _context15.next = 29;
+                  _context15.next = 32;
                   break;
                 }
 
                 this.performance.timing.fetchStart = Date.now();
                 this.performance.url = newConfig.url;
 
-                if (this.lastRequestSource) {
-                  this.lastRequestSource.cancel("New request started, cancelling the previous one. Please check request, now request url: ".concat(newConfig.url));
-                }
-
                 if (this.getState(QUERY_CANCELABLE) !== false) {
+                  if (this.lastRequestSource) {
+                    this.lastRequestSource.cancel("New request started, cancelling the previous one. Please check request, now request url: ".concat(newConfig.url));
+                  }
+
                   this.lastRequestSource = _axios["default"].CancelToken.source();
+                  cancelToken = this.lastRequestSource.token;
+                } else {
+                  this.lastRequestSource = undefined;
                 }
 
-                _context15.next = 25;
+                _context15.next = 28;
                 return this.axios((0, _objectSpread3["default"])({
-                  cancelToken: (_this$lastRequestSour = this.lastRequestSource) === null || _this$lastRequestSour === void 0 ? void 0 : _this$lastRequestSour.token
+                  cancelToken: cancelToken
                 }, (0, _utils2.fixAxiosConfig)(newConfig)));
 
-              case 25:
+              case 28:
                 result = _context15.sent;
                 this.performance.timing.fetchEnd = Date.now();
                 (0, _mobx.runInAction)(function () {
                   if (page >= 0 && !queryChildren) {
-                    _this34.currentPage = page;
+                    _this35.currentPage = page;
                   }
 
-                  var countKey = _this34.countKey;
+                  var countKey = _this35.countKey;
                   var needCount = ObjectChainValue.get(result, countKey) === 'Y';
 
                   if (needCount) {
-                    _this34.counting = _this34.count(page, params).then((0, _mobx.action)(function (countResult) {
-                      var totalKey = _this34.totalKey;
+                    _this35.counting = _this35.count(page, params).then((0, _mobx.action)(function (countResult) {
+                      var totalKey = _this35.totalKey;
                       var total = ObjectChainValue.get(countResult, totalKey);
 
                       if (total !== undefined) {
-                        _this34.totalCount = total;
+                        _this35.totalCount = total;
                       }
 
                       return total;
                     }))["finally"]((0, _mobx.action)(function () {
-                      _this34.counting = undefined;
+                      _this35.counting = undefined;
                     }));
                   }
                 });
                 return _context15.abrupt("return", this.handleLoadSuccess(result));
 
-              case 29:
-                _context15.next = 40;
+              case 32:
+                _context15.next = 43;
                 break;
 
-              case 31:
-                _context15.prev = 31;
+              case 34:
+                _context15.prev = 34;
                 _context15.t0 = _context15["catch"](7);
 
                 if (!(_context15.t0.code === 'ERR_CANCELED' || _context15.t0.message && _context15.t0.message.startsWith('New request started, cancelling the previous one.'))) {
-                  _context15.next = 38;
+                  _context15.next = 41;
                   break;
                 }
 
                 canChangeStatus = false;
                 console.warn(_context15.t0.message);
-                _context15.next = 40;
+                _context15.next = 43;
                 break;
 
-              case 38:
+              case 41:
                 this.handleLoadFail(_context15.t0);
                 throw new _DataSetRequestError["default"](_context15.t0);
 
-              case 40:
-                _context15.prev = 40;
+              case 43:
+                _context15.prev = 43;
 
                 if (!more && canChangeStatus) {
                   this.changeStatus(_enum.DataSetStatus.ready);
                 }
 
-                return _context15.finish(40);
+                return _context15.finish(43);
 
-              case 43:
+              case 46:
               case "end":
                 return _context15.stop();
             }
           }
-        }, _callee15, this, [[7, 31, 40, 43]]);
+        }, _callee15, this, [[7, 34, 43, 46]]);
       }));
 
       function read() {
@@ -13754,7 +13800,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "handleSubmitFail",
     value: function handleSubmitFail(e) {
-      var _this35 = this;
+      var _this36 = this;
 
       var current = this.current;
       var _this$feedback$submit2 = this.feedback.submitFailed,
@@ -13772,7 +13818,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
         record.reset();
         record.isSelected = true;
 
-        if (_this35.props.autoLocateAfterRemove && index === 0) {
+        if (_this36.props.autoLocateAfterRemove && index === 0) {
           record.isCurrent = true;
         }
       });
@@ -13780,7 +13826,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "syncChildren",
     value: function syncChildren(current, previous) {
-      var _this36 = this;
+      var _this37 = this;
 
       var children = this.children;
       var keys = Object.keys(children);
@@ -13803,7 +13849,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 
           if (snapshot instanceof _DataSetSnapshot["default"]) {
             ds.restore(snapshot);
-          } else if (!_this36.syncChild(ds, current, childName, true)) {
+          } else if (!_this37.syncChild(ds, current, childName, true)) {
             ds.loadData([]);
             remoteKeys.push(childName);
           }
@@ -13819,7 +13865,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "syncChild",
     value: function syncChild(ds, currentRecord, childName, onlyClient) {
-      var _this37 = this;
+      var _this38 = this;
 
       var cascadeRecordsMap = currentRecord.cascadeRecordsMap;
       var cascadeRecords = cascadeRecordsMap && cascadeRecordsMap[childName];
@@ -13851,10 +13897,10 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
       if (!onlyClient) {
         var oldSnapshot = ds.snapshot();
         ds.read(1).then(function (resp) {
-          var current = _this37.current;
+          var current = _this38.current;
 
           if (current !== currentRecord) {
-            ds = new DataSet(undefined, _this37.context).restore(oldSnapshot);
+            ds = new DataSet(undefined, _this38.context).restore(oldSnapshot);
           }
 
           ds.clearCachedRecords();
@@ -13935,7 +13981,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
   }, {
     key: "generateOrderQueryString",
     value: function generateOrderQueryString() {
-      var _this38 = this;
+      var _this39 = this;
 
       var combineSort = this.props.combineSort;
       var orderFields = (0, _utils2.getOrderFields)(this);
@@ -13945,7 +13991,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
           var sortname = orderField.name;
 
           if (orderField.type === _enum.FieldType.object) {
-            var bindField = (0, _utils2.findBindFieldBy)(orderField, _this38.fields, 'valueField');
+            var bindField = (0, _utils2.findBindFieldBy)(orderField, _this39.fields, 'valueField');
 
             if (bindField) {
               sortname = bindField.name;
@@ -14136,7 +14182,7 @@ var DataSet = /*#__PURE__*/function (_EventManager) {
 }(_eventManager["default"]);
 
 exports["default"] = DataSet;
-DataSet.defaultProps = {
+(0, _defineProperty2["default"])(DataSet, "defaultProps", {
   autoCreate: false,
   autoQuery: false,
   autoQueryAfterSubmit: true,
@@ -14157,7 +14203,7 @@ DataSet.defaultProps = {
 
     return (0, _omit["default"])(parent.toData(), ['__dirty']);
   }
-};
+});
 (0, _tslib.__decorate)([_mobx.computed], DataSet.prototype, "queryParameter", null);
 (0, _tslib.__decorate)([_mobx.observable], DataSet.prototype, "lookupCaches", void 0);
 (0, _tslib.__decorate)([_mobx.observable], DataSet.prototype, "selectionStrategy", void 0);
@@ -271193,15 +271239,17 @@ var _classCallCheck2 = _interopRequireDefault(__webpack_require__("SDJZ"));
 
 var _createClass2 = _interopRequireDefault(__webpack_require__("NToG"));
 
+var _defineProperty2 = _interopRequireDefault(__webpack_require__("OvAC"));
+
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__("fFdx"));
 
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__("5WRv"));
 
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__("nxTg"));
 
-var _objectSpread2 = _interopRequireDefault(__webpack_require__("yO+l"));
-
 var _extends2 = _interopRequireDefault(__webpack_require__("8VmE"));
+
+var _objectSpread2 = _interopRequireDefault(__webpack_require__("yO+l"));
 
 var _tslib = __webpack_require__("Qno7");
 
@@ -271552,7 +271600,7 @@ function getIdList(store) {
   return idList;
 }
 
-function getRowNumbers(record, dataSet, isTree) {
+function getRowNumbers(record, dataSet, isTree, showRemovedRow) {
   if (record && dataSet) {
     if (record.isCached) {
       return [];
@@ -271569,7 +271617,8 @@ function getRowNumbers(record, dataSet, isTree) {
       });
     }
 
-    return [record.index + 1 + pageIndex];
+    var index = showRemovedRow ? dataSet.records.indexOf(record) : record.index;
+    return [index + 1 + pageIndex];
   }
 
   return [0];
@@ -271589,6 +271638,7 @@ function _renderSelectionBox(_ref2) {
 
   if (dataSet) {
     var selection = dataSet.selection;
+    var selectionDisabled = !record.selectable || store.duplicateKeyConfig.disable && store.isDuplicatePrimaryKeyRecord(record);
 
     var handleChange = function handleChange(value) {
       if (store.props.selectionMode === _enum2.SelectionMode.mousedown) {
@@ -271632,7 +271682,9 @@ function _renderSelectionBox(_ref2) {
 
           if (endIndex !== -1 && startIndex !== endIndex) {
             // Batch update selections
-            var rangeRecords = dataSet.slice(startIndex, endIndex + 1);
+            var rangeRecords = dataSet.slice(startIndex, endIndex + 1).filter(function (rangeRecord) {
+              return !store.duplicateKeyConfig.disable || !store.isDuplicatePrimaryKeyRecord(rangeRecord);
+            });
             var changedRecords = [];
             var selectedKeys = new Set(dataSet.selected.map(function (selected) {
               return selected.key;
@@ -271717,11 +271769,11 @@ function _renderSelectionBox(_ref2) {
         };
       }
 
-      return /*#__PURE__*/_react["default"].createElement(_CheckBox["default"], (0, _extends2["default"])({}, batchSelectProps, {
+      return /*#__PURE__*/_react["default"].createElement(_CheckBox["default"], (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, batchSelectProps), {}, {
         checked: record.isSelected,
         onChange: handleChange,
         onClick: handleClick,
-        disabled: !record.selectable,
+        disabled: selectionDisabled,
         "data-selection-key": SELECTION_KEY,
         labelLayout: _enum4.LabelLayout.none,
         value: true
@@ -271733,7 +271785,7 @@ function _renderSelectionBox(_ref2) {
         checked: record.isSelected,
         onChange: handleChange,
         onClick: handleClick,
-        disabled: !record.selectable,
+        disabled: selectionDisabled,
         "data-selection-key": SELECTION_KEY,
         value: true
       });
@@ -272373,17 +272425,19 @@ var TableStore = /*#__PURE__*/function () {
     var _this = this;
 
     (0, _classCallCheck2["default"])(this, TableStore);
-    this.editors = new Map();
-    this.mouseBatchChooseStartId = 0;
-    this.mouseBatchChooseEndId = 0;
-    this.inBatchExpansion = false;
-    this.performanceOn = false;
-    this.timing = {
+    (0, _defineProperty2["default"])(this, "editors", new Map());
+    (0, _defineProperty2["default"])(this, "mouseBatchChooseStartId", 0);
+    (0, _defineProperty2["default"])(this, "mouseBatchChooseEndId", 0);
+    (0, _defineProperty2["default"])(this, "inBatchExpansion", false);
+    (0, _defineProperty2["default"])(this, "performanceOn", false);
+    (0, _defineProperty2["default"])(this, "timing", {
       renderStart: 0,
       renderEnd: 0
-    };
-    this.lastMeasuredIndex = 0;
-    this.handleSelectAllChange = (0, _mobx.action)(function () {
+    });
+    (0, _defineProperty2["default"])(this, "renderedCellText", new WeakMap());
+    (0, _defineProperty2["default"])(this, "renderedCellNode", new WeakMap());
+    (0, _defineProperty2["default"])(this, "lastMeasuredIndex", 0);
+    (0, _defineProperty2["default"])(this, "handleSelectAllChange", (0, _mobx.action)(function () {
       if (_this.allChecked) {
         _this.unCheckAllCurrent();
 
@@ -272393,11 +272447,11 @@ var TableStore = /*#__PURE__*/function () {
 
         _this.checkAllCached();
       }
-    });
-    this.saveCustomizedDebounce = (0, _debounce["default"])(this.saveCustomized, 1000);
-    this.stopScroll = (0, _debounce["default"])((0, _mobx.action)(function () {
+    }));
+    (0, _defineProperty2["default"])(this, "saveCustomizedDebounce", (0, _debounce["default"])(this.saveCustomized, 1000));
+    (0, _defineProperty2["default"])(this, "stopScroll", (0, _debounce["default"])((0, _mobx.action)(function () {
       _this.scrolling = false;
-    }), 300);
+    }), 300));
     (0, _mobx.runInAction)(function () {
       _this.scrollPosition = _enum2.ScrollPosition.left;
       _this.mouseBatchChooseIdList = [];
@@ -272442,6 +272496,10 @@ var TableStore = /*#__PURE__*/function () {
 
     if (mode === _enum2.TableMode.tree && treeAsync && dataSet) {
       dataSet.setState(_DataSet.QUERY_CANCELABLE, false);
+    }
+
+    if (this.showRemovedRow) {
+      dataSet.setState(_DataSet.TABLE_SHOW_REMOVED_ROW, true);
     }
   }
 
@@ -272588,6 +272646,61 @@ var TableStore = /*#__PURE__*/function () {
     key: "dataSet",
     get: function get() {
       return this.props.dataSet;
+    }
+  }, {
+    key: "duplicateKeyConfig",
+    get: function get() {
+      var config = this.props.duplicateKey || this.getConfig('duplicateKey');
+      var resolvedConfig = typeof config === 'function' ? config('Table') : config;
+      return resolvedConfig || {};
+    }
+  }, {
+    key: "duplicatePrimaryKeyInfo",
+    get: function get() {
+      var duplicateKeyConfig = this.duplicateKeyConfig;
+
+      if (!duplicateKeyConfig.disable && !duplicateKeyConfig.showWarning) {
+        return {
+          duplicateKeys: [],
+          duplicateRecords: new Set()
+        };
+      }
+
+      var dataSet = this.dataSet;
+      var primaryKey = dataSet.props.primaryKey;
+      var recordsByKey = new Map();
+
+      if (primaryKey) {
+        dataSet.records.forEach(function (record) {
+          var value = record.get(primaryKey);
+
+          if (typeof value === 'string' || typeof value === 'number') {
+            var key = String(value);
+            var records = recordsByKey.get(key);
+
+            if (records) {
+              records.push(record);
+            } else {
+              recordsByKey.set(key, [record]);
+            }
+          }
+        });
+      }
+
+      var duplicateKeys = [];
+      var duplicateRecords = new Set();
+      recordsByKey.forEach(function (records, key) {
+        if (records.length > 1) {
+          duplicateKeys.push(key);
+          records.forEach(function (record) {
+            return duplicateRecords.add(record);
+          });
+        }
+      });
+      return {
+        duplicateKeys: duplicateKeys,
+        duplicateRecords: duplicateRecords
+      };
     }
   }, {
     key: "prefixCls",
@@ -272803,7 +272916,7 @@ var TableStore = /*#__PURE__*/function () {
       var lastIndex = -1;
       var centerLeafsLength = leafs.length - rightLeafs.length;
 
-      for (var i = leftLeafs.length ? leftLeafs.length - 1 : 0; i < centerLeafsLength; i++) {
+      for (var i = leftLeafs.length; i < centerLeafsLength; i++) {
         var width = leafs[i].width;
         visibleColumnWidth += width;
 
@@ -272856,6 +272969,11 @@ var TableStore = /*#__PURE__*/function () {
 
       if (rightColLength) {
         rangeThreshold.right = [leafs.length - rightColLength, leafs.length];
+      }
+
+      if (leftColLength + rightColLength === leafs.length) {
+        rangeThreshold.center = [leftColLength, leftColLength];
+        return rangeThreshold;
       }
 
       var _this$updateRenderZon = this.updateRenderZonePosition(),
@@ -274023,13 +274141,25 @@ var TableStore = /*#__PURE__*/function () {
       return [].concat((0, _toConsumableArray2["default"])(this.cachedData), (0, _toConsumableArray2["default"])(this.currentData));
     }
   }, {
+    key: "selectionFilter",
+    get: function get() {
+      var _this4 = this;
+
+      var filter = this.props.filter;
+      var duplicateRecords = this.duplicatePrimaryKeyInfo.duplicateRecords;
+      return function (record) {
+        return (!filter || filter(record)) && (!_this4.duplicateKeyConfig.disable || !duplicateRecords.has(record));
+      };
+    }
+  }, {
     key: "cachedIndeterminate",
     get: function get() {
       var dataSet = this.dataSet,
-          showCachedSelection = this.showCachedSelection;
+          showCachedSelection = this.showCachedSelection,
+          selectionFilter = this.selectionFilter;
 
       if (dataSet) {
-        var _ref27 = showCachedSelection ? (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips) : [0, 0],
+        var _ref27 = showCachedSelection ? (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter) : [0, 0],
             _ref28 = (0, _slicedToArray2["default"])(_ref27, 2),
             cachedSelectedLength = _ref28[0],
             cachedRecordsLength = _ref28[1];
@@ -274045,10 +274175,11 @@ var TableStore = /*#__PURE__*/function () {
     key: "allCachedChecked",
     get: function get() {
       var dataSet = this.dataSet,
-          showCachedSelection = this.showCachedSelection;
+          showCachedSelection = this.showCachedSelection,
+          selectionFilter = this.selectionFilter;
 
       if (dataSet) {
-        var _ref29 = showCachedSelection ? (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips) : [0, 0],
+        var _ref29 = showCachedSelection ? (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter) : [0, 0],
             _ref30 = (0, _slicedToArray2["default"])(_ref29, 2),
             cachedSelectedLength = _ref30[0],
             cachedRecordsLength = _ref30[1];
@@ -274063,12 +274194,11 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "currentIndeterminate",
     get: function get() {
-      var _this$props6 = this.props,
-          dataSet = _this$props6.dataSet,
-          filter = _this$props6.filter;
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
 
       if (dataSet) {
-        var _getCurrentSelectable = (0, _utils2.getCurrentSelectableCounts)(dataSet, filter),
+        var _getCurrentSelectable = (0, _utils2.getCurrentSelectableCounts)(dataSet, selectionFilter),
             _getCurrentSelectable2 = (0, _slicedToArray2["default"])(_getCurrentSelectable, 2),
             selectedLength = _getCurrentSelectable2[0],
             currentLength = _getCurrentSelectable2[1];
@@ -274083,12 +274213,11 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "allCurrentChecked",
     get: function get() {
-      var _this$props7 = this.props,
-          dataSet = _this$props7.dataSet,
-          filter = _this$props7.filter;
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
 
       if (dataSet) {
-        var _getCurrentSelectable3 = (0, _utils2.getCurrentSelectableCounts)(dataSet, filter),
+        var _getCurrentSelectable3 = (0, _utils2.getCurrentSelectableCounts)(dataSet, selectionFilter),
             _getCurrentSelectable4 = (0, _slicedToArray2["default"])(_getCurrentSelectable3, 2),
             selectedLength = _getCurrentSelectable4[0],
             currentLength = _getCurrentSelectable4[1];
@@ -274106,17 +274235,21 @@ var TableStore = /*#__PURE__*/function () {
       var showCachedSelection = this.showCachedSelection;
 
       if (showCachedSelection) {
-        var dataSet = this.dataSet;
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
 
-        var _getCachedSelectableC = (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips),
+        var _getCachedSelectableC = (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter),
             _getCachedSelectableC2 = (0, _slicedToArray2["default"])(_getCachedSelectableC, 2),
             cachedSelectedLength = _getCachedSelectableC2[0],
             cachedRecordsLength = _getCachedSelectableC2[1];
 
-        var allLength = cachedSelectedLength + dataSet.currentSelected.length;
-        return !!allLength && allLength !== cachedRecordsLength + dataSet.records.filter(function (r) {
-          return r.selectable;
-        }).length;
+        var _getCurrentSelectable5 = (0, _utils2.getCurrentSelectableCounts)(dataSet, selectionFilter),
+            _getCurrentSelectable6 = (0, _slicedToArray2["default"])(_getCurrentSelectable5, 2),
+            currentSelectedLength = _getCurrentSelectable6[0],
+            currentRecordsLength = _getCurrentSelectable6[1];
+
+        var allLength = cachedSelectedLength + currentSelectedLength;
+        return !!allLength && allLength !== cachedRecordsLength + currentRecordsLength;
       }
 
       return this.currentIndeterminate;
@@ -274127,17 +274260,21 @@ var TableStore = /*#__PURE__*/function () {
       var showCachedSelection = this.showCachedSelection;
 
       if (showCachedSelection) {
-        var dataSet = this.dataSet;
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
 
-        var _getCachedSelectableC3 = (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips),
+        var _getCachedSelectableC3 = (0, _utils2.getCachedSelectableCounts)(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter),
             _getCachedSelectableC4 = (0, _slicedToArray2["default"])(_getCachedSelectableC3, 2),
             cachedSelectedLength = _getCachedSelectableC4[0],
             cachedRecordsLength = _getCachedSelectableC4[1];
 
-        var allLength = cachedSelectedLength + dataSet.currentSelected.length;
-        return !!allLength && allLength === cachedRecordsLength + dataSet.records.filter(function (r) {
-          return r.selectable;
-        }).length;
+        var _getCurrentSelectable7 = (0, _utils2.getCurrentSelectableCounts)(dataSet, selectionFilter),
+            _getCurrentSelectable8 = (0, _slicedToArray2["default"])(_getCurrentSelectable7, 2),
+            currentSelectedLength = _getCurrentSelectable8[0],
+            currentRecordsLength = _getCurrentSelectable8[1];
+
+        var allLength = cachedSelectedLength + currentSelectedLength;
+        return !!allLength && allLength === cachedRecordsLength + currentRecordsLength;
       }
 
       return this.allCurrentChecked;
@@ -274145,9 +274282,9 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "expandIconAsCell",
     get: function get() {
-      var _this$props8 = this.props,
-          expandedRowRenderer = _this$props8.expandedRowRenderer,
-          expandIconAsCell = _this$props8.expandIconAsCell;
+      var _this$props6 = this.props,
+          expandedRowRenderer = _this$props6.expandedRowRenderer,
+          expandIconAsCell = _this$props6.expandIconAsCell;
 
       if (expandIconAsCell !== undefined) {
         return expandIconAsCell;
@@ -274160,16 +274297,18 @@ var TableStore = /*#__PURE__*/function () {
     get: function get() {
       var dragColumnAlign = this.dragColumnAlign,
           rowDraggable = this.rowDraggable,
-          _this$props9 = this.props,
-          _this$props9$expandIc = _this$props9.expandIconColumnIndex,
-          expandIconColumnIndex = _this$props9$expandIc === void 0 ? 0 : _this$props9$expandIc,
-          rowNumber = _this$props9.rowNumber;
+          _this$props7 = this.props,
+          _this$props7$expandIc = _this$props7.expandIconColumnIndex,
+          expandIconColumnIndex = _this$props7$expandIc === void 0 ? 0 : _this$props7$expandIc,
+          rowNumber = _this$props7.rowNumber,
+          rowBoxPlacement = _this$props7.rowBoxPlacement;
 
       if ((!expandIconColumnIndex || typeof expandIconColumnIndex !== 'number') && !this.isTree) {
         return 0;
       }
 
-      return expandIconColumnIndex + [this.hasRowBox, rowNumber, dragColumnAlign && rowDraggable, !!this.comboQueryColumn].filter(Boolean).length;
+      var index = expandIconColumnIndex + [rowNumber, dragColumnAlign && rowDraggable, !!this.comboQueryColumn].filter(Boolean).length;
+      return this.hasRowBox && !(0, _isNumber["default"])(rowBoxPlacement) && rowBoxPlacement !== _enum2.RowBoxPlacement.end ? index + 1 : index;
     }
   }, {
     key: "inlineEdit",
@@ -274235,46 +274374,47 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "addNewButton",
     get: function get() {
-      var _this$props10 = this.props,
-          addNewButton = _this$props10.addNewButton,
-          pristine = _this$props10.pristine;
+      var _this$props8 = this.props,
+          addNewButton = _this$props8.addNewButton,
+          pristine = _this$props8.pristine;
       return addNewButton && !pristine;
     }
   }, {
     key: "checkAllCurrent",
     value: function checkAllCurrent() {
-      var _this$props11 = this.props,
-          dataSet = _this$props11.dataSet,
-          filter = _this$props11.filter;
-      dataSet.selectAll(filter);
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
+      dataSet.selectAll(selectionFilter);
     }
   }, {
     key: "unCheckAllCurrent",
     value: function unCheckAllCurrent() {
-      var _this$props12 = this.props,
-          dataSet = _this$props12.dataSet,
-          filter = _this$props12.filter;
-      dataSet.unSelectAll(filter);
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
+      dataSet.unSelectAll(selectionFilter);
     }
   }, {
     key: "checkAllCached",
     value: function checkAllCached() {
       if (this.showCachedSelection) {
-        var _this$props13 = this.props,
-            dataSet = _this$props13.dataSet,
-            filter = _this$props13.filter;
-        dataSet.batchSelect((0, _utils2.getCachedSelectableRecords)(dataSet, this.computedRecordCachedType, this.showCachedTips, filter));
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
+        dataSet.batchSelect((0, _utils2.getCachedSelectableRecords)(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter));
       }
     }
   }, {
     key: "unCheckAllCached",
     value: function unCheckAllCached() {
       if (this.showCachedSelection) {
-        var _this$props14 = this.props,
-            dataSet = _this$props14.dataSet,
-            filter = _this$props14.filter;
-        dataSet.batchUnSelect((0, _utils2.getCachedSelectableRecords)(dataSet, this.computedRecordCachedType, this.showCachedTips, filter));
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
+        dataSet.batchUnSelect((0, _utils2.getCachedSelectableRecords)(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter));
       }
+    }
+  }, {
+    key: "isDuplicatePrimaryKeyRecord",
+    value: function isDuplicatePrimaryKeyRecord(record) {
+      return this.duplicatePrimaryKeyInfo.duplicateRecords.has(record);
     }
   }, {
     key: "isBuiltInColumn",
@@ -274356,7 +274496,7 @@ var TableStore = /*#__PURE__*/function () {
       var indexOfCurrentPage = currentIndex - (currentPage - 1) * pageSize;
       var record = dataSet.get(reserve ? indexOfCurrentPage - 1 : indexOfCurrentPage + 1);
 
-      if (record && !(0, _utils2.isDisabledRow)(record)) {
+      if (record && !(0, _utils2.isDisabledRow)(record, this)) {
         dataSet.current = record;
         this.showEditor(name);
         return true;
@@ -274378,10 +274518,27 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "updateProps",
     value: function updateProps(props) {
-      var _this$props15 = this.props,
-          customizedCode = _this$props15.customizedCode,
-          oldAggregation = _this$props15.aggregation;
+      var _this$props9 = this.props,
+          customizedCode = _this$props9.customizedCode,
+          oldAggregation = _this$props9.aggregation;
+      var copyEnabled = Boolean(this.clipboard && this.clipboard.copy);
       this.setProps(props);
+
+      if (copyEnabled && !(this.clipboard && this.clipboard.copy)) {
+        if (this.copyChooseCleanup) {
+          this.copyChooseCleanup();
+        } else if (this.autoScrollRAF) {
+          cancelAnimationFrame(this.autoScrollRAF);
+          this.autoScrollRAF = null;
+        }
+
+        this.startChooseCell = null;
+        this.endChooseCell = null;
+        this.isFinishChooseCell = true;
+        this.shiftKey = false;
+        this.dragCorner = false;
+        this.clearArrangeValue();
+      }
 
       if (this.customizable) {
         if (customizedCode !== props.customizedCode) {
@@ -274402,6 +274559,7 @@ var TableStore = /*#__PURE__*/function () {
       }
 
       this.initColumns();
+      this.dataSet.setState(_DataSet.TABLE_SHOW_REMOVED_ROW, this.showRemovedRow);
     }
   }, {
     key: "disposeGroupReaction",
@@ -274416,11 +274574,18 @@ var TableStore = /*#__PURE__*/function () {
     key: "dispose",
     value: function dispose() {
       this.disposeGroupReaction();
+
+      if (this.copyChooseCleanup) {
+        this.copyChooseCleanup();
+      } else if (this.autoScrollRAF) {
+        cancelAnimationFrame(this.autoScrollRAF);
+        this.autoScrollRAF = null;
+      }
     }
   }, {
     key: "initGroups",
     value: function initGroups() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.disposeGroupReaction();
       var _this$props$groups = this.props.groups,
@@ -274430,7 +274595,7 @@ var TableStore = /*#__PURE__*/function () {
         this.groupReaction = (0, _mobx.reaction)(function () {
           return dataSet.data;
         }, function () {
-          return _this4.initGroups();
+          return _this5.initGroups();
         });
         var headerGroupNames = [];
         var rowGroupNames = [];
@@ -274486,9 +274651,9 @@ var TableStore = /*#__PURE__*/function () {
           customizable = this.customizable,
           aggregation = this.aggregation,
           dataSet = this.dataSet;
-      var _this$props16 = this.props,
-          columns = _this$props16.columns,
-          children = _this$props16.children;
+      var _this$props10 = this.props,
+          columns = _this$props10.columns,
+          children = _this$props10.children;
       var customizedColumns = customizable ? customized.columns : undefined;
       dataSet.setState('__CUSCOLUMNS__', customized);
 
@@ -274545,10 +274710,10 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "setBodyExpanded",
     value: function setBodyExpanded(isBodyExpanded) {
-      var _this$props17 = this.props,
-          bodyExpanded = _this$props17.bodyExpanded,
-          _this$props17$onBodyE = _this$props17.onBodyExpand,
-          onBodyExpand = _this$props17$onBodyE === void 0 ? _noop["default"] : _this$props17$onBodyE;
+      var _this$props11 = this.props,
+          bodyExpanded = _this$props11.bodyExpanded,
+          _this$props11$onBodyE = _this$props11.onBodyExpand,
+          onBodyExpand = _this$props11$onBodyE === void 0 ? _noop["default"] : _this$props11$onBodyE;
 
       if (bodyExpanded === undefined) {
         this.dataSet.setState(BODY_EXPANDED, isBodyExpanded);
@@ -274637,9 +274802,9 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "canTreeLoadData",
     get: function get() {
-      var _this$props18 = this.props,
-          treeLoadData = _this$props18.treeLoadData,
-          treeAsync = _this$props18.treeAsync;
+      var _this$props12 = this.props,
+          treeLoadData = _this$props12.treeLoadData,
+          treeAsync = _this$props12.treeAsync;
       return treeAsync || !!treeLoadData;
     }
   }, {
@@ -274657,11 +274822,11 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "expandAll",
     value: function expandAll() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.inBatchExpansion = true;
       this.expandedRows = this.dataSet.records.map(function (record) {
-        _this5.setRowExpanded(record, true);
+        _this6.setRowExpanded(record, true);
 
         return record.key;
       });
@@ -274670,11 +274835,11 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "collapseAll",
     value: function collapseAll() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.inBatchExpansion = true;
       this.dataSet.records.forEach(function (record) {
-        return _this6.setRowExpanded(record, false);
+        return _this7.setRowExpanded(record, false);
       });
       this.expandedRows = [];
       this.inBatchExpansion = false;
@@ -274683,14 +274848,14 @@ var TableStore = /*#__PURE__*/function () {
     key: "onTreeNodeLoad",
     value: function () {
       var _onTreeNodeLoad = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(_ref32) {
-        var record, _this$props19, dataSet, treeLoadData, treeAsync, selectionMode, promises, _ref33, _ref33$currentPage, currentPage, parentSelect;
+        var record, _this$props13, dataSet, treeLoadData, treeAsync, selectionMode, promises, _ref33, _ref33$currentPage, currentPage, parentSelect;
 
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 record = _ref32.record;
-                _this$props19 = this.props, dataSet = _this$props19.dataSet, treeLoadData = _this$props19.treeLoadData, treeAsync = _this$props19.treeAsync, selectionMode = _this$props19.selectionMode;
+                _this$props13 = this.props, dataSet = _this$props13.dataSet, treeLoadData = _this$props13.treeLoadData, treeAsync = _this$props13.treeAsync, selectionMode = _this$props13.selectionMode;
                 promises = [];
                 this.setRowPending(record, true);
 
@@ -274799,7 +274964,7 @@ var TableStore = /*#__PURE__*/function () {
       var isTree = this.isTree,
           rowNumber = this.props.rowNumber,
           groups = this.groups;
-      var numbers = groups.length > 0 && rowIndex !== undefined ? [rowIndex + 1] : getRowNumbers(record, dataSet, isTree);
+      var numbers = groups.length > 0 && rowIndex !== undefined ? [rowIndex + 1] : getRowNumbers(record, dataSet, isTree, this.showRemovedRow);
       var number = numbers.join('-');
 
       if (typeof rowNumber === 'function') {
@@ -274909,10 +275074,14 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "drawCopyBorder",
     value: function drawCopyBorder(sTarget, eTarget) {
+      var _this8 = this;
+
       var _this$node2 = this.node,
           rangeBorder = _this$node2.rangeBorder,
           tableContentWrap = _this$node2.tableContentWrap,
           tableBodyWrap = _this$node2.tableBodyWrap,
+          fixedColumnsBodyLeft = _this$node2.fixedColumnsBodyLeft,
+          fixedColumnsBodyRight = _this$node2.fixedColumnsBodyRight,
           startChooseCell = this.startChooseCell,
           endChooseCell = this.endChooseCell,
           lastScrollLeft = this.lastScrollLeft,
@@ -274924,123 +275093,179 @@ var TableStore = /*#__PURE__*/function () {
       var positionWrapper = tableBodyWrap || tableContentWrap;
       var maxScrollLeft = positionWrapper.scrollWidth - positionWrapper.clientWidth;
 
+      if (positionWrapper && startChooseCell && endChooseCell) {
+        var minRowIndex = Math.min(startChooseCell.rowIndex, endChooseCell.rowIndex);
+        var maxRowIndex = Math.max(startChooseCell.rowIndex, endChooseCell.rowIndex);
+
+        var resolveVisibleTarget = function resolveVisibleTarget(target, rowIndex, colIndex) {
+          var column = columnGroups.leafs[colIndex];
+
+          if (!column) {
+            return target || null;
+          }
+
+          var columnKey = String(column.key);
+
+          if (target && target.isConnected && Number(target.dataset.rowIndex) === rowIndex && target.dataset.index === columnKey) {
+            return target;
+          }
+
+          var lock = column.column.lock;
+          var wrappers = [lock === _enum2.ColumnLock.left || lock === true ? fixedColumnsBodyLeft : undefined, !lock ? positionWrapper : undefined, lock === _enum2.ColumnLock.right ? fixedColumnsBodyRight : undefined, positionWrapper].filter(function (wrapper) {
+            return Boolean(wrapper);
+          });
+          return wrappers.reduce(function (result, wrapper) {
+            var _wrapper$querySelecto;
+
+            if (result) {
+              return result;
+            }
+
+            var wrapperRect = wrapper.getBoundingClientRect();
+            var footerTop = (_wrapper$querySelecto = wrapper.querySelector('tfoot')) === null || _wrapper$querySelecto === void 0 ? void 0 : _wrapper$querySelecto.getBoundingClientRect().top;
+            var visibleBottom = footerTop === undefined ? wrapperRect.bottom : Math.min(wrapperRect.bottom, footerTop);
+            return Array.from(wrapper.querySelectorAll('td[data-row-index]')).filter(function (cell) {
+              var cellRowIndex = Number(cell.dataset.rowIndex);
+
+              var _cell$getBoundingClie = cell.getBoundingClientRect(),
+                  top = _cell$getBoundingClie.top,
+                  bottom = _cell$getBoundingClie.bottom;
+
+              return cell.dataset.index === columnKey && cellRowIndex >= minRowIndex && cellRowIndex <= maxRowIndex && top < visibleBottom && bottom > wrapperRect.top;
+            }).reduce(function (nearest, cell) {
+              return !nearest || Math.abs(Number(cell.dataset.rowIndex) - rowIndex) < Math.abs(Number(nearest.dataset.rowIndex) - rowIndex) ? cell : nearest;
+            }, null);
+          }, null);
+        };
+
+        startTarget = resolveVisibleTarget(startTarget, startChooseCell.rowIndex, startChooseCell.colIndex);
+        endTarget = resolveVisibleTarget(endTarget, endChooseCell.rowIndex, endChooseCell.colIndex);
+      }
+
       if (rangeBorder && startTarget && endTarget) {
-        var _this$calcDrawBorderF2 = this.calcDrawBorderFixColumn(startTarget, endTarget),
-            fixLeftClassname = _this$calcDrawBorderF2.fixLeftClassname,
-            fixRightClassname = _this$calcDrawBorderF2.fixRightClassname,
-            fixLeftLength = _this$calcDrawBorderF2.fixLeftLength,
-            fixRightLength = _this$calcDrawBorderF2.fixRightLength;
+        (function () {
+          var _this8$calcDrawBorder = _this8.calcDrawBorderFixColumn(startTarget, endTarget),
+              fixLeftClassname = _this8$calcDrawBorder.fixLeftClassname,
+              fixRightClassname = _this8$calcDrawBorder.fixRightClassname,
+              fixLeftLength = _this8$calcDrawBorder.fixLeftLength,
+              fixRightLength = _this8$calcDrawBorder.fixRightLength;
 
-        var rectStart = startTarget.getBoundingClientRect();
-        var rectEnd = endTarget.getBoundingClientRect();
-        var minX = Math.min(rectStart.left, rectEnd.left);
-        var maxX = Math.max(rectStart.right, rectEnd.right);
-        var minY = Math.min(rectStart.top, rectEnd.top);
-        var maxY = Math.max(rectStart.bottom, rectEnd.bottom);
-        var left = Math.min(startTarget.offsetLeft, endTarget.offsetLeft);
-        var top = Math.min(startTarget.offsetTop, endTarget.offsetTop);
-        var width = maxX - minX;
-        var height = maxY - minY;
-        rangeBorder.style.top = (0, _UnitConvertor.pxToRem)(top);
-        rangeBorder.style.height = (0, _UnitConvertor.pxToRem)(height);
-        rangeBorder.style.display = 'block';
+          var rectStart = startTarget.getBoundingClientRect();
+          var rectEnd = endTarget.getBoundingClientRect();
+          var minX = Math.min(rectStart.left, rectEnd.left);
+          var maxX = Math.max(rectStart.right, rectEnd.right);
+          var minY = Math.min(rectStart.top, rectEnd.top);
+          var maxY = Math.max(rectStart.bottom, rectEnd.bottom);
+          var left = Math.min(startTarget.offsetLeft, endTarget.offsetLeft);
+          var top = Math.min(startTarget.offsetTop, endTarget.offsetTop);
+          var width = maxX - minX;
+          var height = maxY - minY;
+          rangeBorder.style.top = (0, _UnitConvertor.pxToRem)(top);
+          rangeBorder.style.height = (0, _UnitConvertor.pxToRem)(height);
+          rangeBorder.style.display = 'block';
 
-        if (!fixLeftLength && !fixRightLength || fixLeftLength && fixRightLength || fixLeftLength > 1 || fixRightLength > 1 || !this.overflowX) {
-          // 一般选框处理
-          rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(width);
-          rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(left);
-        } else {
-          // 动态选框处理
-          var extraDistance = 0;
-          var fixChoosedWidth = 0; // 获取框选的固定列的宽度
+          if (!fixLeftLength && !fixRightLength || fixLeftLength && fixRightLength || fixLeftLength > 1 || fixRightLength > 1 || !_this8.overflowX) {
+            // 一般选框处理
+            rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(width);
+            rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(left);
+          } else {
+            // 动态选框处理
+            var extraDistance = 0;
+            var fixChoosedWidth = 0; // 获取框选的固定列的宽度
 
-          if (startChooseCell && endChooseCell) {
-            var _sort = [startChooseCell.colIndex, endChooseCell.colIndex].sort(function (a, b) {
-              return a - b;
-            }),
-                _sort2 = (0, _slicedToArray2["default"])(_sort, 2),
-                firstColIndex = _sort2[0],
-                lastColIndex = _sort2[1];
+            if (startChooseCell && endChooseCell) {
+              var _sort = [startChooseCell.colIndex, endChooseCell.colIndex].sort(function (a, b) {
+                return a - b;
+              }),
+                  _sort2 = (0, _slicedToArray2["default"])(_sort, 2),
+                  firstColIndex = _sort2[0],
+                  lastColIndex = _sort2[1];
 
-            var leafs = columnGroups.leafs;
-            var totalWidth = leafs.slice(firstColIndex, lastColIndex + 1).reduce(function (total, col) {
-              return total + (col.width || 0);
-            }, 0); // 存在自定义列的情况
+              var leafs = columnGroups.leafs;
+              var totalWidth = leafs.slice(firstColIndex, lastColIndex + 1).reduce(function (total, col) {
+                return total + (col.width || 0);
+              }, 0); // 存在自定义列的情况
 
-            var lastLeafs = leafs[lastColIndex + 1];
+              var lastLeafs = leafs[lastColIndex + 1];
 
-            if (customizable && lastLeafs && lastLeafs.key === CUSTOMIZED_KEY) {
-              totalWidth += leafs[lastColIndex + 1].width || 0;
-            }
-
-            if (fixLeftLength) {
-              extraDistance = lastScrollLeft > endTarget.offsetLeft ? lastScrollLeft - (endTarget.offsetLeft - leftColumnGroups.width + endTarget.offsetWidth) : 0;
-              var fixChoosedLeft = 0;
-
-              for (var i = firstColIndex; i <= lastColIndex; i++) {
-                var col = leafs[i];
-
-                if (col.column.lock === _enum2.ColumnLock.left || col.column.lock === true) {
-                  fixChoosedWidth += col.width || 0;
-
-                  if (i === firstColIndex) {
-                    fixChoosedLeft = startChooseCell.colIndex === firstColIndex ? startChooseCell.target.offsetLeft : endChooseCell.target.offsetLeft;
-                  }
-                }
+              if (customizable && lastLeafs && lastLeafs.key === CUSTOMIZED_KEY) {
+                totalWidth += leafs[lastColIndex + 1].width || 0;
               }
 
-              rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(fixChoosedLeft);
-              rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(Math.max(fixChoosedWidth, totalWidth - lastScrollLeft));
-            } else if (fixRightLength) {
-              var unFixedWidth = 0;
-              var minLeft = 0;
+              if (fixLeftLength) {
+                extraDistance = lastScrollLeft > endTarget.offsetLeft ? lastScrollLeft - (endTarget.offsetLeft - leftColumnGroups.width + endTarget.offsetWidth) : 0;
+                var fixChoosedLeft = 0;
 
-              for (var _i = lastColIndex; _i >= firstColIndex; _i--) {
-                var _col = leafs[_i];
+                for (var i = firstColIndex; i <= lastColIndex; i++) {
+                  var col = leafs[i];
 
-                if (_col.column.lock === _enum2.ColumnLock.right) {
-                  fixChoosedWidth += _col.width || 0;
+                  if (col.column.lock === _enum2.ColumnLock.left || col.column.lock === true) {
+                    fixChoosedWidth += col.width || 0;
 
-                  if (lastColIndex === _i && customizable && lastColIndex === columnGroups.leafs.length - 2) {
-                    fixChoosedWidth += leafs[_i + 1].width || 0;
+                    if (i === firstColIndex) {
+                      var fixedLeftTarget = [startTarget, endTarget].find(function (target) {
+                        return target.classList.contains(fixLeftClassname);
+                      });
+                      fixChoosedLeft = fixedLeftTarget ? fixedLeftTarget.offsetLeft : 0;
+                    }
                   }
-                } else if (!_col.column.lock) {
-                  unFixedWidth += _col.width || 0;
-                  minLeft = _col.left;
                 }
+
+                rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(fixChoosedLeft);
+                rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(Math.max(fixChoosedWidth, totalWidth - lastScrollLeft));
+              } else if (fixRightLength) {
+                var unFixedWidth = 0;
+                var minLeft = 0;
+
+                for (var _i = lastColIndex; _i >= firstColIndex; _i--) {
+                  var _col = leafs[_i];
+
+                  if (_col.column.lock === _enum2.ColumnLock.right) {
+                    fixChoosedWidth += _col.width || 0;
+
+                    if (lastColIndex === _i && customizable && lastColIndex === columnGroups.leafs.length - 2) {
+                      fixChoosedWidth += leafs[_i + 1].width || 0;
+                    }
+                  } else if (!_col.column.lock) {
+                    unFixedWidth += _col.width || 0;
+                    minLeft = _col.left;
+                  }
+                }
+
+                extraDistance = maxScrollLeft - lastScrollLeft > unFixedWidth ? maxScrollLeft - lastScrollLeft - unFixedWidth : 0;
+                rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(minLeft - extraDistance);
+                rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(Math.max(fixChoosedWidth, totalWidth - (maxScrollLeft - lastScrollLeft)));
               }
-
-              extraDistance = maxScrollLeft - lastScrollLeft > unFixedWidth ? maxScrollLeft - lastScrollLeft - unFixedWidth : 0;
-              rangeBorder.style.left = (0, _UnitConvertor.pxToRem)(minLeft - extraDistance);
-              rangeBorder.style.width = (0, _UnitConvertor.pxToRem)(Math.max(fixChoosedWidth, totalWidth - (maxScrollLeft - lastScrollLeft)));
             }
+          } // 动态改变固定列层级
+
+
+          if (fixLeftLength && fixRightLength) {
+            rangeBorder.style.zIndex = "2";
+
+            _this8.changeFixIndex(fixLeftClassname);
+
+            _this8.changeFixIndex(fixRightClassname);
+          } else if (fixLeftLength) {
+            rangeBorder.style.zIndex = "2";
+
+            if (fixLeftLength === 1) {
+              _this8.changeFixIndex(fixRightClassname, "3");
+            }
+
+            _this8.changeFixIndex(fixLeftClassname);
+          } else if (fixRightLength) {
+            rangeBorder.style.zIndex = "2";
+
+            if (fixRightLength === 1) {
+              _this8.changeFixIndex(fixLeftClassname, "3");
+            }
+
+            _this8.changeFixIndex(fixRightClassname);
+          } else {
+            rangeBorder.style.zIndex = "1";
           }
-        } // 动态改变固定列层级
-
-
-        if (fixLeftLength && fixRightLength) {
-          rangeBorder.style.zIndex = "2";
-          this.changeFixIndex(fixLeftClassname);
-          this.changeFixIndex(fixRightClassname);
-        } else if (fixLeftLength) {
-          rangeBorder.style.zIndex = "2";
-
-          if (fixLeftLength === 1) {
-            this.changeFixIndex(fixRightClassname, "3");
-          }
-
-          this.changeFixIndex(fixLeftClassname);
-        } else if (fixRightLength) {
-          rangeBorder.style.zIndex = "2";
-
-          if (fixRightLength === 1) {
-            this.changeFixIndex(fixLeftClassname, "3");
-          }
-
-          this.changeFixIndex(fixRightClassname);
-        } else {
-          rangeBorder.style.zIndex = "1";
-        }
+        })();
       }
     }
   }, {
@@ -275201,7 +275426,7 @@ var TableStore = /*#__PURE__*/function () {
     key: "saveCustomized",
     value: function () {
       var _saveCustomized = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(customized, otherInfo) {
-        var _this$props20, customizedCode, boardCustomized, tableCustomizedSave, tableCustomizedLoad, currentRecord, res, dataJson;
+        var _this$props14, customizedCode, boardCustomized, tableCustomizedSave, tableCustomizedLoad, currentRecord, res, dataJson;
 
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
@@ -275212,7 +275437,7 @@ var TableStore = /*#__PURE__*/function () {
                   break;
                 }
 
-                _this$props20 = this.props, customizedCode = _this$props20.customizedCode, boardCustomized = _this$props20.boardCustomized;
+                _this$props14 = this.props, customizedCode = _this$props14.customizedCode, boardCustomized = _this$props14.boardCustomized;
 
                 if (customized) {
                   this.customized = customized;
@@ -275335,15 +275560,15 @@ var TableStore = /*#__PURE__*/function () {
     key: "loadCustomized",
     value: function () {
       var _loadCustomized = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(customizedProps, forceLoad) {
-        var _this7 = this;
+        var _this9 = this;
 
-        var _this$props21, customizedCode, boardCustomized, _this$props21$onCusto, onCustomizedLoad, dataSet, queryBarProps, showSimpleMode, tableCustomizedLoad, customized, res, dataJson;
+        var _this$props15, customizedCode, boardCustomized, _this$props15$onCusto, onCustomizedLoad, dataSet, queryBarProps, showSimpleMode, tableCustomizedLoad, customized, res, dataJson;
 
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this$props21 = this.props, customizedCode = _this$props21.customizedCode, boardCustomized = _this$props21.boardCustomized, _this$props21$onCusto = _this$props21.onCustomizedLoad, onCustomizedLoad = _this$props21$onCusto === void 0 ? _noop["default"] : _this$props21$onCusto, dataSet = _this$props21.dataSet;
+                _this$props15 = this.props, customizedCode = _this$props15.customizedCode, boardCustomized = _this$props15.boardCustomized, _this$props15$onCusto = _this$props15.onCustomizedLoad, onCustomizedLoad = _this$props15$onCusto === void 0 ? _noop["default"] : _this$props15$onCusto, dataSet = _this$props15.dataSet;
                 queryBarProps = this.props.queryBarProps;
                 showSimpleMode = queryBarProps && queryBarProps.simpleMode;
 
@@ -275354,11 +275579,11 @@ var TableStore = /*#__PURE__*/function () {
 
                 tableCustomizedLoad = this.getConfig('tableCustomizedLoad') || this.getConfig('customizedLoad');
                 (0, _mobx.runInAction)(function () {
-                  delete _this7.customizedLoaded;
-                  _this7.tempCustomized = {
+                  delete _this9.customizedLoaded;
+                  _this9.tempCustomized = {
                     columns: {}
                   };
-                  _this7.loading = true;
+                  _this9.loading = true;
                 });
                 _context4.prev = 6;
                 customized = customizedProps;
@@ -275404,7 +275629,7 @@ var TableStore = /*#__PURE__*/function () {
 
               case 17:
                 (0, _mobx.runInAction)( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-                  var newCustomized, customAggregation, _this7$props, onAggregationChange, aggregation;
+                  var newCustomized, customAggregation, _this9$props, onAggregationChange, aggregation;
 
                   return _regenerator["default"].wrap(function _callee3$(_context3) {
                     while (1) {
@@ -275413,10 +275638,10 @@ var TableStore = /*#__PURE__*/function () {
                           newCustomized = (0, _objectSpread2["default"])({
                             columns: {}
                           }, customized);
-                          _this7.customized = newCustomized;
+                          _this9.customized = newCustomized;
                           dataSet.setState('__CUSTOMIZED__', newCustomized);
 
-                          _this7.initColumns(); // autoQuery：fasle 且分页参数与个性化不一致时进行修改
+                          _this9.initColumns(); // autoQuery：fasle 且分页参数与个性化不一致时进行修改
 
 
                           if (newCustomized.pageSize && dataSet.pageSize !== Number(newCustomized.pageSize) && !dataSet.props.autoQuery) {
@@ -275435,7 +275660,7 @@ var TableStore = /*#__PURE__*/function () {
                           customAggregation = newCustomized.aggregation;
 
                           if (customAggregation !== undefined) {
-                            _this7$props = _this7.props, onAggregationChange = _this7$props.onAggregationChange, aggregation = _this7$props.aggregation;
+                            _this9$props = _this9.props, onAggregationChange = _this9$props.onAggregationChange, aggregation = _this9$props.aggregation;
 
                             if (onAggregationChange && customAggregation !== aggregation) {
                               onAggregationChange(customAggregation);
@@ -275454,7 +275679,7 @@ var TableStore = /*#__PURE__*/function () {
                 _context4.prev = 18;
                 this.customizedLoaded = true;
                 (0, _mobx.runInAction)(function () {
-                  _this7.loading = false;
+                  _this9.loading = false;
                 });
                 return _context4.finish(18);
 
@@ -275575,7 +275800,7 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "isRowInView",
     value: function isRowInView(index) {
-      var _this8 = this;
+      var _this10 = this;
 
       var propVirtual = this.propVirtual;
 
@@ -275595,7 +275820,7 @@ var TableStore = /*#__PURE__*/function () {
       return index >= getStartIndex(this, function () {
         return visibleStartIndex;
       }) && index <= getEndIndex(this, function () {
-        return getVisibleEndIndex(_this8, function () {
+        return getVisibleEndIndex(_this10, function () {
           return visibleStartIndex;
         }, function () {
           return scrollTop;
@@ -275642,7 +275867,12 @@ var TableStore = /*#__PURE__*/function () {
   }, {
     key: "calcArrangeValue",
     value: function calcArrangeValue() {
-      this.dragCorner = false;
+      this.dragCorner = false; // 选择过程中触发滚动导致取消选择后，startChooseCell 和 endChooseCell 为 null
+
+      if (!this.startChooseCell || !this.endChooseCell) {
+        return;
+      }
+
       var _this$startChooseCell2 = this.startChooseCell,
           startColIndex = _this$startChooseCell2.colIndex,
           startRowIndex = _this$startChooseCell2.rowIndex;
@@ -275745,6 +275975,7 @@ exports["default"] = TableStore;
 (0, _tslib.__decorate)([_mobx.observable], TableStore.prototype, "dragUpdateState", void 0);
 (0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "computedHeight", null);
 (0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "height", null);
+(0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "duplicatePrimaryKeyInfo", null);
 (0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "autoHeight", null);
 (0, _tslib.__decorate)([_mobx.computed], TableStore.prototype, "virtualColumnRange", null);
 (0, _tslib.__decorate)([_autobind["default"]], TableStore.prototype, "isRenderRange", null);
@@ -372192,7 +372423,7 @@ Object.defineProperty(exports, "ButtonTooltip", {
     return _enum.Tooltip;
   }
 });
-exports.FuncType = exports.ButtonType = void 0;
+exports.IconPlacementType = exports.FuncType = exports.ButtonType = void 0;
 
 var _enum = __webpack_require__("aYLu");
 
@@ -372229,6 +372460,14 @@ exports.ButtonType = ButtonType;
   ButtonType["submit"] = "submit";
   ButtonType["reset"] = "reset";
 })(ButtonType || (exports.ButtonType = ButtonType = {}));
+
+var IconPlacementType;
+exports.IconPlacementType = IconPlacementType;
+
+(function (IconPlacementType) {
+  IconPlacementType["start"] = "start";
+  IconPlacementType["end"] = "end";
+})(IconPlacementType || (exports.IconPlacementType = IconPlacementType = {}));
 
 /***/ }),
 
@@ -372365,6 +372604,5043 @@ if (typeof window !== "undefined") {
 
 module.exports = win;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("pCvA")))
+
+/***/ }),
+
+/***/ "vXXv":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return SELECTION_KEY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return COMBOBAR_KEY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ROW_NUMBER_KEY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return DRAG_KEY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return EXPAND_KEY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return CUSTOMIZED_KEY; });
+/* unused harmony export AGGREGATION_EXPAND_CELL_KEY */
+/* unused harmony export BODY_EXPANDED */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return VIRTUAL_ROOT_MARGIN; });
+/* unused harmony export getIdList */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return normalizeGroupColumns; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return TableStore; });
+/* harmony import */ var core_js_modules_es_array_reduce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("UKgA");
+/* harmony import */ var core_js_modules_es_array_reduce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("e+GP");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("RiSW");
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("SDJZ");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("NToG");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("OvAC");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("fFdx");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("5WRv");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("nxTg");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("8VmE");
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("yO+l");
+/* harmony import */ var _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("NthX");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("Qno7");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__("mXGw");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("cneo");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("zmui");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var lodash_sortBy__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__("As4l");
+/* harmony import */ var lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(lodash_sortBy__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__("5Zwl");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__("MIf1");
+/* harmony import */ var lodash_isNil__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(lodash_isNil__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var lodash_isObject__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__("9aUh");
+/* harmony import */ var lodash_isObject__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(lodash_isObject__WEBPACK_IMPORTED_MODULE_19__);
+/* harmony import */ var lodash_isPlainObject__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__("NfLg");
+/* harmony import */ var lodash_isPlainObject__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(lodash_isPlainObject__WEBPACK_IMPORTED_MODULE_20__);
+/* harmony import */ var lodash_isString__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__("4e1R");
+/* harmony import */ var lodash_isString__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(lodash_isString__WEBPACK_IMPORTED_MODULE_21__);
+/* harmony import */ var lodash_isNumber__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__("XQLF");
+/* harmony import */ var lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(lodash_isNumber__WEBPACK_IMPORTED_MODULE_22__);
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__("edSL");
+/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_23___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_23__);
+/* harmony import */ var lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__("v7Po");
+/* harmony import */ var lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24__);
+/* harmony import */ var choerodon_ui_dataset_utils__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__("wGa2");
+/* harmony import */ var choerodon_ui_dataset_utils__WEBPACK_IMPORTED_MODULE_25___default = /*#__PURE__*/__webpack_require__.n(choerodon_ui_dataset_utils__WEBPACK_IMPORTED_MODULE_25__);
+/* harmony import */ var _es_util_measureScrollbar__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__("dPN6");
+/* harmony import */ var _es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__("SNvr");
+/* harmony import */ var _es_icon__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__("i38t");
+/* harmony import */ var lodash_isFunction__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__("RqPZ");
+/* harmony import */ var lodash_isFunction__WEBPACK_IMPORTED_MODULE_29___default = /*#__PURE__*/__webpack_require__.n(lodash_isFunction__WEBPACK_IMPORTED_MODULE_29__);
+/* harmony import */ var lodash_omit__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__("PWxN");
+/* harmony import */ var lodash_omit__WEBPACK_IMPORTED_MODULE_30___default = /*#__PURE__*/__webpack_require__.n(lodash_omit__WEBPACK_IMPORTED_MODULE_30__);
+/* harmony import */ var lodash_pick__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__("gTDC");
+/* harmony import */ var lodash_pick__WEBPACK_IMPORTED_MODULE_31___default = /*#__PURE__*/__webpack_require__.n(lodash_pick__WEBPACK_IMPORTED_MODULE_31__);
+/* harmony import */ var lodash_noop__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__("7IP4");
+/* harmony import */ var lodash_noop__WEBPACK_IMPORTED_MODULE_32___default = /*#__PURE__*/__webpack_require__.n(lodash_noop__WEBPACK_IMPORTED_MODULE_32__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__("TiKg");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_33___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_33__);
+/* harmony import */ var choerodon_ui_dataset_data_set_DataSet__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__("0tEP");
+/* harmony import */ var choerodon_ui_dataset_data_set_DataSet__WEBPACK_IMPORTED_MODULE_34___default = /*#__PURE__*/__webpack_require__.n(choerodon_ui_dataset_data_set_DataSet__WEBPACK_IMPORTED_MODULE_34__);
+/* harmony import */ var _Column__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__("0SGn");
+/* harmony import */ var _customization_settings_CustomizationSettings__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__("idZw");
+/* harmony import */ var _util_isFragment__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__("X0H9");
+/* harmony import */ var _check_box_CheckBox__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__("Zn9D");
+/* harmony import */ var _radio_Radio__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__("0o1A");
+/* harmony import */ var _data_set_enum__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__("cX0b");
+/* harmony import */ var _data_set_enum__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/__webpack_require__.n(_data_set_enum__WEBPACK_IMPORTED_MODULE_40__);
+/* harmony import */ var _enum__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__("Epm5");
+/* harmony import */ var _enum__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__("zjun");
+/* harmony import */ var _util_EventManager__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__("t6Pc");
+/* harmony import */ var _util_EventManager__WEBPACK_IMPORTED_MODULE_43___default = /*#__PURE__*/__webpack_require__.n(_util_EventManager__WEBPACK_IMPORTED_MODULE_43__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__("Oefy");
+/* harmony import */ var _util_getReactNodeText__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__("8IqG");
+/* harmony import */ var _ColumnGroups__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__("lDH2");
+/* harmony import */ var _util_autobind__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__("/dZo");
+/* harmony import */ var _core_enum__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__("32dL");
+/* harmony import */ var _locale_context__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__("Gim1");
+/* harmony import */ var _customization_settings_CustomizationColumnHeader__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__("hX5l");
+/* harmony import */ var _combo_customization_settings__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__("EWkk");
+/* harmony import */ var _dropdown_Dropdown__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__("hoiV");
+/* harmony import */ var _menu__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__("pYoZ");
+/* harmony import */ var _modal_Modal__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__("RZRm");
+/* harmony import */ var _util_treeUtils__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__("OCWR");
+/* harmony import */ var _data_set_utils__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__("+OcR");
+/* harmony import */ var _data_set_utils__WEBPACK_IMPORTED_MODULE_56___default = /*#__PURE__*/__webpack_require__.n(_data_set_utils__WEBPACK_IMPORTED_MODULE_56__);
+/* harmony import */ var _util_BatchRunner__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__("nHS+");
+/* harmony import */ var _form_enum__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__("Nb5V");
+/* harmony import */ var _TableCell__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__("oPxp");
+/* harmony import */ var _field_utils__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__("ShDu");
+
+
+
+
+
+
+
+
+
+
+
+var _excluded = ["lock", "className", "headerClassName", "footerClassName"];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var SELECTION_KEY = '__selection-column__'; // TODO:Symbol
+
+var COMBOBAR_KEY = '__combo-column__'; // TODO:Symbol
+
+var ROW_NUMBER_KEY = '__row-number-column__'; // TODO:Symbol
+
+var DRAG_KEY = '__drag-column__'; // TODO:Symbol
+
+var EXPAND_KEY = '__expand-column__'; // TODO:Symbol
+
+var CUSTOMIZED_KEY = '__customized-column__'; // TODO:Symbol
+
+var AGGREGATION_EXPAND_CELL_KEY = '__aggregation-expand-cell__'; // TODO:Symbol
+
+var BODY_EXPANDED = '__body_expanded__'; // TODO:Symbol
+
+var VIRTUAL_ROOT_MARGIN = 50;
+
+function columnFilter(column) {
+  return Boolean(column);
+}
+
+function getOverScanCount(tableStore, index, next) {
+  var rowMetaData = tableStore.rowMetaData;
+
+  if (rowMetaData) {
+    var count = 0;
+    var height = 0;
+
+    while (height < VIRTUAL_ROOT_MARGIN) {
+      index += next ? 1 : -1;
+
+      if (index < 0 || index >= rowMetaData.length) {
+        return count;
+      }
+
+      var metaData = rowMetaData[index];
+
+      if (!metaData) {
+        return count;
+      }
+
+      height += metaData.height;
+      count++;
+    }
+
+    return count;
+  }
+
+  return Math.ceil(VIRTUAL_ROOT_MARGIN / tableStore.virtualRowHeight);
+}
+
+function getItemMetadata(rowMetaData, index, tableStore) {
+  var lastMeasuredIndex = tableStore.lastMeasuredIndex;
+
+  if (index > lastMeasuredIndex) {
+    tableStore.lastMeasuredIndex = index;
+  }
+
+  return rowMetaData[index];
+}
+
+function findNearestItemBinarySearch(rowMetaData, tableStore, high, low, offset) {
+  while (low <= high) {
+    var middle = low + Math.floor((high - low) / 2);
+    var item = getItemMetadata(rowMetaData, middle, tableStore);
+
+    if (!item) {
+      return 0;
+    }
+
+    var currentOffset = item.offset;
+
+    if (currentOffset === offset) {
+      return middle;
+    }
+
+    if (currentOffset < offset) {
+      low = middle + 1;
+    }
+
+    if (currentOffset > offset) {
+      high = middle - 1;
+    }
+  }
+
+  if (low > 0) {
+    return low - 1;
+  }
+
+  return 0;
+}
+
+function overOffset(rowMetaData, tableStore, index, offset) {
+  var item = getItemMetadata(rowMetaData, index, tableStore);
+
+  if (item) {
+    return item.offset < offset;
+  }
+
+  return false;
+}
+
+function findNearestItemExponentialSearch(rowMetaData, tableStore, index, offset) {
+  var virtualEstimatedRows = tableStore.virtualEstimatedRows;
+  var interval = 1;
+
+  while (index < virtualEstimatedRows && overOffset(rowMetaData, tableStore, index, offset)) {
+    index += interval;
+    interval *= 2;
+  }
+
+  return findNearestItemBinarySearch(rowMetaData, tableStore, Math.min(index, virtualEstimatedRows - 1), Math.floor(index / 2), offset);
+}
+
+function getVisibleStartIndex(tableStore) {
+  var getLastScrollTop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.lastScrollTop;
+  };
+  var height = tableStore.height,
+      virtualEstimatedRows = tableStore.virtualEstimatedRows;
+
+  if (height === undefined || !virtualEstimatedRows) {
+    return 0;
+  }
+
+  var lastScrollTop = getLastScrollTop();
+  var virtualRowHeight = tableStore.virtualRowHeight,
+      rowMetaData = tableStore.rowMetaData;
+
+  if (rowMetaData) {
+    if (!rowMetaData.length) {
+      return 0;
+    }
+
+    var lastMeasuredIndex = tableStore.lastMeasuredIndex;
+    var lastRowMetaData = lastMeasuredIndex > 0 ? rowMetaData[lastMeasuredIndex] : undefined;
+    var lastMeasuredItemOffset = lastRowMetaData ? lastRowMetaData.offset : 0;
+
+    if (lastMeasuredItemOffset >= lastScrollTop) {
+      return findNearestItemBinarySearch(rowMetaData, tableStore, lastMeasuredIndex, 0, lastScrollTop);
+    }
+
+    return findNearestItemExponentialSearch(rowMetaData, tableStore, Math.max(0, lastMeasuredIndex), lastScrollTop);
+  }
+
+  return Math.max(0, Math.min(virtualEstimatedRows, Math.floor(lastScrollTop / virtualRowHeight)));
+}
+
+function getVisibleEndIndex(tableStore) {
+  var getVirtualVisibleStartIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.virtualVisibleStartIndex;
+  };
+  var getLastScrollTop = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {
+    return tableStore.lastScrollTop;
+  };
+  var height = tableStore.height,
+      virtualEstimatedRows = tableStore.virtualEstimatedRows;
+
+  if (height === undefined) {
+    return virtualEstimatedRows;
+  }
+
+  var virtualVisibleStartIndex = getVirtualVisibleStartIndex();
+  var virtualRowHeight = tableStore.virtualRowHeight,
+      rowMetaData = tableStore.rowMetaData;
+
+  if (rowMetaData) {
+    if (!rowMetaData.length) {
+      return 0;
+    }
+
+    var itemMetadata = getItemMetadata(rowMetaData, virtualVisibleStartIndex, tableStore);
+
+    if (!itemMetadata) {
+      return 0;
+    }
+
+    var maxOffset = getLastScrollTop() + height;
+    var offset = itemMetadata.offset + itemMetadata.height;
+    var stopIndex = virtualVisibleStartIndex;
+
+    while (stopIndex < virtualEstimatedRows - 1 && offset < maxOffset) {
+      stopIndex++;
+      var item = getItemMetadata(rowMetaData, stopIndex, tableStore);
+
+      if (item) {
+        offset += item.height;
+      }
+    }
+
+    return Math.max(0, Math.min(virtualEstimatedRows, stopIndex + 1));
+  }
+
+  var numVisibleItems = Math.ceil(height / virtualRowHeight);
+  return Math.max(0, Math.min(virtualEstimatedRows, virtualVisibleStartIndex + numVisibleItems));
+}
+
+function getStartIndex(tableStore) {
+  var getVirtualVisibleStartIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.virtualVisibleStartIndex;
+  };
+  var virtualVisibleStartIndex = getVirtualVisibleStartIndex();
+  return Math.max(0, virtualVisibleStartIndex - getOverScanCount(tableStore, virtualVisibleStartIndex));
+}
+
+function getEndIndex(tableStore) {
+  var getVirtualVisibleEndIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+    return tableStore.virtualVisibleEndIndex;
+  };
+  var virtualVisibleEndIndex = getVirtualVisibleEndIndex();
+  var virtualEstimatedRows = tableStore.virtualEstimatedRows;
+  return Math.min(virtualEstimatedRows, virtualVisibleEndIndex + getOverScanCount(tableStore, virtualVisibleEndIndex, true));
+}
+
+function getIdList(store) {
+  var mouseBatchChooseStartId = store.mouseBatchChooseStartId,
+      mouseBatchChooseEndId = store.mouseBatchChooseEndId,
+      element = store.node.element,
+      prefixCls = store.prefixCls;
+  var rows = Array.from(element.querySelectorAll(".".concat(prefixCls, "-row")));
+  var endId;
+  var idList = [];
+  rows.some(function (row) {
+    var index = Number(row.dataset.index);
+
+    if (!endId) {
+      if (mouseBatchChooseStartId === index) {
+        endId = mouseBatchChooseEndId;
+      } else if (mouseBatchChooseEndId === index) {
+        endId = mouseBatchChooseStartId;
+      }
+    }
+
+    if (endId) {
+      idList.push(index);
+    }
+
+    return endId === index;
+  });
+  return idList;
+}
+
+function getRowNumbers(record, dataSet, isTree, showRemovedRow) {
+  if (record && dataSet) {
+    if (record.isCached) {
+      return [];
+    }
+
+    var paging = dataSet.paging,
+        currentPage = dataSet.currentPage,
+        pageSize = dataSet.pageSize;
+    var pageIndex = (isTree ? paging === 'server' : paging) ? (currentPage - 1) * pageSize : 0;
+
+    if (isTree) {
+      return record.path.map(function (r, index) {
+        return r.indexInParent + 1 + (index === 0 ? pageIndex : 0);
+      });
+    }
+
+    var index = showRemovedRow ? dataSet.records.indexOf(record) : record.index;
+    return [index + 1 + pageIndex];
+  }
+
+  return [0];
+}
+
+function hasCheckField(_ref, checkField) {
+  var editor = _ref.editor,
+      name = _ref.name,
+      hidden = _ref.hidden;
+  return !hidden && !!editor && checkField === name;
+}
+
+function _renderSelectionBox(_ref2) {
+  var record = _ref2.record,
+      store = _ref2.store;
+  var dataSet = record.dataSet;
+
+  if (dataSet) {
+    var selection = dataSet.selection;
+    var selectionDisabled = !record.selectable || store.duplicateKeyConfig.disable && store.isDuplicatePrimaryKeyRecord(record);
+
+    var handleChange = function handleChange(value) {
+      if (store.props.selectionMode === _enum__WEBPACK_IMPORTED_MODULE_41__[/* SelectionMode */ "j"].mousedown) {
+        // 将处理逻辑交给 mousedown 的处理逻辑 不然会两次触发导致不被勾选上
+        return;
+      }
+
+      if (value) {
+        dataSet.select(record);
+      } else {
+        dataSet.unSelect(record);
+      }
+    };
+
+    var handleClick = function handleClick(e) {
+      Object(_util_EventManager__WEBPACK_IMPORTED_MODULE_43__["stopPropagation"])(e);
+
+      if (selection === _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["DataSetSelection"].multiple) {
+        var lastSelected = store.lastSelected;
+
+        if (lastSelected) {
+          var nativeEvent = e.nativeEvent;
+          var startIndex = -1;
+          var endIndex = -1;
+
+          if (nativeEvent.shiftKey) {
+            var pointKeys = new Set([lastSelected.key, record.key]);
+            dataSet.some(function (pointRecord, index) {
+              if (pointKeys.has(pointRecord.key)) {
+                if (startIndex === -1) {
+                  startIndex = index;
+                } else {
+                  endIndex = index;
+                  return true;
+                }
+              }
+
+              return false;
+            });
+          }
+
+          if (endIndex !== -1 && startIndex !== endIndex) {
+            // Batch update selections
+            var rangeRecords = dataSet.slice(startIndex, endIndex + 1).filter(function (rangeRecord) {
+              return !store.duplicateKeyConfig.disable || !store.isDuplicatePrimaryKeyRecord(rangeRecord);
+            });
+            var changedRecords = [];
+            var selectedKeys = new Set(dataSet.selected.map(function (selected) {
+              return selected.key;
+            }));
+
+            if (record.isSelected) {
+              rangeRecords.forEach(function (rangeRecord) {
+                if (selectedKeys.has(rangeRecord.key)) {
+                  changedRecords.push(rangeRecord);
+                }
+              });
+              dataSet.batchUnSelect(changedRecords);
+            } else {
+              rangeRecords.forEach(function (rangeRecord) {
+                if (!selectedKeys.has(rangeRecord.key)) {
+                  changedRecords.push(rangeRecord);
+                }
+              });
+              dataSet.batchSelect(changedRecords);
+            }
+          }
+        }
+
+        store.lastSelected = record;
+      } else if (record.isSelected) {
+        dataSet.unSelect(record);
+      }
+    };
+
+    if (selection === _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["DataSetSelection"].multiple) {
+      var batchSelectProps = {};
+      var handleDragMouseUp = Object(mobx__WEBPACK_IMPORTED_MODULE_14__["action"])(function () {
+        var mouseBatchChooseIdList = store.mouseBatchChooseIdList;
+
+        if (store.mouseBatchChooseState) {
+          store.mouseBatchChooseState = false;
+          store.changeMouseBatchChooseIdList([]);
+          var mouseBatchChooseStartId = store.mouseBatchChooseStartId,
+              mouseBatchChooseEndId = store.mouseBatchChooseEndId;
+
+          if (mouseBatchChooseStartId === mouseBatchChooseEndId) {
+            return;
+          }
+
+          var startRecord = dataSet.findRecordById(mouseBatchChooseStartId);
+
+          var _ref3 = startRecord || {},
+              isSelected = _ref3.isSelected;
+
+          if (isSelected) {
+            dataSet.batchUnSelect(mouseBatchChooseIdList);
+          } else {
+            dataSet.batchSelect(mouseBatchChooseIdList);
+          }
+        }
+
+        document.removeEventListener('pointerup', handleDragMouseUp);
+      });
+
+      if (store.useMouseBatchChoose) {
+        batchSelectProps.onMouseDown = Object(mobx__WEBPACK_IMPORTED_MODULE_14__["action"])(function () {
+          store.mouseBatchChooseStartId = record.id;
+          store.mouseBatchChooseEndId = record.id;
+          store.mouseBatchChooseState = true; // 为什么使用 pointerup
+          // 因为需要对disabled的元素进行特殊处理
+          // 因为状态的改变依赖 mouseup 而在disabled的元素上 无法触发mouseup事件
+          // 导致状态无法进行修正
+          // 以下两种方案通过 pointer-events:none 进行处理
+          // https://stackoverflow.com/questions/322378/javascript-check-if-mouse-button-down
+          // https://stackoverflow.com/questions/62081666/the-event-of-the-document-is-not-triggered-when-it-is-on-a-disabled-element
+          // 而使用指针事件可以突破disabled的限制
+          // https://stackoverflow.com/questions/62126515/how-to-get-the-state-of-the-mouse-through-javascript/62127845#62127845
+
+          document.addEventListener('pointerup', handleDragMouseUp);
+        });
+
+        batchSelectProps.onMouseEnter = function () {
+          if (store.mouseBatchChooseState) {
+            store.mouseBatchChooseEndId = record.id;
+            store.changeMouseBatchChooseIdList(getIdList(store));
+          }
+        };
+      }
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_check_box_CheckBox__WEBPACK_IMPORTED_MODULE_38__[/* default */ "b"], _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, batchSelectProps), {}, {
+        checked: record.isSelected,
+        onChange: handleChange,
+        onClick: handleClick,
+        disabled: selectionDisabled,
+        "data-selection-key": SELECTION_KEY,
+        labelLayout: _form_enum__WEBPACK_IMPORTED_MODULE_58__[/* LabelLayout */ "c"].none,
+        value: true
+      }));
+    }
+
+    if (selection === _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["DataSetSelection"].single) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_radio_Radio__WEBPACK_IMPORTED_MODULE_39__[/* default */ "b"], {
+        checked: record.isSelected,
+        onChange: handleChange,
+        onClick: handleClick,
+        disabled: selectionDisabled,
+        "data-selection-key": SELECTION_KEY,
+        value: true
+      });
+    }
+  }
+}
+
+function getCustomizedColumnByKey(key, customizedColumns) {
+  if (customizedColumns) {
+    return customizedColumns[key];
+  }
+}
+
+function getCustomizedColumn(column, customizedColumns) {
+  if (customizedColumns) {
+    return getCustomizedColumnByKey(Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(column).toString(), customizedColumns);
+  }
+}
+
+function mergeColumnLock(column, parent, customizedColumn) {
+  if (parent) {
+    column.lock = parent.lock;
+  } else if (customizedColumn && 'lock' in customizedColumn) {
+    column.lock = customizedColumn.lock;
+  }
+}
+
+function mergeCustomizedColumn(column, tableStore, customizedColumn, isChildrenHideDisabled) {
+  if (isChildrenHideDisabled) {
+    column.hideable = false;
+  } else {
+    var field = tableStore.dataSet.getField(column.name);
+
+    if (field) {
+      var dynamicProps = field.get('dynamicProps');
+      var computedProps = field.get('computedProps');
+
+      if (dynamicProps && dynamicProps.required || computedProps && computedProps.required || field.get('required')) {
+        column.hideable = false;
+      }
+    }
+  }
+
+  if (customizedColumn) {
+    if (column.hideable === false || !tableStore.columnHideable) {
+      delete customizedColumn.hidden;
+    }
+
+    if (column.resizable === false || !tableStore.columnResizable) {
+      delete customizedColumn.width;
+    }
+
+    if (column.titleEditable === false || !tableStore.columnTitleEditable) {
+      delete customizedColumn.title;
+    }
+
+    if (!tableStore.columnDraggable) {
+      delete customizedColumn.sort;
+    }
+
+    _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_9___default()(column, customizedColumn);
+  }
+}
+
+function findAndMergeCustomizedColumn(column, tableStore, customizedColumns, isChildrenHideDisabled) {
+  var customizedColumn = getCustomizedColumn(column, customizedColumns);
+  mergeCustomizedColumn(column, tableStore, customizedColumn, isChildrenHideDisabled);
+}
+
+function mergeDefaultProps(tableStore, originalColumns, tableAggregation, customizedColumns) {
+  var parent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+  var defaultKey = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : [0];
+  var columnSort = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {
+    left: 0,
+    center: 0,
+    right: 0
+  };
+  var columns = [];
+  var leftColumns = [];
+  var rightColumns = [];
+  var hasAggregationColumn = false;
+  var isHideDisabled = false;
+  originalColumns.forEach(function (column) {
+    if (lodash_isPlainObject__WEBPACK_IMPORTED_MODULE_20___default()(column)) {
+      var newColumn = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, _Column__WEBPACK_IMPORTED_MODULE_35__[/* ColumnDefaultProps */ "a"]), column);
+
+      if (lodash_isNil__WEBPACK_IMPORTED_MODULE_18___default()(Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(newColumn))) {
+        newColumn.key = "anonymous-".concat(defaultKey[0]++);
+      }
+
+      var children = newColumn.children,
+          aggregation = newColumn.aggregation;
+
+      if (!hasAggregationColumn && aggregation) {
+        hasAggregationColumn = true;
+      }
+
+      if (tableAggregation || !aggregation) {
+        var customizedColumn = getCustomizedColumn(newColumn, customizedColumns);
+        mergeColumnLock(newColumn, parent, customizedColumn);
+
+        if (children) {
+          var _mergeDefaultProps = mergeDefaultProps(tableStore, children, tableAggregation, customizedColumns, newColumn, defaultKey),
+              _mergeDefaultProps2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_mergeDefaultProps, 4),
+              childrenColumns = _mergeDefaultProps2[1],
+              _mergeDefaultProps2$ = _mergeDefaultProps2[3],
+              childrenHasAggregationColumn = _mergeDefaultProps2$.hasAggregationColumn,
+              childrenIsHideDisabled = _mergeDefaultProps2$.isHideDisabled;
+
+          newColumn.children = childrenColumns;
+
+          if (!hasAggregationColumn && childrenHasAggregationColumn) {
+            hasAggregationColumn = true;
+          }
+
+          if (!isHideDisabled && childrenIsHideDisabled) {
+            isHideDisabled = true;
+          }
+
+          mergeCustomizedColumn(newColumn, tableStore, customizedColumn, childrenIsHideDisabled);
+        } else {
+          mergeCustomizedColumn(newColumn, tableStore, customizedColumn);
+        }
+
+        if (!isHideDisabled && newColumn.hideable === false) {
+          isHideDisabled = true;
+        }
+
+        if (parent || !newColumn.lock) {
+          if (newColumn.sort === undefined) {
+            newColumn.sort = columnSort.center;
+          }
+
+          columnSort.center++;
+          columns.push(newColumn);
+        } else if (newColumn.lock === true || newColumn.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left) {
+          if (newColumn.sort === undefined) {
+            newColumn.sort = columnSort.left;
+          }
+
+          columnSort.left++;
+          leftColumns.push(newColumn);
+        } else {
+          if (newColumn.sort === undefined) {
+            newColumn.sort = columnSort.right;
+          }
+
+          columnSort.right++;
+          rightColumns.push(newColumn);
+        }
+      } else if (children) {
+        var _mergeDefaultProps3 = mergeDefaultProps(tableStore, children, tableAggregation, customizedColumns, parent, defaultKey, parent ? undefined : columnSort),
+            _mergeDefaultProps4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_mergeDefaultProps3, 4),
+            leftNodes = _mergeDefaultProps4[0],
+            nodes = _mergeDefaultProps4[1],
+            rightNodes = _mergeDefaultProps4[2],
+            _mergeDefaultProps4$ = _mergeDefaultProps4[3],
+            _childrenHasAggregationColumn = _mergeDefaultProps4$.hasAggregationColumn,
+            _childrenIsHideDisabled = _mergeDefaultProps4$.isHideDisabled;
+
+        if (!hasAggregationColumn && _childrenHasAggregationColumn) {
+          hasAggregationColumn = true;
+        }
+
+        if (!isHideDisabled && _childrenIsHideDisabled) {
+          newColumn.hideable = false;
+          isHideDisabled = true;
+        }
+
+        if (parent) {
+          parent.children = [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftNodes), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(nodes), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightNodes));
+        } else {
+          leftColumns.push.apply(leftColumns, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftNodes));
+          columns.push.apply(columns, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(nodes));
+          rightColumns.push.apply(rightColumns, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightNodes));
+        }
+      }
+    }
+  }, []);
+
+  if (parent) {
+    return [[], lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(columns, function (_ref4) {
+      var sort = _ref4.sort;
+      return sort;
+    }), [], {
+      hasAggregationColumn: hasAggregationColumn,
+      isHideDisabled: isHideDisabled
+    }];
+  }
+
+  return [lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(leftColumns, function (_ref5) {
+    var sort = _ref5.sort;
+    return sort;
+  }), lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(columns, function (_ref6) {
+    var sort = _ref6.sort;
+    return sort;
+  }), lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(rightColumns, function (_ref7) {
+    var sort = _ref7.sort;
+    return sort;
+  }), {
+    hasAggregationColumn: hasAggregationColumn,
+    isHideDisabled: isHideDisabled
+  }];
+}
+
+function normalizeColumns(tableStore, elements, tableAggregation, customizedColumns) {
+  var parent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+  var defaultKey = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : [0];
+  var columnSort = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {
+    left: 0,
+    center: 0,
+    right: 0
+  };
+  var columns = [];
+  var leftColumns = [];
+  var rightColumns = [];
+  var hasAggregationColumn = false;
+  var isHideDisabled = false;
+
+  var normalizeColumn = function normalizeColumn(element) {
+    if ( /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_13__["isValidElement"])(element)) {
+      var props = element.props,
+          key = element.key,
+          type = element.type;
+
+      if (Object(_util_isFragment__WEBPACK_IMPORTED_MODULE_37__[/* default */ "a"])(element)) {
+        var children = props.children;
+
+        if (children) {
+          react__WEBPACK_IMPORTED_MODULE_13__["Children"].forEach(children, normalizeColumn);
+        }
+      } else if (type.__PRO_TABLE_COLUMN) {
+        var column = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, props);
+
+        if (key) {
+          column.key = key;
+        } else if (lodash_isNil__WEBPACK_IMPORTED_MODULE_18___default()(Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(column))) {
+          column.key = "anonymous-".concat(defaultKey[0]++);
+        }
+
+        var _children = column.children,
+            aggregation = column.aggregation;
+
+        if (!hasAggregationColumn && aggregation) {
+          hasAggregationColumn = true;
+        }
+
+        if (tableAggregation || !aggregation) {
+          var customizedColumn = getCustomizedColumn(column, customizedColumns);
+          mergeColumnLock(column, parent, customizedColumn);
+
+          var _normalizeColumns = normalizeColumns(tableStore, _children, tableAggregation, customizedColumns, column, defaultKey),
+              _normalizeColumns2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_normalizeColumns, 4),
+              childrenColumns = _normalizeColumns2[1],
+              _normalizeColumns2$ = _normalizeColumns2[3],
+              childrenHasAggregationColumn = _normalizeColumns2$.hasAggregationColumn,
+              childrenIsHideDisabled = _normalizeColumns2$.isHideDisabled;
+
+          column.children = childrenColumns;
+
+          if (!hasAggregationColumn && childrenHasAggregationColumn) {
+            hasAggregationColumn = childrenHasAggregationColumn;
+          }
+
+          if (!isHideDisabled && childrenIsHideDisabled) {
+            isHideDisabled = true;
+          }
+
+          mergeCustomizedColumn(column, tableStore, customizedColumn, childrenIsHideDisabled);
+
+          if (!isHideDisabled && column.hideable === false) {
+            isHideDisabled = true;
+          }
+
+          if (parent || !column.lock) {
+            if (column.sort === undefined) {
+              column.sort = columnSort.center;
+            }
+
+            columnSort.center++;
+            columns.push(column);
+          } else if (column.lock === true || column.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left) {
+            if (column.sort === undefined) {
+              column.sort = columnSort.left;
+            }
+
+            columnSort.left++;
+            leftColumns.push(column);
+          } else {
+            if (column.sort === undefined) {
+              column.sort = columnSort.right;
+            }
+
+            columnSort.right++;
+            rightColumns.push(column);
+          }
+        } else {
+          var _normalizeColumns3 = normalizeColumns(tableStore, _children, tableAggregation, customizedColumns, parent, defaultKey, parent ? undefined : columnSort),
+              _normalizeColumns4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_normalizeColumns3, 4),
+              leftNodes = _normalizeColumns4[0],
+              nodes = _normalizeColumns4[1],
+              rightNodes = _normalizeColumns4[2],
+              _normalizeColumns4$ = _normalizeColumns4[3],
+              _childrenHasAggregationColumn2 = _normalizeColumns4$.hasAggregationColumn,
+              _childrenIsHideDisabled2 = _normalizeColumns4$.isHideDisabled;
+
+          if (!hasAggregationColumn && _childrenHasAggregationColumn2) {
+            hasAggregationColumn = _childrenHasAggregationColumn2;
+          }
+
+          if (!isHideDisabled && _childrenIsHideDisabled2) {
+            column.hideable = false;
+            isHideDisabled = true;
+          }
+
+          if (parent) {
+            parent.children = [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftNodes), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(nodes), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightNodes));
+          } else {
+            leftColumns.push.apply(leftColumns, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftNodes));
+            columns.push.apply(columns, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(nodes));
+            rightColumns.push.apply(rightColumns, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightNodes));
+          }
+        }
+      }
+    }
+  };
+
+  react__WEBPACK_IMPORTED_MODULE_13__["Children"].forEach(elements, normalizeColumn);
+
+  if (parent) {
+    return [[], lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(columns, function (_ref8) {
+      var sort = _ref8.sort;
+      return sort;
+    }), [], {
+      hasAggregationColumn: hasAggregationColumn,
+      isHideDisabled: isHideDisabled
+    }];
+  }
+
+  return [lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(leftColumns, function (_ref9) {
+    var sort = _ref9.sort;
+    return sort;
+  }), lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(columns, function (_ref10) {
+    var sort = _ref10.sort;
+    return sort;
+  }), lodash_sortBy__WEBPACK_IMPORTED_MODULE_16___default()(rightColumns, function (_ref11) {
+    var sort = _ref11.sort;
+    return sort;
+  }), {
+    hasAggregationColumn: hasAggregationColumn,
+    isHideDisabled: isHideDisabled
+  }];
+}
+
+function getColumnGroupedColumns(tableStore, groups, customizedColumns) {
+  var leftGroupedColumns = [];
+  var groupedColumns = [];
+  var rightGroupedColumns = [];
+  var hasAggregation = false;
+  groups.forEach(function (group) {
+    var name = group.name,
+        type = group.type,
+        columnProps = group.columnProps;
+
+    if (type === _enum__WEBPACK_IMPORTED_MODULE_41__[/* GroupType */ "d"].column) {
+      var column = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, _Column__WEBPACK_IMPORTED_MODULE_35__[/* ColumnDefaultProps */ "a"]), {}, {
+        lock: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left
+      }, columnProps), {}, {
+        draggable: false,
+        hideable: false,
+        key: "__group-".concat(name),
+        name: name,
+        __tableGroup: group
+      });
+
+      column.children = columnProps && columnProps.children ? Object(_util_treeUtils__WEBPACK_IMPORTED_MODULE_55__[/* treeMap */ "a"])(columnProps.children, function (col, index, parentNode) {
+        var newCol = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, col), {}, {
+          __tableGroup: group,
+          lock: column.lock
+        });
+
+        if (!Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(col)) {
+          newCol.key = parentNode ? "".concat(parentNode.key, "-").concat(index) : "__group-".concat(name, "-").concat(index);
+        }
+
+        findAndMergeCustomizedColumn(newCol, tableStore, customizedColumns);
+        return newCol;
+      }, function (_ref12, _ref13) {
+        var _ref12$sort = _ref12.sort,
+            sort = _ref12$sort === void 0 ? Infinity : _ref12$sort;
+        var _ref13$sort = _ref13.sort,
+            sort2 = _ref13$sort === void 0 ? Infinity : _ref13$sort;
+        return sort - sort2;
+      }) : undefined;
+      findAndMergeCustomizedColumn(column, tableStore, customizedColumns);
+
+      if (!column.lock) {
+        groupedColumns.push(column);
+      } else if (column.lock === true || column.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left) {
+        leftGroupedColumns.push(column);
+      } else {
+        rightGroupedColumns.push(column);
+      }
+
+      if (columnProps && !hasAggregation && columnProps.aggregation) {
+        hasAggregation = true;
+      }
+    }
+  });
+  return [leftGroupedColumns, groupedColumns, rightGroupedColumns, hasAggregation];
+}
+
+function getHeaderGroupedColumns(tableStore, groups, tableGroups, columns, dataSet, groupedColumns, customizedColumns, parentKey) {
+  var generatedColumns = new Set();
+  var headerUsed = false;
+  groups.forEach(function (group) {
+    var name = group.name,
+        subGroups = group.subGroups,
+        value = group.value;
+    var key = parentKey ? "".concat(parentKey, "-").concat(value) : value;
+    var subColumns = subGroups.length ? getHeaderGroupedColumns(tableStore, subGroups, tableGroups, columns, dataSet, groupedColumns, customizedColumns, key) : columns;
+    var tableGroup = tableGroups.find(function ($tableGroup) {
+      return name === $tableGroup.name;
+    });
+
+    if (tableGroup) {
+      var columnProps = tableGroup.columnProps,
+          groupName = tableGroup.name,
+          hidden = tableGroup.hidden;
+
+      if (hidden) {
+        subColumns.forEach(function (col) {
+          var __originalKey = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(col);
+
+          var colKey = "".concat(key, "-").concat(__originalKey);
+
+          var newCol = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, col), {}, {
+            key: colKey,
+            __tableGroup: tableGroup,
+            __group: group,
+            __groups: groups,
+            __originalKey: __originalKey
+          });
+
+          findAndMergeCustomizedColumn(newCol, tableStore, customizedColumns);
+          newCol.lock = false;
+          generatedColumns.add(newCol);
+        });
+      } else {
+        var length = groupedColumns.length;
+
+        if (length && !headerUsed) {
+          headerUsed = true;
+          var header = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getHeader */ "n"])(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, columnProps), {}, {
+            name: groupName,
+            dataSet: dataSet,
+            group: group,
+            groups: groups
+          }));
+
+          if (header) {
+            var oldColumn = groupedColumns[length - 1];
+            var newKey = "".concat(key, "-").concat(Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(oldColumn));
+
+            var newColumn = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, columnProps), {}, {
+              lock: oldColumn.lock,
+              titleEditable: false,
+              draggable: false,
+              hideable: false,
+              key: newKey,
+              header: header,
+              children: [oldColumn],
+              __tableGroup: tableGroup
+            });
+
+            var customizedColumn = getCustomizedColumnByKey(newKey, customizedColumns);
+            mergeCustomizedColumn(newColumn, tableStore, customizedColumn);
+            groupedColumns[length - 1] = newColumn;
+          }
+        }
+
+        var renderer = columnProps && columnProps.renderer || _Column__WEBPACK_IMPORTED_MODULE_35__[/* defaultAggregationRenderer */ "d"];
+
+        var column = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, columnProps), {}, {
+          titleEditable: false,
+          key: key,
+          headerStyle: columnProps && columnProps.style,
+          header: function header() {
+            return renderer({
+              dataSet: dataSet,
+              record: group.totalRecords[0],
+              name: groupName,
+              text: value,
+              value: value,
+              headerGroup: group
+            });
+          },
+          children: Object(_util_treeUtils__WEBPACK_IMPORTED_MODULE_55__[/* treeMap */ "a"])(subColumns, function (col) {
+            var __originalKey = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(col);
+
+            var colKey = "".concat(key, "-").concat(__originalKey);
+
+            var newCol = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, col), {}, {
+              key: colKey,
+              __originalKey: __originalKey
+            });
+
+            if (customizedColumns) {
+              _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_9___default()(newCol, customizedColumns[__originalKey], customizedColumns[colKey]);
+            }
+
+            newCol.lock = false;
+            return newCol;
+          }, function (_ref14, _ref15) {
+            var _ref14$sort = _ref14.sort,
+                sort = _ref14$sort === void 0 ? Infinity : _ref14$sort;
+            var _ref15$sort = _ref15.sort,
+                sort2 = _ref15$sort === void 0 ? Infinity : _ref15$sort;
+            return sort - sort2;
+          }),
+          __tableGroup: tableGroup,
+          __group: group,
+          __groups: groups
+        });
+
+        findAndMergeCustomizedColumn(column, tableStore, customizedColumns);
+        generatedColumns.add(column);
+      }
+    } else if (subColumns.length) {
+      subColumns.forEach(function (column) {
+        return generatedColumns.add(column);
+      });
+    }
+  });
+  return _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(generatedColumns);
+}
+
+function normalizeGroupColumns(tableStore, columns, children, aggregation, customizedColumns) {
+  var headerTableGroups = tableStore.headerTableGroups,
+      groups = tableStore.groups,
+      dataSet = tableStore.dataSet;
+  var hasHeaderGroup = headerTableGroups.length > 0;
+  var generatedColumns = columns ? mergeDefaultProps(tableStore, columns, aggregation, customizedColumns) : normalizeColumns(tableStore, children, aggregation, customizedColumns);
+
+  var _generatedColumns = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(generatedColumns, 4),
+      leftOriginalColumns = _generatedColumns[0],
+      originalColumns = _generatedColumns[1],
+      rightOriginalColumns = _generatedColumns[2],
+      hasAggregationColumn = _generatedColumns[3].hasAggregationColumn;
+
+  var _ref16 = groups.length ? getColumnGroupedColumns(tableStore, groups, customizedColumns) : [[], [], [], false],
+      _ref17 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_ref16, 4),
+      leftColumnGroupedColumns = _ref17[0],
+      columnGroupedColumns = _ref17[1],
+      rightColumnGroupedColumns = _ref17[2],
+      hasAggregationColumnGroup = _ref17[3];
+
+  if (hasHeaderGroup) {
+    var groupedColumns = [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftColumnGroupedColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(columnGroupedColumns));
+    return [groupedColumns, getHeaderGroupedColumns(tableStore, tableStore.groupedDataWithHeader, headerTableGroups, [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftOriginalColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(originalColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightOriginalColumns)), dataSet, groupedColumns, customizedColumns), rightColumnGroupedColumns, hasAggregationColumnGroup || hasAggregationColumn];
+  }
+
+  return [[].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftColumnGroupedColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftOriginalColumns)), [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(columnGroupedColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(originalColumns)), [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightOriginalColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightColumnGroupedColumns)), hasAggregationColumnGroup || hasAggregationColumn];
+}
+
+function getHeaderTexts(_x, _x2, _x3) {
+  return _getHeaderTexts.apply(this, arguments);
+}
+
+function _getHeaderTexts() {
+  _getHeaderTexts = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.mark(function _callee5(dataSet, columns, aggregation) {
+    var headers,
+        column,
+        _args5 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            headers = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : [];
+            column = columns.shift();
+
+            if (!column) {
+              _context5.next = 10;
+              break;
+            }
+
+            _context5.t0 = headers;
+            _context5.t1 = column.name;
+            _context5.next = 7;
+            return Object(_util_getReactNodeText__WEBPACK_IMPORTED_MODULE_45__[/* default */ "a"])(Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getHeader */ "n"])(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, column), {}, {
+              dataSet: dataSet,
+              aggregation: aggregation
+            })));
+
+          case 7:
+            _context5.t2 = _context5.sent;
+            _context5.t3 = {
+              name: _context5.t1,
+              label: _context5.t2
+            };
+
+            _context5.t0.push.call(_context5.t0, _context5.t3);
+
+          case 10:
+            if (!columns.length) {
+              _context5.next = 13;
+              break;
+            }
+
+            _context5.next = 13;
+            return getHeaderTexts(dataSet, columns, aggregation, headers);
+
+          case 13:
+            return _context5.abrupt("return", headers);
+
+          case 14:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _getHeaderTexts.apply(this, arguments);
+}
+
+function autoHeightToStyle(autoHeight) {
+  var parentPaddingTop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var type = autoHeight.type,
+      diff = autoHeight.diff;
+  var height = "calc(100% - ".concat(diff + parentPaddingTop, "px)");
+
+  if (type === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableAutoHeightType */ "l"].minHeight) {
+    return {
+      height: height
+    };
+  }
+
+  return {
+    maxHeight: height
+  };
+}
+
+var TableStore = /*#__PURE__*/function () {
+  function TableStore(node) {
+    var _this = this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, TableStore);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "editors", new Map());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "mouseBatchChooseStartId", 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "mouseBatchChooseEndId", 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "inBatchExpansion", false);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "performanceOn", false);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "timing", {
+      renderStart: 0,
+      renderEnd: 0
+    });
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "renderedCellText", new WeakMap());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "renderedCellNode", new WeakMap());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "lastMeasuredIndex", 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "handleSelectAllChange", Object(mobx__WEBPACK_IMPORTED_MODULE_14__["action"])(function () {
+      if (_this.allChecked) {
+        _this.unCheckAllCurrent();
+
+        _this.unCheckAllCached();
+      } else {
+        _this.checkAllCurrent();
+
+        _this.checkAllCached();
+      }
+    }));
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "saveCustomizedDebounce", lodash_debounce__WEBPACK_IMPORTED_MODULE_17___default()(this.saveCustomized, 1000));
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(this, "stopScroll", lodash_debounce__WEBPACK_IMPORTED_MODULE_17___default()(Object(mobx__WEBPACK_IMPORTED_MODULE_14__["action"])(function () {
+      _this.scrolling = false;
+    }), 300));
+
+    Object(mobx__WEBPACK_IMPORTED_MODULE_14__["runInAction"])(function () {
+      _this.scrollPosition = _enum__WEBPACK_IMPORTED_MODULE_41__[/* ScrollPosition */ "i"].left;
+      _this.mouseBatchChooseIdList = [];
+      _this.mouseBatchChooseState = false;
+      _this.showCachedSelection = false;
+      _this.lockColumnsHeadRowsHeight = {};
+      _this.lockColumnsBodyRowsHeight = {};
+      _this.lockColumnsFootRowsHeight = {};
+      _this.node = node;
+      _this.expandedRows = [];
+      _this.screenHeight = typeof window === 'undefined' ? 0 : document.documentElement.clientHeight;
+      _this.headerHeight = 0;
+      _this.footerHeight = 0;
+      _this.lastScrollTop = 0;
+      _this.lastScrollLeft = 0;
+      _this.customizedActiveKey = ['columns'];
+      _this.leftOriginalColumns = [];
+      _this.originalColumns = [];
+      _this.rightOriginalColumns = [];
+      _this.tempCustomized = {
+        columns: {}
+      };
+      _this.customized = {
+        columns: {}
+      };
+      _this.isCopyPristine = false;
+
+      _this.setProps(node.props);
+
+      if (_this.customizable) {
+        _this.loadCustomized();
+      } else {
+        _this.initColumns();
+      }
+
+      _this.selectedDragRows = [];
+    });
+    var _node$props = node.props,
+        mode = _node$props.mode,
+        treeAsync = _node$props.treeAsync,
+        dataSet = _node$props.dataSet;
+
+    if (mode === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableMode */ "s"].tree && treeAsync && dataSet) {
+      dataSet.setState(choerodon_ui_dataset_data_set_DataSet__WEBPACK_IMPORTED_MODULE_34__["QUERY_CANCELABLE"], false);
+    }
+
+    if (this.showRemovedRow) {
+      dataSet.setState(choerodon_ui_dataset_data_set_DataSet__WEBPACK_IMPORTED_MODULE_34__["TABLE_SHOW_REMOVED_ROW"], true);
+    }
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default()(TableStore, [{
+    key: "styleHeight",
+    get: function get() {
+      var autoHeight = this.autoHeight,
+          style = this.props.style,
+          parentPaddingTop = this.parentPaddingTop;
+      return autoHeight ? autoHeightToStyle(autoHeight, parentPaddingTop).height : style && style.height;
+    }
+  }, {
+    key: "styleMaxHeight",
+    get: function get() {
+      var autoHeight = this.autoHeight,
+          style = this.props.style,
+          parentPaddingTop = this.parentPaddingTop;
+      return autoHeight ? autoHeightToStyle(autoHeight, parentPaddingTop).maxHeight : style && style.maxHeight;
+    }
+  }, {
+    key: "styleMinHeight",
+    get: function get() {
+      var style = this.props.style;
+      return style && Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* toPx */ "f"])(style.minHeight, this.getRelationSize);
+    }
+  }, {
+    key: "computedHeight",
+    get: function get() {
+      if (this.heightChangeable) {
+        var _this$customized = this.customized,
+            heightType = _this$customized.heightType,
+            height = _this$customized.height,
+            heightDiff = _this$customized.heightDiff,
+            tempCustomized = this.tempCustomized;
+
+        var tempHeightType = Object(mobx__WEBPACK_IMPORTED_MODULE_14__["get"])(tempCustomized, 'heightType');
+
+        if (tempHeightType) {
+          if (tempHeightType === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableHeightType */ "r"].fixed) {
+            return Object(mobx__WEBPACK_IMPORTED_MODULE_14__["get"])(tempCustomized, 'height');
+          }
+
+          if (tempHeightType === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableHeightType */ "r"].flex) {
+            return this.screenHeight - (Object(mobx__WEBPACK_IMPORTED_MODULE_14__["get"])(tempCustomized, 'heightDiff') || 0);
+          }
+
+          return undefined;
+        }
+
+        if (heightType) {
+          if (heightType === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableHeightType */ "r"].fixed) {
+            return height;
+          }
+
+          if (heightType === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableHeightType */ "r"].flex) {
+            return this.screenHeight - (heightDiff || 0);
+          }
+
+          return undefined;
+        }
+      }
+
+      return Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* toPx */ "f"])(this.styleHeight, this.getRelationSize);
+    }
+  }, {
+    key: "otherHeight",
+    get: function get() {
+      var footerHeight = this.footerHeight,
+          boxSizing = this.props.boxSizing;
+      var footerTotalHeight = footerHeight && this.overflowX ? Object(_es_util_measureScrollbar__WEBPACK_IMPORTED_MODULE_26__[/* default */ "a"])() + footerHeight : footerHeight;
+      var otherHeight = this.headerHeight + footerTotalHeight;
+
+      if (boxSizing === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableBoxSizing */ "m"].wrapper) {
+        var _ref18 = this.siblingHeihgt || {},
+            _ref18$before = _ref18.before,
+            before = _ref18$before === void 0 ? 0 : _ref18$before,
+            _ref18$after = _ref18.after,
+            after = _ref18$after === void 0 ? 0 : _ref18$after;
+
+        return otherHeight + before + after;
+      }
+
+      return otherHeight;
+    }
+  }, {
+    key: "height",
+    get: function get() {
+      if (!this.isBodyExpanded) {
+        return undefined;
+      }
+
+      var computedHeight = this.computedHeight;
+      var maxHeight = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* toPx */ "f"])(this.styleMaxHeight, this.getRelationSize);
+      var minHeight = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* toPx */ "f"])(this.styleMinHeight, this.getRelationSize);
+      var isComputedHeight = lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(computedHeight);
+
+      if (isComputedHeight || lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(minHeight) || lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(maxHeight)) {
+        var rowHeight = this.rowHeight,
+            otherHeight = this.otherHeight;
+        var rowMinHeight = (lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(rowHeight) ? rowHeight : 30) + otherHeight;
+        var minTotalHeight = minHeight ? Math.max(rowMinHeight, minHeight) : rowMinHeight;
+        var height = lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24___default()(computedHeight, this.bodyHeight + otherHeight);
+        var totalHeight = Math.max(minTotalHeight, maxHeight ? Math.min(maxHeight, height) : height);
+        return isComputedHeight || totalHeight !== height ? totalHeight - otherHeight : undefined;
+      }
+    }
+  }, {
+    key: "totalHeight",
+    get: function get() {
+      var height = this.height,
+          bodyHeight = this.bodyHeight,
+          otherHeight = this.otherHeight;
+      return lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24___default()(height, bodyHeight) + otherHeight;
+    }
+  }, {
+    key: "bodyHeight",
+    get: function get() {
+      if (this.propVirtual) {
+        var virtualHeight = this.virtualHeight;
+
+        if (virtualHeight > 0) {
+          return virtualHeight;
+        }
+      }
+
+      return this.calcBodyHeight || 0;
+    }
+  }, {
+    key: "stickyLeft",
+    get: function get() {
+      return [_enum__WEBPACK_IMPORTED_MODULE_41__[/* ScrollPosition */ "i"].right, _enum__WEBPACK_IMPORTED_MODULE_41__[/* ScrollPosition */ "i"].middle].includes(this.scrollPosition);
+    }
+  }, {
+    key: "stickyRight",
+    get: function get() {
+      return [_enum__WEBPACK_IMPORTED_MODULE_41__[/* ScrollPosition */ "i"].left, _enum__WEBPACK_IMPORTED_MODULE_41__[/* ScrollPosition */ "i"].middle].includes(this.scrollPosition);
+    }
+  }, {
+    key: "performanceEnabled",
+    get: function get() {
+      var performanceEnabled = this.getConfig('performanceEnabled');
+      return performanceEnabled && performanceEnabled.Table;
+    }
+  }, {
+    key: "dataSet",
+    get: function get() {
+      return this.props.dataSet;
+    }
+  }, {
+    key: "duplicateKeyConfig",
+    get: function get() {
+      var config = this.props.duplicateKey || this.getConfig('duplicateKey');
+      var resolvedConfig = typeof config === 'function' ? config('Table') : config;
+      return resolvedConfig || {};
+    }
+  }, {
+    key: "duplicatePrimaryKeyInfo",
+    get: function get() {
+      var duplicateKeyConfig = this.duplicateKeyConfig;
+
+      if (!duplicateKeyConfig.disable && !duplicateKeyConfig.showWarning) {
+        return {
+          duplicateKeys: [],
+          duplicateRecords: new Set()
+        };
+      }
+
+      var dataSet = this.dataSet;
+      var primaryKey = dataSet.props.primaryKey;
+      var recordsByKey = new Map();
+
+      if (primaryKey) {
+        dataSet.records.forEach(function (record) {
+          var value = record.get(primaryKey);
+
+          if (typeof value === 'string' || typeof value === 'number') {
+            var key = String(value);
+            var records = recordsByKey.get(key);
+
+            if (records) {
+              records.push(record);
+            } else {
+              recordsByKey.set(key, [record]);
+            }
+          }
+        });
+      }
+
+      var duplicateKeys = [];
+      var duplicateRecords = new Set();
+      recordsByKey.forEach(function (records, key) {
+        if (records.length > 1) {
+          duplicateKeys.push(key);
+          records.forEach(function (record) {
+            return duplicateRecords.add(record);
+          });
+        }
+      });
+      return {
+        duplicateKeys: duplicateKeys,
+        duplicateRecords: duplicateRecords
+      };
+    }
+  }, {
+    key: "prefixCls",
+    get: function get() {
+      return this.node.prefixCls;
+    }
+  }, {
+    key: "customizable",
+    get: function get() {
+      var customizedCode = this.props.customizedCode;
+      var queryBarProps = this.props.queryBarProps;
+      var isSimpleMode = queryBarProps && queryBarProps.simpleMode;
+
+      if (customizedCode || this.queryBar === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableQueryBarType */ "u"].comboBar && !isSimpleMode) {
+        if ('customizable' in this.props) {
+          return this.props.customizable;
+        }
+
+        return this.getConfig('tableCustomizable') || this.node.context.getCustomizable('Table');
+      }
+
+      return false;
+    }
+    /**
+     * board 组件个性化按钮 in buttons
+     */
+
+  }, {
+    key: "customizedBtn",
+    get: function get() {
+      var _this$props = this.props,
+          customizedCode = _this$props.customizedCode,
+          boardCustomized = _this$props.boardCustomized;
+
+      if (customizedCode && boardCustomized) {
+        return boardCustomized.customizedBtn;
+      }
+
+      return false;
+    }
+  }, {
+    key: "aggregation",
+    get: function get() {
+      var aggregation = this.customized.aggregation;
+
+      if (aggregation !== undefined) {
+        return aggregation;
+      }
+
+      var propAggregation = this.props.aggregation;
+      return propAggregation;
+    }
+  }, {
+    key: "aggregationExpandType",
+    get: function get() {
+      return this.customized.aggregationExpandType || 'cell';
+    }
+  }, {
+    key: "autoHeight",
+    get: function get() {
+      var autoHeight = this.props.autoHeight;
+
+      if (autoHeight) {
+        var defaultAutoHeight = {
+          type: _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableAutoHeightType */ "l"].minHeight,
+          diff: this.getConfig('tableAutoHeightDiff') || 80
+        };
+
+        if (lodash_isObject__WEBPACK_IMPORTED_MODULE_19___default()(autoHeight)) {
+          return _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, defaultAutoHeight), autoHeight);
+        }
+
+        return defaultAutoHeight;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "heightType",
+    get: function get() {
+      if (this.heightChangeable) {
+        var tempHeightType = Object(mobx__WEBPACK_IMPORTED_MODULE_14__["get"])(this.tempCustomized, 'heightType');
+
+        if (tempHeightType !== undefined) {
+          return tempHeightType;
+        }
+
+        var heightType = this.customized.heightType;
+
+        if (heightType !== undefined) {
+          return heightType;
+        }
+      }
+
+      return this.originalHeightType;
+    }
+  }, {
+    key: "originalHeightType",
+    get: function get() {
+      var styleHeight = this.styleHeight;
+
+      if (styleHeight) {
+        if (lodash_isString__WEBPACK_IMPORTED_MODULE_21___default()(styleHeight) && Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* isCalcSize */ "a"])(styleHeight)) {
+          return _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableHeightType */ "r"].flex;
+        }
+
+        if (lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* toPx */ "f"])(styleHeight))) {
+          return _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableHeightType */ "r"].fixed;
+        }
+      }
+
+      return _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableHeightType */ "r"].auto;
+    }
+  }, {
+    key: "virtualCell",
+    get: function get() {
+      if ('virtualCell' in this.props) {
+        return this.props.virtualCell;
+      }
+
+      return this.getConfig('tableVirtualCell');
+    }
+  }, {
+    key: "isFixedRowHeight",
+    get: function get() {
+      if (!this.aggregation || !this.hasAggregationColumn) {
+        return lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(this.rowHeight);
+      }
+
+      return false;
+    }
+  }, {
+    key: "propVirtual",
+    get: function get() {
+      if (this.isTree && this.rowDraggable) {
+        return true;
+      }
+
+      if ('virtual' in this.props) {
+        return this.props.virtual;
+      }
+
+      var configTableVirtual = this.getConfig('tableVirtual');
+
+      if (typeof configTableVirtual === 'function') {
+        return configTableVirtual(this.currentData.length, this.columnGroups.leafs.length);
+      }
+
+      return configTableVirtual;
+    }
+  }, {
+    key: "virtual",
+    get: function get() {
+      if (this.height !== undefined) {
+        return this.propVirtual;
+      }
+
+      return false;
+    }
+  }, {
+    key: "columnBuffer",
+    get: function get() {
+      var columnBuffer = this.props.columnBuffer;
+
+      if ('columnBuffer' in this.props && typeof columnBuffer === 'number' && columnBuffer >= 0) {
+        return columnBuffer;
+      }
+
+      var bufferConfig = this.getConfig('tableVirtualBuffer');
+
+      if (bufferConfig && 'columnBuffer' in bufferConfig && typeof bufferConfig.columnBuffer === 'number' && bufferConfig.columnBuffer >= 0) {
+        return bufferConfig.columnBuffer;
+      }
+
+      return 3;
+    }
+  }, {
+    key: "columnThreshold",
+    get: function get() {
+      var columnThreshold = this.props.columnThreshold;
+
+      if ('columnThreshold' in this.props && typeof columnThreshold === 'number' && columnThreshold >= 0) {
+        return columnThreshold;
+      }
+
+      var bufferConfig = this.getConfig('tableVirtualBuffer');
+
+      if (bufferConfig && 'columnThreshold' in bufferConfig && typeof bufferConfig.columnThreshold === 'number' && bufferConfig.columnThreshold >= 0) {
+        return bufferConfig.columnThreshold;
+      }
+
+      return 3;
+    }
+  }, {
+    key: "updateRenderZonePosition",
+    value: function updateRenderZonePosition() {
+      // 获取表格坐标显示范围
+      if (!this.width) {
+        return [0, 0];
+      }
+
+      var _this$columnGroups = this.columnGroups,
+          leafs = _this$columnGroups.leafs,
+          leftLeafs = _this$columnGroups.leftLeafs,
+          rightLeafs = _this$columnGroups.rightLeafs,
+          leftLeafColumnsWidth = _this$columnGroups.leftLeafColumnsWidth,
+          rightLeafColumnsWidth = _this$columnGroups.rightLeafColumnsWidth,
+          columnThreshold = this.columnThreshold,
+          nextRenderColIndex = this.nextRenderColIndex;
+      var scrollLeft = this.lastScrollLeft || 0;
+      var visibleColumnWidth = 0;
+      var firstIndex = -1;
+      var lastIndex = -1;
+      var centerLeafsLength = leafs.length - rightLeafs.length;
+
+      for (var i = leftLeafs.length; i < centerLeafsLength; i++) {
+        var width = leafs[i].width;
+        visibleColumnWidth += width;
+
+        if (firstIndex === -1 && visibleColumnWidth > scrollLeft) {
+          firstIndex = i;
+        }
+
+        if (lastIndex === -1 && i === centerLeafsLength - 1 || this.width && visibleColumnWidth >= scrollLeft + this.width - leftLeafColumnsWidth - rightLeafColumnsWidth - (this.overflowY ? Object(_es_util_measureScrollbar__WEBPACK_IMPORTED_MODULE_26__[/* default */ "a"])() : 0)) {
+          lastIndex = i;
+        }
+
+        if (lastIndex !== -1 && firstIndex !== -1) {
+          break;
+        }
+      }
+
+      if (!nextRenderColIndex || nextRenderColIndex && nextRenderColIndex.includes(lastIndex) || firstIndex < nextRenderColIndex[0] || lastIndex > nextRenderColIndex[1]) {
+        this.nextRenderColIndex = [lastIndex - columnThreshold, Math.min(lastIndex + columnThreshold, leafs.length)];
+        this.prevRenderColIndex = [firstIndex, lastIndex];
+        return [firstIndex, lastIndex];
+      }
+
+      return this.prevRenderColIndex || [0, 0];
+    }
+  }, {
+    key: "virtualColumnRange",
+    get: function get() {
+      var _this$columnGroups2 = this.columnGroups,
+          leafs = _this$columnGroups2.leafs,
+          leftLeafs = _this$columnGroups2.leftLeafs,
+          rightLeafs = _this$columnGroups2.rightLeafs,
+          columnBuffer = this.columnBuffer;
+
+      if (!this.propVirtual || !this.overflowX) {
+        return {
+          center: [0, leafs.length]
+        };
+      }
+
+      var rangeThreshold = {
+        center: [0, 0]
+      }; // 左右固定列的坐标范围
+
+      var leftColLength = leftLeafs.length;
+      var rightColLength = rightLeafs.length;
+
+      if (leftColLength) {
+        rangeThreshold.left = [0, leftColLength];
+      }
+
+      if (rightColLength) {
+        rangeThreshold.right = [leafs.length - rightColLength, leafs.length];
+      }
+
+      if (leftColLength + rightColLength === leafs.length) {
+        rangeThreshold.center = [leftColLength, leftColLength];
+        return rangeThreshold;
+      }
+
+      var _this$updateRenderZon = this.updateRenderZonePosition(),
+          _this$updateRenderZon2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_this$updateRenderZon, 2),
+          start = _this$updateRenderZon2[0],
+          end = _this$updateRenderZon2[1];
+
+      var first = Math.max(leftColLength, start - columnBuffer);
+      var last = Math.min(leafs.length - rightColLength, end + columnBuffer + 1);
+      rangeThreshold.center = [first, last];
+      return rangeThreshold;
+    }
+  }, {
+    key: "isRenderRange",
+    value: function isRenderRange(index, isGroup) {
+      var virtualColumnRange = this.virtualColumnRange,
+          propVirtual = this.propVirtual;
+
+      if (!propVirtual || isGroup) {
+        return true;
+      }
+
+      if (virtualColumnRange.left && index >= virtualColumnRange.left[0] && index < virtualColumnRange.left[1]) {
+        return true;
+      }
+
+      if (index >= virtualColumnRange.center[0] && index < virtualColumnRange.center[1]) {
+        return true;
+      }
+
+      if (virtualColumnRange.right && index >= virtualColumnRange.right[0] && index <= virtualColumnRange.right[1]) {
+        return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "blankVirtualCell",
+    get: function get() {
+      var virtualColumnRange = this.virtualColumnRange;
+      var left = virtualColumnRange.left,
+          center = virtualColumnRange.center,
+          right = virtualColumnRange.right;
+      return {
+        left: _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(Array(center[0] - (left ? left[1] : 0)).keys()).map(function (key) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement("td", {
+            key: "empty-left-".concat(key)
+          });
+        }),
+        right: right ? _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(Array(right[0] - center[1]).keys()).map(function (key) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement("td", {
+            key: "empty-right-".concat(key)
+          });
+        }) : []
+      };
+    }
+  }, {
+    key: "tableColumnResizeTransition",
+    get: function get() {
+      return this.getConfig('tableColumnResizeTransition');
+    }
+  }, {
+    key: "virtualRowHeight",
+    get: function get() {
+      var rowHeight = this.rowHeight,
+          _this$cellVerticalSiz = this.cellVerticalSize,
+          cellVerticalSize = _this$cellVerticalSiz === void 0 ? 3 : _this$cellVerticalSiz;
+      var normalRowHeight = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* scaleSize */ "e"])(lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(rowHeight) ? rowHeight + cellVerticalSize : 30 + cellVerticalSize);
+      return this.aggregation && this.hasAggregationColumn ? normalRowHeight * 4 : normalRowHeight;
+    }
+  }, {
+    key: "virtualEstimatedRows",
+    get: function get() {
+      var rowMetaData = this.rowMetaData;
+
+      if (rowMetaData) {
+        return rowMetaData.length;
+      }
+
+      var actualRows = this.actualRows;
+
+      if (actualRows !== undefined) {
+        return actualRows;
+      }
+
+      return this.data.length;
+    }
+  }, {
+    key: "virtualHeight",
+    get: function get() {
+      var virtualRowHeight = this.virtualRowHeight,
+          virtualEstimatedRows = this.virtualEstimatedRows;
+
+      if (!virtualEstimatedRows) {
+        return 0;
+      }
+
+      var rowMetaData = this.rowMetaData;
+
+      if (rowMetaData) {
+        var lastMeasuredIndex = this.lastMeasuredIndex;
+        var totalSizeOfMeasuredItems = 0;
+
+        if (lastMeasuredIndex >= virtualEstimatedRows) {
+          lastMeasuredIndex = virtualEstimatedRows - 1;
+        }
+
+        if (lastMeasuredIndex >= 0) {
+          var itemMetadata = rowMetaData[lastMeasuredIndex];
+
+          if (itemMetadata) {
+            totalSizeOfMeasuredItems = itemMetadata.offset + itemMetadata.height;
+          }
+        }
+
+        var numUnmeasuredItems = virtualEstimatedRows - lastMeasuredIndex - 1;
+        var totalSizeOfUnmeasuredItems = numUnmeasuredItems * virtualRowHeight;
+        return totalSizeOfMeasuredItems + totalSizeOfUnmeasuredItems;
+      }
+
+      return Math.round(virtualEstimatedRows * virtualRowHeight);
+    }
+  }, {
+    key: "virtualVisibleStartIndex",
+    get: function get() {
+      return getVisibleStartIndex(this);
+    }
+  }, {
+    key: "virtualVisibleEndIndex",
+    get: function get() {
+      return getVisibleEndIndex(this);
+    }
+  }, {
+    key: "virtualStartIndex",
+    get: function get() {
+      return getStartIndex(this);
+    }
+  }, {
+    key: "virtualEndIndex",
+    get: function get() {
+      return getEndIndex(this);
+    }
+  }, {
+    key: "virtualTop",
+    get: function get() {
+      var virtualRowHeight = this.virtualRowHeight,
+          virtualStartIndex = this.virtualStartIndex;
+      var rowMetaData = this.rowMetaData;
+
+      if (rowMetaData && rowMetaData.length) {
+        return rowMetaData[virtualStartIndex].offset;
+      }
+
+      return virtualStartIndex * virtualRowHeight;
+    }
+  }, {
+    key: "hidden",
+    get: function get() {
+      return this.styledHidden || this.props.hidden;
+    }
+  }, {
+    key: "alwaysShowRowBox",
+    get: function get() {
+      if ('alwaysShowRowBox' in this.props) {
+        return this.props.alwaysShowRowBox;
+      }
+
+      var alwaysShowRowBox = this.getConfig('tableAlwaysShowRowBox');
+
+      if (typeof alwaysShowRowBox !== 'undefined') {
+        return alwaysShowRowBox;
+      }
+
+      return false;
+    }
+  }, {
+    key: "keyboard",
+    get: function get() {
+      if ('keyboard' in this.props) {
+        return this.props.keyboard;
+      }
+
+      var keyboard = this.getConfig('tableKeyboard');
+
+      if (typeof keyboard !== 'undefined') {
+        return keyboard;
+      }
+
+      return false;
+    }
+  }, {
+    key: "columnResizable",
+    get: function get() {
+      if (this.currentEditRecord) {
+        return false;
+      }
+
+      if ('columnResizable' in this.props) {
+        return this.props.columnResizable !== false;
+      }
+
+      return this.getConfig('tableColumnResizable') !== false;
+    }
+    /**
+     * 自定义样式对表格的横向缩放倍数，用于矫正列宽拖拽的计算
+     */
+
+  }, {
+    key: "xZoom",
+    get: function get() {
+      var _this$props$columnRes = this.props.columnResizable,
+          columnResizable = _this$props$columnRes === void 0 ? this.getConfig('tableColumnResizable') : _this$props$columnRes;
+
+      if (typeof columnResizable === 'boolean') {
+        return 1;
+      }
+
+      var _ref19 = columnResizable || {},
+          _ref19$xZoom = _ref19.xZoom,
+          xZoom = _ref19$xZoom === void 0 ? 1 : _ref19$xZoom;
+
+      return xZoom;
+    }
+  }, {
+    key: "columnHideable",
+    get: function get() {
+      if ('columnHideable' in this.props) {
+        return this.props.columnHideable;
+      }
+
+      return this.getConfig('tableColumnHideable') !== false;
+    }
+    /**
+     * 表头支持编辑
+     */
+
+  }, {
+    key: "columnTitleEditable",
+    get: function get() {
+      if ('columnTitleEditable' in this.props) {
+        return this.props.columnTitleEditable;
+      }
+
+      return this.getConfig('tableColumnTitleEditable') === true;
+    }
+  }, {
+    key: "heightChangeable",
+    get: function get() {
+      if ('heightChangeable' in this.props) {
+        return this.props.heightChangeable;
+      }
+
+      return this.getConfig('tableHeightChangeable') === true;
+    }
+  }, {
+    key: "pagination",
+    get: function get() {
+      if ('pagination' in this.props) {
+        return this.props.pagination;
+      }
+
+      return this.getConfig('pagination');
+    }
+  }, {
+    key: "pageSizeChangeable",
+    get: function get() {
+      if ('pageSizeChangeable' in this.props) {
+        return this.props.pageSizeChangeable;
+      }
+
+      return this.getConfig('tablePageSizeChangeable') === true;
+    }
+  }, {
+    key: "dragColumnAlign",
+    get: function get() {
+      if ('dragColumnAlign' in this.props) {
+        return this.props.dragColumnAlign;
+      }
+
+      return this.getConfig('tableDragColumnAlign');
+    }
+  }, {
+    key: "columnDraggable",
+    get: function get() {
+      if ('columnDraggable' in this.props) {
+        return this.props.columnDraggable;
+      }
+
+      if ('dragColumn' in this.props) {
+        return this.props.dragColumn;
+      }
+
+      if (this.getConfig('tableColumnDraggable') === true) {
+        return true;
+      }
+
+      return this.getConfig('tableDragColumn') === true;
+    }
+  }, {
+    key: "rowDraggable",
+    get: function get() {
+      if (this.groups.length) {
+        return false;
+      }
+
+      if ('rowDraggable' in this.props) {
+        return this.props.rowDraggable;
+      }
+
+      if ('dragRow' in this.props) {
+        return this.props.dragRow;
+      }
+
+      var tableRowDraggable = this.getConfig('tableRowDraggable');
+
+      if (tableRowDraggable === true || tableRowDraggable === 'multiDrag') {
+        return tableRowDraggable;
+      }
+
+      return this.getConfig('tableDragRow') === true;
+    }
+  }, {
+    key: "customDragDropContenxt",
+    get: function get() {
+      if ('customDragDropContenxt' in this.props) {
+        return this.rowDraggable && this.props.customDragDropContenxt;
+      }
+
+      return false;
+    }
+  }, {
+    key: "size",
+    get: function get() {
+      var size = this.customized.size;
+      var tableSize = this.getConfig('tableSize');
+
+      if (size !== undefined) {
+        return size;
+      }
+
+      return this.props.size || tableSize || _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"]["default"];
+    }
+  }, {
+    key: "rowHeight",
+    get: function get() {
+      var _this$props$rowHeight = this.props.rowHeight,
+          rowHeight = _this$props$rowHeight === void 0 ? lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24___default()(this.getConfig('tableRowHeight'), 30) : _this$props$rowHeight;
+      var size = this.size;
+
+      if (typeof rowHeight === 'function') {
+        return rowHeight({
+          size: size
+        });
+      }
+
+      if (lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(rowHeight)) {
+        switch (size) {
+          case _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"].large:
+            return rowHeight + 2;
+
+          case _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"].small:
+            return rowHeight - 2;
+
+          default:
+        }
+      }
+
+      return rowHeight;
+    }
+  }, {
+    key: "headerRowHeight",
+    get: function get() {
+      var _this$props$headerRow = this.props.headerRowHeight,
+          headerRowHeight = _this$props$headerRow === void 0 ? this.getConfig('tableHeaderRowHeight') : _this$props$headerRow;
+
+      if (headerRowHeight === undefined) {
+        return this.rowHeight;
+      }
+
+      var size = this.size;
+
+      if (typeof headerRowHeight === 'function') {
+        return headerRowHeight({
+          size: size
+        });
+      }
+
+      if (lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(headerRowHeight)) {
+        switch (size) {
+          case _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"].large:
+            return headerRowHeight + 2;
+
+          case _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"].small:
+            return headerRowHeight - 2;
+
+          default:
+        }
+      }
+
+      return headerRowHeight;
+    }
+  }, {
+    key: "footerRowHeight",
+    get: function get() {
+      var _this$props$footerRow = this.props.footerRowHeight,
+          footerRowHeight = _this$props$footerRow === void 0 ? this.getConfig('tableFooterRowHeight') : _this$props$footerRow;
+
+      if (footerRowHeight === undefined) {
+        return this.rowHeight;
+      }
+
+      var size = this.size;
+
+      if (typeof footerRowHeight === 'function') {
+        return footerRowHeight({
+          size: size
+        });
+      }
+
+      if (lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(footerRowHeight)) {
+        switch (size) {
+          case _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"].large:
+            return footerRowHeight + 2;
+
+          case _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"].small:
+            return footerRowHeight - 2;
+
+          default:
+        }
+      }
+
+      return footerRowHeight;
+    }
+  }, {
+    key: "autoFootHeight",
+    get: function get() {
+      if ('autoFootHeight' in this.props) {
+        return this.props.autoFootHeight;
+      }
+
+      return false;
+    }
+  }, {
+    key: "emptyText",
+    get: function get() {
+      var renderEmpty = this.props.renderEmpty;
+
+      if (renderEmpty) {
+        return renderEmpty();
+      }
+
+      return this.getConfig('renderEmpty')('Table');
+    }
+  }, {
+    key: "highLightRow",
+    get: function get() {
+      if ('highLightRow' in this.props) {
+        return this.props.highLightRow;
+      }
+
+      return this.getConfig('tableHighLightRow');
+    }
+  }, {
+    key: "parityRow",
+    get: function get() {
+      var parityRow = this.customized.parityRow;
+
+      if (parityRow !== undefined) {
+        return parityRow;
+      }
+
+      if ('parityRow' in this.props) {
+        return this.props.parityRow;
+      }
+
+      return this.getConfig('tableParityRow') === true;
+    }
+  }, {
+    key: "showRemovedRow",
+    get: function get() {
+      if ('showRemovedRow' in this.props) {
+        return this.props.showRemovedRow;
+      }
+
+      return this.getConfig('tableShowRemovedRow') === true;
+    }
+  }, {
+    key: "autoFocus",
+    get: function get() {
+      if ('autoFocus' in this.props) {
+        return this.props.autoFocus;
+      }
+
+      return this.getConfig('tableAutoFocus') !== false;
+    }
+  }, {
+    key: "selectedHighLightRow",
+    get: function get() {
+      if ('selectedHighLightRow' in this.props) {
+        return this.props.selectedHighLightRow;
+      }
+
+      return this.getConfig('tableSelectedHighLightRow') !== false;
+    }
+  }, {
+    key: "editorNextKeyEnterDown",
+    get: function get() {
+      if ('editorNextKeyEnterDown' in this.props) {
+        return this.props.editorNextKeyEnterDown;
+      }
+
+      return this.getConfig('tableEditorNextKeyEnterDown') !== false;
+    }
+  }, {
+    key: "border",
+    get: function get() {
+      if ('border' in this.props) {
+        return this.props.border;
+      }
+
+      return this.getConfig('tableBorder') !== false;
+    }
+  }, {
+    key: "columnEditorBorder",
+    get: function get() {
+      if ('columnEditorBorder' in this.props) {
+        return this.props.columnEditorBorder;
+      }
+
+      var tableColumnEditorBorder = this.getConfig('tableColumnEditorBorder');
+
+      if (tableColumnEditorBorder !== undefined) {
+        return tableColumnEditorBorder;
+      }
+
+      return this.border;
+    }
+  }, {
+    key: "queryBar",
+    get: function get() {
+      return this.props.queryBar || this.getConfig('queryBar');
+    }
+  }, {
+    key: "expandIcon",
+    get: function get() {
+      return this.props.expandIcon || this.getConfig('tableExpandIcon');
+    }
+  }, {
+    key: "tableColumnResizeTrigger",
+    get: function get() {
+      return this.getConfig('tableColumnResizeTrigger');
+    } // get pristine(): boolean | undefined {
+    //   return this.props.pristine;
+    // }
+
+  }, {
+    key: "currentEditRecord",
+    get: function get() {
+      return this.dataSet.find(function (record) {
+        return record.editing === true;
+      });
+    },
+    set: function set(record) {
+      var _this2 = this;
+
+      Object(mobx__WEBPACK_IMPORTED_MODULE_14__["runInAction"])(function () {
+        var currentEditRecord = _this2.currentEditRecord,
+            dataSet = _this2.dataSet;
+
+        if (currentEditRecord) {
+          if (currentEditRecord.isNew) {
+            dataSet.remove(currentEditRecord);
+          } else {
+            currentEditRecord.reset();
+            currentEditRecord.editing = false;
+          }
+        }
+
+        if (record) {
+          record.editing = true;
+        }
+      });
+    }
+  }, {
+    key: "computedRecordCachedType",
+    get: function get() {
+      return this.recordCachedType || this.defaultRecordCachedType;
+    }
+  }, {
+    key: "isTree",
+    get: function get() {
+      return this.props.mode === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableMode */ "s"].tree;
+    }
+  }, {
+    key: "editing",
+    get: function get() {
+      return this.currentEditorName !== undefined || this.currentEditRecord !== undefined;
+    }
+  }, {
+    key: "hasRowBox",
+    get: function get() {
+      var _this$props2 = this.props,
+          dataSet = _this$props2.dataSet,
+          selectionMode = _this$props2.selectionMode;
+      var alwaysShowRowBox = this.alwaysShowRowBox;
+
+      if (dataSet) {
+        var selection = dataSet.selection;
+        return selection && (selectionMode && [_enum__WEBPACK_IMPORTED_MODULE_41__[/* SelectionMode */ "j"].rowbox, _enum__WEBPACK_IMPORTED_MODULE_41__[/* SelectionMode */ "j"].dblclick].includes(selectionMode) || alwaysShowRowBox);
+      }
+
+      return false;
+    }
+  }, {
+    key: "useMouseBatchChoose",
+    get: function get() {
+      var useMouseBatchChoose = this.props.useMouseBatchChoose;
+
+      if (useMouseBatchChoose !== undefined) {
+        return useMouseBatchChoose;
+      }
+
+      return this.getConfig('tableUseMouseBatchChoose');
+    }
+  }, {
+    key: "showCachedTips",
+    get: function get() {
+      var showCachedTips = this.props.showCachedTips;
+
+      if (showCachedTips !== undefined) {
+        return showCachedTips;
+      }
+
+      var tableShowCachedTips = this.getConfig('tableShowCachedTips');
+
+      if (tableShowCachedTips !== undefined) {
+        return tableShowCachedTips;
+      }
+
+      return false;
+    }
+  }, {
+    key: "showSelectionTips",
+    get: function get() {
+      var showSelectionTips = this.props.showSelectionTips;
+
+      if (showSelectionTips !== undefined) {
+        return showSelectionTips;
+      }
+
+      var tableShowSelectionTips = this.getConfig('tableShowSelectionTips');
+
+      if (tableShowSelectionTips !== undefined) {
+        return tableShowSelectionTips;
+      }
+
+      return false;
+    }
+  }, {
+    key: "overflowX",
+    get: function get() {
+      var width = this.width;
+
+      if (width !== undefined) {
+        return this.columnGroups.width > width;
+      }
+
+      return false;
+    }
+  }, {
+    key: "overflowY",
+    get: function get() {
+      var bodyHeight = this.bodyHeight,
+          height = this.height;
+      return bodyHeight !== undefined && height !== undefined && height < bodyHeight + (!this.hasFooter && this.overflowX ? Object(_es_util_measureScrollbar__WEBPACK_IMPORTED_MODULE_26__[/* default */ "a"])() : 0);
+    }
+  }, {
+    key: "hasRowGroups",
+    get: function get() {
+      if (this.cachedData.length) {
+        return true;
+      }
+
+      var groups = this.groups;
+
+      if (groups) {
+        return groups.some(function (_ref20) {
+          var type = _ref20.type;
+          return type === _enum__WEBPACK_IMPORTED_MODULE_41__[/* GroupType */ "d"].row;
+        });
+      }
+
+      return false;
+    }
+  }, {
+    key: "headerTableGroups",
+    get: function get() {
+      var groups = this.groups;
+      return groups ? groups.filter(function (_ref21) {
+        var type = _ref21.type;
+        return type === _enum__WEBPACK_IMPORTED_MODULE_41__[/* GroupType */ "d"].header;
+      }) : [];
+    }
+  }, {
+    key: "customizedColumnHeader",
+    value: function customizedColumnHeader() {
+      if (this.queryBar === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableQueryBarType */ "u"].comboBar) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_combo_customization_settings__WEBPACK_IMPORTED_MODULE_51__[/* default */ "a"], null);
+      }
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_customization_settings_CustomizationColumnHeader__WEBPACK_IMPORTED_MODULE_50__[/* default */ "a"], {
+        customizedBtn: this.customizedBtn,
+        onHeaderClick: this.openCustomizationModal
+      });
+    }
+  }, {
+    key: "customizedColumn",
+    get: function get() {
+      if (this.customizable && !this.customizedBtn && (!this.rowDraggable || this.dragColumnAlign !== _enum__WEBPACK_IMPORTED_MODULE_41__[/* DragColumnAlign */ "c"].right)) {
+        var _this$props$customize = this.props.customizedColumnProps,
+            customizedColumnProps = _this$props$customize === void 0 ? {} : _this$props$customize;
+        var defaultProps = {
+          key: CUSTOMIZED_KEY,
+          resizable: false,
+          titleEditable: false,
+          align: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnAlign */ "a"].center,
+          width: Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* scaleSize */ "e"])(30),
+          lock: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].right,
+          header: this.customizedColumnHeader,
+          headerClassName: "".concat(this.prefixCls, "-customized-column")
+        };
+        return lodash_isFunction__WEBPACK_IMPORTED_MODULE_29___default()(customizedColumnProps) ? _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, defaultProps), customizedColumnProps(defaultProps)) : _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, defaultProps), customizedColumnProps);
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "expandColumn",
+    get: function get() {
+      if (this.expandIconAsCell) {
+        return {
+          key: EXPAND_KEY,
+          resizable: false,
+          titleEditable: false,
+          align: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnAlign */ "a"].center,
+          width: Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* scaleSize */ "e"])(50),
+          lock: true
+        };
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "rowNumberColumn",
+    get: function get() {
+      var _this$props3 = this.props,
+          rowNumber = _this$props3.rowNumber,
+          _this$props3$rowNumbe = _this$props3.rowNumberColumnProps,
+          rowNumberColumnProps = _this$props3$rowNumbe === void 0 ? {} : _this$props3$rowNumbe;
+
+      if (rowNumber) {
+        var defaultProps = {
+          key: ROW_NUMBER_KEY,
+          resizable: true,
+          titleEditable: false,
+          headerClassName: "".concat(this.prefixCls, "-row-number-column"),
+          renderer: this.renderRowNumber,
+          tooltip: _enum__WEBPACK_IMPORTED_MODULE_42__[/* Tooltip */ "b"].overflow,
+          align: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnAlign */ "a"].center,
+          width: Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* scaleSize */ "e"])(50),
+          lock: true
+        };
+        return lodash_isFunction__WEBPACK_IMPORTED_MODULE_29___default()(rowNumberColumnProps) ? _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, defaultProps), rowNumberColumnProps(defaultProps)) : _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, defaultProps), rowNumberColumnProps);
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "selectionColumn",
+    get: function get() {
+      if (this.hasRowBox) {
+        var dataSet = this.dataSet,
+            prefixCls = this.prefixCls;
+        var _this$props4 = this.props,
+            rowBoxPlacement = _this$props4.rowBoxPlacement,
+            _this$props4$selectio = _this$props4.selectionColumnProps,
+            selectionColumnProps = _this$props4$selectio === void 0 ? {} : _this$props4$selectio;
+
+        var sLock = selectionColumnProps.lock,
+            className = selectionColumnProps.className,
+            headerClassName = selectionColumnProps.headerClassName,
+            footerClassName = selectionColumnProps.footerClassName,
+            rest = _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_2___default()(selectionColumnProps, _excluded);
+
+        var sClassName = "".concat(prefixCls, "-selection-column");
+        var lock = sLock || _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left;
+
+        if (rowBoxPlacement === _enum__WEBPACK_IMPORTED_MODULE_41__[/* RowBoxPlacement */ "h"].start) {
+          lock = _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left;
+        } else if (rowBoxPlacement === _enum__WEBPACK_IMPORTED_MODULE_41__[/* RowBoxPlacement */ "h"].end) {
+          lock = _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].right;
+        } else {
+          lock = false;
+        }
+
+        var selectionColumn = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({
+          key: SELECTION_KEY,
+          resizable: false,
+          titleEditable: false,
+          renderer: this.renderSelectionBox,
+          align: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnAlign */ "a"].center,
+          width: Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* scaleSize */ "e"])(50),
+          headerClassName: classnames__WEBPACK_IMPORTED_MODULE_15___default()(sClassName, headerClassName),
+          className: classnames__WEBPACK_IMPORTED_MODULE_15___default()(sClassName, className),
+          footerClassName: classnames__WEBPACK_IMPORTED_MODULE_15___default()(sClassName, footerClassName),
+          lock: lock
+        }, rest);
+
+        if (dataSet && dataSet.selection === _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["DataSetSelection"].multiple) {
+          selectionColumn.header = 'header' in rest ? rest.header : this.multipleSelectionRenderer;
+          selectionColumn.footer = 'footer' in rest ? rest.footer : this.multipleSelectionRenderer;
+        }
+
+        return selectionColumn;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "comboQueryColumn",
+    get: function get() {
+      var _this3 = this;
+
+      if (this.queryBar === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableQueryBarType */ "u"].comboBar) {
+        var prefixCls = this.prefixCls,
+            queryBarProps = this.props.queryBarProps;
+        var showInlineSearch = queryBarProps && queryBarProps.inlineSearch;
+        var showInlineSearchRender = queryBarProps && queryBarProps.inlineSearchRender;
+        var className = "".concat(prefixCls, "-inline-query");
+        var lock = _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left;
+        var queryColumn = {
+          key: COMBOBAR_KEY,
+          header: showInlineSearch && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_es_icon__WEBPACK_IMPORTED_MODULE_28__[/* default */ "a"], {
+            type: "manage_search",
+            className: className,
+            onClick: Object(mobx__WEBPACK_IMPORTED_MODULE_14__["action"])(function () {
+              _this3.comboBarStatus = !_this3.comboBarStatus;
+
+              _this3.node.handleHeightTypeChange();
+            })
+          }),
+          resizable: false,
+          titleEditable: false,
+          headerClassName: className,
+          className: className,
+          footerClassName: className,
+          renderer: function renderer() {
+            return queryBarProps && queryBarProps.inlineSearchRender;
+          },
+          align: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnAlign */ "a"].center,
+          width: Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* scaleSize */ "e"])(50),
+          lock: lock
+        };
+        return showInlineSearch === true || showInlineSearchRender ? queryColumn : undefined;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "draggableColumn",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          rowDraggable = this.rowDraggable,
+          prefixCls = this.prefixCls;
+
+      if (dragColumnAlign && rowDraggable) {
+        var draggableColumn = {
+          key: DRAG_KEY,
+          resizable: false,
+          titleEditable: false,
+          className: "".concat(prefixCls, "-drag-column"),
+          renderer: this.renderDragBox,
+          align: _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnAlign */ "a"].center,
+          width: Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* scaleSize */ "e"])(50)
+        };
+
+        if (dragColumnAlign === _enum__WEBPACK_IMPORTED_MODULE_41__[/* DragColumnAlign */ "c"].left) {
+          draggableColumn.lock = _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left;
+        }
+
+        if (dragColumnAlign === _enum__WEBPACK_IMPORTED_MODULE_41__[/* DragColumnAlign */ "c"].right) {
+          draggableColumn.lock = _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].right;
+          draggableColumn.header = this.customizable && this.customizedColumnHeader;
+        }
+
+        return draggableColumn;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "leftColumns",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          leftOriginalColumns = this.leftOriginalColumns,
+          expandColumn = this.expandColumn,
+          expandIconColumnIndex = this.expandIconColumnIndex,
+          draggableColumn = this.draggableColumn,
+          rowNumberColumn = this.rowNumberColumn,
+          selectionColumn = this.selectionColumn,
+          comboQueryColumn = this.comboQueryColumn;
+      var rowSelectCols = rowNumberColumn && (rowNumberColumn.rowNumberIndex || 0) > 0 ? [selectionColumn && selectionColumn.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left ? selectionColumn : undefined, rowNumberColumn] : [rowNumberColumn, selectionColumn && selectionColumn.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left ? selectionColumn : undefined];
+      return mobx__WEBPACK_IMPORTED_MODULE_14__["observable"].array([expandIconColumnIndex ? undefined : expandColumn, dragColumnAlign === _enum__WEBPACK_IMPORTED_MODULE_41__[/* DragColumnAlign */ "c"].left ? draggableColumn : undefined].concat(rowSelectCols, [comboQueryColumn], _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftOriginalColumns)).filter(columnFilter));
+    }
+  }, {
+    key: "rightColumns",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          rightOriginalColumns = this.rightOriginalColumns,
+          draggableColumn = this.draggableColumn,
+          customizedColumn = this.customizedColumn,
+          selectionColumn = this.selectionColumn;
+      return mobx__WEBPACK_IMPORTED_MODULE_14__["observable"].array([].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightOriginalColumns), [dragColumnAlign === _enum__WEBPACK_IMPORTED_MODULE_41__[/* DragColumnAlign */ "c"].right ? draggableColumn : undefined, selectionColumn && selectionColumn.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].right ? selectionColumn : undefined, customizedColumn]).filter(columnFilter));
+    }
+  }, {
+    key: "columns",
+    get: function get() {
+      var leftColumns = this.leftColumns,
+          rightColumns = this.rightColumns,
+          selectionColumn = this.selectionColumn,
+          expandColumn = this.expandColumn,
+          expandIconColumnIndex = this.expandIconColumnIndex,
+          rowBoxPlacement = this.props.rowBoxPlacement;
+      var originalColumns = this.originalColumns.slice();
+
+      if (lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(rowBoxPlacement) && selectionColumn) {
+        originalColumns.splice(rowBoxPlacement, 0, selectionColumn);
+      }
+
+      var allColumns = Array.from([].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(leftColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(originalColumns), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(rightColumns)));
+
+      if (expandIconColumnIndex && expandColumn) {
+        var lock = true;
+
+        if (expandIconColumnIndex > leftColumns.length && expandIconColumnIndex <= leftColumns.length + originalColumns.length) {
+          lock = false;
+        } else if (expandIconColumnIndex > leftColumns.length + originalColumns.length) {
+          lock = _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].right;
+        }
+
+        allColumns.splice(expandIconColumnIndex, 0, _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, expandColumn), {}, {
+          lock: lock
+        }));
+      }
+
+      return mobx__WEBPACK_IMPORTED_MODULE_14__["observable"].array([].concat(allColumns));
+    }
+  }, {
+    key: "columnGroups",
+    get: function get() {
+      return new _ColumnGroups__WEBPACK_IMPORTED_MODULE_46__[/* default */ "a"](this.columns, this);
+    }
+  }, {
+    key: "leftColumnGroups",
+    get: function get() {
+      return new _ColumnGroups__WEBPACK_IMPORTED_MODULE_46__[/* default */ "a"](this.leftColumns, this);
+    }
+  }, {
+    key: "rightColumnGroups",
+    get: function get() {
+      return new _ColumnGroups__WEBPACK_IMPORTED_MODULE_46__[/* default */ "a"](this.rightColumns, this);
+    }
+  }, {
+    key: "leafNamedColumns",
+    get: function get() {
+      return this.columnGroups.allLeafs.reduce(function (list, _ref22) {
+        var column = _ref22.column;
+        return column.name ? list.concat(column) : list;
+      }, []);
+    }
+  }, {
+    key: "hasEmptyWidthColumn",
+    get: function get() {
+      return this.columnGroups.leafs.some(function (_ref23) {
+        var column = _ref23.column;
+        return lodash_isNil__WEBPACK_IMPORTED_MODULE_18___default()(Object(mobx__WEBPACK_IMPORTED_MODULE_14__["get"])(column, 'width'));
+      });
+    }
+  }, {
+    key: "getLastEmptyWidthColumn",
+    get: function get() {
+      var emptyWidthColumns = this.columnGroups.leafs.filter(function (_ref24) {
+        var column = _ref24.column;
+        return lodash_isNil__WEBPACK_IMPORTED_MODULE_18___default()(Object(mobx__WEBPACK_IMPORTED_MODULE_14__["get"])(column, 'width'));
+      });
+      return emptyWidthColumns.length ? emptyWidthColumns[emptyWidthColumns.length - 1].column : undefined;
+    }
+  }, {
+    key: "hasCheckFieldColumn",
+    get: function get() {
+      var checkField = this.dataSet.props.checkField;
+
+      if (checkField) {
+        var aggregation = this.aggregation;
+        return this.columnGroups.leafs.some(function (_ref25) {
+          var column = _ref25.column;
+          return aggregation ? Object(_util_treeUtils__WEBPACK_IMPORTED_MODULE_55__[/* treeSome */ "c"])([column], function (c) {
+            return hasCheckField(c, checkField);
+          }) : hasCheckField(column, checkField);
+        });
+      }
+
+      return false;
+    }
+  }, {
+    key: "hasFooter",
+    get: function get() {
+      return this.columnGroups.leafs.some(function (_ref26) {
+        var column = _ref26.column;
+        return !!column.footer && column.key !== SELECTION_KEY;
+      });
+    }
+  }, {
+    key: "isAnyColumnsLeftLock",
+    get: function get() {
+      return this.leftColumns.length > 0;
+    }
+  }, {
+    key: "isAnyColumnsRightLock",
+    get: function get() {
+      return this.rightColumns.length > 0;
+    }
+  }, {
+    key: "isAnyColumnsLock",
+    get: function get() {
+      return this.isAnyColumnsLeftLock || this.isAnyColumnsRightLock;
+    }
+  }, {
+    key: "isCombinedColumn",
+    get: function get() {
+      var columns = this.columns;
+      var combinedColumn = columns.find(function (column) {
+        return !column.aggregation && column.children && column.children.length > 0;
+      });
+      return !lodash_isNil__WEBPACK_IMPORTED_MODULE_18___default()(combinedColumn);
+    }
+  }, {
+    key: "cachedDataInType",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection,
+          _this$computedRecordC = this.computedRecordCachedType,
+          computedRecordCachedType = _this$computedRecordC === void 0 ? _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["RecordCachedType"].selected : _this$computedRecordC;
+
+      if (showCachedSelection) {
+        switch (computedRecordCachedType) {
+          case _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["RecordCachedType"].selected:
+            return dataSet.cachedSelected;
+
+          case _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["RecordCachedType"].add:
+            return dataSet.cachedCreated;
+
+          case _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["RecordCachedType"].update:
+            return dataSet.cachedUpdated;
+
+          case _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["RecordCachedType"]["delete"]:
+            return dataSet.cachedDestroyed;
+
+          default:
+        }
+      }
+
+      return [];
+    }
+  }, {
+    key: "cachedData",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection;
+
+      if (showCachedSelection) {
+        return dataSet.cachedRecords;
+      }
+
+      return [];
+    }
+  }, {
+    key: "currentData",
+    get: function get() {
+      var _this$props5 = this.props,
+          pristine = _this$props5.pristine,
+          recordFilter = _this$props5.filter,
+          treeFilter = _this$props5.treeFilter;
+      var dataSet = this.dataSet,
+          isTree = this.isTree,
+          headerFilterArr = this.headerFilter;
+      var filter = isTree ? typeof treeFilter === 'function' ? treeFilter : recordFilter : recordFilter;
+      var data = isTree ? dataSet.treeRecords : dataSet.records;
+
+      if (typeof filter === 'function') {
+        data = data.filter(filter);
+      }
+
+      if (pristine) {
+        data = data.filter(function (record) {
+          return !record.isNew;
+        });
+      }
+
+      if (headerFilterArr && headerFilterArr.length) {
+        headerFilterArr.forEach(function (headerFilter) {
+          var filter = headerFilter.filter,
+              filterText = headerFilter.filterText;
+
+          if (typeof filter === 'function') {
+            data = data.filter(function (record) {
+              return filter({
+                record: record,
+                filterText: filterText
+              });
+            });
+          } else {
+            var field = dataSet.getField(headerFilter.fieldName);
+            var type = field && field.get('type');
+            var multiple = field && field.get('multiple');
+            var isLookUp = false;
+
+            if (field && (field.get('lookupCode') || lodash_isString__WEBPACK_IMPORTED_MODULE_21___default()(field.get('lookupUrl')) || type !== _data_set_enum__WEBPACK_IMPORTED_MODULE_40__["FieldType"].object && (field.get('lovCode') || field.getLookup() || field.get('options')) || field.get('lovCode'))) {
+              isLookUp = true;
+            }
+
+            data = data.filter(function (record) {
+              var recordText;
+              var fieldValue = record.get(headerFilter.fieldName);
+
+              if (multiple) {
+                if (isLookUp) {
+                  recordText = fieldValue.map(function (value) {
+                    return field.getText(value);
+                  }).join('');
+                } else {
+                  recordText = fieldValue.map(function (value) {
+                    return Object(moment__WEBPACK_IMPORTED_MODULE_33__["isMoment"])(value) ? value.format(Object(_field_utils__WEBPACK_IMPORTED_MODULE_60__[/* getDateFormatByField */ "e"])(field, undefined, record)) : value;
+                  }).join('');
+                }
+              } else {
+                recordText = isLookUp ? String(field.getText(fieldValue)) : String(Object(moment__WEBPACK_IMPORTED_MODULE_33__["isMoment"])(fieldValue) ? fieldValue.format(Object(_field_utils__WEBPACK_IMPORTED_MODULE_60__[/* getDateFormatByField */ "e"])(field, undefined, record)) : fieldValue);
+              }
+
+              return recordText.toLocaleLowerCase().includes(String(headerFilter.filterText).toLocaleLowerCase());
+            });
+          }
+        });
+      }
+
+      return data;
+    }
+  }, {
+    key: "treeFilter",
+    get: function get() {
+      var treeFilter = this.props.treeFilter;
+      return treeFilter;
+    }
+  }, {
+    key: "data",
+    get: function get() {
+      return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(this.cachedData), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_7___default()(this.currentData));
+    }
+  }, {
+    key: "selectionFilter",
+    get: function get() {
+      var _this4 = this;
+
+      var filter = this.props.filter;
+      var duplicateRecords = this.duplicatePrimaryKeyInfo.duplicateRecords;
+      return function (record) {
+        return (!filter || filter(record)) && (!_this4.duplicateKeyConfig.disable || !duplicateRecords.has(record));
+      };
+    }
+  }, {
+    key: "cachedIndeterminate",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection,
+          selectionFilter = this.selectionFilter;
+
+      if (dataSet) {
+        var _ref27 = showCachedSelection ? Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCachedSelectableCounts */ "d"])(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter) : [0, 0],
+            _ref28 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_ref27, 2),
+            cachedSelectedLength = _ref28[0],
+            cachedRecordsLength = _ref28[1];
+
+        if (cachedSelectedLength) {
+          return cachedSelectedLength !== cachedRecordsLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "allCachedChecked",
+    get: function get() {
+      var dataSet = this.dataSet,
+          showCachedSelection = this.showCachedSelection,
+          selectionFilter = this.selectionFilter;
+
+      if (dataSet) {
+        var _ref29 = showCachedSelection ? Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCachedSelectableCounts */ "d"])(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter) : [0, 0],
+            _ref30 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_ref29, 2),
+            cachedSelectedLength = _ref30[0],
+            cachedRecordsLength = _ref30[1];
+
+        if (cachedSelectedLength) {
+          return cachedSelectedLength === cachedRecordsLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "currentIndeterminate",
+    get: function get() {
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
+
+      if (dataSet) {
+        var _getCurrentSelectable = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCurrentSelectableCounts */ "j"])(dataSet, selectionFilter),
+            _getCurrentSelectable2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_getCurrentSelectable, 2),
+            selectedLength = _getCurrentSelectable2[0],
+            currentLength = _getCurrentSelectable2[1];
+
+        if (selectedLength) {
+          return selectedLength !== currentLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "allCurrentChecked",
+    get: function get() {
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
+
+      if (dataSet) {
+        var _getCurrentSelectable3 = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCurrentSelectableCounts */ "j"])(dataSet, selectionFilter),
+            _getCurrentSelectable4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_getCurrentSelectable3, 2),
+            selectedLength = _getCurrentSelectable4[0],
+            currentLength = _getCurrentSelectable4[1];
+
+        if (selectedLength) {
+          return selectedLength === currentLength;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "indeterminate",
+    get: function get() {
+      var showCachedSelection = this.showCachedSelection;
+
+      if (showCachedSelection) {
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
+
+        var _getCachedSelectableC = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCachedSelectableCounts */ "d"])(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter),
+            _getCachedSelectableC2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_getCachedSelectableC, 2),
+            cachedSelectedLength = _getCachedSelectableC2[0],
+            cachedRecordsLength = _getCachedSelectableC2[1];
+
+        var _getCurrentSelectable5 = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCurrentSelectableCounts */ "j"])(dataSet, selectionFilter),
+            _getCurrentSelectable6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_getCurrentSelectable5, 2),
+            currentSelectedLength = _getCurrentSelectable6[0],
+            currentRecordsLength = _getCurrentSelectable6[1];
+
+        var allLength = cachedSelectedLength + currentSelectedLength;
+        return !!allLength && allLength !== cachedRecordsLength + currentRecordsLength;
+      }
+
+      return this.currentIndeterminate;
+    }
+  }, {
+    key: "allChecked",
+    get: function get() {
+      var showCachedSelection = this.showCachedSelection;
+
+      if (showCachedSelection) {
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
+
+        var _getCachedSelectableC3 = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCachedSelectableCounts */ "d"])(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter),
+            _getCachedSelectableC4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_getCachedSelectableC3, 2),
+            cachedSelectedLength = _getCachedSelectableC4[0],
+            cachedRecordsLength = _getCachedSelectableC4[1];
+
+        var _getCurrentSelectable7 = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCurrentSelectableCounts */ "j"])(dataSet, selectionFilter),
+            _getCurrentSelectable8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_getCurrentSelectable7, 2),
+            currentSelectedLength = _getCurrentSelectable8[0],
+            currentRecordsLength = _getCurrentSelectable8[1];
+
+        var allLength = cachedSelectedLength + currentSelectedLength;
+        return !!allLength && allLength === cachedRecordsLength + currentRecordsLength;
+      }
+
+      return this.allCurrentChecked;
+    }
+  }, {
+    key: "expandIconAsCell",
+    get: function get() {
+      var _this$props6 = this.props,
+          expandedRowRenderer = _this$props6.expandedRowRenderer,
+          expandIconAsCell = _this$props6.expandIconAsCell;
+
+      if (expandIconAsCell !== undefined) {
+        return expandIconAsCell;
+      }
+
+      return !!expandedRowRenderer && !this.isTree;
+    }
+  }, {
+    key: "expandIconColumnIndex",
+    get: function get() {
+      var dragColumnAlign = this.dragColumnAlign,
+          rowDraggable = this.rowDraggable,
+          _this$props7 = this.props,
+          _this$props7$expandIc = _this$props7.expandIconColumnIndex,
+          expandIconColumnIndex = _this$props7$expandIc === void 0 ? 0 : _this$props7$expandIc,
+          rowNumber = _this$props7.rowNumber,
+          rowBoxPlacement = _this$props7.rowBoxPlacement;
+
+      if ((!expandIconColumnIndex || typeof expandIconColumnIndex !== 'number') && !this.isTree) {
+        return 0;
+      }
+
+      var index = expandIconColumnIndex + [rowNumber, dragColumnAlign && rowDraggable, !!this.comboQueryColumn].filter(Boolean).length;
+      return this.hasRowBox && !lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(rowBoxPlacement) && rowBoxPlacement !== _enum__WEBPACK_IMPORTED_MODULE_41__[/* RowBoxPlacement */ "h"].end ? index + 1 : index;
+    }
+  }, {
+    key: "inlineEdit",
+    get: function get() {
+      return this.props.editMode === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableEditMode */ "q"].inline;
+    }
+  }, {
+    key: "clipboard",
+    get: function get() {
+      if ('clipboard' in this.props) {
+        return this.props.clipboard;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "combineSortConfig",
+    get: function get() {
+      var combineSortConfig = this.props.combineSortConfig; // 如果存在 showSortOption，走历史逻辑
+
+      if (combineSortConfig && combineSortConfig.showSortOption) {
+        return combineSortConfig;
+      }
+
+      if (combineSortConfig) {
+        var currentDataSort = combineSortConfig.currentDataSort,
+            allDataSort = combineSortConfig.allDataSort;
+        var processConfig = {
+          showSortOption: _enum__WEBPACK_IMPORTED_MODULE_41__[/* SortRangeOption */ "k"].allDataSort
+        }; // 兼容 currentDataSort
+
+        if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(currentDataSort) === 'object' && currentDataSort.enable === false) {
+          processConfig.currentDataSort = false;
+        } else if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(currentDataSort) === 'object') {
+          processConfig.currentDataSort = true;
+        }
+
+        if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(currentDataSort) === 'object' && typeof currentDataSort.customFn === 'function') {
+          processConfig.currentDataSort = currentDataSort.customFn;
+        } // 兼容 allDataSort
+
+
+        if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(allDataSort) === 'object' && allDataSort.enable !== false) {
+          processConfig.allDataSort = true;
+        } else {
+          processConfig.allDataSort = false;
+        } // 兼容 showSortOption, allDataSort 优先级更高
+
+
+        if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(currentDataSort) === 'object' && currentDataSort.show) {
+          processConfig.showSortOption = _enum__WEBPACK_IMPORTED_MODULE_41__[/* SortRangeOption */ "k"].currentDataSort;
+        }
+
+        if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(allDataSort) === 'object' && allDataSort.show) {
+          processConfig.showSortOption = _enum__WEBPACK_IMPORTED_MODULE_41__[/* SortRangeOption */ "k"].allDataSort;
+        }
+
+        return processConfig;
+      }
+
+      return undefined;
+    }
+  }, {
+    key: "addNewButton",
+    get: function get() {
+      var _this$props8 = this.props,
+          addNewButton = _this$props8.addNewButton,
+          pristine = _this$props8.pristine;
+      return addNewButton && !pristine;
+    }
+  }, {
+    key: "checkAllCurrent",
+    value: function checkAllCurrent() {
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
+      dataSet.selectAll(selectionFilter);
+    }
+  }, {
+    key: "unCheckAllCurrent",
+    value: function unCheckAllCurrent() {
+      var dataSet = this.dataSet,
+          selectionFilter = this.selectionFilter;
+      dataSet.unSelectAll(selectionFilter);
+    }
+  }, {
+    key: "checkAllCached",
+    value: function checkAllCached() {
+      if (this.showCachedSelection) {
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
+        dataSet.batchSelect(Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCachedSelectableRecords */ "e"])(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter));
+      }
+    }
+  }, {
+    key: "unCheckAllCached",
+    value: function unCheckAllCached() {
+      if (this.showCachedSelection) {
+        var dataSet = this.dataSet,
+            selectionFilter = this.selectionFilter;
+        dataSet.batchUnSelect(Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getCachedSelectableRecords */ "e"])(dataSet, this.computedRecordCachedType, this.showCachedTips, selectionFilter));
+      }
+    }
+  }, {
+    key: "isDuplicatePrimaryKeyRecord",
+    value: function isDuplicatePrimaryKeyRecord(record) {
+      return this.duplicatePrimaryKeyInfo.duplicateRecords.has(record);
+    }
+  }, {
+    key: "isBuiltInColumn",
+    value: function isBuiltInColumn(_ref31) {
+      var key = _ref31.key;
+
+      if (lodash_isString__WEBPACK_IMPORTED_MODULE_21___default()(key)) {
+        return [DRAG_KEY, SELECTION_KEY, ROW_NUMBER_KEY, CUSTOMIZED_KEY, EXPAND_KEY, COMBOBAR_KEY].includes(key);
+      }
+    }
+  }, {
+    key: "getColumnTooltip",
+    value: function getColumnTooltip(column) {
+      var tooltip = column.tooltip;
+
+      if (tooltip) {
+        return tooltip;
+      }
+
+      return this.node.context.getTooltip('table-cell');
+    }
+  }, {
+    key: "getColumnHeaders",
+    value: function getColumnHeaders() {
+      var leafNamedColumns = this.leafNamedColumns,
+          dataSet = this.dataSet;
+      return getHeaderTexts(dataSet, leafNamedColumns.slice(), this.aggregation);
+    }
+  }, {
+    key: "getColumnTagRenderer",
+    value: function getColumnTagRenderer(column) {
+      var tagRenderer = column.tagRenderer;
+      return tagRenderer;
+    }
+  }, {
+    key: "showEditor",
+    value: function showEditor(name) {
+      this.currentEditorName = name;
+    }
+  }, {
+    key: "setLastScrollTop",
+    value: function setLastScrollTop(lastScrollTop) {
+      this.lastScrollTop = lastScrollTop;
+      this.startScroll();
+    }
+  }, {
+    key: "setLastScrollLeft",
+    value: function setLastScrollLeft(lastScrollLeft) {
+      this.lastScrollLeft = lastScrollLeft;
+      this.startScroll();
+
+      if (this.clipboard && this.clipboard.copy && this.startChooseCell && this.endChooseCell) {
+        var _this$calcDrawBorderF = this.calcDrawBorderFixColumn(this.startChooseCell.target, this.endChooseCell.target),
+            fixLeftLength = _this$calcDrawBorderF.fixLeftLength,
+            fixRightLength = _this$calcDrawBorderF.fixRightLength;
+
+        if (fixLeftLength || fixRightLength) {
+          this.drawCopyBorder();
+        }
+      }
+    }
+  }, {
+    key: "hideEditor",
+    value: function hideEditor() {
+      this.currentEditorName = undefined;
+    }
+  }, {
+    key: "changeMouseBatchChooseIdList",
+    value: function changeMouseBatchChooseIdList(idList) {
+      this.mouseBatchChooseIdList = idList;
+    }
+  }, {
+    key: "showNextEditor",
+    value: function showNextEditor(name, reserve) {
+      var dataSet = this.dataSet;
+      var currentIndex = dataSet.currentIndex,
+          pageSize = dataSet.pageSize,
+          currentPage = dataSet.currentPage;
+      var indexOfCurrentPage = currentIndex - (currentPage - 1) * pageSize;
+      var record = dataSet.get(reserve ? indexOfCurrentPage - 1 : indexOfCurrentPage + 1);
+
+      if (record && !Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* isDisabledRow */ "u"])(record, this)) {
+        dataSet.current = record;
+        this.showEditor(name);
+        return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "setProps",
+    value: function setProps(props) {
+      this.props = props;
+      this.initGroups();
+      var showCachedSelection = props.showCachedSelection;
+
+      if (showCachedSelection !== undefined) {
+        this.showCachedSelection = showCachedSelection;
+      }
+    }
+  }, {
+    key: "updateProps",
+    value: function updateProps(props) {
+      var _this$props9 = this.props,
+          customizedCode = _this$props9.customizedCode,
+          oldAggregation = _this$props9.aggregation;
+      var copyEnabled = Boolean(this.clipboard && this.clipboard.copy);
+      this.setProps(props);
+
+      if (copyEnabled && !(this.clipboard && this.clipboard.copy)) {
+        if (this.copyChooseCleanup) {
+          this.copyChooseCleanup();
+        } else if (this.autoScrollRAF) {
+          cancelAnimationFrame(this.autoScrollRAF);
+          this.autoScrollRAF = null;
+        }
+
+        this.startChooseCell = null;
+        this.endChooseCell = null;
+        this.isFinishChooseCell = true;
+        this.shiftKey = false;
+        this.dragCorner = false;
+        this.clearArrangeValue();
+      }
+
+      if (this.customizable) {
+        if (customizedCode !== props.customizedCode) {
+          this.loadCustomized();
+          return;
+        }
+
+        var aggregation = props.aggregation;
+
+        if (oldAggregation !== aggregation) {
+          var customized = this.customized;
+
+          if (!lodash_isNil__WEBPACK_IMPORTED_MODULE_18___default()(aggregation) && aggregation !== customized.aggregation) {
+            customized.aggregation = aggregation;
+            this.saveCustomized();
+          }
+        }
+      }
+
+      this.initColumns();
+      this.dataSet.setState(choerodon_ui_dataset_data_set_DataSet__WEBPACK_IMPORTED_MODULE_34__["TABLE_SHOW_REMOVED_ROW"], this.showRemovedRow);
+    }
+  }, {
+    key: "disposeGroupReaction",
+    value: function disposeGroupReaction() {
+      var groupReaction = this.groupReaction;
+
+      if (groupReaction) {
+        groupReaction();
+      }
+    }
+  }, {
+    key: "dispose",
+    value: function dispose() {
+      this.disposeGroupReaction();
+
+      if (this.copyChooseCleanup) {
+        this.copyChooseCleanup();
+      } else if (this.autoScrollRAF) {
+        cancelAnimationFrame(this.autoScrollRAF);
+        this.autoScrollRAF = null;
+      }
+    }
+  }, {
+    key: "initGroups",
+    value: function initGroups() {
+      var _this5 = this;
+
+      this.disposeGroupReaction();
+      var _this$props$groups = this.props.groups,
+          groups = _this$props$groups === void 0 ? [] : _this$props$groups;
+
+      if (groups.length) {
+        this.groupReaction = Object(mobx__WEBPACK_IMPORTED_MODULE_14__["reaction"])(function () {
+          return dataSet.data;
+        }, function () {
+          return _this5.initGroups();
+        });
+        var headerGroupNames = [];
+        var rowGroupNames = [];
+        var groupNames = [];
+        var parentFields = new Map();
+        var dataSet = this.dataSet;
+        var header = [];
+        var row = [];
+        var column = [];
+        groups.forEach(function (group) {
+          var type = group.type,
+              name = group.name,
+              parentField = group.parentField;
+
+          switch (type) {
+            case _enum__WEBPACK_IMPORTED_MODULE_41__[/* GroupType */ "d"].header:
+              header.push(group);
+              headerGroupNames.push(name);
+              break;
+
+            case _enum__WEBPACK_IMPORTED_MODULE_41__[/* GroupType */ "d"].row:
+              row.push(group);
+              rowGroupNames.push(name);
+              break;
+
+            case _enum__WEBPACK_IMPORTED_MODULE_41__[/* GroupType */ "d"].none:
+              break;
+
+            default:
+              {
+                column.push(group);
+                groupNames.push(name);
+              }
+          }
+
+          if (parentField) {
+            parentFields.set(name, parentField);
+          }
+        });
+        this.groupedData = Object(_data_set_utils__WEBPACK_IMPORTED_MODULE_56__["mergeGroupStates"])(Object(_data_set_utils__WEBPACK_IMPORTED_MODULE_56__["normalizeGroups"])(rowGroupNames.concat(groupNames), headerGroupNames, this.currentData, parentFields), this.groupedData);
+        this.groupedDataWithHeader = Object(_data_set_utils__WEBPACK_IMPORTED_MODULE_56__["mergeGroupStates"])(Object(_data_set_utils__WEBPACK_IMPORTED_MODULE_56__["normalizeGroups"])(headerGroupNames.concat(rowGroupNames, groupNames), [], this.currentData), this.groupedDataWithHeader);
+        this.groups = [].concat(header, row, column);
+      } else {
+        this.groups = [];
+        this.groupedData = [];
+        this.groupedDataWithHeader = [];
+      }
+    }
+  }, {
+    key: "initColumns",
+    value: function initColumns() {
+      var customized = this.customized,
+          customizable = this.customizable,
+          aggregation = this.aggregation,
+          dataSet = this.dataSet;
+      var _this$props10 = this.props,
+          columns = _this$props10.columns,
+          children = _this$props10.children;
+      var customizedColumns = customizable ? customized.columns : undefined;
+      dataSet.setState('__CUSCOLUMNS__', customized);
+
+      var _normalizeGroupColumn = normalizeGroupColumns(this, columns, children, aggregation, customizedColumns),
+          _normalizeGroupColumn2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_normalizeGroupColumn, 4),
+          leftOriginalColumns = _normalizeGroupColumn2[0],
+          originalColumns = _normalizeGroupColumn2[1],
+          rightOriginalColumns = _normalizeGroupColumn2[2],
+          hasAggregationColumn = _normalizeGroupColumn2[3];
+
+      this.leftOriginalColumns = leftOriginalColumns;
+      this.originalColumns = originalColumns;
+      this.rightOriginalColumns = rightOriginalColumns;
+      this.hasAggregationColumn = hasAggregationColumn;
+    }
+  }, {
+    key: "isAggregationCellExpanded",
+    value: function isAggregationCellExpanded(record, key) {
+      var expandedKeys = record.getState(AGGREGATION_EXPAND_CELL_KEY);
+
+      if (expandedKeys) {
+        return expandedKeys.get(key);
+      }
+    }
+  }, {
+    key: "setAggregationCellExpanded",
+    value: function setAggregationCellExpanded(record, key, expanded) {
+      var expandedKeys = record.getState(AGGREGATION_EXPAND_CELL_KEY) || mobx__WEBPACK_IMPORTED_MODULE_14__["observable"].map();
+      expandedKeys.set(key, expanded);
+      record.setState(AGGREGATION_EXPAND_CELL_KEY, expandedKeys);
+    }
+  }, {
+    key: "isBodyExpanded",
+    get: function get() {
+      if (!this.props.bodyExpandable) {
+        return true;
+      }
+
+      var bodyExpanded = this.props.bodyExpanded;
+
+      if (bodyExpanded !== undefined) {
+        return bodyExpanded;
+      }
+
+      var isBodyExpanded = this.dataSet.getState(BODY_EXPANDED);
+
+      if (isBodyExpanded !== undefined) {
+        return isBodyExpanded;
+      }
+
+      return lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24___default()(this.props.defaultBodyExpanded, true);
+    }
+  }, {
+    key: "setBodyExpanded",
+    value: function setBodyExpanded(isBodyExpanded) {
+      var _this$props11 = this.props,
+          bodyExpanded = _this$props11.bodyExpanded,
+          _this$props11$onBodyE = _this$props11.onBodyExpand,
+          onBodyExpand = _this$props11$onBodyE === void 0 ? lodash_noop__WEBPACK_IMPORTED_MODULE_32___default.a : _this$props11$onBodyE;
+
+      if (bodyExpanded === undefined) {
+        this.dataSet.setState(BODY_EXPANDED, isBodyExpanded);
+      }
+
+      onBodyExpand(isBodyExpanded);
+    }
+  }, {
+    key: "isGroupExpanded",
+    value: function isGroupExpanded(group) {
+      return group.isExpanded && (!group.parent || this.isGroupExpanded(group.parent));
+    }
+  }, {
+    key: "setGroupExpanded",
+    value: function setGroupExpanded(group, isExpanded) {
+      group.isExpanded = isExpanded;
+    }
+  }, {
+    key: "isRowExpanded",
+    value: function isRowExpanded(record) {
+      var _record$isExpanded = record.isExpanded,
+          isExpanded = _record$isExpanded === void 0 ? this.expandedRows.indexOf(record.key) !== -1 : _record$isExpanded;
+      return isExpanded && (!this.isTree || !record.parent || this.isRowExpanded(record.parent));
+    }
+    /**
+     *
+     * @param record 想修改的record
+     * @param expanded 设置是否展开
+     * @param disHandler 设置是否需要触发展开事件
+     */
+
+  }, {
+    key: "setRowExpanded",
+    value: function setRowExpanded(record, expanded, disHandler) {
+      record.isExpanded = expanded;
+
+      if (!this.inBatchExpansion) {
+        var index = this.expandedRows.indexOf(record.key);
+
+        if (expanded) {
+          if (index === -1) {
+            this.expandedRows.push(record.key);
+          }
+        } else if (index !== -1) {
+          this.expandedRows.splice(index, 1);
+        }
+      }
+
+      var onExpand = this.props.onExpand;
+
+      if (onExpand && !disHandler) {
+        onExpand(expanded, record);
+      }
+
+      if (expanded && this.canTreeLoadData) {
+        this.onTreeNodeLoad({
+          record: record
+        });
+      }
+    }
+  }, {
+    key: "isRowPending",
+    value: function isRowPending(record) {
+      return record.pending === true;
+    }
+  }, {
+    key: "setRowPending",
+    value: function setRowPending(record, pending) {
+      record.pending = pending;
+    }
+  }, {
+    key: "isRowLoaded",
+    value: function isRowLoaded(record) {
+      return record.childrenLoaded === true;
+    }
+  }, {
+    key: "setRowLoaded",
+    value: function setRowLoaded(record, loaded) {
+      record.childrenLoaded = loaded;
+    }
+  }, {
+    key: "isRowHover",
+    value: function isRowHover(record) {
+      return this.hoverRow === record;
+    }
+  }, {
+    key: "canTreeLoadData",
+    get: function get() {
+      var _this$props12 = this.props,
+          treeLoadData = _this$props12.treeLoadData,
+          treeAsync = _this$props12.treeAsync;
+      return treeAsync || !!treeLoadData;
+    }
+  }, {
+    key: "cellHighlightRenderer",
+    get: function get() {
+      var _this$props$cellHighl = this.props.cellHighlightRenderer,
+          cellHighlightRenderer = _this$props$cellHighl === void 0 ? this.getConfig('highlightRenderer') : _this$props$cellHighl;
+      return cellHighlightRenderer;
+    }
+  }, {
+    key: "setRowHover",
+    value: function setRowHover(record, hover) {
+      this.hoverRow = hover ? record : undefined;
+    }
+  }, {
+    key: "expandAll",
+    value: function expandAll() {
+      var _this6 = this;
+
+      this.inBatchExpansion = true;
+      this.expandedRows = this.dataSet.records.map(function (record) {
+        _this6.setRowExpanded(record, true);
+
+        return record.key;
+      });
+      this.inBatchExpansion = false;
+    }
+  }, {
+    key: "collapseAll",
+    value: function collapseAll() {
+      var _this7 = this;
+
+      this.inBatchExpansion = true;
+      this.dataSet.records.forEach(function (record) {
+        return _this7.setRowExpanded(record, false);
+      });
+      this.expandedRows = [];
+      this.inBatchExpansion = false;
+    }
+  }, {
+    key: "onTreeNodeLoad",
+    value: function () {
+      var _onTreeNodeLoad = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.mark(function _callee(_ref32) {
+        var record, _this$props13, dataSet, treeLoadData, treeAsync, selectionMode, promises, _ref33, _ref33$currentPage, currentPage, parentSelect;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                record = _ref32.record;
+                _this$props13 = this.props, dataSet = _this$props13.dataSet, treeLoadData = _this$props13.treeLoadData, treeAsync = _this$props13.treeAsync, selectionMode = _this$props13.selectionMode;
+                promises = [];
+                this.setRowPending(record, true);
+
+                if (treeAsync && dataSet) {
+                  if (dataSet.paging) {
+                    _ref33 = record.getState(choerodon_ui_dataset_data_set_DataSet__WEBPACK_IMPORTED_MODULE_34__["CHILDREN_PAGE_INFO"]) || {}, _ref33$currentPage = _ref33.currentPage, currentPage = _ref33$currentPage === void 0 ? 1 : _ref33$currentPage;
+                    promises.push(dataSet.queryMoreChild(record, currentPage));
+                  } else {
+                    promises.push(dataSet.queryMoreChild(record));
+                  }
+                }
+
+                if (treeLoadData) {
+                  promises.push(treeLoadData({
+                    record: record,
+                    dataSet: dataSet
+                  }));
+                } // 由子选父
+
+
+                parentSelect = function parentSelect(parent) {
+                  if (!parent.isSelected && parent.children && parent.children.length > 0 && parent.children.every(function (child) {
+                    return child.isSelected;
+                  })) {
+                    dataSet.select(parent);
+
+                    if (parent.parent) {
+                      parentSelect(parent.parent);
+                    }
+                  }
+                };
+
+                _context.prev = 7;
+                _context.next = 10;
+                return Promise.all(promises);
+
+              case 10:
+                if (selectionMode === _enum__WEBPACK_IMPORTED_MODULE_41__[/* SelectionMode */ "j"].treebox) {
+                  // 由父选子
+                  if (record.isSelected) {
+                    if (!record.parentSelectToChildrenSynced) {
+                      lodash_defaultTo__WEBPACK_IMPORTED_MODULE_24___default()(record.children, []).forEach(function (child) {
+                        if (!child.isSelected) {
+                          dataSet.select(child);
+                        }
+                      });
+                    }
+                  } else {
+                    parentSelect(record);
+                  }
+
+                  record.parentSelectToChildrenSynced = true;
+                }
+
+                this.setRowLoaded(record, true);
+
+              case 12:
+                _context.prev = 12;
+                this.setRowLoaded(record, true);
+                this.setRowPending(record, false);
+                return _context.finish(12);
+
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[7,, 12, 16]]);
+      }));
+
+      function onTreeNodeLoad(_x4) {
+        return _onTreeNodeLoad.apply(this, arguments);
+      }
+
+      return onTreeNodeLoad;
+    }()
+  }, {
+    key: "renderSelectionBox",
+    value: function renderSelectionBox(_ref34) {
+      var record = _ref34.record;
+      var selectionBoxRenderer = this.props.selectionBoxRenderer;
+
+      if (selectionBoxRenderer && lodash_isFunction__WEBPACK_IMPORTED_MODULE_29___default()(selectionBoxRenderer)) {
+        var element = _renderSelectionBox({
+          record: record,
+          store: this
+        });
+
+        return selectionBoxRenderer({
+          record: record,
+          element: element
+        });
+      }
+
+      return _renderSelectionBox({
+        record: record,
+        store: this
+      });
+    }
+  }, {
+    key: "renderRowNumber",
+    value: function renderRowNumber(_ref35) {
+      var record = _ref35.record,
+          dataSet = _ref35.dataSet,
+          rowIndex = _ref35.rowIndex;
+      var isTree = this.isTree,
+          rowNumber = this.props.rowNumber,
+          groups = this.groups;
+      var numbers = groups.length > 0 && rowIndex !== undefined ? [rowIndex + 1] : getRowNumbers(record, dataSet, isTree, this.showRemovedRow);
+      var number = numbers.join('-');
+
+      if (typeof rowNumber === 'function') {
+        return rowNumber({
+          record: record,
+          dataSet: dataSet,
+          text: number,
+          pathNumbers: numbers
+        });
+      }
+
+      return number;
+    }
+  }, {
+    key: "renderDragBox",
+    value: function renderDragBox(_ref36) {
+      var record = _ref36.record;
+      var rowDragRender = this.props.rowDragRender;
+
+      if (rowDragRender && lodash_isFunction__WEBPACK_IMPORTED_MODULE_29___default()(rowDragRender.renderIcon)) {
+        return rowDragRender.renderIcon({
+          record: record
+        });
+      }
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_es_icon__WEBPACK_IMPORTED_MODULE_28__[/* default */ "a"], {
+        type: "baseline-drag_indicator"
+      });
+    }
+  }, {
+    key: "findColumnGroup",
+    value: function findColumnGroup(indexOrKeyOrName) {
+      var allLeafs = this.columnGroups.allLeafs;
+      return lodash_isNumber__WEBPACK_IMPORTED_MODULE_22___default()(indexOrKeyOrName) ? allLeafs[indexOrKeyOrName] : allLeafs.find(function (_ref37) {
+        var key = _ref37.key;
+        return String(key) === indexOrKeyOrName;
+      });
+    }
+  }, {
+    key: "setColumnWidth",
+    value: function setColumnWidth(columnGroup, width) {
+      var saveToCustomization = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var column = columnGroup.column;
+
+      if (width !== column.width) {
+        this.changeCustomizedColumnValue(column, {
+          width: width
+        }, saveToCustomization);
+        var onColumnResize = this.props.onColumnResize;
+
+        if (onColumnResize) {
+          var index = this.columnGroups.allLeafs.indexOf(columnGroup);
+          /**
+           * onColumnResize 事件回调
+           * 回调参数：
+           * @param column
+           * @param width
+           */
+
+          onColumnResize({
+            column: column,
+            width: width,
+            index: index
+          });
+        }
+      }
+    }
+  }, {
+    key: "calcDrawBorderFixColumn",
+    value: function calcDrawBorderFixColumn(startTarget, endTarget) {
+      var startAndTargetClassValues = "".concat(startTarget.classList.value, " ").concat(endTarget.classList.value).split(" ");
+      var fixLeftClassname = "".concat(this.prefixCls, "-cell-fix-left");
+      var fixRightClassname = "".concat(this.prefixCls, "-cell-fix-right");
+      var fixLeftLength = startAndTargetClassValues.filter(function (x) {
+        return x === fixLeftClassname;
+      }).length; // 选中左固定列的数量  0 ~ 2
+
+      var fixRightLength = startAndTargetClassValues.filter(function (x) {
+        return x === fixRightClassname;
+      }).length; // 选中右固定列的数量 0 ～ 2
+
+      return {
+        fixLeftClassname: fixLeftClassname,
+        fixRightClassname: fixRightClassname,
+        fixLeftLength: fixLeftLength,
+        fixRightLength: fixRightLength
+      };
+    } // 动态改变固定列层级
+
+  }, {
+    key: "changeFixIndex",
+    value: function changeFixIndex(classname) {
+      var zIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+      var _this$node = this.node,
+          tableContentWrap = _this$node.tableContentWrap,
+          tableBodyWrap = _this$node.tableBodyWrap;
+      var positionWrapper = tableBodyWrap || tableContentWrap;
+
+      if (positionWrapper) {
+        var fixElements = positionWrapper.querySelectorAll("td.".concat(classname));
+        var choosedRows = Array.from(fixElements);
+        choosedRows.forEach(function (element) {
+          element.style.zIndex = zIndex;
+        });
+      }
+    }
+  }, {
+    key: "drawCopyBorder",
+    value: function drawCopyBorder(sTarget, eTarget) {
+      var _this8 = this;
+
+      var _this$node2 = this.node,
+          rangeBorder = _this$node2.rangeBorder,
+          tableContentWrap = _this$node2.tableContentWrap,
+          tableBodyWrap = _this$node2.tableBodyWrap,
+          fixedColumnsBodyLeft = _this$node2.fixedColumnsBodyLeft,
+          fixedColumnsBodyRight = _this$node2.fixedColumnsBodyRight,
+          startChooseCell = this.startChooseCell,
+          endChooseCell = this.endChooseCell,
+          lastScrollLeft = this.lastScrollLeft,
+          columnGroups = this.columnGroups,
+          leftColumnGroups = this.leftColumnGroups,
+          customizable = this.customizable;
+      var startTarget = sTarget || startChooseCell && startChooseCell.target;
+      var endTarget = eTarget || endChooseCell && endChooseCell.target;
+      var positionWrapper = tableBodyWrap || tableContentWrap;
+      var maxScrollLeft = positionWrapper.scrollWidth - positionWrapper.clientWidth;
+
+      if (positionWrapper && startChooseCell && endChooseCell) {
+        var minRowIndex = Math.min(startChooseCell.rowIndex, endChooseCell.rowIndex);
+        var maxRowIndex = Math.max(startChooseCell.rowIndex, endChooseCell.rowIndex);
+
+        var resolveVisibleTarget = function resolveVisibleTarget(target, rowIndex, colIndex) {
+          var column = columnGroups.leafs[colIndex];
+
+          if (!column) {
+            return target || null;
+          }
+
+          var columnKey = String(column.key);
+
+          if (target && target.isConnected && Number(target.dataset.rowIndex) === rowIndex && target.dataset.index === columnKey) {
+            return target;
+          }
+
+          var lock = column.column.lock;
+          var wrappers = [lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left || lock === true ? fixedColumnsBodyLeft : undefined, !lock ? positionWrapper : undefined, lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].right ? fixedColumnsBodyRight : undefined, positionWrapper].filter(function (wrapper) {
+            return Boolean(wrapper);
+          });
+          return wrappers.reduce(function (result, wrapper) {
+            var _wrapper$querySelecto;
+
+            if (result) {
+              return result;
+            }
+
+            var wrapperRect = wrapper.getBoundingClientRect();
+            var footerTop = (_wrapper$querySelecto = wrapper.querySelector('tfoot')) === null || _wrapper$querySelecto === void 0 ? void 0 : _wrapper$querySelecto.getBoundingClientRect().top;
+            var visibleBottom = footerTop === undefined ? wrapperRect.bottom : Math.min(wrapperRect.bottom, footerTop);
+            return Array.from(wrapper.querySelectorAll('td[data-row-index]')).filter(function (cell) {
+              var cellRowIndex = Number(cell.dataset.rowIndex);
+
+              var _cell$getBoundingClie = cell.getBoundingClientRect(),
+                  top = _cell$getBoundingClie.top,
+                  bottom = _cell$getBoundingClie.bottom;
+
+              return cell.dataset.index === columnKey && cellRowIndex >= minRowIndex && cellRowIndex <= maxRowIndex && top < visibleBottom && bottom > wrapperRect.top;
+            }).reduce(function (nearest, cell) {
+              return !nearest || Math.abs(Number(cell.dataset.rowIndex) - rowIndex) < Math.abs(Number(nearest.dataset.rowIndex) - rowIndex) ? cell : nearest;
+            }, null);
+          }, null);
+        };
+
+        startTarget = resolveVisibleTarget(startTarget, startChooseCell.rowIndex, startChooseCell.colIndex);
+        endTarget = resolveVisibleTarget(endTarget, endChooseCell.rowIndex, endChooseCell.colIndex);
+      }
+
+      if (rangeBorder && startTarget && endTarget) {
+        (function () {
+          var _this8$calcDrawBorder = _this8.calcDrawBorderFixColumn(startTarget, endTarget),
+              fixLeftClassname = _this8$calcDrawBorder.fixLeftClassname,
+              fixRightClassname = _this8$calcDrawBorder.fixRightClassname,
+              fixLeftLength = _this8$calcDrawBorder.fixLeftLength,
+              fixRightLength = _this8$calcDrawBorder.fixRightLength;
+
+          var rectStart = startTarget.getBoundingClientRect();
+          var rectEnd = endTarget.getBoundingClientRect();
+          var minX = Math.min(rectStart.left, rectEnd.left);
+          var maxX = Math.max(rectStart.right, rectEnd.right);
+          var minY = Math.min(rectStart.top, rectEnd.top);
+          var maxY = Math.max(rectStart.bottom, rectEnd.bottom);
+          var left = Math.min(startTarget.offsetLeft, endTarget.offsetLeft);
+          var top = Math.min(startTarget.offsetTop, endTarget.offsetTop);
+          var width = maxX - minX;
+          var height = maxY - minY;
+          rangeBorder.style.top = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(top);
+          rangeBorder.style.height = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(height);
+          rangeBorder.style.display = 'block';
+
+          if (!fixLeftLength && !fixRightLength || fixLeftLength && fixRightLength || fixLeftLength > 1 || fixRightLength > 1 || !_this8.overflowX) {
+            // 一般选框处理
+            rangeBorder.style.width = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(width);
+            rangeBorder.style.left = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(left);
+          } else {
+            // 动态选框处理
+            var extraDistance = 0;
+            var fixChoosedWidth = 0; // 获取框选的固定列的宽度
+
+            if (startChooseCell && endChooseCell) {
+              var _sort = [startChooseCell.colIndex, endChooseCell.colIndex].sort(function (a, b) {
+                return a - b;
+              }),
+                  _sort2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_8___default()(_sort, 2),
+                  firstColIndex = _sort2[0],
+                  lastColIndex = _sort2[1];
+
+              var leafs = columnGroups.leafs;
+              var totalWidth = leafs.slice(firstColIndex, lastColIndex + 1).reduce(function (total, col) {
+                return total + (col.width || 0);
+              }, 0); // 存在自定义列的情况
+
+              var lastLeafs = leafs[lastColIndex + 1];
+
+              if (customizable && lastLeafs && lastLeafs.key === CUSTOMIZED_KEY) {
+                totalWidth += leafs[lastColIndex + 1].width || 0;
+              }
+
+              if (fixLeftLength) {
+                extraDistance = lastScrollLeft > endTarget.offsetLeft ? lastScrollLeft - (endTarget.offsetLeft - leftColumnGroups.width + endTarget.offsetWidth) : 0;
+                var fixChoosedLeft = 0;
+
+                for (var i = firstColIndex; i <= lastColIndex; i++) {
+                  var col = leafs[i];
+
+                  if (col.column.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].left || col.column.lock === true) {
+                    fixChoosedWidth += col.width || 0;
+
+                    if (i === firstColIndex) {
+                      var fixedLeftTarget = [startTarget, endTarget].find(function (target) {
+                        return target.classList.contains(fixLeftClassname);
+                      });
+                      fixChoosedLeft = fixedLeftTarget ? fixedLeftTarget.offsetLeft : 0;
+                    }
+                  }
+                }
+
+                rangeBorder.style.left = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(fixChoosedLeft);
+                rangeBorder.style.width = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(Math.max(fixChoosedWidth, totalWidth - lastScrollLeft));
+              } else if (fixRightLength) {
+                var unFixedWidth = 0;
+                var minLeft = 0;
+
+                for (var _i = lastColIndex; _i >= firstColIndex; _i--) {
+                  var _col = leafs[_i];
+
+                  if (_col.column.lock === _enum__WEBPACK_IMPORTED_MODULE_41__[/* ColumnLock */ "b"].right) {
+                    fixChoosedWidth += _col.width || 0;
+
+                    if (lastColIndex === _i && customizable && lastColIndex === columnGroups.leafs.length - 2) {
+                      fixChoosedWidth += leafs[_i + 1].width || 0;
+                    }
+                  } else if (!_col.column.lock) {
+                    unFixedWidth += _col.width || 0;
+                    minLeft = _col.left;
+                  }
+                }
+
+                extraDistance = maxScrollLeft - lastScrollLeft > unFixedWidth ? maxScrollLeft - lastScrollLeft - unFixedWidth : 0;
+                rangeBorder.style.left = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(minLeft - extraDistance);
+                rangeBorder.style.width = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(Math.max(fixChoosedWidth, totalWidth - (maxScrollLeft - lastScrollLeft)));
+              }
+            }
+          } // 动态改变固定列层级
+
+
+          if (fixLeftLength && fixRightLength) {
+            rangeBorder.style.zIndex = "2";
+
+            _this8.changeFixIndex(fixLeftClassname);
+
+            _this8.changeFixIndex(fixRightClassname);
+          } else if (fixLeftLength) {
+            rangeBorder.style.zIndex = "2";
+
+            if (fixLeftLength === 1) {
+              _this8.changeFixIndex(fixRightClassname, "3");
+            }
+
+            _this8.changeFixIndex(fixLeftClassname);
+          } else if (fixRightLength) {
+            rangeBorder.style.zIndex = "2";
+
+            if (fixRightLength === 1) {
+              _this8.changeFixIndex(fixLeftClassname, "3");
+            }
+
+            _this8.changeFixIndex(fixRightClassname);
+          } else {
+            rangeBorder.style.zIndex = "1";
+          }
+        })();
+      }
+    }
+  }, {
+    key: "drawExpandArea",
+    value: function drawExpandArea(event) {
+      // 说明有起点 & 终点
+      var _this$node3 = this.node,
+          rangeBorder = _this$node3.rangeBorder,
+          expandBorder = _this$node3.expandBorder,
+          startChooseCell = this.startChooseCell,
+          endChooseCell = this.endChooseCell;
+      var sTarget = startChooseCell && startChooseCell.target;
+      var eTarget = endChooseCell && endChooseCell.target;
+      var pointTarget = Object(_TableCell__WEBPACK_IMPORTED_MODULE_59__[/* getTdElementByTarget */ "b"])(event.target);
+      var targetTop = pointTarget.offsetTop + pointTarget.offsetHeight; // 分析对比两点的位置，第一个点是 右下角。第二个点是 左上角
+      // 计算右下角的位置
+
+      if (rangeBorder) {
+        var cornerTop = rangeBorder.offsetTop + rangeBorder.offsetHeight;
+
+        if (targetTop > cornerTop && sTarget && eTarget) {
+          // 往下绘制扩展区域
+          // 起点
+          var LT = {
+            x: Math.min(sTarget.offsetLeft, eTarget.offsetLeft),
+            y: Math.max(sTarget.offsetTop + sTarget.offsetHeight, eTarget.offsetTop + eTarget.offsetHeight)
+          }; // 终点
+
+          var RB = {
+            x: Math.max(sTarget.offsetLeft + sTarget.offsetWidth, eTarget.offsetLeft + eTarget.offsetWidth),
+            y: pointTarget.offsetTop + pointTarget.offsetHeight
+          };
+
+          if (expandBorder) {
+            expandBorder.style.left = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(rangeBorder.offsetLeft);
+            expandBorder.style.top = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(LT.y);
+            expandBorder.style.width = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(rangeBorder.offsetWidth);
+            expandBorder.style.height = Object(_es_util_UnitConvertor__WEBPACK_IMPORTED_MODULE_27__[/* pxToRem */ "d"])(RB.y - LT.y);
+            expandBorder.style.borderTop = "none";
+            expandBorder.style.display = "block";
+            expandBorder.style.zIndex = rangeBorder.style.zIndex;
+          }
+
+          var rows = (RB.y - LT.y + 1) / pointTarget.offsetHeight;
+          this.batchExpandRowNumber = Math.floor(rows);
+        } else {
+          this.batchExpandRowNumber = 0;
+
+          if (expandBorder) {
+            expandBorder.style.display = "none";
+          }
+        }
+      }
+    } // 批量赋值款选单元格的值
+
+  }, {
+    key: "batchSetCellValue",
+    value: function batchSetCellValue() {
+      var _this$node4 = this.node,
+          tableBodyWrap = _this$node4.tableBodyWrap,
+          expandBorder = _this$node4.expandBorder,
+          dataSet = this.dataSet;
+      if (!this.batchExpandRowNumber) return; // 记录初始框选的值
+
+      var _this$startChooseCell = this.startChooseCell,
+          startColIndex = _this$startChooseCell.colIndex,
+          startRowIndex = _this$startChooseCell.rowIndex,
+          sTarget = _this$startChooseCell.target;
+      var _this$endChooseCell = this.endChooseCell,
+          endColIndex = _this$endChooseCell.colIndex,
+          endRowIndex = _this$endChooseCell.rowIndex,
+          eTarget = _this$endChooseCell.target;
+      var minRowIndex = Math.min(startRowIndex, endRowIndex);
+      var minColIndex = Math.min(startColIndex, endColIndex);
+      var maxRowIndex = Math.max(startRowIndex, endRowIndex);
+      var maxColIndex = Math.max(startColIndex, endColIndex);
+      var data = this.currentData.map(function (x) {
+        return x.toData();
+      });
+      var cols = this.columns.filter(function (x) {
+        return !x.hidden;
+      });
+      var i = minRowIndex;
+
+      for (var k = 1; k <= this.batchExpandRowNumber; k++) {
+        for (var j = minColIndex; j <= maxColIndex; j++) {
+          var cField = cols[j].name;
+          var cValue = data[i][cField];
+          var record = this.currentData[maxRowIndex + k];
+          var field = dataSet.fields.get(cField);
+          var colEditor = cols[j].editor;
+
+          if (typeof colEditor === 'function') {
+            colEditor = colEditor(record, cField);
+          }
+
+          if (colEditor && field && !field.get('readOnly', record) && !field.get('disabled', record)) {
+            record.set(cField, cValue);
+          }
+        }
+
+        if (i < maxRowIndex && k % (maxRowIndex - minRowIndex + 1) !== 0) {
+          i++;
+        } else {
+          i = minRowIndex;
+        }
+      } // 新起点
+
+
+      var newSTarget = startRowIndex > endRowIndex ? eTarget : sTarget; // 新终点
+
+      var trs = tableBodyWrap === null || tableBodyWrap === void 0 ? void 0 : tableBodyWrap.querySelectorAll('.c7n-pro-table-tbody tr');
+
+      if (trs) {
+        var dataIndex = (startRowIndex > endRowIndex ? sTarget : eTarget).getAttribute('data-index');
+        var newETarget = trs[(startRowIndex > endRowIndex ? startRowIndex : endRowIndex) + this.batchExpandRowNumber].querySelector("td[data-index=\"".concat(dataIndex, "\"]"));
+
+        if (newETarget) {
+          this.drawCopyBorder(newSTarget, newETarget);
+        } // 更新起始点
+
+
+        this.startChooseCell = {
+          rowIndex: startRowIndex > endRowIndex ? endRowIndex : startRowIndex,
+          colIndex: startRowIndex > endRowIndex ? endColIndex : startColIndex,
+          target: newSTarget
+        };
+        this.endChooseCell = {
+          rowIndex: (startRowIndex > endRowIndex ? startRowIndex : endRowIndex) + this.batchExpandRowNumber,
+          colIndex: startRowIndex > endRowIndex ? startColIndex : endColIndex,
+          target: newETarget
+        };
+      }
+
+      if (expandBorder) {
+        expandBorder.style.display = "none";
+      }
+
+      if (this.clipboard && this.clipboard.copy) {
+        this.calcArrangeValue();
+      }
+    }
+  }, {
+    key: "changeCustomizedColumnValue",
+    value: function changeCustomizedColumnValue(column, value) {
+      var saveToCustomization = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var columns = this.customized.columns;
+      Object(mobx__WEBPACK_IMPORTED_MODULE_14__["set"])(column, value);
+      var columnKey = Object(_utils__WEBPACK_IMPORTED_MODULE_44__[/* getColumnKey */ "g"])(column).toString();
+      var oldCustomized = Object(mobx__WEBPACK_IMPORTED_MODULE_14__["get"])(columns, columnKey) || lodash_get__WEBPACK_IMPORTED_MODULE_23___default()(columns, columnKey);
+      Object(mobx__WEBPACK_IMPORTED_MODULE_14__["set"])(columns, columnKey, _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, oldCustomized), value));
+
+      if (saveToCustomization) {
+        this.saveCustomizedDebounce();
+      }
+    }
+  }, {
+    key: "saveCustomized",
+    value: function () {
+      var _saveCustomized = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.mark(function _callee2(customized, otherInfo) {
+        var _this$props14, customizedCode, boardCustomized, tableCustomizedSave, tableCustomizedLoad, currentRecord, res, dataJson;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(this.customizable && this.customizedLoaded)) {
+                  _context2.next = 23;
+                  break;
+                }
+
+                _this$props14 = this.props, customizedCode = _this$props14.customizedCode, boardCustomized = _this$props14.boardCustomized;
+
+                if (customized) {
+                  this.customized = customized;
+                }
+
+                if (!customizedCode) {
+                  _context2.next = 23;
+                  break;
+                }
+
+                tableCustomizedSave = this.getConfig('tableCustomizedSave') || this.getConfig('customizedSave');
+                tableCustomizedLoad = this.getConfig('tableCustomizedLoad') || this.getConfig('customizedLoad'); // board 组件列表视图配置保存
+
+                if (!(this.customizedBtn && boardCustomized && boardCustomized.customizedDS)) {
+                  _context2.next = 17;
+                  break;
+                }
+
+                currentRecord = boardCustomized.customizedDS.current; // @ts-ignore
+
+                _context2.next = 10;
+                return tableCustomizedSave(customizedCode, _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({
+                  dataJson: JSON.stringify(lodash_omit__WEBPACK_IMPORTED_MODULE_30___default()(this.customized, ['dataJson', 'creationDate', 'createdBy', 'lastUpdateDate', 'lastUpdatedBy', '_token', 'userId', 'tenantId', 'id']))
+                }, lodash_omit__WEBPACK_IMPORTED_MODULE_30___default()(this.customized, ['dataJson'])), {}, {
+                  defaultFlag: 1,
+                  viewType: 'table',
+                  id: currentRecord.get('id'),
+                  objectVersionNumber: currentRecord.get('objectVersionNumber')
+                }), this.customizedBtn ? 'Board' : 'Table', otherInfo);
+
+              case 10:
+                if (!customizedCode) {
+                  _context2.next = 15;
+                  break;
+                }
+
+                _context2.next = 13;
+                return tableCustomizedLoad(customizedCode, 'Board', {
+                  type: 'detail',
+                  id: currentRecord.get('id')
+                });
+
+              case 13:
+                res = _context2.sent;
+
+                try {
+                  dataJson = res.dataJson ? lodash_pick__WEBPACK_IMPORTED_MODULE_31___default()(JSON.parse(res.dataJson), ['size', 'parityRow', 'pageSize', 'columns', 'combineSort', 'defaultFlag', 'height', 'heightDiff', 'viewName']) : {}; // @ts-ignore
+
+                  this.customized = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({
+                    columns: {}
+                  }, lodash_omit__WEBPACK_IMPORTED_MODULE_30___default()(res, 'dataJson')), dataJson);
+                  currentRecord.set({
+                    objectVersionNumber: res.objectVersionNumber,
+                    dataJson: dataJson,
+                    viewName: res.viewName
+                  });
+                  this.dataSet.setState('__CUSTOMIZED__', this.customized);
+                } catch (error) {
+                  Object(choerodon_ui_dataset_utils__WEBPACK_IMPORTED_MODULE_25__["warning"])(false, error.message);
+                }
+
+              case 15:
+                _context2.next = 23;
+                break;
+
+              case 17:
+                _context2.next = 19;
+                return tableCustomizedSave(customizedCode, this.customized, 'Table', otherInfo);
+
+              case 19:
+                this.dataSet.setState('__CUSTOMIZED__', this.customized);
+
+                if (!(otherInfo && otherInfo.params)) {
+                  _context2.next = 23;
+                  break;
+                }
+
+                _context2.next = 23;
+                return this.loadCustomized();
+
+              case 23:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function saveCustomized(_x5, _x6) {
+        return _saveCustomized.apply(this, arguments);
+      }
+
+      return saveCustomized;
+    }()
+  }, {
+    key: "openCustomizationModal",
+    value: function openCustomizationModal(context) {
+      var customizedCode = this.props.customizedCode;
+      var modalProps = {
+        key: 'TABLE_CUSTOMIZATION_MODAL',
+        drawer: true,
+        size: _core_enum__WEBPACK_IMPORTED_MODULE_48__[/* Size */ "a"].small,
+        title: this.customizedBtn ? '表格视图配置' : Object(_locale_context__WEBPACK_IMPORTED_MODULE_49__[/* $l */ "a"])('Table', 'customization_settings'),
+        children: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_customization_settings_CustomizationSettings__WEBPACK_IMPORTED_MODULE_36__[/* default */ "a"], {
+          context: context
+        }),
+        bodyStyle: {
+          overflow: 'hidden auto',
+          padding: 0
+        }
+      };
+
+      if (customizedCode) {
+        modalProps.okText = Object(_locale_context__WEBPACK_IMPORTED_MODULE_49__[/* $l */ "a"])('Table', 'save_button');
+      }
+
+      _modal_Modal__WEBPACK_IMPORTED_MODULE_54__[/* default */ "a"].open(modalProps);
+    }
+  }, {
+    key: "loadCustomized",
+    value: function () {
+      var _loadCustomized = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.mark(function _callee4(customizedProps, forceLoad) {
+        var _this9 = this;
+
+        var _this$props15, customizedCode, boardCustomized, _this$props15$onCusto, onCustomizedLoad, dataSet, queryBarProps, showSimpleMode, tableCustomizedLoad, customized, res, dataJson;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _this$props15 = this.props, customizedCode = _this$props15.customizedCode, boardCustomized = _this$props15.boardCustomized, _this$props15$onCusto = _this$props15.onCustomizedLoad, onCustomizedLoad = _this$props15$onCusto === void 0 ? lodash_noop__WEBPACK_IMPORTED_MODULE_32___default.a : _this$props15$onCusto, dataSet = _this$props15.dataSet;
+                queryBarProps = this.props.queryBarProps;
+                showSimpleMode = queryBarProps && queryBarProps.simpleMode;
+
+                if (!((forceLoad || this.customizable) && customizedCode || this.queryBar === _enum__WEBPACK_IMPORTED_MODULE_41__[/* TableQueryBarType */ "u"].comboBar && !showSimpleMode)) {
+                  _context4.next = 22;
+                  break;
+                }
+
+                tableCustomizedLoad = this.getConfig('tableCustomizedLoad') || this.getConfig('customizedLoad');
+                Object(mobx__WEBPACK_IMPORTED_MODULE_14__["runInAction"])(function () {
+                  delete _this9.customizedLoaded;
+                  _this9.tempCustomized = {
+                    columns: {}
+                  };
+                  _this9.loading = true;
+                });
+                _context4.prev = 6;
+                customized = customizedProps;
+
+                if (!(customizedCode && !boardCustomized && !customized)) {
+                  _context4.next = 12;
+                  break;
+                }
+
+                _context4.next = 11;
+                return tableCustomizedLoad(customizedCode, 'Table');
+
+              case 11:
+                customized = _context4.sent;
+
+              case 12:
+                if (!(customizedCode && boardCustomized && boardCustomized.customizedDS && !customized)) {
+                  _context4.next = 17;
+                  break;
+                }
+
+                _context4.next = 15;
+                return tableCustomizedLoad(customizedCode, 'Board', {
+                  type: 'detail',
+                  id: boardCustomized.customizedDS.current.get('id')
+                });
+
+              case 15:
+                res = _context4.sent;
+
+                try {
+                  dataJson = res.dataJson ? lodash_pick__WEBPACK_IMPORTED_MODULE_31___default()(JSON.parse(res.dataJson), ['size', 'parityRow', 'pageSize', 'columns', 'combineSort', 'defaultFlag', 'height', 'heightDiff', 'viewName']) : {};
+                  boardCustomized.customizedDS.current.set({
+                    objectVersionNumber: res.objectVersionNumber,
+                    dataJson: dataJson,
+                    viewName: res.viewName
+                  }); // @ts-ignore
+
+                  customized = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({}, lodash_omit__WEBPACK_IMPORTED_MODULE_30___default()(res, 'dataJson')), dataJson);
+                } catch (error) {
+                  Object(choerodon_ui_dataset_utils__WEBPACK_IMPORTED_MODULE_25__["warning"])(false, error.message);
+                }
+
+              case 17:
+                Object(mobx__WEBPACK_IMPORTED_MODULE_14__["runInAction"])( /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.mark(function _callee3() {
+                  var newCustomized, customAggregation, _this9$props, onAggregationChange, aggregation;
+
+                  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_11___default.a.wrap(function _callee3$(_context3) {
+                    while (1) {
+                      switch (_context3.prev = _context3.next) {
+                        case 0:
+                          newCustomized = _babel_runtime_helpers_objectSpread2__WEBPACK_IMPORTED_MODULE_10___default()({
+                            columns: {}
+                          }, customized);
+                          _this9.customized = newCustomized;
+                          dataSet.setState('__CUSTOMIZED__', newCustomized);
+
+                          _this9.initColumns(); // autoQuery：fasle 且分页参数与个性化不一致时进行修改
+
+
+                          if (newCustomized.pageSize && dataSet.pageSize !== Number(newCustomized.pageSize) && !dataSet.props.autoQuery) {
+                            dataSet.pageSize = Number(newCustomized.pageSize); // 手动加载个性化时, 重新查询
+
+                            if (customizedProps) {
+                              dataSet.currentPage = 1;
+                              dataSet.query(1, undefined, true);
+                            }
+                          }
+
+                          _context3.next = 7;
+                          return onCustomizedLoad(newCustomized);
+
+                        case 7:
+                          customAggregation = newCustomized.aggregation;
+
+                          if (customAggregation !== undefined) {
+                            _this9$props = _this9.props, onAggregationChange = _this9$props.onAggregationChange, aggregation = _this9$props.aggregation;
+
+                            if (onAggregationChange && customAggregation !== aggregation) {
+                              onAggregationChange(customAggregation);
+                            }
+                          }
+
+                        case 9:
+                        case "end":
+                          return _context3.stop();
+                      }
+                    }
+                  }, _callee3);
+                })));
+
+              case 18:
+                _context4.prev = 18;
+                this.customizedLoaded = true;
+                Object(mobx__WEBPACK_IMPORTED_MODULE_14__["runInAction"])(function () {
+                  _this9.loading = false;
+                });
+                return _context4.finish(18);
+
+              case 22:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[6,, 18, 22]]);
+      }));
+
+      function loadCustomized(_x7, _x8) {
+        return _loadCustomized.apply(this, arguments);
+      }
+
+      return loadCustomized;
+    }()
+  }, {
+    key: "handleAllPageSelectionMenuClick",
+    value: function handleAllPageSelectionMenuClick(_ref39) {
+      var key = _ref39.key;
+      var dataSet = this.dataSet;
+      var isAllPageSelection = dataSet.isAllPageSelection;
+
+      switch (key) {
+        case 'current':
+          {
+            if (this.allChecked) {
+              this.unCheckAllCurrent();
+              this.unCheckAllCached();
+            } else {
+              this.checkAllCurrent();
+              this.checkAllCached();
+            }
+
+            break;
+          }
+
+        case 'all':
+          dataSet.setAllPageSelection(!isAllPageSelection);
+          break;
+
+        default:
+      }
+    }
+  }, {
+    key: "renderAllPageSelectionMenu",
+    value: function renderAllPageSelectionMenu() {
+      var isAllPageSelection = this.dataSet.isAllPageSelection,
+          allChecked = this.allChecked,
+          prefixCls = this.prefixCls;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_menu__WEBPACK_IMPORTED_MODULE_53__[/* default */ "a"], {
+        prefixCls: "".concat(prefixCls, "-dropdown-menu"),
+        onClick: this.handleAllPageSelectionMenuClick
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_menu__WEBPACK_IMPORTED_MODULE_53__[/* default */ "a"].Item, {
+        key: "current"
+      }, Object(_locale_context__WEBPACK_IMPORTED_MODULE_49__[/* $l */ "a"])('Table', allChecked ? 'unselect_current_page' : 'select_current_page')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_menu__WEBPACK_IMPORTED_MODULE_53__[/* default */ "a"].Item, {
+        key: "all"
+      }, Object(_locale_context__WEBPACK_IMPORTED_MODULE_49__[/* $l */ "a"])('Table', isAllPageSelection ? 'unselect_all_page' : 'select_all_page')));
+    }
+  }, {
+    key: "getConfig",
+    value: function getConfig(key) {
+      return this.node.getContextConfig(key);
+    }
+  }, {
+    key: "getProPrefixCls",
+    value: function getProPrefixCls(suffixCls, customizePrefixCls) {
+      return this.node.getContextProPrefixCls(suffixCls, customizePrefixCls);
+    }
+  }, {
+    key: "multipleSelectionRenderer",
+    value: function multipleSelectionRenderer() {
+      var buttons = [/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_check_box_CheckBox__WEBPACK_IMPORTED_MODULE_38__[/* default */ "b"], {
+        key: "selectAll",
+        checked: this.allChecked,
+        indeterminate: this.indeterminate,
+        onChange: this.handleSelectAllChange,
+        labelLayout: _form_enum__WEBPACK_IMPORTED_MODULE_58__[/* LabelLayout */ "c"].none,
+        value: true
+      })];
+
+      if (this.props.showAllPageSelectionButton) {
+        buttons.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_dropdown_Dropdown__WEBPACK_IMPORTED_MODULE_52__[/* default */ "a"], {
+          key: "selectAllPage",
+          overlay: this.renderAllPageSelectionMenu
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_es_icon__WEBPACK_IMPORTED_MODULE_28__[/* default */ "a"], {
+          type: "baseline-arrow_drop_down",
+          className: "".concat(this.prefixCls, "-page-all-select")
+        })));
+      }
+
+      return buttons;
+    }
+  }, {
+    key: "getRelationSize",
+    value: function getRelationSize(type) {
+      if (type === '%') {
+        return this.parentHeight;
+      }
+
+      return this.screenHeight;
+    }
+  }, {
+    key: "startScroll",
+    value: function startScroll() {
+      this.scrolling = true;
+      this.stopScroll();
+    }
+  }, {
+    key: "batchSetRowHeight",
+    value: function batchSetRowHeight(key, callback) {
+      var batchRunner = Object(_data_set_utils__WEBPACK_IMPORTED_MODULE_56__["getIf"])(this, 'batchRunner', function () {
+        return new _util_BatchRunner__WEBPACK_IMPORTED_MODULE_57__[/* default */ "a"]();
+      });
+      batchRunner.addTask(key, callback);
+    }
+  }, {
+    key: "isRowInView",
+    value: function isRowInView(index) {
+      var _this10 = this;
+
+      var propVirtual = this.propVirtual;
+
+      if (propVirtual) {
+        return true;
+      }
+
+      if (this.height === undefined) {
+        return index <= 10;
+      }
+
+      var tableBodyWrap = this.node.tableBodyWrap;
+      var scrollTop = tableBodyWrap ? tableBodyWrap.scrollTop : 0;
+      var visibleStartIndex = getVisibleStartIndex(this, function () {
+        return scrollTop;
+      });
+      return index >= getStartIndex(this, function () {
+        return visibleStartIndex;
+      }) && index <= getEndIndex(this, function () {
+        return getVisibleEndIndex(_this10, function () {
+          return visibleStartIndex;
+        }, function () {
+          return scrollTop;
+        });
+      });
+    }
+  }, {
+    key: "alignEditor",
+    value: function alignEditor() {
+      var currentEditorName = this.currentEditorName;
+
+      if (currentEditorName) {
+        var currentEditor = this.editors.get(currentEditorName);
+
+        if (currentEditor) {
+          currentEditor.alignEditor();
+        }
+      }
+    }
+  }, {
+    key: "blurEditor",
+    value: function blurEditor() {
+      var currentEditorName = this.currentEditorName;
+
+      if (currentEditorName) {
+        var currentEditor = this.editors.get(currentEditorName);
+
+        if (currentEditor) {
+          currentEditor.blur();
+        }
+      }
+    }
+  }, {
+    key: "clearArrangeValue",
+    value: function clearArrangeValue() {
+      this.arrangeValue = {
+        avg: 0,
+        sum: 0,
+        max: 0,
+        min: 0,
+        count: 0
+      };
+    }
+  }, {
+    key: "calcArrangeValue",
+    value: function calcArrangeValue() {
+      this.dragCorner = false; // 选择过程中触发滚动导致取消选择后，startChooseCell 和 endChooseCell 为 null
+
+      if (!this.startChooseCell || !this.endChooseCell) {
+        return;
+      }
+
+      var _this$startChooseCell2 = this.startChooseCell,
+          startColIndex = _this$startChooseCell2.colIndex,
+          startRowIndex = _this$startChooseCell2.rowIndex;
+      var _this$endChooseCell2 = this.endChooseCell,
+          endColIndex = _this$endChooseCell2.colIndex,
+          endRowIndex = _this$endChooseCell2.rowIndex;
+      var data = this.currentData.map(function (x) {
+        return x.toData();
+      });
+      var cols = this.columns.filter(function (x) {
+        return !x.hidden;
+      });
+      var sum = 0;
+      var avg = 0;
+      var count = 0;
+      var max = 0;
+      var min = 0;
+      var cellCount = 0;
+      var arrayValue = [];
+      var minRowIndex = Math.min(startRowIndex, endRowIndex);
+      var minColIndex = Math.min(startColIndex, endColIndex);
+      var maxRowIndex = Math.max(startRowIndex, endRowIndex);
+      var maxColIndex = Math.max(startColIndex, endColIndex);
+
+      for (var i = minRowIndex; i <= maxRowIndex; i++) {
+        for (var j = minColIndex; j <= maxColIndex; j++) {
+          var field = cols[j].name;
+          var value = data[i][field];
+
+          if (!isNaN(parseFloat(value)) && isFinite(value)) {
+            sum += Number(value);
+            arrayValue.push(Number(value));
+            count++;
+          }
+
+          cellCount++;
+        }
+      }
+
+      avg = count ? Number((sum / count).toFixed(3)) : 0;
+      max = arrayValue.length ? Math.max.apply(Math, arrayValue) : 0;
+      min = arrayValue.length ? Math.min.apply(Math, arrayValue) : 0;
+      this.arrangeValue = {
+        avg: avg,
+        sum: sum,
+        max: max,
+        min: min,
+        count: cellCount
+      };
+    }
+  }]);
+
+  return TableStore;
+}();
+
+
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "props", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "customized", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "tempCustomized", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "loading", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "leftOriginalColumns", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "originalColumns", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "rightOriginalColumns", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "hasAggregationColumn", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "calcBodyHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "width", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "lastScrollTop", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "lastScrollLeft", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "lockColumnsBodyRowsHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "lockColumnsFootRowsHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "lockColumnsHeadRowsHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "expandedRows", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "hoverRow", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "rowClicked", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "currentEditorName", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "styledHidden", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "customizedActiveKey", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "mouseBatchChooseState", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "mouseBatchChooseIdList", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "columnResizing", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "scrollPosition", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "comboBarStatus", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "siblingHeihgt", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "parentHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "parentPaddingTop", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "screenHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "headerHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "footerHeight", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "headerFilter", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "startChooseCell", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "endChooseCell", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "isFinishChooseCell", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "isCopyPristine", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "shiftKey", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "autoScrollRAF", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "arrangeValue", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "dragCorner", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "dragCornerPosition", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "batchExpandRowNumber", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "selectedDragRows", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "dragUpdateState", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "computedHeight", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "height", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "duplicatePrimaryKeyInfo", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "autoHeight", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "virtualColumnRange", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "isRenderRange", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "actualRows", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "rowMetaData", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "scrolling", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "cellVerticalSize", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "virtualRowHeight", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "virtualVisibleStartIndex", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "virtualVisibleEndIndex", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "virtualStartIndex", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "virtualEndIndex", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "currentEditRecord", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "showCachedSelection", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "defaultRecordCachedType", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "recordCachedType", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "overflowX", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "overflowY", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "hasRowGroups", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "headerTableGroups", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "customizedColumnHeader", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "customizedColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "expandColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "rowNumberColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "selectionColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "comboQueryColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "draggableColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "leftColumns", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "rightColumns", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "columns", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "columnGroups", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "leftColumnGroups", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "rightColumnGroups", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "leafNamedColumns", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "hasEmptyWidthColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "getLastEmptyWidthColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "hasCheckFieldColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "isCombinedColumn", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "groups", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "groupedData", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["observable"]], TableStore.prototype, "groupedDataWithHeader", void 0);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "currentData", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "data", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "cachedIndeterminate", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "allCachedChecked", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "currentIndeterminate", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "allCurrentChecked", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "indeterminate", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "allChecked", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "showEditor", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setLastScrollTop", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setLastScrollLeft", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "hideEditor", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "changeMouseBatchChooseIdList", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setProps", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "updateProps", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "initGroups", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "initColumns", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setAggregationCellExpanded", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setRowExpanded", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setRowPending", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setRowLoaded", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["computed"]], TableStore.prototype, "cellHighlightRenderer", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "setRowHover", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "expandAll", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "collapseAll", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "onTreeNodeLoad", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "renderSelectionBox", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "renderRowNumber", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "renderDragBox", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "drawCopyBorder", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "drawExpandArea", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "batchSetCellValue", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "changeCustomizedColumnValue", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "saveCustomized", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"], mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "openCustomizationModal", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "loadCustomized", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"], mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "handleAllPageSelectionMenuClick", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "renderAllPageSelectionMenu", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "getConfig", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "getProPrefixCls", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "multipleSelectionRenderer", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([_util_autobind__WEBPACK_IMPORTED_MODULE_47__[/* default */ "a"]], TableStore.prototype, "getRelationSize", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "startScroll", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "clearArrangeValue", null);
+
+Object(tslib__WEBPACK_IMPORTED_MODULE_12__["__decorate"])([mobx__WEBPACK_IMPORTED_MODULE_14__["action"]], TableStore.prototype, "calcArrangeValue", null);
 
 /***/ }),
 
