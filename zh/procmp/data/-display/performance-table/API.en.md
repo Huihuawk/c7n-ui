@@ -63,6 +63,8 @@ title: API
 | onDragStart`(1.5.0-beta.0)` |  (initial: DragStart, provided: ResponderProvided) => void | Trigger event before dragging |
 | components |  [TableComponents](#tablecomponents) | Override default table elements | 1.6.5 ｜
 | useMouseBatchChoose`(1.6.7)` |  boolean`[globalConfig.performanceTableUseMouseBatchChoose](/components/configure#API)` | Whether to use mouse batch selection. When enabled, mouse drag batch selection can be performed in the case of rowbox. Press at the starting rowbox and release at the ending position |
+| customizedColumnProps | Partial<HeaderCellProps> | Header cell properties for the column containing the customization button. This column only has a header; className and isHeaderCell are set internally. | 1.6.9 |
+| headWordWrap | boolean | Whether the header cell wraps automatically, default is `wordWrap` | 1.6.9 |
 
 ### Form methods
 
@@ -84,25 +86,26 @@ scrollLeft: (left: number) => void;
 
 ### Column
 
-| Property      | Type `(Default)`                                 | Description                                                                                                 |
-| ------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| align         | enum: 'left','center','right'                    | Alignment                                                                                                   |
-| colSpan       | number                                           | Merges column cells to merge when the `dataKey` value for the merged column is `null` or `undefined`.       |
-| fixed         | boolean, 'left', 'right'                         | Fixed column                                                                                                |
-| flexGrow      | number                                           | Set the column width automatically adjusts, when set `flexGrow` cannot set `resizable` and `width` property |
-| minWidth      | number`(200)`                                    | When you use `flexGrow`, you can set a minimum width by `minwidth`                                          |
-| onResize      | (columnWidth?: number, dataKey?: string) => void | Callback after column width change                                                                          |
-| resizable     | boolean                                          | Customizable Resize Column width                                                                            |
-| sortable      | boolean                                          | Sortable                                                                                                    |
-| treeCol       | boolean                                          | A column of a tree.                                                                                         |
-| verticalAlign | enum: 'top', 'middle', 'bottom'                  | Vertical alignment                                                                                          |
-| width         | number                                           | Column width                                                                                                |
-| hidden         | boolean                                           | Hidden                                                                                  |
-| hideable         | boolean`(true)`                                       | Whether it is hideable                                                                                  |
-| titleEditable         | boolean`(true)`                                       | Whether the column header is editable in personalization                                                                                |
-| onCell`(1.4.4)` 	| ({ rowData, dataIndex, rowIndex }) => object | Set cell properties	| 
-| render	| ({ rowData, dataIndex, rowIndex }) => ReactNode | Override render cell content	| 
-| footer`(1.6.7)`	| ({ data, dataIndex }) => ReactNode | Table footer render content	| 
+| Property | Type `(Default)` | Description | Version |
+| ------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- | --- |
+| align | enum: 'left','center','right' | Alignment |  |
+| colSpan | number | Merges column cells when the `dataKey` value for the merged column is `null` or `undefined`; can also be returned from `onCell` for row-specific configuration. When using dynamic `colSpan` with virtual scrolling, configure a column-level `colSpan` as well to disable horizontal column virtualization. |  |
+| fixed | boolean, 'left', 'right' | Fixed column |  |
+| flexGrow | number | Set the column width automatically adjusts, when set `flexGrow` cannot set `width` property |  |
+| minWidth | number`(200)` | When you use `flexGrow`, you can set a minimum width by `minwidth` |  |
+| onResize | (columnWidth?: number, dataKey?: string) => void | Callback after column width change |  |
+| resizable | boolean | Customizable Resize Column width |  |
+| sortable | boolean | Sortable |  |
+| treeCol | boolean | A column of a tree. |  |
+| verticalAlign | enum: 'top', 'middle', 'bottom' | Vertical alignment |  |
+| width | number | Column width |  |
+| hidden | boolean | Hidden |  |
+| hideable | boolean`(true)` | Whether it is hideable |  |
+| titleEditable | boolean`(true)` | Whether the column header is editable in personalization |  |
+| onCell`(1.4.4)` | ({ rowData, dataIndex, rowIndex }) => object | Set cell properties |  |
+| render | ({ rowData, dataIndex, rowIndex }) => ReactNode | Override render cell content |  |
+| footer`(1.6.7)` | ({ data, dataIndex }) => ReactNode | Table footer render content |  |
+| customizable | boolean, 'left', 'right', The default value is `true` | Whether this column is subject to personalization control. When set to `false`, `left`, or `right`, this column will not be displayed in the personalization configuration panel and will always be at the edge of the column group, for example: at the far left of all left-fixed columns or the far right. | 1.6.9 |
 
 > `sortable` is used to define whether the column is sortable, but depending on what `key` sort needs to set a `dataKey` in `Cell`.
 > The sort here is the service-side sort, so you need to handle the logic in the ' Onsortcolumn ' callback function of `<Table>`, and the callback function returns `sortColumn`, `sortType` values.

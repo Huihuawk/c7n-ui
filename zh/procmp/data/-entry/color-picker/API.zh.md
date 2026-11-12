@@ -12,3 +12,5 @@ preset          | 是否开启备选色板                     | boolean | false
 
 更多属性请参考 [TriggerField](/zh/procmp/abstract/trigger-field/#TriggerField)。
 
+| showNoFill      | 是否显示无填充选项                    | boolean | `true` | 1.6.9 |
+| gradientMode    | 颜色模式：`single` 为单色，`gradient` 为渐变色（支持线性和径向渐变）；传入 `['single', 'gradient']` 可在两种模式间切换 | 'single' \| 'gradient' \| ('single' \| 'gradient')[] | `single` | 1.6.9 |
